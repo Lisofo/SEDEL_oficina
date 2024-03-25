@@ -122,6 +122,7 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBarDesign(titulo: 'Ptos de inspeccions'),
       drawer: const Drawer(
@@ -199,7 +200,7 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
           width: Constantes().ancho,
           decoration: BoxDecoration(
               border: Border.all(
-                  width: 1, color: const Color.fromARGB(255, 52, 120, 62)),
+                  width: 1, color: colors.primary),
               borderRadius: BorderRadius.circular(5)),
           child: DropdownButtonFormField(
             decoration: const InputDecoration(border: InputBorder.none),
@@ -252,7 +253,7 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
                   ],
                 ),
                 trailing: Checkbox(
-                  activeColor: const Color.fromARGB(255, 52, 120, 62),
+                  activeColor: colors.primary,
                   value: punto.seleccionado,
                   splashRadius: 40,
                   onChanged: (bool? newValue) {

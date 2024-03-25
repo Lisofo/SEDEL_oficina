@@ -69,6 +69,7 @@ class _MarcasPageState extends State<MarcasPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBarDesign(
         titulo: 'Marcas',
@@ -190,7 +191,7 @@ class _MarcasPageState extends State<MarcasPage> {
                       return Card(
                         child: ListTile(
                           leading: CircleAvatar(
-                            backgroundColor: const Color.fromARGB(255, 52, 120, 62),
+                            backgroundColor: colors.primary,
                             child: Text(marca.marcaId.toString(), style: const TextStyle(color: Colors.white),),
                           ),
                           title: Text('${marca.codTecnico} - ${marca.nombreTecnico}'),

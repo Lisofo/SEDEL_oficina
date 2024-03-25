@@ -23,6 +23,7 @@ class _LoginMobileState extends State<LoginMobile> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Center(
       child: SingleChildScrollView(
         child: Padding(
@@ -49,7 +50,7 @@ class _LoginMobileState extends State<LoginMobile> {
                   'Inicia Sesion en tu cuenta',
                   style: GoogleFonts.inter(
                     fontSize: 17,
-                    color: const Color.fromARGB(255, 52, 120, 62),
+                    color: colors.primary,
                   ),
                 ),
                 const SizedBox(height: 35),
@@ -115,10 +116,10 @@ class _LoginMobileState extends State<LoginMobile> {
                             builder: (context) => const MenuPage(),
                           ));
                     },
-                    child: const Text(
+                    child: Text(
                       'Iniciar Sesión',
                       style: TextStyle(
-                          color: Color.fromARGB(255, 52, 120, 62),
+                          color: colors.primary,
                           fontWeight: FontWeight.bold,
                           fontSize: 20),
                     )),

@@ -17,8 +17,9 @@ class AppBarDesign extends StatefulWidget implements PreferredSizeWidget {
 class _AppBarDesignState extends State<AppBarDesign> {
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return AppBar(
-      backgroundColor: const Color.fromARGB(255, 52, 120, 62),
+      backgroundColor: colors.primary,
       title: Text(
         widget.titulo,
         style: const TextStyle(color: Colors.white),

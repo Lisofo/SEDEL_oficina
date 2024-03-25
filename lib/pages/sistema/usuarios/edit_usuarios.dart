@@ -233,6 +233,7 @@ class _EditUsuariosPageState extends State<EditUsuariosPage> {
 
   BottomAppBar botonesSinId(
       Usuario userSeleccionado, BuildContext context, String token) {
+        final colors = Theme.of(context).colorScheme;
     return BottomAppBar(
         elevation: 0,
         child: Padding(
@@ -264,12 +265,12 @@ class _EditUsuariosPageState extends State<EditUsuariosPage> {
                       });
                     }
                   },
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.5),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.5),
                     child: Text(
                       'Guardar',
                       style: TextStyle(
-                          color: Color.fromARGB(255, 52, 120, 62),
+                          color: colors.primary,
                           fontWeight: FontWeight.bold,
                           fontSize: 20),
                     ),
@@ -289,12 +290,12 @@ class _EditUsuariosPageState extends State<EditUsuariosPage> {
                     await borrarUserDialog(context, userSeleccionado, token);
                     Navigator.of(context).pop();
                   },
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.5),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.5),
                     child: Text(
                       'Eliminar',
                       style: TextStyle(
-                          color: Color.fromARGB(255, 52, 120, 62),
+                          color: colors.primary,
                           fontWeight: FontWeight.bold,
                           fontSize: 20),
                     ),

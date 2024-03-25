@@ -25,6 +25,7 @@ class _MetodosAplicacionPageState extends State<MetodosAplicacionPage> {
   
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     final token = context.watch<OrdenProvider>().token;
     return SafeArea(
       child: Scaffold(
@@ -112,7 +113,7 @@ class _MetodosAplicacionPageState extends State<MetodosAplicacionPage> {
                     return Card(
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: const Color.fromARGB(255, 52, 120, 62),
+                          backgroundColor: colors.primary,
                           child: Text(
                             metodo.codMetodoAplicacion,
                             style: const TextStyle(color: Colors.white),

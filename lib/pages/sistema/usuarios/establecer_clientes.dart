@@ -42,6 +42,7 @@ class _EstablecerClientesState extends State<EstablecerClientes> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBarDesign(
         titulo: 'Usuarios',
@@ -187,12 +188,12 @@ class _EstablecerClientesState extends State<EstablecerClientes> {
                       );
                     }
                   },
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.5),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.5),
                     child: Text(
                       'Agregar cliente',
                       style: TextStyle(
-                          color: Color.fromARGB(255, 52, 120, 62),
+                          color: colors.primary,
                           fontWeight: FontWeight.bold,
                           fontSize: 20),
                     ),

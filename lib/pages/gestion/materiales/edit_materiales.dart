@@ -59,6 +59,7 @@ class _EditMaterialesPageState extends State<EditMaterialesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     cargarValoresDeCampo(materialSeleccionado);
 
     return Scaffold(
@@ -162,7 +163,7 @@ class _EditMaterialesPageState extends State<EditMaterialesPage> {
                     children: [
                       const Text('En App Tecnico'),
                       Switch(
-                        activeColor: const Color.fromARGB(255, 52, 120, 62),
+                        activeColor: colors.primary,
                         value: materialSeleccionado.enAppTecnico == 'S',
                         onChanged: (value) {
                           setState(() {
@@ -183,7 +184,7 @@ class _EditMaterialesPageState extends State<EditMaterialesPage> {
                     children: [
                       const Text('En uso'),
                       Switch(
-                        activeColor: const Color.fromARGB(255, 52, 120, 62),
+                        activeColor: colors.primary,
                         value: materialSeleccionado.enUso == 'S'
                             ? filtro2 = true
                             : filtro2 = false,

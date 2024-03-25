@@ -33,6 +33,7 @@ class _ControlesPageState extends State<ControlesPage> {
   
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return SafeArea(
       child: Scaffold(
         appBar: AppBarDesign(titulo: 'Controles',),
@@ -99,7 +100,7 @@ class _ControlesPageState extends State<ControlesPage> {
                     return Card(
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: const Color.fromARGB(255, 52, 120, 62),
+                          backgroundColor: colors.primary,
                           child: Text(
                             control.controlId.toString(),
                             style: const TextStyle(color: Colors.white),

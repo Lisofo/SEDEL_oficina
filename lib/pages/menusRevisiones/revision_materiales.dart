@@ -173,6 +173,7 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     if (selectedMaterial.materialId != 0 && widget.materiales.isNotEmpty) {
       materialInicial = widget.materiales.firstWhere(
           (material) => material.materialId == selectedMaterial.materialId);
@@ -187,7 +188,7 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
             width: Constantes().ancho,
             decoration: BoxDecoration(
                 border: Border.all(
-                    width: 1, color: const Color.fromARGB(255, 52, 120, 62)),
+                    width: 1, color: colors.primary),
                 borderRadius: BorderRadius.circular(5)),
             child: DropdownButton<Materiales>(
               hint: const Text("Selecciona un material"),

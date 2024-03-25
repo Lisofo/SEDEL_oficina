@@ -50,6 +50,7 @@ class _LotesPageState extends State<LotesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBarDesign(titulo: 'Lotes'),
       drawer: const Drawer(
@@ -69,7 +70,7 @@ class _LotesPageState extends State<LotesPage> {
                     var lote = lotes[i];
                     return ListTile(
                       leading: CircleAvatar(
-                        backgroundColor: const Color.fromARGB(255, 52, 120, 62),
+                        backgroundColor:  colors.primary,
                         child: Text(lote.materialLoteId.toString(), style: const TextStyle(color: Colors.white),)),
                       title: Text(lote.lote),
                       subtitle: Text(lote.estado == 'A' ? 'Activo' : 'Inactivo'),
@@ -77,7 +78,7 @@ class _LotesPageState extends State<LotesPage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.edit, color: Color.fromARGB(255, 52, 120, 62),),
+                            icon: Icon(Icons.edit, color: colors.primary,),
                             onPressed: (){
                               crearLote(lote);
                             },
@@ -96,9 +97,9 @@ class _LotesPageState extends State<LotesPage> {
                     );
                   }, 
                   separatorBuilder: (context, i) {
-                    return const Divider(
+                    return Divider(
                       thickness: 3,
-                      color: Color.fromARGB(255, 52, 120, 62),
+                      color: colors.primary,
                     );
                   },
                 )

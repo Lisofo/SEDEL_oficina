@@ -55,6 +55,7 @@ class _RevisionCuestionarioMenuState extends State<RevisionCuestionarioMenu> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -63,7 +64,7 @@ class _RevisionCuestionarioMenuState extends State<RevisionCuestionarioMenu> {
               width: Constantes().ancho,
               decoration: BoxDecoration(
                   border: Border.all(
-                      width: 2, color: const Color.fromARGB(255, 52, 120, 62)),
+                      width: 2, color: colors.primary),
                   borderRadius: BorderRadius.circular(5)),
               child: DropdownButtonFormField(
                 decoration: const InputDecoration(border: InputBorder.none),
@@ -128,11 +129,11 @@ class _RevisionCuestionarioMenuState extends State<RevisionCuestionarioMenu> {
                     subtitle: Center(
                       child: ToggleButtons(
                         isSelected: selections,
-                        borderColor: const Color.fromARGB(255, 52, 120, 62),
-                        selectedBorderColor: const Color.fromARGB(255, 52, 120, 62),
+                        borderColor: colors.primary,
+                        selectedBorderColor: colors.primary,
                         borderWidth: 2,
                         borderRadius: BorderRadius.circular(5),
-                        fillColor: const Color.fromARGB(255, 52, 120, 62),
+                        fillColor: colors.primary,
                         onPressed: (i){
                           setState(() {
                             

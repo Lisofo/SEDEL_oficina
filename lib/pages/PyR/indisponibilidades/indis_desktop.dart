@@ -96,6 +96,7 @@ class _IndisponibilidadesDesktopState extends State<IndisponibilidadesDesktop> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBarDesign(titulo: 'Indisponibilidades',),
       drawer: const Drawer(
@@ -262,12 +263,12 @@ class _IndisponibilidadesDesktopState extends State<IndisponibilidadesDesktop> {
                           onPressed: () async {
                             await buscar(context);
                           },
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.5),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.5),
                             child: Text(
                               'Buscar',
                               style: TextStyle(
-                                color: Color.fromARGB(255, 52, 120, 62),
+                                color: colors.primary,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -289,12 +290,12 @@ class _IndisponibilidadesDesktopState extends State<IndisponibilidadesDesktop> {
                             Provider.of<OrdenProvider>(context, listen: false).clearSelectedIndisponibilidad();
                             router.push('/editIndisponibilidades');
                           },
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.5),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.5),
                             child: Text(
                               'Crear Indisponibilidad',
                               style: TextStyle(
-                                color: Color.fromARGB(255, 52, 120, 62),
+                                color: colors.primary,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -333,7 +334,7 @@ class _IndisponibilidadesDesktopState extends State<IndisponibilidadesDesktop> {
                                       Flexible(
                                         flex: 1,
                                         child: CircleAvatar(
-                                          backgroundColor: const Color.fromARGB(255, 52, 120, 62),
+                                          backgroundColor: colors.primary,
                                           foregroundColor: Colors.white,
                                           child: Text(indisponibilidades[i].indisponibilidadId.toString()),
                                         ),

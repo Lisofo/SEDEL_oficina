@@ -148,6 +148,7 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     final token = context.read<OrdenProvider>().token;
 
     cargarValoresDeCampo(cliente);
@@ -636,7 +637,7 @@ class _BodyState extends State<Body> {
                             return ListTile(
                               leading: CircleAvatar(
                                 backgroundColor:
-                                    const Color.fromARGB(255, 52, 120, 62),
+                                   colors.primary,
                                 child: Text(
                                   usuariosXClientes[index].usuarioId.toString(),
                                   style: const TextStyle(color: Colors.white),

@@ -17,6 +17,7 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return ElevatedButton(
       clipBehavior: clip,
       onPressed: disabled ? null : onPressed,
@@ -31,7 +32,7 @@ class CustomButton extends StatelessWidget {
       child: Text(text,
           style: TextStyle(
             fontSize: tamano,
-            color: const Color.fromARGB(255, 52, 120, 62),
+            color: colors.primary,
             fontWeight: FontWeight.bold,
           )),
           

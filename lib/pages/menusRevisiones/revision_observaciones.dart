@@ -32,6 +32,7 @@ class _RevisionObservacionesMenuState extends State<RevisionObservacionesMenu> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     observacionController.text = widget.observacion.observacion;
     comentarioInternoController.text = widget.observacion.comentarioInterno;
     revisionId = context.read<OrdenProvider>().revisionId;
@@ -52,7 +53,7 @@ class _RevisionObservacionesMenuState extends State<RevisionObservacionesMenu> {
               width: Constantes().ancho,
               decoration: BoxDecoration(
                 border: Border.all(
-                    color: const Color.fromARGB(255, 52, 120, 62), width: 1),
+                    color: colors.primary, width: 1),
                 borderRadius: BorderRadius.circular(5),
                 // color: Colors.white
               ),
@@ -77,7 +78,7 @@ class _RevisionObservacionesMenuState extends State<RevisionObservacionesMenu> {
               width: Constantes().ancho,
               decoration: BoxDecoration(
                 border: Border.all(
-                    color: const Color.fromARGB(255, 52, 120, 62), width: 1),
+                    color: colors.primary, width: 1),
                 borderRadius: BorderRadius.circular(5),
               ),
               child: TextFormField(

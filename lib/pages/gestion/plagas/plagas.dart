@@ -23,6 +23,7 @@ class _PlagasPageState extends State<PlagasPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     final token = context.watch<OrdenProvider>().token;
     return SafeArea(
       child: Scaffold(
@@ -90,12 +91,12 @@ class _PlagasPageState extends State<PlagasPage> {
                           onPressed: () async {
                             await buscar(context, token);
                           },
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.5),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.5),
                             child: Text(
                               'Buscar',
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 52, 120, 62),
+                                  color: colors.primary,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20),
                             ),
@@ -118,12 +119,12 @@ class _PlagasPageState extends State<PlagasPage> {
                                 .clearSelectedPlaga();
                             router.push('/editPlagas');
                           },
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.5),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.5),
                             child: Text(
                               'Agregar Plaga',
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 52, 120, 62),
+                                  color: colors.primary,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20),
                             ),
@@ -143,7 +144,7 @@ class _PlagasPageState extends State<PlagasPage> {
                     return Card(
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: const Color.fromARGB(255, 52, 120, 62),
+                          backgroundColor: colors.primary,
                           child: Text(
                             plagas[index].plagaId.toString(),
                             style: const TextStyle(color: Colors.white),

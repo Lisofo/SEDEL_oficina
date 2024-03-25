@@ -147,6 +147,7 @@ class _MonitoreoPageState extends State<MonitoreoPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     final token = context.watch<OrdenProvider>().token;
 
     return SafeArea(
@@ -246,7 +247,7 @@ class _MonitoreoPageState extends State<MonitoreoPage> {
                 ),
                 Container(
                   decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 52, 120, 62),
+                      color: colors.primary,
                       borderRadius: BorderRadius.circular(5)),
                   height: 30,
                   child: const Center(

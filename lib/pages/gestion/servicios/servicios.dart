@@ -25,6 +25,7 @@ class _ServiciosPageState extends State<ServiciosPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     final token = context.watch<OrdenProvider>().token;
     return SafeArea(
       child: Scaffold(
@@ -139,7 +140,7 @@ class _ServiciosPageState extends State<ServiciosPage> {
                     return Card(
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: const Color.fromARGB(255, 52, 120, 62),
+                          backgroundColor: colors.primary,
                           child: Text(
                             servicios[index].servicioId.toString(),
                             style: const TextStyle(color: Colors.white),

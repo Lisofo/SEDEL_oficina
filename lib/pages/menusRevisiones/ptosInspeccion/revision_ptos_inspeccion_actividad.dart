@@ -97,6 +97,7 @@ class _RevisionPtosInspeccionActividadState
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -104,7 +105,7 @@ class _RevisionPtosInspeccionActividadState
             '${orden.ordenTrabajoId} - $menu',
             style: const TextStyle(color: Colors.white),
           ),
-          backgroundColor: const Color.fromARGB(255, 52, 120, 62),
+          backgroundColor: colors.primary,
         ),
         backgroundColor: Colors.grey.shade200,
         body: SingleChildScrollView(
@@ -117,7 +118,7 @@ class _RevisionPtosInspeccionActividadState
                   Container(
                     width: Constantes().ancho,
                     decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 52, 120, 62),
+                        color: colors.primary,
                         borderRadius: BorderRadius.circular(5)),
                     height: 30,
                     child: const Center(
@@ -141,7 +142,7 @@ class _RevisionPtosInspeccionActividadState
                       itemBuilder: (context, index) {
                         final tarea = tareas[index];
                         return CheckboxListTile(
-                          activeColor: const Color.fromARGB(255, 52, 120, 62),
+                          activeColor: colors.primary,
                           title: Text(tarea.descripcion),
                           value: tarea.selected,
                           onChanged: (newValue) {
@@ -165,7 +166,7 @@ class _RevisionPtosInspeccionActividadState
                             flex: 10,
                             child: Container(
                               decoration: BoxDecoration(
-                                  color: const Color.fromARGB(255, 52, 120, 62),
+                                  color: colors.primary,
                                   borderRadius: BorderRadius.circular(5)),
                               height: 30,
                               child: const Center(
@@ -266,7 +267,7 @@ class _RevisionPtosInspeccionActividadState
                   Container(
                     width: Constantes().ancho,
                     decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 52, 120, 62),
+                        color: colors.primary,
                         borderRadius: BorderRadius.circular(5)),
                     height: 30,
                     child: const Center(
@@ -288,7 +289,7 @@ class _RevisionPtosInspeccionActividadState
                     decoration: BoxDecoration(
                         border: Border.all(
                             width: 2,
-                            color: const Color.fromARGB(255, 52, 120, 62)),
+                            color: colors.primary),
                         borderRadius: BorderRadius.circular(5)),
                     child: DropdownButtonFormField(
                       decoration:
@@ -413,10 +414,10 @@ class _RevisionPtosInspeccionActividadState
                   await marcarPIActividad(2, '');
                 }
               },
-              child: const Text(
+              child: Text(
                 'Guardar',
                 style: TextStyle(
-                    color: Color.fromARGB(255, 52, 120, 62),
+                    color: colors.primary,
                     fontWeight: FontWeight.bold,
                     fontSize: 20),
               )),

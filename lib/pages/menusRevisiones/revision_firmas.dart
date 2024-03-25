@@ -158,6 +158,7 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
@@ -175,7 +176,7 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                       width: Constantes().ancho,
                       decoration: BoxDecoration(
                           border: Border.all(
-                              color: const Color.fromARGB(255, 52, 120, 62),
+                              color: colors.primary,
                               width: 1),
                           borderRadius: BorderRadius.circular(5)),
                       child: TextFormField(
@@ -196,7 +197,7 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                       width: Constantes().ancho,
                       decoration: BoxDecoration(
                           border: Border.all(
-                              color: const Color.fromARGB(255, 52, 120, 62),
+                              color: colors.primary,
                               width: 1),
                           borderRadius: BorderRadius.circular(5)),
                       child: TextFormField(
@@ -222,7 +223,7 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
               child: Container(
                 decoration: BoxDecoration(
                     border: Border.all(
-                        color: const Color.fromARGB(255, 52, 120, 62),
+                        color: colors.primary,
                         width: 1),
                     borderRadius: BorderRadius.circular(5)),
                 child: Signature(
@@ -271,9 +272,9 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                                   borderRadius: BorderRadius.horizontal(
                                       left: Radius.circular(50),
                                       right: Radius.circular(50))))),
-                      child: const Icon(
+                      child: Icon(
                         Icons.delete,
-                        color: Color.fromARGB(255, 52, 120, 62),
+                        color: colors.primary,
                       )),
                 ),
               ],

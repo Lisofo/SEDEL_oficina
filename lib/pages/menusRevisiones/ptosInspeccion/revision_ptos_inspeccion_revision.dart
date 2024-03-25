@@ -30,10 +30,11 @@ class _RevisionPtosInspeccionRevisionState
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 52, 120, 62),
+          backgroundColor: colors.primary,
           title: const Text(
             'Revisión',
             style: TextStyle(color: Colors.white),

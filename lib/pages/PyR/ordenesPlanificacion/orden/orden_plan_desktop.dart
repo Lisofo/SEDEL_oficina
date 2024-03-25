@@ -110,6 +110,7 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBarDesign(titulo: 'Ordenes de trabajo',),
       drawer: const Drawer(child: BotonesDrawer(),),
@@ -350,12 +351,12 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
                           onPressed: () async {
                             await buscar(token);
                           },
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.5),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.5),
                             child: Text(
                               'Buscar',
                               style: TextStyle(
-                                color: Color.fromARGB(255, 52, 120, 62),
+                                color: colors.primary,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -378,12 +379,12 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
                               .clearSelectedOrden();
                             router.push('/editOrden');
                           },
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.5),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.5),
                             child: Text(
                               'Crear Orden',
                               style: TextStyle(
-                                color: Color.fromARGB(255, 52, 120, 62),
+                                color: colors.primary,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -423,11 +424,21 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
                                       Flexible(
                                         flex: 1,
                                         child: CircleAvatar(
+<<<<<<< Updated upstream
                                           backgroundColor: const Color.fromARGB(255, 52, 120, 62),
                                           foregroundColor: Colors.white,
                                           minRadius: 10,
                                           maxRadius: 30,
                                           child: Text(ordenesFiltradas[i].ordenTrabajoId.toString()),
+=======
+                                          backgroundColor: colors.primary,
+                                          foregroundColor: Colors.white,
+                                          radius: 30,
+                                          
+                                          child: Text(ordenesFiltradas[i]
+                                              .ordenTrabajoId
+                                              .toString()),
+>>>>>>> Stashed changes
                                         ),
                                       ),
                                       const SizedBox(

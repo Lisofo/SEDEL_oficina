@@ -139,6 +139,7 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     if (selectedMaterial.materialId != 0 && materiales.isNotEmpty) {
       materialInicial = materiales.firstWhere(
           (material) => material.materialId == selectedMaterial.materialId);
@@ -155,7 +156,7 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
               decoration: BoxDecoration(
                   border: Border.all(
                       width: 2,
-                      color: const Color.fromARGB(255, 52, 120, 62)),
+                      color: colors.primary),
                   borderRadius: BorderRadius.circular(5)),
               child: DropdownButton<Materiales>(
                 hint: const Text("Selecciona un material"),
@@ -192,7 +193,7 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 52, 120, 62),
+                        color: colors.primary,
                         borderRadius: BorderRadius.circular(5)),
                     height: 30,
                     child: const Center(

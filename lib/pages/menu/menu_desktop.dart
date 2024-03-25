@@ -23,13 +23,14 @@ class _MenuDesktopState extends State<MenuDesktop> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
 
 
 
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 52, 120, 62),
+          backgroundColor: colors.primary,
           title: const Text(
             'Menú',
             style: TextStyle(color: Colors.white),
@@ -48,6 +49,7 @@ class _MenuDesktopState extends State<MenuDesktop> {
         backgroundColor: Colors.white,
         body: Center(child: Image.asset('images/logo.png')),
         bottomNavigationBar: BottomAppBar(
+          color: Colors.white,
             elevation: 0,
             child: IconButton.filledTonal(
                 onPressed: () {

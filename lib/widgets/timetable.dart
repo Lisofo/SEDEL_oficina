@@ -157,15 +157,16 @@ class _CustomizedTimetableScreenState extends State<CustomizedTimetableScreen> {
   
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     token = context.read<OrdenProvider>().token;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green.shade700,
         automaticallyImplyLeading: false,
         actions: [
-          const VerticalDivider(
+          VerticalDivider(
             thickness: 3,
-            color: Color.fromARGB(255, 52, 120, 62),
+            color: colors.primary,
           ),
           SizedBox(
             width: 220,
@@ -173,6 +174,7 @@ class _CustomizedTimetableScreenState extends State<CustomizedTimetableScreen> {
               dropdownDecoratorProps: const DropDownDecoratorProps(
                   baseStyle: TextStyle(color: Colors.white),
                   dropdownSearchDecoration: InputDecoration(
+                    border: InputBorder.none,
                       hintText: 'Tecnico',
                       hintStyle: TextStyle(color: Colors.white))),
               items: tecnicos,
@@ -187,17 +189,17 @@ class _CustomizedTimetableScreenState extends State<CustomizedTimetableScreen> {
               },
             ),
           ),
-          const VerticalDivider(
+          VerticalDivider(
             thickness: 3,
-            color: Color.fromARGB(255, 52, 120, 62),
+            color: colors.primary,
           ),
           const ButtonDelegate(
             colorSeleccionado: Colors.white,
             nombreProvider: 'Planificador',
           ),
-          const VerticalDivider(
+          VerticalDivider(
             thickness: 3,
-            color: Color.fromARGB(255, 52, 120, 62),
+            color: colors.primary,
           ),
           TextButton(
               onPressed: () async {
@@ -231,9 +233,9 @@ class _CustomizedTimetableScreenState extends State<CustomizedTimetableScreen> {
           Text('${DateFormat("EEEEE d MMMM", 'es').format(selectedDate.start)} - ${DateFormat("EEEEE d MMMM", 'es').format(selectedDate.end)}',
             style: const TextStyle(color: Colors.white),
           ),
-          const VerticalDivider(
+          VerticalDivider(
             thickness: 3,
-            color: Color.fromARGB(255, 52, 120, 62),
+            color: colors.primary,
           ),
           Text(
             '${ordenesFiltradas.isEmpty ? '0' : ordenesFiltradas.length} Ordenes', 

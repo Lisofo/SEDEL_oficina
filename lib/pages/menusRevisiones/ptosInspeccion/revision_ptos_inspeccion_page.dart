@@ -94,6 +94,7 @@ class _RevisionPtosInspeccionMenuState extends State<RevisionPtosInspeccionMenu>
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     revisionId = context.read<OrdenProvider>().revisionId;
     print(revisionId);
     return Padding(
@@ -103,7 +104,7 @@ class _RevisionPtosInspeccionMenuState extends State<RevisionPtosInspeccionMenu>
           width: Constantes().ancho,
           decoration: BoxDecoration(
               border: Border.all(
-                  width: 1, color: const Color.fromARGB(255, 52, 120, 62)),
+                  width: 1, color: colors.primary),
               borderRadius: BorderRadius.circular(5)),
           child: DropdownButtonFormField(
             decoration: const InputDecoration(border: InputBorder.none),
@@ -164,12 +165,12 @@ class _RevisionPtosInspeccionMenuState extends State<RevisionPtosInspeccionMenu>
                   Icons.control_point,
                   size: 35,
                   color: selectedTipoPto.tipoPuntoInspeccionId != 0
-                    ? const Color.fromARGB(255, 52, 120, 62)
+                    ? colors.primary
                     : Colors.grey,
                 ),
               ),
               Switch(
-                  activeColor: const Color.fromARGB(255, 52, 120, 62),
+                  activeColor: colors.primary,
                   value: filtro,
                   onChanged: (value) {
                     setState(() {
@@ -186,7 +187,7 @@ class _RevisionPtosInspeccionMenuState extends State<RevisionPtosInspeccionMenu>
                   }),
               const Spacer(),
               Checkbox(
-                activeColor: const Color.fromARGB(255, 52, 120, 62),
+                activeColor: colors.primary,
                 value: selectAll,
                 onChanged: (newValue) {
                   setState(() {
@@ -220,6 +221,7 @@ class _RevisionPtosInspeccionMenuState extends State<RevisionPtosInspeccionMenu>
   }
 
   listaDePuntos() {
+    final colors = Theme.of(context).colorScheme;
     return Consumer<OrdenProvider>(builder: (context, provider, child) {
       return ListView.builder(
         itemCount: provider.listaPuntos.length,
@@ -234,7 +236,7 @@ class _RevisionPtosInspeccionMenuState extends State<RevisionPtosInspeccionMenu>
                 Text(
                   puntoDeInspeccion.codAccion.toString(),
                   style:
-                      const TextStyle(color: Color.fromARGB(255, 52, 120, 62)),
+                     TextStyle(color: colors.primary),
                 )
               ],
             ),
@@ -248,7 +250,7 @@ class _RevisionPtosInspeccionMenuState extends State<RevisionPtosInspeccionMenu>
               ],
             ),
             trailing: Checkbox(
-              activeColor: const Color.fromARGB(255, 52, 120, 62),
+              activeColor: colors.primary,
               value: puntoDeInspeccion.seleccionado,
               splashRadius: 40,
               onChanged: (bool? newValue) {

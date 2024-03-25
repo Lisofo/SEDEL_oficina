@@ -9,6 +9,7 @@ class VisualizarAccion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -31,8 +32,8 @@ class VisualizarAccion extends StatelessWidget {
                 const Spacer(),
                 Text(
                   revision!.codAccion.toString(),
-                  style: const TextStyle(
-                      fontSize: 22, color: Color.fromARGB(255, 52, 120, 62)),
+                  style: TextStyle(
+                      fontSize: 22, color: colors.primary),
                 )
               ],
             ),

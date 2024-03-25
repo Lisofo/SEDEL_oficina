@@ -85,6 +85,7 @@ class _OrdenPlanificacionDesktopState extends State<OrdenPlanificacionDesktop> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     _instruccionesController.text = orden.instrucciones;
     return SafeArea(
       child: Scaffold(
@@ -422,7 +423,7 @@ class _OrdenPlanificacionDesktopState extends State<OrdenPlanificacionDesktop> {
                               width: MediaQuery.of(context).size.width * 0.2,
                               decoration: BoxDecoration(
                                   border: Border.all(
-                                      color: const Color.fromARGB(255, 52, 120, 62),
+                                      color: colors.primary,
                                       width: 2),
                                   borderRadius: BorderRadius.circular(5)),
                               child: TextFormField(
@@ -452,7 +453,7 @@ class _OrdenPlanificacionDesktopState extends State<OrdenPlanificacionDesktop> {
                               width: MediaQuery.of(context).size.width * 0.2,
                               decoration: BoxDecoration(
                                   border: Border.all(
-                                      color: const Color.fromARGB(255, 52, 120, 62),
+                                      color: colors.primary,
                                       width: 2),
                                   borderRadius: BorderRadius.circular(5)),
                               child: TextFormField(

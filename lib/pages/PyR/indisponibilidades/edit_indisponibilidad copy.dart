@@ -182,7 +182,7 @@
 //                     child: Text(
 //                       'Guardar',
 //                       style: TextStyle(
-//                           color: Color.fromARGB(255, 52, 120, 62),
+//                           color: colors.primary,
 //                           fontWeight: FontWeight.bold,
 //                           fontSize: 20),
 //                     ),
@@ -204,7 +204,7 @@
 //                     child: Text(
 //                       'Modificar',
 //                       style: TextStyle(
-//                           color: Color.fromARGB(255, 52, 120, 62),
+//                           color: colors.primary,
 //                           fontWeight: FontWeight.bold,
 //                           fontSize: 20),
 //                     ),
@@ -226,7 +226,7 @@
 //                     child: Text(
 //                       'Eliminar',
 //                       style: TextStyle(
-//                           color: Color.fromARGB(255, 52, 120, 62),
+//                           color: colors.primary,
 //                           fontWeight: FontWeight.bold,
 //                           fontSize: 20),
 //                     ),

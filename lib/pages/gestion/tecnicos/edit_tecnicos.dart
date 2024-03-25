@@ -105,6 +105,7 @@ class _EditTecnicosPageState extends State<EditTecnicosPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     if (selectedTecnico.tecnicoId != 0) {
       _nombreController.text = selectedTecnico.nombre;
       _docController.text = selectedTecnico.documento;
@@ -322,12 +323,12 @@ class _EditTecnicosPageState extends State<EditTecnicosPage> {
                       onPressed: () async {
                         await postTecnico(context);
                       },
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8.5),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.5),
                         child: Text(
                           'Guardar',
                           style: TextStyle(
-                              color: Color.fromARGB(255, 52, 120, 62),
+                              color: colors.primary,
                               fontWeight: FontWeight.bold,
                               fontSize: 20),
                         ),
@@ -349,12 +350,12 @@ class _EditTecnicosPageState extends State<EditTecnicosPage> {
                         onPressed: () async {
                           borrarTecnico(context, selectedTecnico, token);
                         },
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8.5),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.5),
                           child: Text(
                             'Eliminar',
                             style: TextStyle(
-                                color: Color.fromARGB(255, 52, 120, 62),
+                                color: colors.primary,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20),
                           ),

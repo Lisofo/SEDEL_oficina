@@ -47,6 +47,7 @@ class _DetallesMaterialesState extends State<DetallesMateriales> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBarDesign(titulo: 'Detalles del material'),
       drawer: const Drawer(
@@ -67,7 +68,7 @@ class _DetallesMaterialesState extends State<DetallesMateriales> {
                       var detalle = detalles[i];
                       return ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: const Color.fromARGB(255, 52, 120, 62),
+                          backgroundColor: colors.primary,
                           child: Text(detalle.materialDetId.toString(), style: const TextStyle(color: Colors.white),),
                         ),
                         title: Text(detalle.principioActivo),
@@ -93,8 +94,8 @@ class _DetallesMaterialesState extends State<DetallesMateriales> {
                       );
                     },
                     separatorBuilder: (BuildContext context, int index) {
-                      return const Divider(
-                        color: Color.fromARGB(255, 52, 120, 62),
+                      return Divider(
+                        color: colors.primary,
                         thickness: 3,
                       );
                     },),

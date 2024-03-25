@@ -54,6 +54,7 @@ class _RevisionTareasMenuState extends State<RevisionTareasMenu> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
@@ -62,7 +63,7 @@ class _RevisionTareasMenuState extends State<RevisionTareasMenu> {
               width: Constantes().ancho,
               decoration: BoxDecoration(
                   border: Border.all(
-                      width: 1, color: const Color.fromARGB(255, 52, 120, 62)),
+                      width: 1, color: colors.primary),
                   borderRadius: BorderRadius.circular(5)),
               child: DropdownSearch(
                 dropdownDecoratorProps: const DropDownDecoratorProps(

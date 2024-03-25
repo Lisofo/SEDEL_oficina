@@ -78,13 +78,14 @@ class _ListaPuntosState extends State<ListaPuntos> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Column(
       children: [
         Container(
           width: Constantes().ancho,
           decoration: BoxDecoration(
               border: Border.all(
-                  width: 1, color: const Color.fromARGB(255, 52, 120, 62)),
+                  width: 1, color: colors.primary),
               borderRadius: BorderRadius.circular(5)),
           child: DropdownButtonFormField(
             decoration: const InputDecoration(border: InputBorder.none),
@@ -133,7 +134,7 @@ class _ListaPuntosState extends State<ListaPuntos> {
                   ],
                 ),
                 trailing: Checkbox(
-                  activeColor: const Color.fromARGB(255, 52, 120, 62),
+                  activeColor: colors.primary,
                   value: punto.seleccionado,
                   splashRadius: 40,
                   onChanged: (bool? newValue) {

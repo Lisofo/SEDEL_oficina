@@ -25,6 +25,7 @@ class _TecnicosPageState extends State<TecnicosPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     final token = context.watch<OrdenProvider>().token;
     return SafeArea(
       child: Scaffold(
@@ -119,12 +120,12 @@ class _TecnicosPageState extends State<TecnicosPage> {
                           onPressed: () async {
                             await buscarTecnico(token);
                           },
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.5),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.5),
                             child: Text(
                               'Buscar',
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 52, 120, 62),
+                                  color: colors.primary,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20),
                             ),
@@ -147,12 +148,12 @@ class _TecnicosPageState extends State<TecnicosPage> {
                                 .clearSelectedTecnico();
                             router.push('/editTecnicos');
                           },
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.5),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.5),
                             child: Text(
                               'Agregar Tecnico',
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 52, 120, 62),
+                                  color: colors.primary,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20),
                             ),
@@ -173,7 +174,7 @@ class _TecnicosPageState extends State<TecnicosPage> {
                       child: ListTile(
                         leading: CircleAvatar(
                           backgroundColor:
-                              const Color.fromARGB(255, 52, 120, 62),
+                             colors.primary,
                           child: Text(
                             tecnicos[index].codTecnico,
                             style: const TextStyle(color: Colors.white),

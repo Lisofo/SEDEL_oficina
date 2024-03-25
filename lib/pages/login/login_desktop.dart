@@ -38,6 +38,7 @@ class _LoginDesktopState extends State<LoginDesktop> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -71,7 +72,7 @@ class _LoginDesktopState extends State<LoginDesktop> {
                         'Inicia Sesion en tu cuenta',
                         style: GoogleFonts.inter(
                             fontSize: 17,
-                            color: const Color.fromARGB(255, 52, 120, 62),
+                            color: colors.primary,
                             fontWeight: FontWeight.w700),
                       ),
                       const SizedBox(height: 35),
@@ -90,7 +91,7 @@ class _LoginDesktopState extends State<LoginDesktop> {
                                       filled: true,
                                       prefixIcon: const Icon(Icons.person),
                                       prefixIconColor:
-                                          const Color.fromARGB(255, 41, 146, 41),
+                                          colors.primary,
                                       hintText: 'Ingrese su usuario'),
                                   validator: (value) {
                                     if (value!.isEmpty ||
@@ -117,7 +118,8 @@ class _LoginDesktopState extends State<LoginDesktop> {
                                       filled: true,
                                       prefixIcon: const Icon(Icons.lock),
                                       prefixIconColor:
-                                          const Color.fromARGB(255, 41, 146, 41),
+                                          //const Color.fromARGB(255, 41, 146, 41)
+                                          colors.primary,
                                       suffixIcon: IconButton(
                                         padding: const EdgeInsetsDirectional.only(
                                             end: 12.0),
@@ -169,13 +171,13 @@ class _LoginDesktopState extends State<LoginDesktop> {
                                 onPressed: () async {
                                   await login(context);
                                 },
-                                child: const Padding(
+                                child: Padding(
                                   padding:
-                                      EdgeInsets.symmetric(vertical: 8.5),
+                                      const EdgeInsets.symmetric(vertical: 8.5),
                                   child: Text(
                                     'Iniciar Sesión',
                                     style: TextStyle(
-                                      color: Color.fromARGB(255, 52, 120, 62),
+                                      color: colors.primary,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 25,
                                     ),
