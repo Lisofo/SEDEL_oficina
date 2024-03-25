@@ -614,46 +614,50 @@ class RevisionServices {
     }
   }
 
-  Future postRevisonFirma(BuildContext context, Orden orden, ClienteFirma firma, int revisionId, String token) async {
-    String link = '${apiLink}api/v1/ordenes/${orden.ordenTrabajoId}/revisiones/$revisionId/firmas';
+  Future postRevisonFirma(BuildContext context, Orden orden, ClienteFirma firma, String token) async {
+    String link = '${apiLink}api/v1/ordenes/${orden.ordenTrabajoId}/revisiones/${orden.otRevisionId}/firmas';
 
-    var data = firma.toMap();
+    FormData formData = FormData.fromMap({
+      'file': MultipartFile.fromBytes(firma.firma as List<int>, filename: 'imagen.jpg'),
+      'nombre': firma.nombre,
+      'area': firma.area,
+      'firmaMD5': firma.firmaMd5,
+      'comentario': ''
+    });
 
     try {
       var headers = {'Authorization': token};
-      var resp = await _dio.request(
+      var resp = await _dio.post(
         link,
+        data: formData,
         options: Options(
-          method: 'POST',
+          contentType: 'multipart/form-data',
           headers: headers,
         ),
-        data: data,
       );
+      
       if (resp.statusCode == 201) {
         firma.otFirmaId = resp.data["otFirmaId"];
         showDialogs(context, 'Firma guardada', false, false);
+        // print('posteo $statusCode');
       }
-
-      return;
+      // print('termino posteo $statusCode');
+      return; 
     } catch (e) {
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
-            if(e.response!.statusCode == 403){
-              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
-              final errors = responseData['errors'] as List<dynamic>;
-              final errorMessages = errors.map((error) {
+            final errors = responseData['errors'] as List<dynamic>;
+            final errorMessages = errors.map((error) {
               return "Error: ${error['message']}";
             }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+            await _mostrarError(context, errorMessages.join('\n'));
           } else {
-            showErrorDialog(context, 'Error: ${e.response!.data}');
+            await _mostrarError(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
+          await _mostrarError(context, 'Error: ${e.message}');
         }
       }
     }

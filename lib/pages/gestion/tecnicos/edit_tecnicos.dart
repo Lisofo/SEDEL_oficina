@@ -1,4 +1,4 @@
-// ignore_for_file: unused_field
+// ignore_for_file: unused_field, avoid_print, avoid_init_to_null
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +11,8 @@ import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 import 'package:intl/intl.dart';
+import 'dart:typed_data';
+import 'package:universal_html/html.dart' as html;
 
 class EditTecnicosPage extends StatefulWidget {
   const EditTecnicosPage({super.key});
@@ -27,27 +29,64 @@ class _EditTecnicosPageState extends State<EditTecnicosPage> {
     Cargo(cargoId: 3, codCargo: '3', descripcion: 'Supervisor'),
   ];
   late Cargo? cargoSeleccionado = Cargo.empty();
-  DateTime selectedDateNacimiento =
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-  DateTime selectedDateIngreso =
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-  DateTime selectedDateCarneSalud =
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime selectedDateNacimiento = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime selectedDateIngreso = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime selectedDateCarneSalud = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   late String _setDate;
   late String dateTime;
-  final TextEditingController _dateNacimientoController =
-      TextEditingController();
+  final TextEditingController _dateNacimientoController = TextEditingController();
   final TextEditingController _dateIngresoController = TextEditingController();
-  final TextEditingController _dateCarneSaludController =
-      TextEditingController();
+  final TextEditingController _dateCarneSaludController = TextEditingController();
   final _nombreController = TextEditingController();
   final _docController = TextEditingController();
   final _codController = TextEditingController();
   late String token = context.read<OrdenProvider>().token;
   late bool tieneId = false;
+  late Uint8List? _avatarTecnico = null;
+  late Uint8List? _firmaTecnico = null;
 
   String _formatDateAndTime(DateTime? date) {
     return '${date?.day.toString().padLeft(2, '0')}/${date?.month.toString().padLeft(2, '0')}/${date?.year.toString().padLeft(4, '0')}';
+  }
+
+  Future<void> _uploadPhoto1() async {
+    final html.FileUploadInputElement input = html.FileUploadInputElement();
+    input.accept = 'image/*';
+    input.click();
+
+    input.onChange.listen((e) {
+      final files = input.files;
+      if (files!.isNotEmpty) {
+        final reader = html.FileReader();
+        reader.readAsArrayBuffer(files[0]); // Leer el archivo como una matriz de bytes
+        reader.onLoadEnd.listen((e) {
+          setState(() {
+            // Asignar los bytes del archivo a _avatarTecnico
+            _avatarTecnico = reader.result as Uint8List?;
+          });
+        });
+      }
+    });
+  }
+
+  Future<void> _uploadPhoto2() async {
+    final html.FileUploadInputElement input = html.FileUploadInputElement();
+    input.accept = 'image/*';
+    input.click();
+  
+    input.onChange.listen((e) {
+      final files = input.files;
+      if (files!.isNotEmpty) {
+        final reader = html.FileReader();
+        reader.readAsArrayBuffer(files[0]); // Leer el archivo como una matriz de bytes
+        reader.onLoadEnd.listen((e) {
+          setState(() {
+            // Asignar los bytes del archivo a _avatarTecnico
+            _firmaTecnico = reader.result as Uint8List?;
+          });
+        });
+      }
+    });
   }
 
   @override
@@ -88,8 +127,7 @@ class _EditTecnicosPageState extends State<EditTecnicosPage> {
 
     late Cargo cargoInicialSeleccionado = cargos[0];
     if (cargoSeleccionado!.cargoId != 0) {
-      cargoInicialSeleccionado = cargos
-          .firstWhere((cargo) => cargo.cargoId == cargoSeleccionado!.cargoId);
+      cargoInicialSeleccionado = cargos.firstWhere((cargo) => cargo.cargoId == cargoSeleccionado!.cargoId);
     }
     return SafeArea(
       child: Scaffold(
@@ -112,18 +150,34 @@ class _EditTecnicosPageState extends State<EditTecnicosPage> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        _avatarTecnico != null ? 
+                        Image.memory(_avatarTecnico!, width: 200, height: 200) : 
                         const SizedBox(
-                          width: 300,
-                          child: Placeholder(),
+                          width: 200,
+                          height: 200,
+                          child: Placeholder(
+                            child: Text('Avatar del tecnico'),
+                          ),
                         ),
+                        IconButton(
+                          tooltip: 'Subir foto',
+                          onPressed: () async {
+                            await _uploadPhoto1();
+                          }, 
+                          icon: const Icon(Icons.upload)),
                         const SizedBox(
                           height: 10,
                         ),
                         SizedBox(
                           width: 300,
-                          child: Image.asset(
-                              'images/Firmas_Tecnicos/ANDRES ABREU.JPG'),
-                        )
+                          child: Image.asset('images/Firmas_Tecnicos/ANDRES ABREU.JPG'),
+                        ),
+                        IconButton(
+                          tooltip: 'Subir firma',
+                          onPressed: () async {
+                            await _uploadPhoto2();
+                          }, 
+                          icon: const Icon(Icons.upload)),
                       ],
                     ),
                   ),

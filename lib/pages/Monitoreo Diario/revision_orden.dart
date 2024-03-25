@@ -154,7 +154,9 @@ class _RevisionOrdenPageState extends State<RevisionOrdenPage> with SingleTicker
               observaciones: observaciones,
               revision: selectedRevision,
             ),
-          if (menu == 'Firmas') const RevisionFirmasMenu(),
+          if (menu == 'Firmas') RevisionFirmasMenu(
+            revision: selectedRevision,
+          ),
           if (menu == 'Cuestionario') const RevisionCuestionarioMenu(),
           if (menu == 'Validacion') const RevisionValidacionMenu(),
           if (menu == 'Materiales') RevisionMaterialesDiagnositcoMenu(
@@ -170,7 +172,7 @@ class _RevisionOrdenPageState extends State<RevisionOrdenPage> with SingleTicker
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(
-              width: 300,
+              width: MediaQuery.of(context).size.width * 0.2,
               child: CustomDropdownFormMenu(
                 value: revisiones.isEmpty ? null : revisiones[0],
                 items: revisiones.map((e){
@@ -234,7 +236,7 @@ void _showCreateCopyDialog(BuildContext context) {
             const SizedBox(height: 10,),
             CustomDropdownFormMenu(
               hint: 'Seleccione una revisión',
-              value: selectedRevision,
+              // value: selectedRevision,
               onChanged: (newValue) {
                 setState(() {
                   selectedRevision = newValue;

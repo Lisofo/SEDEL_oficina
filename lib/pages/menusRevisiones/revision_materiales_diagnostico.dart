@@ -111,18 +111,19 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
               child: const Text('Guardar'),
               onPressed: () async {
                 final RevisionMaterial nuevaRevisionMaterial =
-                    RevisionMaterial(
-                        otMaterialId: 0,
-                        ordenTrabajoId: orden.ordenTrabajoId,
-                        otRevisionId: orden.otRevisionId,
-                        cantidad: esNumerico(cantidad) ? double.parse(cantidad) : double.parse("0.0"),
-                        comentario: comentarioController.text,
-                        ubicacion: '',
-                        areaCobertura: '',
-                        plagas: [],
-                        material: material,
-                        lote: Lote.empty(),
-                        metodoAplicacion: MetodoAplicacion.empty());
+                  RevisionMaterial(
+                    otMaterialId: 0,
+                    ordenTrabajoId: orden.ordenTrabajoId,
+                    otRevisionId: orden.otRevisionId,
+                    cantidad: esNumerico(cantidad) ? double.parse(cantidad) : double.parse("0.0"),
+                    comentario: comentarioController.text,
+                    ubicacion: '',
+                    areaCobertura: '',
+                    plagas: [],
+                    material: material,
+                    lote: Lote.empty(),
+                    metodoAplicacion: MetodoAplicacion.empty()
+                  );
                 await MaterialesDiagnosticoServices().postRevisionMaterial(
                     context, orden, nuevaRevisionMaterial, revisionId, token);
                 widget.revisionMaterialesList.add(nuevaRevisionMaterial);

@@ -13,8 +13,11 @@ import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:signature/signature.dart';
 import 'package:crypto/crypto.dart';
 
+import '../../models/revision_orden.dart';
+
 class RevisionFirmasMenu extends StatefulWidget {
-  const RevisionFirmasMenu({super.key});
+  final RevisionOrden? revision;
+  const RevisionFirmasMenu({super.key, required this.revision});
 
   @override
   State<RevisionFirmasMenu> createState() => _RevisionFirmasMenuState();
@@ -236,6 +239,12 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                   padding: const EdgeInsets.all(10),
                   child: CustomButton(
                     onPressed: () async {
+                      if (widget.revision?.ordinal == 0) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('No se puede modificar esta revisión.'),
+                      ));
+                      return Future.value(false);
+                    }
                       if (nameController.text.isNotEmpty &&
                           areaController.text.isNotEmpty) {
                         await guardarFirma(context);
@@ -384,7 +393,7 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
         firma: exportedImage);
 
     _agregarCliente();
-    await RevisionServices().postRevisonFirma(context, orden, nuevaFirma, revisionId, token);
+    await RevisionServices().postRevisonFirma(context, orden, nuevaFirma, token);
   }
 
   void completeDatosPopUp(BuildContext context) {

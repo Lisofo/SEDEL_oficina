@@ -423,12 +423,11 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
                                       Flexible(
                                         flex: 1,
                                         child: CircleAvatar(
-                                          backgroundColor: const Color.fromARGB(
-                                              255, 52, 120, 62),
+                                          backgroundColor: const Color.fromARGB(255, 52, 120, 62),
                                           foregroundColor: Colors.white,
-                                          child: Text(ordenesFiltradas[i]
-                                              .ordenTrabajoId
-                                              .toString()),
+                                          minRadius: 10,
+                                          maxRadius: 30,
+                                          child: Text(ordenesFiltradas[i].ordenTrabajoId.toString()),
                                         ),
                                       ),
                                       const SizedBox(
