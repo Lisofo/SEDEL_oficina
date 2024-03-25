@@ -1,0 +1,135 @@
+{
+    "nombreApp": "sedel_oficina",
+    "rutas": [
+        {
+            "camino": "Planificación y Revisión",
+            "opciones": [
+                {
+                    "ruta": "/planificador",
+                    "icon": "calendar_month",
+                    "texto": "Planificador"
+                },
+                {
+                    "ruta": "/ordenesTrabajo",
+                    "icon": "assignment",
+                    "texto": "Ordenes de trabajo"
+                },
+                {
+                    "ruta": "/indisponibilidades",
+                    "icon": "event_busy",
+                    "texto": "Indisponibilidades"
+                }
+            ]
+        },
+        {
+            "camino": "Gestión",
+            "opciones": [
+                {
+                    "ruta": "/tecnicos",
+                    "icon": "person_3_rounded",
+                    "texto": "Técnicos"
+                },
+                {
+                    "ruta": "/marcas",
+                    "icon": "person_pin_circle_outlined",
+                    "texto": "Marcas"
+                },
+                {
+                    "ruta": "/servicios",
+                    "icon": "task_outlined",
+                    "texto": "Servicios"
+                },
+                {
+                    "ruta": "/tareas",
+                    "icon": "task",
+                    "texto": "Tareas"
+                },
+                {
+                    "ruta": "/plagas",
+                    "icon": "bug_report",
+                    "texto": "Plagas"
+                },
+                {
+                    "ruta": "/plagas_objetivo",
+                    "icon": "bug_report",
+                    "texto": "Plagas objetivo"
+                },
+                {
+                    "ruta": "/materiales",
+                    "icon": "grading",
+                    "texto": "Materiales"
+                },
+                {
+                    "ruta": "/metodosAplicacion",
+                    "icon": "grain_outlined",
+                    "texto": "Metodos de aplicación"
+                },
+                {
+                    "ruta": "/controles",
+                    "icon": "grading",
+                    "texto": "Controles"
+                },
+                {
+                    "ruta": "/clientes",
+                    "icon": "groups",
+                    "texto": "Clientes"
+                }
+            ]
+        },
+        {
+            "camino": "Análisis",
+            "opciones": [
+                {
+                    "ruta": "/informes",
+                    "icon": "my_library_books_rounded",
+                    "texto": "Informes"
+                },
+                {
+                    "ruta": "/reportes",
+                    "icon": "corporate_fare_rounded",
+                    "texto": "Reportes"
+                }
+            ]
+        },
+        {
+            "camino": "Monitoreo diario",
+            "opciones": [
+                {
+                    "ruta": "/ordenesMonitoreo",
+                    "icon": "assignment",
+                    "texto": "Monitoreo de ordenes"
+                },
+                {
+                    "ruta": "/mapa",
+                    "icon": "map",
+                    "texto": "Mapa"
+                }
+            ]
+        },
+        {
+            "camino": "Configuración",
+            "opciones": [
+                {
+                    "ruta": "/parametros",
+                    "icon": "settings_sharp",
+                    "texto": "Parámetros"
+                }
+            ]
+        },
+        {
+            "camino": "Sistema",
+            "opciones": [
+                {
+                    "ruta": "/usuarios",
+                    "icon": "person_add_alt_1",
+                    "texto": "Usuarios"
+                },
+                {
+                    "ruta": "/permisos",
+                    "icon": "security",
+                    "texto": "Permisos"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,30 @@
+{
+    "nombreApp" : "portal_maqueta",
+    "rutas" : [
+        
+        {
+            "ruta" : "general",
+            "icon" : "person",
+            "texto": "Personal Tecnico de SEDEL",
+            "categ": "PT"
+        },
+        {
+            "ruta" : "general",
+            "icon" : "propane_tank_sharp",
+            "texto": "Productos Plaguicidas / Desinfectantes",
+            "categ": "PROD"
+        },
+        {
+            "ruta" : "general",
+            "icon" : "chrome_reader_mode",
+            "texto": "Habilitaciones de SEDEL",
+            "categ": "HAB"
+        },
+        {
+            "ruta" : "general",
+            "icon" : "content_paste_outlined",
+            "texto": "Notas / Comunicados",
+            "categ": "NYC"
+        }
+    ]
+}

@@ -1,0 +1,41 @@
+{
+    "nombreApp": "sedel_oficina",
+    "rutas": [
+        {
+            "camino": "Gestión",
+            "opciones": [
+                {
+                    "ruta": "/clientes",
+                    "icon": "groups",
+                    "texto": "Clientes"
+                }
+            ]
+        },
+        {
+            "camino": "Monitoreo diario",
+            "opciones": [
+                {
+                    "ruta": "/ordenesMonitoreo",
+                    "icon": "assignment",
+                    "texto": "Monitoreo de ordenes"
+                },
+                {
+                    "ruta": "/mapa",
+                    "icon": "map",
+                    "texto": "Mapa"
+                }
+            ]
+        },
+        {
+            "camino": "Sistema",
+            "opciones": [
+                {
+                    "ruta": "/usuarios",
+                    "icon": "person_add_alt_1",
+                    "texto": "Usuarios"
+                }
+                
+            ]
+        }
+    ]
+}
