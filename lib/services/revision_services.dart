@@ -14,7 +14,7 @@ import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 class RevisionServices {
   final _dio = Dio();
   String apiLink = Config.APIURL;
-  var statusCode;
+  int? statusCode;
 
   static Future<void> showDialogs(BuildContext context, String errorMessage,
       bool doblePop, bool triplePop) async {
@@ -627,7 +627,7 @@ class RevisionServices {
       'firmaMD5': firma.firmaMd5,
       'comentario': ''
     });
-
+    
     try {
       var headers = {'Authorization': token};
       var resp = await _dio.post(
@@ -638,15 +638,14 @@ class RevisionServices {
           headers: headers,
         ),
       );
-      
+      statusCode = resp.statusCode;
       if (resp.statusCode == 201) {
         Provider.of<OrdenProvider>(context,listen: false).setStatusCode(resp.statusCode);
         firma.otFirmaId = resp.data["otFirmaId"];
         showDialogs(context, 'Firma guardada', false, false);
         // print('posteo $statusCode');
       }
-      // print('termino posteo $statusCode');
-      return; 
+      // print('termino posteo $statusCode'); 
     } catch (e) {
       if (e is DioException) {
         if (e.response != null) {
@@ -666,7 +665,7 @@ class RevisionServices {
       }
     }
   }
-
+  
   Future<int?> getStatusCode() async {
     return statusCode;
   }
@@ -683,7 +682,7 @@ class RevisionServices {
           headers: headers,
         ),
       );
-      statusCode = resp.statusCode;
+      
       final List<dynamic> revisionFirmasList = resp.data;
 
       return revisionFirmasList.map((obj) => ClienteFirma.fromJson(obj)).toList();
