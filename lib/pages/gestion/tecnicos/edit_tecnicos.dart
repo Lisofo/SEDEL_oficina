@@ -208,8 +208,7 @@ class _EditTecnicosPageState extends State<EditTecnicosPage> {
                         Row(
                           children: [
                             IconButton.filledTonal(
-                                onPressed: () =>
-                                    _selectFechaNacimiento(context),
+                                onPressed: () => _selectFechaNacimiento(context),
                                 icon: const Icon(Icons.calendar_month)),
                             SizedBox(
                               width: 300,

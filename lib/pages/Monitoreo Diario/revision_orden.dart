@@ -369,7 +369,7 @@ void _showCreateDeleteDialog(BuildContext context) {
     data.forEach((opt) {
       final widgetTemp = ListTile(
         title: Text(opt['texto']),
-        leading: getIcon(opt['icon']),
+        leading: getIcon(opt['icon'], context),
         trailing: const Icon(
           Icons.keyboard_arrow_right,
           color: Colors.green,

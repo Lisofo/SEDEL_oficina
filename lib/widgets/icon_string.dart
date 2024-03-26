@@ -21,9 +21,10 @@ final _icons = <String, IconData>{
   'person_pin_circle_outlined': Icons.person_pin_circle_outlined
 };
 
-Icon getIcon(String iconName) {
+Icon getIcon(String iconName,BuildContext context) {
+  final colors = Theme.of(context).colorScheme;
   return Icon(
     _icons[iconName],
-    color: Colors.green.shade700,
+    color: colors.secondary
   );
 }

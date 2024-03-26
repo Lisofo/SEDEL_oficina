@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 final _icons = <String, IconData>{
   'approval': Icons.approval,
   'task': Icons.task,
@@ -10,6 +11,7 @@ final _icons = <String, IconData>{
   'grading': Icons.grading,
 };
 
-Icon getIcon(String nombreIcon) {
-  return Icon(_icons[nombreIcon], color: Colors.green);
+Icon getIcon(String nombreIcon, BuildContext context) {
+  final colors = Theme.of(context).colorScheme; 
+  return Icon(_icons[nombreIcon], color: colors.secondary);
 }

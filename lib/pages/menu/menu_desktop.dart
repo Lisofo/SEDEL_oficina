@@ -35,6 +35,7 @@ class _MenuDesktopState extends State<MenuDesktop> {
             'Menú',
             style: TextStyle(color: Colors.white),
           ),
+          iconTheme: IconThemeData(color: colors.onPrimary),
           actions: [
             Padding(
               padding: const EdgeInsets.all(8.0),

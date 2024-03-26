@@ -226,7 +226,6 @@ class _MarcasPageState extends State<MarcasPage> {
   Future<void> buscar(String token) async {
     String fechaDesde = ('${selectedDate.start.year}-${selectedDate.start.month}-${selectedDate.start.day}');
     String fechaHasta = ('${selectedDate.end.year}-${selectedDate.end.month}-${selectedDate.end.day} 23:59:59');
-    print(fechaHasta);
     String tecnicoId = selectedTecnico != null ? selectedTecnico!.tecnicoId.toString() : '';
 
     List<Marca> results = await MarcaServices().getMarca(

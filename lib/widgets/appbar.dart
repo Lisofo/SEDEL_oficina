@@ -24,6 +24,7 @@ class _AppBarDesignState extends State<AppBarDesign> {
         widget.titulo,
         style: const TextStyle(color: Colors.white),
       ),
+      iconTheme: IconThemeData(color: colors.onPrimary),
       actions: [
         IconButton(
             onPressed: () {

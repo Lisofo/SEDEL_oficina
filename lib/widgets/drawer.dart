@@ -15,6 +15,7 @@ class BotonesDrawer extends StatefulWidget {
 class _BotonesDrawerState extends State<BotonesDrawer> {
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return FutureBuilder(
         future: menuProvider.cargarData(),
         initialData: const [],
@@ -27,8 +28,8 @@ class _BotonesDrawerState extends State<BotonesDrawer> {
                   menuProvider.opciones[index]['camino'],
                   style: const TextStyle(color: Colors.black),
                 ),
-                collapsedIconColor: Colors.green.shade700,
-                iconColor: Colors.green.shade700,
+                collapsedIconColor: colors.secondary, //Colors.green.shade700,
+                iconColor: colors.secondary, //Colors.green.shade700,
                 initiallyExpanded: true,
                 children: _filaBotones2(snapshot.data, context,
                     menuProvider.opciones[index]['opciones']),
@@ -46,18 +47,14 @@ List<Widget> _filaBotones2(data, context, opciones) {
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
         children: [
-          getIcon(
-            opt['icon'],
-          ),
+          getIcon(opt['icon'], context),
           TextButton(
               onPressed: () {
-                Provider.of<OrdenProvider>(context, listen: false)
-                    .setPageName(opt['texto']);
+                Provider.of<OrdenProvider>(context, listen: false).setPageName(opt['texto']);
                 router.push(opt['ruta']);
               },
-              child: Text(
-                opt['texto'],
-                style: const TextStyle(color: Colors.black),
+              child: Text(opt['texto'],
+               style: const TextStyle(color: Colors.black),
               )),
         ],
       ),
