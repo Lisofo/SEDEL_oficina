@@ -426,7 +426,10 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
     exportedImage = firma != null ? firma : await controller.toPngBytes();
     firmaBytes = exportedImage as List<int>;
     md5Hash = calculateMD5(firmaBytes);
+<<<<<<< Updated upstream
+=======
     int? statusCode;
+>>>>>>> Stashed changes
 
     final ClienteFirma nuevaFirma = ClienteFirma(
         otFirmaId: 0,
@@ -439,12 +442,18 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
         comentario: '',
         firma: exportedImage);
 
+<<<<<<< Updated upstream
     await RevisionServices().postRevisonFirma(context, orden, nuevaFirma, token);
     var statusCode = context.read<OrdenProvider>().statusCode;
     // statusCode = await RevisionServices().getStatusCode();
+=======
+  
     RevisionServices revisionServices = RevisionServices();
+
     await revisionServices.postRevisonFirma(context, orden, nuevaFirma, token);
     statusCode = await revisionServices.getStatusCode();
+
+>>>>>>> Stashed changes
     print('call $statusCode');
 
     if(statusCode == 201){
