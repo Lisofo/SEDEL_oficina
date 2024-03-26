@@ -113,13 +113,9 @@ class _MarcasPageState extends State<MarcasPage> {
                             text: TextSpan(
                                 style: const TextStyle(color: Colors.black),
                                 children: <TextSpan>[
-                              TextSpan(
-                                  text: DateFormat('dd/MM/yyyy', 'es')
-                                      .format(selectedDate.start)),
+                              TextSpan(text: DateFormat('dd/MM/yyyy', 'es').format(selectedDate.start)),
                               const TextSpan(text: ' - '),
-                              TextSpan(
-                                  text: DateFormat('dd/MM/yyyy', 'es')
-                                      .format(selectedDate.end)),
+                              TextSpan(text: DateFormat('dd/MM/yyyy', 'es').format(selectedDate.end)),
                             ]))
                       ],
                     ),
@@ -229,7 +225,7 @@ class _MarcasPageState extends State<MarcasPage> {
 
   Future<void> buscar(String token) async {
     String fechaDesde = ('${selectedDate.start.year}-${selectedDate.start.month}-${selectedDate.start.day}');
-    String fechaHasta = ('${selectedDate.end.year}-${selectedDate.end.month}-${selectedDate.end.day}');
+    String fechaHasta = ('${selectedDate.end.year}-${selectedDate.end.month}-${selectedDate.end.day} 23:59:59');
 
     String tecnicoId = selectedTecnico != null ? selectedTecnico!.tecnicoId.toString() : '';
 

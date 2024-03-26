@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_init_to_null
 
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/models/estado_cliente.dart';
@@ -177,21 +178,21 @@ class _ClientesPageState extends State<ClientesPage> {
                         const Text('Tecnico: '),
                         SizedBox(
                           width: 300,
-                          child: CustomDropdownFormMenu(
-                            hint: 'Tecnico',
-                            value: selectedTecnico,
-                            onChanged: (value) async {
+                          child: DropdownSearch(
+                            dropdownDecoratorProps: const DropDownDecoratorProps(
+                              dropdownSearchDecoration: InputDecoration(
+                              hintText: 'Seleccione un tecnico')
+                            ),
+                            items: tecnicos,
+                            selectedItem: selectedTecnico,
+                            popupProps: const PopupProps.menu(
+                                showSearchBox: true, searchDelay: Duration.zero),
+                            onChanged: (value) {
                               setState(() {
                                 selectedTecnico = value;
                                 tecnicoFiltro = value!.tecnicoId;
                               });
                             },
-                            items: tecnicos.map((e) {
-                              return DropdownMenuItem(
-                                value: e,
-                                child: Text(e.nombre),
-                              );
-                            }).toList(),
                           ),
                         ),
                       ],

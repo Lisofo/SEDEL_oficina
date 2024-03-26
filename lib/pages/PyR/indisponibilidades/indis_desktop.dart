@@ -418,10 +418,8 @@ class _IndisponibilidadesDesktopState extends State<IndisponibilidadesDesktop> {
   Future<void> buscar(BuildContext context) async {
     selectedCliente = context.read<OrdenProvider>().clienteIndisponibilidad;
 
-    String fechaDesde =
-        ('${selectedDate.start.year}-${selectedDate.start.month}-${selectedDate.start.day}');
-    String fechaHasta =
-        ('${selectedDate.end.year}-${selectedDate.end.month}-${selectedDate.end.day} 23:59:59');
+    String fechaDesde = ('${selectedDate.start.year}-${selectedDate.start.month}-${selectedDate.start.day}');
+    String fechaHasta = ('${selectedDate.end.year}-${selectedDate.end.month}-${selectedDate.end.day} 23:59:59');
 
     String tecnicoId =
         selectedTecnico != null ? selectedTecnico!.tecnicoId.toString() : '';
