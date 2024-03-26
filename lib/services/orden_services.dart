@@ -345,17 +345,7 @@ class OrdenServices {
 
     try {
       var headers = {'Authorization': token};
-      var data = {
-        "fechaOrdenTrabajo": orden.fechaOrdenTrabajo.toIso8601String(),
-        "fechaDesde": orden.fechaDesde.toIso8601String(),
-        "fechaHasta": orden.fechaHasta.toIso8601String(),
-        "instrucciones": orden.instrucciones,
-        "servicios": orden.servicio.map((e) => e.servicioId).toList(),
-        "tecnicoId": orden.tecnico.tecnicoId,
-        "clienteId": orden.cliente.clienteId,
-        "comentarios": orden.comentarios,
-        "tipoOrdenId": orden.tipoOrden.tipoOrdenId
-      };
+      var data = orden.toMap();
       var resp = await _dio.request(link,
           options: Options(
             method: 'POST',

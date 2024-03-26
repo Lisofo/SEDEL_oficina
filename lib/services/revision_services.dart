@@ -1,6 +1,7 @@
-// ignore_for_file: unused_element, unused_local_variable, avoid_print, use_build_context_synchronously
+// ignore_for_file: unused_element, unused_local_variable, avoid_print, use_build_context_synchronously, prefer_typing_uninitialized_variables
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/config.dart';
 import 'package:sedel_oficina_maqueta/models/clientesFirmas.dart';
 import 'package:sedel_oficina_maqueta/models/observacion.dart';
@@ -8,6 +9,7 @@ import 'package:sedel_oficina_maqueta/models/orden.dart';
 import 'package:sedel_oficina_maqueta/models/revision_orden.dart';
 import 'package:sedel_oficina_maqueta/models/revision_plaga.dart';
 import 'package:sedel_oficina_maqueta/models/revision_tarea.dart';
+import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 
 class RevisionServices {
   final _dio = Dio();
@@ -638,6 +640,7 @@ class RevisionServices {
       );
       
       if (resp.statusCode == 201) {
+        Provider.of<OrdenProvider>(context,listen: false).setStatusCode(resp.statusCode);
         firma.otFirmaId = resp.data["otFirmaId"];
         showDialogs(context, 'Firma guardada', false, false);
         // print('posteo $statusCode');

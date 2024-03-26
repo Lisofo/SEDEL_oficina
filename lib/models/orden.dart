@@ -68,20 +68,37 @@ class Orden {
       );
 
   Map<String, dynamic> toMap() => {
-        "ordenTrabajoId": ordenTrabajoId,
-        "fechaOrdenTrabajo": fechaOrdenTrabajo.toIso8601String(),
-        "fechaDesde": fechaDesde.toIso8601String(),
-        "fechaHasta": fechaHasta.toIso8601String(),
-        "instrucciones": instrucciones,
-        "comentarios": comentarios,
-        "estado": estado,
-        "tipoOrden": tipoOrden.toMap(),
-        "cliente": cliente.toMap(),
-        "tecnico": tecnico.toMap(),
-        "otRevisionId": otRevisionId,
-        "planoId": planoId,
-        "servicios": servicio.map((e) => e.servicioId).toList(),
-      };
+    "fechaOrdenTrabajo": _formatFechaOrdenTrabajo(fechaOrdenTrabajo),
+    "fechaDesde": _formatDateAndTime(fechaDesde),
+    "fechaHasta": _formatDateAndTime(fechaHasta),
+    "instrucciones": instrucciones,
+    "servicios": servicio.map((e) => e.servicioId).toList(),
+    "tecnicoId": tecnico.tecnicoId,
+    "clienteId": cliente.clienteId,
+    "comentarios": comentarios,
+    "tipoOrdenId": tipoOrden.tipoOrdenId
+      // "ordenTrabajoId": ordenTrabajoId,
+      // "fechaOrdenTrabajo": fechaOrdenTrabajo.toIso8601String(),
+      // "fechaDesde": fechaDesde.toIso8601String(),
+      // "fechaHasta": fechaHasta.toIso8601String(),
+      // "instrucciones": instrucciones,
+      // "comentarios": comentarios,
+      // "estado": estado,
+      // "tipoOrden": tipoOrden.toMap(),
+      // "cliente": cliente.toMap(),
+      // "tecnico": tecnico.toMap(),
+      // "otRevisionId": otRevisionId,
+      // "planoId": planoId,
+      // "servicios": servicio.map((e) => e.servicioId).toList(),
+    };
+
+    String _formatDateAndTime(DateTime? date) {
+      return '${date?.year.toString().padLeft(4, '0')}-${date?.month.toString().padLeft(2, '0')}-${date?.day.toString().padLeft(2, '0')} ${date?.hour.toString().padLeft(2, '0')}:${date?.minute.toString().padLeft(2, '0')}:${date?.second.toString().padLeft(2, '0')}';
+    }
+    String _formatFechaOrdenTrabajo(DateTime? date) {
+      return '${date?.year.toString().padLeft(4, '0')}-${date?.month.toString().padLeft(2, '0')}-${date?.day.toString().padLeft(2, '0')}';
+    }
+
 
   Orden.empty() {
     ordenTrabajoId = 0;

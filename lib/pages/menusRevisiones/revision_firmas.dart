@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, avoid_init_to_null, void_checks, avoid_print
 
 import 'dart:typed_data';
 
@@ -12,6 +12,7 @@ import 'package:sedel_oficina_maqueta/services/revision_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:signature/signature.dart';
 import 'package:crypto/crypto.dart';
+import 'package:universal_html/html.dart' as html;
 
 import '../../models/revision_orden.dart';
 
@@ -36,6 +37,8 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
   late String md5Hash = '';
   late List<int> firmaBytes = [];
   late int revisionId = 0;
+  late Uint8List? _firmaCliente = null;
+
 
   SignatureController controller = SignatureController(
     penStrokeWidth: 3,
@@ -156,6 +159,27 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
     });
   }
 
+  Future<void> _uploadFirma() async {
+    final html.FileUploadInputElement input = html.FileUploadInputElement();
+    input.accept = 'image/*';
+    input.click();
+
+    input.onChange.listen((e) {
+      final files = input.files;
+      if (files!.isNotEmpty) {
+        final reader = html.FileReader();
+        reader.readAsArrayBuffer(files[0]); // Leer el archivo como una matriz de bytes
+        reader.onLoadEnd.listen((e) {
+          setState(() {
+            // Asignar los bytes del archivo a _avatarTecnico
+            _firmaCliente = reader.result as Uint8List?;
+          });
+        });
+      }
+    });
+  }
+  
+  
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -226,11 +250,32 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                         color: colors.primary,
                         width: 1),
                     borderRadius: BorderRadius.circular(5)),
-                child: Signature(
-                    controller: controller,
+                child: 
+                widget.revision!.ordinal == 0 ?
+                Signature(
+                  controller: controller,
+                  width: Constantes().ancho,
+                  height: 200,
+                  backgroundColor: Colors.white) : 
+                  SizedBox(
                     width: Constantes().ancho,
                     height: 200,
-                    backgroundColor: Colors.white),
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _firmaCliente == null ? const Center(child: Text('Subir foto'),) : Image.memory(_firmaCliente!, width: 200, height: 150),
+                          IconButton(
+                            icon: const Icon(Icons.upload), 
+                            onPressed: () async {
+                              await _uploadFirma();
+                              setState(() {});
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
               ),
             ),
             Row(
@@ -248,7 +293,7 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                     }
                       if (nameController.text.isNotEmpty &&
                           areaController.text.isNotEmpty) {
-                        await guardarFirma(context);
+                        await guardarFirma(context, _firmaCliente);
                       } else {
                         completeDatosPopUp(context);
                       }
@@ -377,11 +422,10 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
     );
   }
 
-  Future<void> guardarFirma(BuildContext context) async {
-    exportedImage = await controller.toPngBytes();
+  Future<void> guardarFirma(BuildContext context, Uint8List? firma) async {
+    exportedImage = firma != null ? firma : await controller.toPngBytes();
     firmaBytes = exportedImage as List<int>;
     md5Hash = calculateMD5(firmaBytes);
-    var statusCode;
 
     final ClienteFirma nuevaFirma = ClienteFirma(
         otFirmaId: 0,
@@ -395,7 +439,8 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
         firma: exportedImage);
 
     await RevisionServices().postRevisonFirma(context, orden, nuevaFirma, token);
-    statusCode = await RevisionServices().getStatusCode();
+    var statusCode = context.read<OrdenProvider>().statusCode;
+    // statusCode = await RevisionServices().getStatusCode();
     print('call $statusCode');
 
     if(statusCode == 201){

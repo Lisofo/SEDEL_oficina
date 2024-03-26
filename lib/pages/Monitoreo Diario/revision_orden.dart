@@ -172,13 +172,13 @@ class _RevisionOrdenPageState extends State<RevisionOrdenPage> with SingleTicker
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.2,
+              width: MediaQuery.of(context).size.width * 0.29,
               child: CustomDropdownFormMenu(
                 value: revisiones.isEmpty ? null : revisiones[0],
                 items: revisiones.map((e){
                   return DropdownMenuItem(
                     value: e,
-                    child: Text('Revisión ${e.ordinal} : ${e.comentario}'));
+                    child: Text('Revisión ${e.ordinal} : ${e.comentario}'),);
                 }).toList(),
                 hint: 'Seleccione una revisión',
                 onChanged: (value) async {

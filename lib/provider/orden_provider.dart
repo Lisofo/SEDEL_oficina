@@ -21,6 +21,7 @@ class OrdenProvider with ChangeNotifier {
   String _menuName = '';
   String _token = '';
   String _username = '';
+  int? _statusCode = 0;
 
   bool _pendientes = false;
 
@@ -58,6 +59,7 @@ class OrdenProvider with ChangeNotifier {
   String get token => _token;
   String get username => _username;
   bool get pendientes => _pendientes;
+  int? get statusCode => _statusCode;
 
   TipoPtosInspeccion get tipoPtosInspeccion => _tipoPtosInspeccion;
   List<RevisionPtoInspeccion> get ptosInspeccion => _ptosInspeccion;
@@ -114,6 +116,11 @@ class OrdenProvider with ChangeNotifier {
 
   void setIndisponibilidad(Indisponibilidad indis) {
     _indisponibilidad = indis;
+    notifyListeners();
+  }
+
+  void setStatusCode(int? statusCode){
+    _statusCode = statusCode;
     notifyListeners();
   }
 
