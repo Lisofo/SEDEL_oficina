@@ -424,21 +424,11 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
                                       Flexible(
                                         flex: 1,
                                         child: CircleAvatar(
-<<<<<<< Updated upstream
-                                          backgroundColor: const Color.fromARGB(255, 52, 120, 62),
-                                          foregroundColor: Colors.white,
                                           minRadius: 10,
                                           maxRadius: 30,
-                                          child: Text(ordenesFiltradas[i].ordenTrabajoId.toString()),
-=======
                                           backgroundColor: colors.primary,
                                           foregroundColor: Colors.white,
-                                          radius: 30,
-                                          
-                                          child: Text(ordenesFiltradas[i]
-                                              .ordenTrabajoId
-                                              .toString()),
->>>>>>> Stashed changes
+                                          child: Text(ordenesFiltradas[i].ordenTrabajoId.toString()),
                                         ),
                                       ),
                                       const SizedBox(
