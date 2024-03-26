@@ -421,25 +421,33 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Flexible(
-                                        flex: 1,
-                                        child: CircleAvatar(
-                                          minRadius: 10,
-                                          maxRadius: 30,
-                                          backgroundColor: colors.primary,
-                                          foregroundColor: Colors.white,
-                                          child: Text(ordenesFiltradas[i].ordenTrabajoId.toString()),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 30,
-                                      ),
+                                      // Flexible(
+                                      //   flex: 1,
+                                      //   child: CircleAvatar(
+                                      //     minRadius: 10,
+                                      //     maxRadius: 30,
+                                      //     backgroundColor: colors.primary,
+                                      //     foregroundColor: Colors.white,
+                                      //     child: Text(ordenesFiltradas[i].ordenTrabajoId.toString()),
+                                      //   ),
+                                      // ),
+                                      // const SizedBox(
+                                      //   width: 30,
+                                      // ),
                                       Flexible(
                                         flex: 2,
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
+                                            Container(
+                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: colors.primary,),
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Text('${ordenesFiltradas[i].ordenTrabajoId}', style: const TextStyle(color: Colors.white),),
+                                              )
+                                            ),
+                                            const SizedBox(height: 30,),
                                             Text(
                                                 '${ordenesFiltradas[i].cliente.codCliente} ${ordenesFiltradas[i].cliente.nombre}'),
                                             Row(
