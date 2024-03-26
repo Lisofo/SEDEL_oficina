@@ -381,6 +381,7 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
     exportedImage = await controller.toPngBytes();
     firmaBytes = exportedImage as List<int>;
     md5Hash = calculateMD5(firmaBytes);
+    var statusCode;
 
     final ClienteFirma nuevaFirma = ClienteFirma(
         otFirmaId: 0,
@@ -393,8 +394,15 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
         comentario: '',
         firma: exportedImage);
 
-    _agregarCliente();
     await RevisionServices().postRevisonFirma(context, orden, nuevaFirma, token);
+    statusCode = await RevisionServices().getStatusCode();
+    print('call $statusCode');
+
+    if(statusCode == 201){
+      _agregarCliente();
+    }else{
+      print('error');
+    }
   }
 
   void completeDatosPopUp(BuildContext context) {

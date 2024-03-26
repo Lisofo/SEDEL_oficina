@@ -12,6 +12,7 @@ import 'package:sedel_oficina_maqueta/models/revision_tarea.dart';
 class RevisionServices {
   final _dio = Dio();
   String apiLink = Config.APIURL;
+  var statusCode;
 
   static Future<void> showDialogs(BuildContext context, String errorMessage,
       bool doblePop, bool triplePop) async {
@@ -663,6 +664,10 @@ class RevisionServices {
     }
   }
 
+  Future<int?> getStatusCode() async {
+    return statusCode;
+  }
+
   Future getRevisionFirmas(BuildContext context, Orden orden, int revisionId, String token) async {
     String link = '${apiLink}api/v1/ordenes/${orden.ordenTrabajoId}/revisiones/$revisionId/firmas';
 
@@ -675,6 +680,7 @@ class RevisionServices {
           headers: headers,
         ),
       );
+      statusCode = resp.statusCode;
       final List<dynamic> revisionFirmasList = resp.data;
 
       return revisionFirmasList.map((obj) => ClienteFirma.fromJson(obj)).toList();
