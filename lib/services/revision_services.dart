@@ -617,8 +617,8 @@ class RevisionServices {
     }
   }
 
-  Future postRevisonFirma(BuildContext context, Orden orden, ClienteFirma firma, String token) async {
-    String link = '${apiLink}api/v1/ordenes/${orden.ordenTrabajoId}/revisiones/${orden.otRevisionId}/firmas';
+  Future postRevisonFirma(BuildContext context, Orden orden, ClienteFirma firma, int revisionId, String token) async {
+    String link = '${apiLink}api/v1/ordenes/${orden.ordenTrabajoId}/revisiones/$revisionId/firmas';
 
     FormData formData = FormData.fromMap({
       'file': MultipartFile.fromBytes(firma.firma as List<int>, filename: 'imagen.jpg'),

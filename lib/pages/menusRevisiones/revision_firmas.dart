@@ -18,7 +18,8 @@ import '../../models/revision_orden.dart';
 
 class RevisionFirmasMenu extends StatefulWidget {
   final RevisionOrden? revision;
-  const RevisionFirmasMenu({super.key, required this.revision});
+  final List<ClienteFirma> firmas;
+  const RevisionFirmasMenu({super.key, required this.revision, required this.firmas});
 
   @override
   State<RevisionFirmasMenu> createState() => _RevisionFirmasMenuState();
@@ -28,7 +29,6 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
   final _formKey1 = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController areaController = TextEditingController();
-  List<ClienteFirma> client = [];
   late int marcaId = 0;
   bool isReadOnly = true;
   late Orden orden = context.read<OrdenProvider>().orden;
@@ -49,7 +49,7 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
   void _agregarCliente() {
     if (_formKey1.currentState!.validate()) {
       setState(() {
-        client.add(ClienteFirma(
+        widget.firmas.add(ClienteFirma(
           nombre: nameController.text,
           area: areaController.text,
           firma: exportedImage,
@@ -88,10 +88,10 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                   onPressed: () async {
                     Navigator.of(context).pop();
                     await RevisionServices().deleteRevisionFirma(
-                        context, orden, client[index], revisionId, token);
+                        context, orden, widget.firmas[index], revisionId, token);
 
                     setState(() {
-                      client.removeAt(index);
+                      widget.firmas.removeAt(index);
                     });
                   },
                   child: const Text("BORRAR")),
@@ -329,9 +329,9 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
               height: 184,
               width: Constantes().ancho,
               child: ListView.builder(
-                itemCount: client.length,
+                itemCount: widget.firmas.length,
                 itemBuilder: (context, index) {
-                  final item = client[index];
+                  final item = widget.firmas[index];
                   return Dismissible(
                     key: Key(item.toString()),
                     direction: DismissDirection.endToStart,
@@ -344,7 +344,7 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                     },
                     onDismissed: (direction) async {
                       setState(() {
-                        client.removeAt(index);
+                        widget.firmas.removeAt(index);
                       });
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text('La firma de $item ha sido borrada'),
@@ -365,8 +365,8 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                           border: Border(bottom: BorderSide())),
                       child: ListTile(
                         tileColor: Colors.white,
-                        title: Text(client[index].nombre),
-                        subtitle: Text(client[index].area),
+                        title: Text(widget.firmas[index].nombre),
+                        subtitle: Text(widget.firmas[index].area),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -375,7 +375,7 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                               splashRadius: 25,
                               icon: const Icon(Icons.edit),
                               onPressed: () {
-                                _editarCliente(client[index]);
+                                _editarCliente(widget.firmas[index]);
                               },
                             ),
                             IconButton(
@@ -415,7 +415,7 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
             ),
             onPressed: () async {
               Navigator.of(context).pop(true);
-              await RevisionServices().deleteRevisionFirma(context, orden, client[i], revisionId, token);
+              await RevisionServices().deleteRevisionFirma(context, orden, widget.firmas[i], revisionId, token);
             },
             child: const Text("BORRAR")),
       ],
@@ -423,37 +423,29 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
   }
 
   Future<void> guardarFirma(BuildContext context, Uint8List? firma) async {
-    exportedImage = firma != null ? firma : await controller.toPngBytes();
+    exportedImage = firma ?? await controller.toPngBytes();
     firmaBytes = exportedImage as List<int>;
     md5Hash = calculateMD5(firmaBytes);
-<<<<<<< Updated upstream
-=======
     int? statusCode;
->>>>>>> Stashed changes
 
     final ClienteFirma nuevaFirma = ClienteFirma(
-        otFirmaId: 0,
-        ordenTrabajoId: orden.ordenTrabajoId,
-        otRevisionId: orden.otRevisionId,
-        nombre: nameController.text,
-        area: areaController.text,
-        firmaPath: '',
-        firmaMd5: md5Hash,
-        comentario: '',
-        firma: exportedImage);
+      otFirmaId: 0,
+      ordenTrabajoId: orden.ordenTrabajoId,
+      otRevisionId: orden.otRevisionId,
+      nombre: nameController.text,
+      area: areaController.text,
+      firmaPath: '',
+      firmaMd5: md5Hash,
+      comentario: '',
+      firma: exportedImage
+    );
 
-<<<<<<< Updated upstream
-    await RevisionServices().postRevisonFirma(context, orden, nuevaFirma, token);
-    var statusCode = context.read<OrdenProvider>().statusCode;
-    // statusCode = await RevisionServices().getStatusCode();
-=======
-  
     RevisionServices revisionServices = RevisionServices();
 
-    await revisionServices.postRevisonFirma(context, orden, nuevaFirma, token);
+    await revisionServices.postRevisonFirma(context, orden, nuevaFirma, widget.revision!.otRevisionId, token);
     statusCode = await revisionServices.getStatusCode();
 
->>>>>>> Stashed changes
+
     print('call $statusCode');
 
     if(statusCode == 201){

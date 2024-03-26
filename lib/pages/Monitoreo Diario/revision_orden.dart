@@ -32,6 +32,8 @@ import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 import 'package:sedel_oficina_maqueta/widgets/icons.dart';
 import 'package:sedel_oficina_maqueta/models/revision_pto_inspeccion.dart';
 
+import '../../models/clientesFirmas.dart';
+
 
 class RevisionOrdenPage extends StatefulWidget {
   const RevisionOrdenPage({super.key});
@@ -58,6 +60,7 @@ class _RevisionOrdenPageState extends State<RevisionOrdenPage> with SingleTicker
   List<RevisionOrden> revisiones = [];
   int selectedIndex = 0;
   RevisionOrden? selectedRevision = RevisionOrden.empty();
+  late List<ClienteFirma> firmas = [];
 
   @override
   void initState() {
@@ -77,6 +80,7 @@ class _RevisionOrdenPageState extends State<RevisionOrdenPage> with SingleTicker
     revisionPlagasList = await RevisionServices().getRevisionPlagas(context, orden, revisionId, token);
     observaciones = await RevisionServices().getObservacion(context, orden, observacion, revisionId, token);
     ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token);
+    firmas = await RevisionServices().getRevisionFirmas(context, orden, revisionId, token);
     revisiones = await RevisionServices().getRevision(context, orden, token);
     observacion = observaciones.isNotEmpty ? observaciones[0] : Observacion.empty();
     Provider.of<OrdenProvider>(context, listen: false).setRevisionId(revisionId);
@@ -156,6 +160,7 @@ class _RevisionOrdenPageState extends State<RevisionOrdenPage> with SingleTicker
             ),
           if (menu == 'Firmas') RevisionFirmasMenu(
             revision: selectedRevision,
+            firmas: firmas,
           ),
           if (menu == 'Cuestionario') const RevisionCuestionarioMenu(),
           if (menu == 'Validacion') const RevisionValidacionMenu(),
@@ -218,6 +223,8 @@ class _RevisionOrdenPageState extends State<RevisionOrdenPage> with SingleTicker
     observaciones = await RevisionServices().getObservacion(context, orden, observacion, revisionId, token);
     observacion = observaciones.isNotEmpty ? observaciones[0] : Observacion.empty();
     ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token);
+    firmas = await RevisionServices().getRevisionFirmas(context, orden, revisionId, token);
+
     setState(() {});
     
   }
