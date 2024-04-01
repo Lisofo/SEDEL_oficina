@@ -22,8 +22,7 @@ class IndisponibilidadesDesktop extends StatefulWidget {
   const IndisponibilidadesDesktop({super.key});
 
   @override
-  State<IndisponibilidadesDesktop> createState() =>
-      _IndisponibilidadesDesktopState();
+  State<IndisponibilidadesDesktop> createState() => _IndisponibilidadesDesktopState();
 }
 
 class _IndisponibilidadesDesktopState extends State<IndisponibilidadesDesktop> {
@@ -39,8 +38,7 @@ class _IndisponibilidadesDesktopState extends State<IndisponibilidadesDesktop> {
   final TextEditingController _comentarioController = TextEditingController();
   final _indisponibilidadServices = IndisponibilidadServices();
   late String token = '';
-  late DateTimeRange selectedDate =
-      DateTimeRange(start: DateTime.now(), end: DateTime.now());
+  late DateTimeRange selectedDate = DateTimeRange(start: DateTime.now(), end: DateTime.now());
 
   @override
   void initState() {
@@ -119,12 +117,12 @@ class _IndisponibilidadesDesktopState extends State<IndisponibilidadesDesktop> {
                         TextButton(
                             onPressed: () async {
                               final pickedDate = await showDateRangePicker(
-                                  context: context,
-                                  firstDate: DateTime(2023),
-                                  lastDate: DateTime(2025));
+                                context: context,
+                                firstDate: DateTime(2023),
+                                lastDate: DateTime(2025)
+                              );
 
-                              if (pickedDate != null &&
-                                  pickedDate != selectedDate) {
+                              if (pickedDate != null && pickedDate != selectedDate) {
                                 setState(() {
                                   selectedDate = pickedDate;
                                   print(selectedDate);
@@ -138,17 +136,19 @@ class _IndisponibilidadesDesktopState extends State<IndisponibilidadesDesktop> {
                               style: TextStyle(color: Colors.black),
                             )),
                         RichText(
-                            text: TextSpan(
-                                style: const TextStyle(color: Colors.black),
-                                children: <TextSpan>[
+                          text: TextSpan(
+                            style: const TextStyle(color: Colors.black),
+                            children: <TextSpan>[
                               TextSpan(
-                                  text: DateFormat('yyyy-MM-dd', 'es')
-                                      .format(selectedDate.start)),
+                                text: DateFormat('dd/MM/yyyy', 'es').format(selectedDate.start)
+                              ),
                               const TextSpan(text: ' - '),
                               TextSpan(
-                                  text: DateFormat('yyyy-MM-dd', 'es')
-                                      .format(selectedDate.end)),
-                            ]))
+                                text: DateFormat('dd/MM/yyyy', 'es').format(selectedDate.end)
+                              ),
+                            ]
+                          )
+                        )
                       ],
                     ),
                     const SizedBox(

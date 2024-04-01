@@ -129,38 +129,40 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
                       children: [
                         const Text('Seleccione periodo: '),
                         TextButton(
-                            onPressed: () async {
-                              final pickedDate = await showDateRangePicker(
-                                  context: context,
-                                  firstDate: DateTime(2023),
-                                  lastDate: DateTime(2025));
-
-                              if (pickedDate != null &&
-                                  pickedDate != selectedDate) {
-                                setState(() {
-                                  selectedDate = pickedDate;
-                                  print(selectedDate);
-                                });
-                              }
-                              // print(pickedDate.start);
-                              // print(pickedDate.end);
-                            },
-                            child: const Text(
-                              'Período',
-                              style: TextStyle(color: Colors.black),
-                            )),
+                          onPressed: () async {
+                            final pickedDate = await showDateRangePicker(
+                              context: context,
+                              firstDate: DateTime(2023),
+                              lastDate: DateTime(2025)
+                            );
+                            if (pickedDate != null && pickedDate != selectedDate) {
+                              setState(() {
+                                selectedDate = pickedDate;
+                                print(selectedDate);
+                              });
+                            }
+                            // print(pickedDate.start);
+                            // print(pickedDate.end);
+                          },
+                          child: const Text(
+                            'Período',
+                            style: TextStyle(color: Colors.black),
+                          )
+                        ),
                         RichText(
-                            text: TextSpan(
-                                style: const TextStyle(color: Colors.black),
-                                children: <TextSpan>[
+                          text: TextSpan(
+                            style: const TextStyle(color: Colors.black),
+                            children: <TextSpan>[
                               TextSpan(
-                                  text: DateFormat('yyyy-MM-dd', 'es')
-                                      .format(selectedDate.start)),
+                                text: DateFormat('dd/MM/yyyy', 'es').format(selectedDate.start)
+                              ),
                               const TextSpan(text: ' - '),
                               TextSpan(
-                                  text: DateFormat('yyyy-MM-dd', 'es')
-                                      .format(selectedDate.end)),
-                            ]))
+                                text: DateFormat('dd/MM/yyyy', 'es').format(selectedDate.end)
+                              ),
+                            ]
+                          )
+                        )
                       ],
                     ),
                     const SizedBox(
@@ -405,8 +407,7 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
                     itemBuilder: (context, i) {
                       return InkWell(
                         onTap: () {
-                          Provider.of<OrdenProvider>(context, listen: false)
-                              .setOrden(ordenesFiltradas[i]);
+                          Provider.of<OrdenProvider>(context, listen: false).setOrden(ordenesFiltradas[i]);
                           router.push('/editOrden');
                         },
                         child: Card(
