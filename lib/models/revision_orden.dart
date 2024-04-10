@@ -17,6 +17,7 @@ class RevisionOrden {
     late String nombre;
     late String apellido;
     late String comentario;
+    late String tipoRevision;
 
     RevisionOrden({
         required this.otRevisionId,
@@ -27,6 +28,7 @@ class RevisionOrden {
         required this.nombre,
         required this.apellido,
         required this.comentario,
+        required this.tipoRevision
     });
 
     factory RevisionOrden.fromJson(Map<String, dynamic> json) => RevisionOrden(
@@ -38,6 +40,7 @@ class RevisionOrden {
         nombre: json["nombre"] as String? ?? '',
         apellido: json["apellido"] as String? ?? '',
         comentario: json["comentario"] as String? ?? '',
+        tipoRevision: json['tipoRevision'] as String? ?? '',
     );
 
     Map<String, dynamic> toMap() => {
@@ -60,5 +63,6 @@ class RevisionOrden {
       nombre = '';
       apellido = '';
       comentario = '';
+      tipoRevision = '';
     }
 }

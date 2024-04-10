@@ -167,7 +167,8 @@ class RevisionServices {
     link += 'api/v1/ordenes/${orden.ordenTrabajoId}/revisiones/${revision.otRevisionId}/copiar';
 
     var data = {
-      "comentario": revision.comentario
+      "comentario": revision.comentario,
+      "tipoRevision": revision.tipoRevision
     };
     
     try {

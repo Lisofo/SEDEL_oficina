@@ -32,7 +32,7 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
     '',
     'Pendiente',
     'En Proceso',
-    'Finalizado',
+    'Finalizada',
     'Revisada',
     'Descartada'
   ];

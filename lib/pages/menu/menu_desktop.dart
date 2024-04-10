@@ -24,9 +24,6 @@ class _MenuDesktopState extends State<MenuDesktop> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-
-
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(

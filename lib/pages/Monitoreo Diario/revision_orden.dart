@@ -61,6 +61,7 @@ class _RevisionOrdenPageState extends State<RevisionOrdenPage> with SingleTicker
   int selectedIndex = 0;
   RevisionOrden? selectedRevision = RevisionOrden.empty();
   late List<ClienteFirma> firmas = [];
+  bool filtro = false;
 
   @override
   void initState() {
@@ -183,7 +184,8 @@ class _RevisionOrdenPageState extends State<RevisionOrdenPage> with SingleTicker
                 items: revisiones.map((e){
                   return DropdownMenuItem(
                     value: e,
-                    child: Text('Revisión ${e.ordinal} : ${e.comentario}'),);
+                    child: Text('Revisión ${e.ordinal} (${e.tipoRevision}) : ${e.comentario}'),
+                  );
                 }).toList(),
                 hint: 'Seleccione una revisión',
                 onChanged: (value) async {
@@ -230,40 +232,59 @@ class _RevisionOrdenPageState extends State<RevisionOrdenPage> with SingleTicker
   }
 
 void _showCreateCopyDialog(BuildContext context) {
-
+  final colors = Theme.of(context).colorScheme;
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
         title: const Text('Crear copia'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Está por generar la copia de una revisión, seleccione el origen de la copia'),
-            const SizedBox(height: 10,),
-            CustomDropdownFormMenu(
-              hint: 'Seleccione una revisión',
-              // value: selectedRevision,
-              onChanged: (newValue) {
-                setState(() {
-                  selectedRevision = newValue;
-                });
-              },
-              items: revisiones.map((RevisionOrden revision) {
-                return DropdownMenuItem(
-                  value: revision,
-                  child: Text('Revisión ${revision.ordinal}'),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 10,),
-            CustomTextFormField(
-              controller: comentarioController,
-              hint: 'Escriba un comentario a ser necesario',
-              label: 'Comentario',
-              maxLines: 1,
-            )
-          ],
+        content: StatefulBuilder(
+          builder: (context, setStateBd) => Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Está por generar la copia de una revisión, seleccione el origen de la copia'),
+              const SizedBox(height: 10,),
+              CustomDropdownFormMenu(
+                hint: 'Seleccione una revisión',
+                // value: selectedRevision,
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedRevision = newValue;
+                  });
+                },
+                items: revisiones.map((RevisionOrden revision) {
+                  return DropdownMenuItem(
+                    value: revision,
+                    child: Text('Revisión ${revision.ordinal}'),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 10,),
+              CustomTextFormField(
+                controller: comentarioController,
+                hint: 'Escriba un comentario a ser necesario',
+                label: 'Comentario',
+                maxLines: 1,
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Revision normal'),
+                  Switch(
+                    activeColor: colors.primary,
+                    value: filtro, 
+                    onChanged: (value) {
+                      filtro = value;
+                      setStateBd(() {});
+                    },
+                  ),
+                  const Text('Revision restringida')
+                ],
+              )
+            ],
+          ),
         ),
         actions: <Widget>[
           TextButton(
@@ -276,7 +297,8 @@ void _showCreateCopyDialog(BuildContext context) {
             child: const Text('Crear'),
             onPressed: () async {
               if (selectedRevision != null) {
-                selectedRevision!.comentario = comentarioController.text;            
+                selectedRevision!.comentario = comentarioController.text;          
+                selectedRevision!.tipoRevision = filtro ? 'R' : 'N';
                 await RevisionServices().copyRevision(context, orden, selectedRevision!, token);
                 revisiones = await RevisionServices().getRevision(context, orden, token);
                 setState(() {});
