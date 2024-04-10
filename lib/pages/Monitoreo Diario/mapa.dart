@@ -65,14 +65,15 @@ class _MapaPageState extends State<MapaPage>
 
   cargarDatos() async {
     token = context.read<OrdenProvider>().token;
-    _animationController =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
     print(_animationController.value);
   }
 
   Future<void> loadTecnicos() async {
     final token = context.watch<OrdenProvider>().token;
-    final loadedTecnicos = await TecnicoServices().getAllTecnicos(context, token);
+    final loadedTecnicos =
+        await TecnicoServices().getAllTecnicos(context, token);
     setState(() {
       tecnicos = loadedTecnicos;
     });
@@ -153,11 +154,13 @@ class _MapaPageState extends State<MapaPage>
                       onPressed: () async {
                         ubicaciones = await UbicacionesServices()
                             .getUbicaciones(
-                              context,
-                              selectedTecnico!.tecnicoId,
-                              selectedDate.toIso8601String(),
-                              selectedDate.add(const Duration(days: 1)).toIso8601String(),
-                              token);
+                                context,
+                                selectedTecnico!.tecnicoId,
+                                selectedDate.toIso8601String(),
+                                selectedDate
+                                    .add(const Duration(days: 1))
+                                    .toIso8601String(),
+                                token);
 
                         cargarUbicacion();
                         cargarMarkers();
@@ -239,7 +242,8 @@ class _MapaPageState extends State<MapaPage>
                                     markers: _markers.values.toSet(),
                                     polylines: {
                                       Polyline(
-                                        polylineId: const PolylineId('polyline'),
+                                        polylineId:
+                                            const PolylineId('polyline'),
                                         color: Colors.blue,
                                         width: 3,
                                         points: polylineCoordinates,
@@ -274,7 +278,8 @@ class _MapaPageState extends State<MapaPage>
                         }),
 
                     if (_animationController.value == 1.0)
-                      const SizedBox(width: 10.0), // Espacio entre el mapa y la lista
+                      const SizedBox(
+                          width: 10.0), // Espacio entre el mapa y la lista
                     if (_animationController.value == 1.0)
                       Card(
                         child: Column(
@@ -305,7 +310,8 @@ class _MapaPageState extends State<MapaPage>
                                       setState(() {
                                         selectAll = value!;
                                         // Actualiza el estado de todos los elementos en la lista
-                                        for (var ubicacion in ubicacionesFiltradas) {
+                                        for (var ubicacion
+                                            in ubicacionesFiltradas) {
                                           ubicacion.seleccionado = selectAll;
                                         }
                                         // Actualiza los markers en el mapa

@@ -7,7 +7,7 @@ import 'package:sedel_oficina_maqueta/pages/menu/menu.dart';
 import '../pages/Monitoreo Diario/mapa.dart';
 import '../pages/PyR/indisponibilidades/indisponibilidades.dart';
 import '../pages/PyR/ordenesPlanificacion/orden/orden_trabajo.dart';
-import '../pages/PyR/ordenesPlanificacion/orden_planificacion.dart';
+
 import '../pages/PyR/planificador/planificador.dart';
 import '../pages/login/login.dart';
 
@@ -17,7 +17,6 @@ Map<String, WidgetBuilder> getAppRoute() {
     'menu': (context) => const MenuPage(),
     'planificador': (context) => const PlanificadorPage(),
     'ordenesTrabajo': (context) => const OrdenesPlanificacion(),
-    'ordenPlanificacion': (context) => const OrdenPlan(),
     // 'ordenRevision':(context) => OrdenRevision(),
     'indisponibilidades': (context) => const IndisponibilidadesPage(),
     'editIndisponibilidades':(context) => const EditIndisponibilidad(),

@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print
+
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sedel_oficina_maqueta/pages/menu/menu.dart';
+import 'package:sedel_oficina_maqueta/services/login_service.dart';
 
 class LoginMobile extends StatefulWidget {
   const LoginMobile({super.key});
@@ -14,11 +17,25 @@ class _LoginMobileState extends State<LoginMobile> {
   final _formKey = GlobalKey<FormState>();
   final passwordFocusNode = FocusNode();
   final userFocusNode = FocusNode();
+    String user = '';
+  String pass = '';
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  final _loginServices = LoginServices();
+
+
 
   @override
   void initState() {
     super.initState();
     isObscured = true;
+  }
+
+   @override
+  void dispose() {
+    usernameController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -57,7 +74,7 @@ class _LoginMobileState extends State<LoginMobile> {
                 Form(
                     key: _formKey,
                     child: TextFormField(
-                      keyboardType: TextInputType.emailAddress,
+                      controller: usernameController,
                       decoration: InputDecoration(
                           border: OutlineInputBorder(
                               borderSide: const BorderSide(),
@@ -65,23 +82,32 @@ class _LoginMobileState extends State<LoginMobile> {
                           fillColor: Colors.white,
                           filled: true,
                           prefixIcon: const Icon(Icons.person),
-                          prefixIconColor: const Color.fromARGB(255, 41, 146, 41),
+                          prefixIconColor:  colors.primary,
                           hintText: 'Ingrese su usuario'),
-                    )),
+                          validator: (value) {
+                            if (value!.isEmpty || value.trim().isEmpty){
+                              return 'Ingrese un usuario valido';
+                            }
+                            return null;
+                          },
+                          onSaved:(newValue) => user = newValue!,
+                    )
+                  ),
                 const SizedBox(height: 20),
                 Form(
-                    child: TextFormField(
-                  obscureText: isObscured,
-                  focusNode: passwordFocusNode,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
+                  child: TextFormField(
+                    controller: passwordController,
+                    obscureText: isObscured,
+                    focusNode: passwordFocusNode,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderSide: const BorderSide(),
                           borderRadius: BorderRadius.circular(20)),
                       fillColor: Colors.white,
                       filled: true,
                       prefixIcon: const Icon(Icons.lock),
-                      prefixIconColor: const Color.fromARGB(255, 41, 146, 41),
+                      prefixIconColor: colors.primary,
                       suffixIcon: IconButton(
                         padding: const EdgeInsetsDirectional.only(end: 12.0),
                         icon: isObscured
@@ -97,6 +123,20 @@ class _LoginMobileState extends State<LoginMobile> {
                         },
                       ),
                       hintText: 'Ingrese su contraseña'),
+                      validator: (value) {
+                        if (value!.isEmpty ||
+                            value.trim().isEmpty) {
+                          return 'Ingrese su contraseña';
+                        }
+                        if (value.length < 6) {
+                          return 'Contraseña invalida';
+                        }
+                        return null;
+                      },
+                      onFieldSubmitted: (value) async {
+                        await login(context);
+                      },
+                      onSaved: (newValue) => pass = newValue!,
                 )),
                 const SizedBox(
                   height: 40,
@@ -109,12 +149,8 @@ class _LoginMobileState extends State<LoginMobile> {
                             borderRadius: BorderRadius.horizontal(
                                 left: Radius.circular(50),
                                 right: Radius.circular(50))))),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const MenuPage(),
-                          ));
+                    onPressed: () async{
+                      await login(context);
                     },
                     child: Text(
                       'Iniciar Sesión',
@@ -130,4 +166,33 @@ class _LoginMobileState extends State<LoginMobile> {
       ),
     );
   }
+
+
+  Future<void> login(BuildContext context) async {
+    await _loginServices.login(
+      usernameController.text,
+      passwordController.text,
+      context,
+    );
+
+    if (_formKey.currentState?.validate() == true) {
+      var statusCode = await _loginServices.getStatusCode();
+
+      if (statusCode == 200) {
+        context.push('/menu');
+      } else if (statusCode == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Credenciales inválidas. Intente nuevamente.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        print('Credenciales inválidas. Intente nuevamente.');
+      }
+    }
+  }
+
+
+
+
 }

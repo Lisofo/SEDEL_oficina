@@ -5,8 +5,7 @@ export 'package:sedel_oficina_maqueta/pages/PyR/planificador/planificador.dart';
 export 'package:sedel_oficina_maqueta/pages/PyR/indisponibilidades/indisponibilidades.dart';
 export 'package:sedel_oficina_maqueta/pages/PyR/indisponibilidades/edit_indisponibilidad.dart';
 export 'package:sedel_oficina_maqueta/pages/PyR/ordenesPlanificacion/orden/orden_trabajo.dart';
-export 'package:sedel_oficina_maqueta/pages/PyR/ordenesPlanificacion/orden_planificacion.dart';
-export 'package:sedel_oficina_maqueta/pages/PyR/ordenesPlanificacion/edit%20Orden/edit_orden.dart';
+export 'package:sedel_oficina_maqueta/pages/PyR/ordenesPlanificacion/edit%20Orden/edit_orden_desktop.dart';
 
 
 export 'package:sedel_oficina_maqueta/pages/gestion/plagas/plagas.dart';

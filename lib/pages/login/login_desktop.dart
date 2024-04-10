@@ -100,7 +100,8 @@ class _LoginDesktopState extends State<LoginDesktop> {
                                     }
                                     return null;
                                   },
-                                  onSaved: (newValue) => user = newValue!),
+                                  onSaved: (newValue) => user = newValue!
+                                ),
                               const SizedBox(
                                 height: 20,
                               ),

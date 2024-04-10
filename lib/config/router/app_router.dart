@@ -19,10 +19,6 @@ final router = GoRouter(initialLocation: '/', routes: [
     builder: (context, state) => const OrdenesPlanificacion(),
   ),
   GoRoute(
-    path: '/ordenPlanificacion',
-    builder: (context, state) => const OrdenPlan(),
-  ),
-  GoRoute(
     path: '/indisponibilidades',
     builder: (context, state) => const IndisponibilidadesPage(),
   ),
