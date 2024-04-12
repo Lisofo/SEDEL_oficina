@@ -14,16 +14,16 @@ import 'package:sedel_oficina_maqueta/widgets/button_delegate.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 import 'package:intl/intl.dart';
 
-import '../../models/tecnico.dart';
+import '../../../models/tecnico.dart';
 
-class MonitoreoPage extends StatefulWidget {
-  const MonitoreoPage({super.key});
+class MonitoreoDesktop extends StatefulWidget {
+  const MonitoreoDesktop({super.key});
 
   @override
-  _MonitoreoPageState createState() => _MonitoreoPageState();
+  _MonitoreoDesktopState createState() => _MonitoreoDesktopState();
 }
 
-class _MonitoreoPageState extends State<MonitoreoPage> {
+class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
   List<Tecnico> tecnicos = [];
   List<Orden> ordenes = [];
   List<String> estados = [

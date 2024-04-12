@@ -32,7 +32,7 @@ final router = GoRouter(initialLocation: '/', routes: [
   ),
   GoRoute(
     path: '/ordenesMonitoreo',
-    builder: (context, state) => const MonitoreoPage(),
+    builder: (context, state) => const Monitoreo(),
   ),
   GoRoute(
     path: '/clientes',
