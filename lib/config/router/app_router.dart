@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:sedel_oficina_maqueta/pages/PyR/ordenesPlanificacion/edit%20Orden/edit_orden.dart';
 import '../../pages/pages.dart';
 
 final router = GoRouter(initialLocation: '/', routes: [

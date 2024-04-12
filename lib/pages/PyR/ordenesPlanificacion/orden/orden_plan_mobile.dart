@@ -173,68 +173,67 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
                               // const SizedBox(
                               //   width: 30,
                               // ),
-                              Flexible(
-                                flex: 1,
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: colors.primary,),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text('${ordenesFiltradas[i].ordenTrabajoId}', style: const TextStyle(color: Colors.white),),
-                                      )
-                                    ),
-                                    const SizedBox(height: 30,),
-                                    Text(
-                                        '${ordenesFiltradas[i].cliente.codCliente} ${ordenesFiltradas[i].cliente.nombre}'),
-                                    Row(
-                                      children: [
-                                        Text(
-                                            'Tecnico: ${ordenesFiltradas[i].tecnico.nombre}'),
-                                      ],
-                                    ),
-                                    Text(
-                                        'Tipo de orden: ${ordenesFiltradas[i].tipoOrden.descripcion}'),
-                                    Text(
-                                        'Estado: ${ordenesFiltradas[i].estado}'),
-
-
-
-                                    const SizedBox(height: 20,),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        RichText(
-                                          text: TextSpan(
-                                            style: const TextStyle(color: Colors.black),
-                                            children: <TextSpan>[
-                                              const TextSpan(text: 'Inicio: '),
-                                              TextSpan(
-                                                text: DateFormat("E d, MMM HH:mm", 'es').format(ordenesFiltradas[i].fechaDesde),
-                                              ),
-
-                                            ]
-                                          )
-                                        ),
-                                        RichText(
-                                          text: TextSpan(
-                                            style: const TextStyle(color: Colors.black),
-                                            children: <TextSpan>[
-                                              const TextSpan(text: 'Finalizacion: '),
-                                              TextSpan(
-                                                text: DateFormat("E d, MMM HH:mm", 'es').format(ordenesFiltradas[i].fechaHasta),
-                                              ),
-
-                                            ]
-                                          )
-                                        ),
-                                      ],
+                              Column(
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: colors.primary,),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text('${ordenesFiltradas[i].ordenTrabajoId}', style: const TextStyle(color: Colors.white),),
                                     )
-
-                                  ],
-                                ),
+                                  ),
+                                  const SizedBox(height: 30,),
+                                  
+                                  Text(ordenesFiltradas[i].cliente.codCliente),
+                                  
+                                  // ignore: sized_box_for_whitespace
+                                  Container(
+                                    width: MediaQuery.of(context).size.width * 0.85,
+                                    child: Text(ordenesFiltradas[i].cliente.nombre,softWrap: true,),
+                                  ),
+                                  Text(
+                                      'Tecnico: ${ordenesFiltradas[i].tecnico.nombre}'),
+                                  Text(
+                                      'Tipo de orden: ${ordenesFiltradas[i].tipoOrden.descripcion}'),
+                                  Text(
+                                      'Estado: ${ordenesFiltradas[i].estado}'),
+                              
+                              
+                              
+                                  const SizedBox(height: 20,),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      RichText(
+                                        text: TextSpan(
+                                          style: const TextStyle(color: Colors.black),
+                                          children: <TextSpan>[
+                                            const TextSpan(text: 'Inicio: '),
+                                            TextSpan(
+                                              text: DateFormat("E d, MMM HH:mm", 'es').format(ordenesFiltradas[i].fechaDesde),
+                                            ),
+                              
+                                          ]
+                                        )
+                                      ),
+                                      RichText(
+                                        text: TextSpan(
+                                          style: const TextStyle(color: Colors.black),
+                                          children: <TextSpan>[
+                                            const TextSpan(text: 'Finalizacion: '),
+                                            TextSpan(
+                                              text: DateFormat("E d, MMM HH:mm", 'es').format(ordenesFiltradas[i].fechaHasta),
+                                            ),
+                              
+                                          ]
+                                        )
+                                      ),
+                                    ],
+                                  )
+                              
+                                ],
                               ),
                             ],
                           ),

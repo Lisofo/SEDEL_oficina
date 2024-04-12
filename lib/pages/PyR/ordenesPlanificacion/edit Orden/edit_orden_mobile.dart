@@ -1,7 +1,9 @@
 // ignore_for_file: use_build_context_synchronously, avoid_init_to_null
 
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/cliente.dart';
@@ -20,14 +22,14 @@ import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 import 'package:intl/intl.dart';
 
-class EditOrdenDesktop extends StatefulWidget {
-  const EditOrdenDesktop({super.key});
+class EditOrdenMobile extends StatefulWidget {
+  const EditOrdenMobile({super.key});
 
   @override
-  State<EditOrdenDesktop> createState() => _EditOrdenDesktopState();
+  State<EditOrdenMobile> createState() => _EditOrdenMobileState();
 }
 
-class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
+class _EditOrdenMobileState extends State<EditOrdenMobile> {
   late Orden orden = Orden.empty();
   Map<String, Color> colores = {
     'PENDIENTE': Colors.yellow.shade200,
@@ -97,6 +99,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     if(orden.ordenTrabajoId != 0){
       tipoOrdenInicial = orden.tipoOrden;
       _instruccionesController.text = orden.instrucciones;
@@ -145,12 +148,14 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SizedBox(
-                            width: 650,
+                          Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width * 0.9,
                             child: Card(
                               elevation: 4,
                               child: Padding(
@@ -242,8 +247,9 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                               ),
                             ),
                           ),
-                          SizedBox(
-                            width: 650,
+                          Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width *0.95,
                             child: Card(
                               elevation: 4,
                               child: Padding(
@@ -264,7 +270,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                     const SizedBox(
                                       height: 10,
                                     ),
-                                    Row(
+                                    Column(
                                       children: [
                                         RichText(
                                           text: TextSpan(
@@ -295,7 +301,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                       ],
                                     ),
                                     const SizedBox(height: 10),
-                                    Row(
+                                    Column(
                                       children: [
                                         RichText(
                                           text: TextSpan(
@@ -327,7 +333,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                     const SizedBox(
                                       height: 10,
                                     ),
-                                    Row(
+                                    Column(
                                       children: [
                                         RichText(
                                           text: TextSpan(
@@ -498,93 +504,109 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                               ),
                             ),
                           ),
+                          const SizedBox(height: 10,),
+                          Container(
+                            alignment: Alignment.center,
+                            child: Column(
+                             crossAxisAlignment: CrossAxisAlignment.center,
+                             children: [
+                               const Text(
+                                 'Notas del cliente: ',
+                                 style: TextStyle(
+                                     fontSize: 16, fontWeight: FontWeight.w600),
+                               ),
+                               Container(
+                                 alignment: Alignment.center,
+                                 width: MediaQuery.of(context).size.width * 0.9,
+                                 decoration: BoxDecoration(
+                                     border: Border.all(
+                                         color: colors.primary,
+                                         width: 2),
+                                     borderRadius: BorderRadius.circular(5)),
+                                 child: TextFormField(
+                                   enabled: false,
+                                   maxLines: 10,
+                                   controller: _notasClienteController,
+                                   decoration: const InputDecoration(
+                                       border: InputBorder.none,
+                                       fillColor: Colors.white,
+                                       filled: true),
+                                 ),
+                               ),
+                             ],
+                            ),
+                            
+                          ),
+                          const SizedBox(height: 10),
+                          Container(
+                            alignment: Alignment.center,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Center(
+                                  child: Text(
+                                    'Instrucciones: ',
+                                    style: TextStyle(
+                                        fontSize: 16, fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                                Container(
+                                  width: MediaQuery.of(context).size.width * 0.9,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: colors.primary,
+                                          width: 2),
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: TextFormField(
+                                    enabled: editarOrden,
+                                    maxLines: 10,
+                                    controller: _instruccionesController,
+                                    decoration: const InputDecoration(
+                                        border: InputBorder.none,
+                                        fillColor: Colors.white,
+                                        filled: true),
+                                  ),
+                                ),
+                              ],
+                             ),
+                          ),
+                          const SizedBox(height: 10,),
+                          Container(
+                            alignment: Alignment.center,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const SizedBox(height: 10,),
+                                const Center(
+                                  child: Text(
+                                    'Comentario:',
+                                    style: TextStyle(
+                                        fontSize: 16, fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                                Container(
+                                  width: MediaQuery.of(context).size.width * 0.9,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: colors.primary,
+                                          width: 2),
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: TextFormField(
+                                    enabled: editarOrden,
+                                    maxLines: 10,
+                                    controller: _comentarioController,
+                                    decoration: const InputDecoration(
+                                        border: InputBorder.none,
+                                        fillColor: Colors.white,
+                                        filled: true),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 20,),
                         ],
-                      ),
-                      const SizedBox(width: 40,),
-                      Flexible(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Notas del cliente: ',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w600),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.2,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: const Color.fromARGB(
-                                          255, 52, 120, 62),
-                                      width: 2),
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: TextFormField(
-                                enabled: false,
-                                maxLines: 20,
-                                controller: _notasClienteController,
-                                decoration: const InputDecoration(
-                                    border: InputBorder.none,
-                                    fillColor: Colors.white,
-                                    filled: true),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 30),
-                      Flexible(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Instrucciones: ',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w600),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.2,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: const Color.fromARGB(
-                                          255, 52, 120, 62),
-                                      width: 2),
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: TextFormField(
-                                enabled: editarOrden,
-                                maxLines: 10,
-                                controller: _instruccionesController,
-                                decoration: const InputDecoration(
-                                    border: InputBorder.none,
-                                    fillColor: Colors.white,
-                                    filled: true),
-                              ),
-                            ),
-                            const Text(
-                              'Comentario:',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w600),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.2,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: const Color.fromARGB(
-                                          255, 52, 120, 62),
-                                      width: 2),
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: TextFormField(
-                                enabled: editarOrden,
-                                maxLines: 10,
-                                controller: _comentarioController,
-                                decoration: const InputDecoration(
-                                    border: InputBorder.none,
-                                    fillColor: Colors.white,
-                                    filled: true),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      ), 
                     ],
                   ),
                 ],
@@ -592,69 +614,73 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
             ),
           ),
         ),
+        
         bottomNavigationBar: BottomAppBar(
+          notchMargin: 20,
           elevation: 0,
           color: Colors.grey.shade200,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                if(orden.ordenTrabajoId != 0)...[
-                  CustomButton(
-                    text: 'Cambiar tecnico',
-                    onPressed: () {
-                      cambiarTecnico();
-                    },
-                    disabled: orden.estado == 'DESCARTADA',
-                    tamano: 20,
-                  ),
-                  const SizedBox(width: 30,),
-                ],
-                if(orden.ordenTrabajoId != 0)...[
-                  CustomButton(
-                  text: 'Cambiar estado',
+          child: Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            alignment: WrapAlignment.spaceEvenly,
+            runSpacing: 5,
+            children: [
+              if(orden.ordenTrabajoId != 0)...[
+                CustomButton(
+                  text: 'Cambiar tecnico',
                   onPressed: () {
-                    cambiarEstado();
+                    cambiarTecnico();
                   },
                   disabled: orden.estado == 'DESCARTADA',
-                  tamano: 20,
+                  tamano: 15,
                 ),
-                const SizedBox(width: 30,),
-                ],                
-                CustomButton(
-                  text: 'Guardar',
-                  onPressed: orden.estado == 'PENDIENTE'
-                      ? () => datosAGuardar(context)
-                      : null,
-                  tamano: 20,
-                  disabled: orden.estado != 'PENDIENTE',
-                ),
-                // SizedBox(
-                //   width: 30,
-                // ),
-                // CustomButton(
-                //   text: 'Eliminar',
-                //   onPressed: () {},
-                //   tamano: 20,
-                // ),
-                const SizedBox(width: 30),
-                if(orden.ordenTrabajoId != 0)
-                CustomButton(
-                  text: 'Revisión',
-                  onPressed: (orden.estado == 'EN PROCESO' ||
-                          orden.estado == 'FINALIZADA' ||
-                          orden.estado == 'REVISADA')
-                      ? () => router.push('/revisionOrden')
-                      : null,
-                  disabled: orden.estado == 'PENDIENTE' ||
-                      orden.estado == 'DESCARTADA',
-                  tamano: 20,
-                ),
+                const SizedBox(width: 15,),
               ],
-            ),
+              if(orden.ordenTrabajoId != 0)...[
+                CustomButton(
+                text: 'Cambiar estado',
+                onPressed: () {
+                  cambiarEstado();
+                },
+                disabled: orden.estado == 'DESCARTADA',
+                tamano: 15,
+              ),
+              const SizedBox(width: 15,),
+              ],                
+              CustomButton(
+                text: 'Guardar',
+                onPressed: orden.estado == 'PENDIENTE'
+                    ? () => datosAGuardar(context)
+                    : null,
+                tamano: 15,
+                disabled: orden.estado != 'PENDIENTE',
+              ),
+              // SizedBox(
+              //   width: 30,
+              // ),
+              // CustomButton(
+              //   text: 'Eliminar',
+              //   onPressed: () {},
+              //   tamano: 20,
+              // ),
+              const SizedBox(width: 15),
+              if(orden.ordenTrabajoId != 0)
+              CustomButton(
+                text: 'Revisión',
+                onPressed: (orden.estado == 'EN PROCESO' ||
+                        orden.estado == 'FINALIZADA' ||
+                        orden.estado == 'REVISADA')
+                    ? () => router.push('/revisionOrden')
+                    : null,
+                disabled: orden.estado == 'PENDIENTE' ||
+                    orden.estado == 'DESCARTADA',
+                tamano: 15,
+              ),
+            ],
           ),
+          
         ),
+        
+        
       ),
     );
   }
