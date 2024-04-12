@@ -51,8 +51,8 @@ class _LoginMobileState extends State<LoginMobile> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Image.asset(
-                  'images/logo.png',
-                  fit: BoxFit.cover,
+                  'images/logoMobile.png',
+                  fit: BoxFit.fill,
                 ),
                 const SizedBox(height: 8),
                 Text(

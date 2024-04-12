@@ -35,7 +35,7 @@ class _MenuDesktopState extends State<MenuDesktop> {
           iconTheme: IconThemeData(color: colors.onPrimary),
           actions: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.fromLTRB(8, 8, 15, 8),
               child: Text(name,style: const TextStyle(color: Colors.white, fontSize: 24)),
             )
           ],
@@ -50,10 +50,14 @@ class _MenuDesktopState extends State<MenuDesktop> {
           color: Colors.white,
             elevation: 0,
             child: IconButton.filledTonal(
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(colors.primary)
+              ),
                 onPressed: () {
                   logout();
                 },
-                icon: const Icon(Icons.logout))),
+                icon: const Icon(Icons.logout))
+        ),
       ),
     );
   }
