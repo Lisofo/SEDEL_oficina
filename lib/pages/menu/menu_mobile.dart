@@ -55,6 +55,9 @@ class _MenuMobileState extends State<MenuMobile> {
           color: Colors.white,
             elevation: 0,
             child: IconButton.filledTonal(
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(colors.primary)
+              ),
                 onPressed: () {
                   logout();
                 },

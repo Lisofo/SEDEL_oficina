@@ -22,9 +22,14 @@ class _ButtonDelegateState extends State<ButtonDelegate> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Row(
       children: [
         TextButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStatePropertyAll(colors.secondary),
+            shape: MaterialStatePropertyAll(ContinuousRectangleBorder(borderRadius: BorderRadius.circular(20)))
+          ),
           child: selectedCliente.nombre == ''
               ? Text(
                   'Seleccione cliente',
