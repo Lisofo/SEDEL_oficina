@@ -1,5 +1,4 @@
 import 'package:go_router/go_router.dart';
-import 'package:sedel_oficina_maqueta/pages/PyR/ordenesPlanificacion/edit%20Orden/edit_orden.dart';
 import '../../pages/pages.dart';
 
 final router = GoRouter(initialLocation: '/', routes: [
@@ -37,7 +36,7 @@ final router = GoRouter(initialLocation: '/', routes: [
   ),
   GoRoute(
     path: '/clientes',
-    builder: (context, state) => const ClientesPage(),
+    builder: (context, state) => const Clientes(),
   ),
   GoRoute(
     path: '/tecnicos',
@@ -162,5 +161,9 @@ final router = GoRouter(initialLocation: '/', routes: [
   GoRoute(
     path: '/editMarcas',
     builder: (context, state) => const EditMarcasPage(),
+  ),
+  GoRoute(
+    path: '/editClientes',
+    builder: (context, state) => const EditClientesDesktop(),
   ),
 ]);

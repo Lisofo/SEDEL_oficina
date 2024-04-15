@@ -16,7 +16,8 @@ class AddClientServicesDialog extends StatefulWidget {
   final String token;
 
   const AddClientServicesDialog(
-      {super.key, required this.servicioClienteSeleccionado,
+      {super.key,
+      required this.servicioClienteSeleccionado,
       required this.cliente,
       required this.token});
 
@@ -29,7 +30,7 @@ class _AddClientServicesDialogState extends State<AddClientServicesDialog> {
   final TextEditingController comentarioController = TextEditingController();
   late Servicio? servicioSeleccionado = Servicio.empty();
   final DateTime hoy = DateTime.now();
-  late DateTime fechaDesde = DateTime(hoy.year, hoy.month, hoy.day,0,0,0);
+  late DateTime fechaDesde = DateTime(hoy.year, hoy.month, hoy.day, 0, 0, 0);
   late DateTime? fechaHasta = null;
 
   List<Servicio> servicios = [];
@@ -102,7 +103,6 @@ class _AddClientServicesDialogState extends State<AddClientServicesDialog> {
                         context: context,
                         firstDate: DateTime(2000),
                         lastDate: DateTime(2099));
-
                     setState(() {
                       if (fechaDesdeSeleccionada == null) {
                         fechaDesde = fechaDesde;
@@ -138,7 +138,6 @@ class _AddClientServicesDialogState extends State<AddClientServicesDialog> {
                         context: context,
                         firstDate: DateTime(2000),
                         lastDate: DateTime(2099));
-
                     setState(() {
                       if (fechaHastaSeleccionada == null) {
                         fechaHasta = fechaHasta;

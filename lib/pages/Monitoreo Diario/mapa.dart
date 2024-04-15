@@ -386,13 +386,11 @@ class _MapaPageState extends State<MapaPage>
   }
 
   void cargarUbicacion() {
-    ubicacionesFiltradas = ubicaciones
-        .where((e) =>
-            (clienteFiltro > 0 ? e.cliente.clienteId == clienteFiltro : true) &&
-            (tecnicoFiltro > 0 ? e.tecnico.tecnicoId == tecnicoFiltro : true) &&
-            e.ubicacion != '' &&
-            (filtroController.text.isEmpty ||
-                e.ordenTrabajoId.toString().contains(filtroController.text)))
-        .toList();
+    ubicacionesFiltradas = ubicaciones.where((e) =>
+      (clienteFiltro > 0 ? e.cliente.clienteId == clienteFiltro : true) &&
+      (tecnicoFiltro > 0 ? e.tecnico.tecnicoId == tecnicoFiltro : true) &&
+      e.ubicacion != '' &&
+      (filtroController.text.isEmpty || e.ordenTrabajoId.toString().contains(filtroController.text)))
+    .toList();
   }
 }

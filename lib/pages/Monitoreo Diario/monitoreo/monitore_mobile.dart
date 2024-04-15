@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/services/tecnico_services.dart';
+import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 
 import '../../../config/router/app_router.dart';
 import '../../../models/cliente.dart';
@@ -45,6 +46,8 @@ class _MonitoreoMobileState extends State<MonitoreoMobile> {
     'Finalizada': Colors.red.shade200
   };
   late Cliente clienteSeleccionado;
+  late final PageController _pageController = PageController(initialPage: 0);
+  int _pageIndex = 0;
 
   @override
   void initState() {
@@ -143,95 +146,144 @@ class _MonitoreoMobileState extends State<MonitoreoMobile> {
   @override
   Widget build(BuildContext context) {
   final token = context.watch<OrdenProvider>().token;
-
+  final colors = Theme.of(context).colorScheme;
   return SafeArea(
     child: Scaffold(
       appBar: AppBarDesign(
         titulo: 'Monitoreo de ordenes',
       ),
       drawer: Drawer(
-        child: Column(
-          children: [
-            DrawerHeader(
-              child: Column(
-                children: [
-                  const Text(
-                    'Tecnico: ',
-                    style: TextStyle(fontSize: 24),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  SizedBox(
-                    width: 220,
-                    child: DropdownSearch(
-                      dropdownDecoratorProps: const DropDownDecoratorProps(
-                          dropdownSearchDecoration: InputDecoration(
-                              hintText: 'Seleccione un tecnico')),
-                      items: tecnicos,
-                      popupProps: const PopupProps.menu(
-                          showSearchBox: true, searchDelay: Duration.zero),
-                      onChanged: (value) {
-                        setState(() {
-                          selectedTecnico = value;
-                          tecnicoFiltro = value!.tecnicoId;
-                        });
-                      },
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.symmetric(horizontal: BorderSide(color: colors.primary, width: 15)),  
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Column(
+                  children: [
+                    const Text(
+                      'Tecnico: ',
+                      style: TextStyle(fontSize: 24),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Cliente: ',
-                    style: TextStyle(fontSize: 24),
-                  ),
-                  const SizedBox(height: 10),
-                  const ButtonDelegate(
-                    colorSeleccionado: Colors.black,
-                    nombreProvider: 'Monitoreo',
-                  ),
-                ],
-              ),
+                    const SizedBox(width: 10,),
+                    SizedBox(
+                      width: 220,
+                      child: DropdownSearch(
+                        dropdownDecoratorProps: const DropDownDecoratorProps(
+                            dropdownSearchDecoration: InputDecoration(
+                                hintText: 'Seleccione un tecnico')),
+                        items: tecnicos,
+                        popupProps: const PopupProps.menu(
+                            showSearchBox: true, searchDelay: Duration.zero),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedTecnico = value;
+                            tecnicoFiltro = value!.tecnicoId;
+                          });
+                        },
+                      ),
+                    ),
+                    const Divider(height: 50,),
+                    const Text(
+                      'Cliente: ',
+                      style: TextStyle(fontSize: 24),
+                    ),
+                    const SizedBox(height: 10),
+                    const FittedBox(
+                      fit: BoxFit.contain,
+                      child: ButtonDelegate(
+                        colorSeleccionado: Colors.black,
+                        nombreProvider: 'Monitoreo',
+                      ),
+                    ),
+                  ],
+                ),              
+                const Divider(height: 50,),
+                ListTile(
+                  leading: const Icon(Icons.calendar_month),
+                  title: const Text('Seleccione fecha'),
+                  onTap: () async {
+                    final pickedDate = await showDatePicker(
+                      initialDate: selectedDate,
+                      firstDate: DateTime(2022),
+                      lastDate: DateTime(2099),
+                      context: context,
+                    );
+                    if (pickedDate != null && pickedDate != selectedDate) {
+                      setState(() {
+                        selectedDate = pickedDate;
+                        print(selectedDate);
+                      });
+                    }
+                  },
+                ),
+                Text(
+                  DateFormat('d/MM/yyyy').format(selectedDate), style: const TextStyle(fontSize: 20),
+                ),
+                const Divider(height: 50,),
+                CustomButton(
+                  text: 'Buscar',
+                  onPressed: () async {
+                    await buscar(token);
+                    cargarListas();
+                  },
+                ),
+              ],
             ),
-            ListTile(
-              leading: const Icon(Icons.search_outlined),
-              title: const Text('Buscar'),
-              onTap: () async {
-                await buscar(token);
-                cargarListas();
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.calendar_month),
-              title: const Text('Seleccione fecha'),
-              onTap: () async {
-                final pickedDate = await showDatePicker(
-                  initialDate: selectedDate,
-                  firstDate: DateTime(2022),
-                  lastDate: DateTime(2099),
-                  context: context,
-                );
-                if (pickedDate != null && pickedDate != selectedDate) {
-                  setState(() {
-                    selectedDate = pickedDate;
-                    print(selectedDate);
-                  });
-                }
-              },
-            ),
-          ],
-        ),
-      ),
-      body: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              _buildEstadoContainer('Pendiente', ordenesPendientes),
-              _buildEstadoContainer('En Proceso', ordenesEnProceso),
-              _buildEstadoContainer('Finalizada', ordenesFinalizadas),
-              _buildEstadoContainer('Revisada', ordenesRevisadas),
-            ],
           ),
         ),
+      ),
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _pageIndex = index;
+          });
+        },
+        scrollDirection: Axis.horizontal,
+          children: [
+            _buildEstadoContainer('Pendiente', ordenesPendientes),
+            _buildEstadoContainer('En Proceso', ordenesEnProceso),
+            _buildEstadoContainer('Finalizada', ordenesFinalizadas),
+            _buildEstadoContainer('Revisada', ordenesRevisadas),
+          ],
+        ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _pageIndex,
+        onTap: (index) {
+          setState(() {
+            _pageIndex = index;
+          });
+          _pageController.animateToPage(
+            index,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.ease,
+          );
+        },
+        showUnselectedLabels: true,
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.grey,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.pending_actions),
+            label: 'Pendiente',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.play_arrow),
+            label: 'En Proceso',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.done),
+            label: 'Finalizada',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.check),
+            label: 'Revisada',
+          ),
+        ],
+      ),
     ),
   );
 }
@@ -281,16 +333,19 @@ class _MonitoreoMobileState extends State<MonitoreoMobile> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 4),
+            child: Container(
+              decoration: BoxDecoration(
                 color: colores[estado],
+                borderRadius: BorderRadius.circular(5)),
+              height: 30,
+              child: Center(
                 child: Text(
                   estado,
                   style: const TextStyle(
-                    fontSize: 20,
                     fontWeight: FontWeight.bold,
-                  ),
+                    fontSize: 18),
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),

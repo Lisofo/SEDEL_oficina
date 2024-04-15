@@ -1,9 +1,6 @@
 // ignore_for_file: avoid_print
-
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
@@ -137,7 +134,6 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
           token: token,
           updateFilteredItems: updateFilteredItems
         ),
-
       ),
       body: Row(
         children: [
@@ -310,8 +306,7 @@ class _OrdenPlanDrawerState extends State<OrdenPlanDrawer> {
     final colors = Theme.of(context).colorScheme;
     return Container(
       decoration: BoxDecoration(
-        border: Border.symmetric(horizontal: BorderSide(color: colors.primary, width: 15)),
-        
+        border: Border.symmetric(horizontal: BorderSide(color: colors.primary, width: 15)),  
       ),
       child: SingleChildScrollView(
         child: Column(

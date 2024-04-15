@@ -24,14 +24,14 @@ import 'package:maps_launcher/maps_launcher.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:intl/intl.dart';
 
-class EditClientesPages extends StatefulWidget {
-  const EditClientesPages({super.key});
+class EditClientesDesktop extends StatefulWidget {
+  const EditClientesDesktop({super.key});
 
   @override
-  State<EditClientesPages> createState() => _EditClientesPagesState();
+  State<EditClientesDesktop> createState() => _EditClientesDesktopState();
 }
 
-class _EditClientesPagesState extends State<EditClientesPages> {
+class _EditClientesDesktopState extends State<EditClientesDesktop> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -126,10 +126,8 @@ class _BodyState extends State<Body> {
     final List<Departamento> loadedDepartamentos = await ClientServices().getClientesDepartamentos(context,token);
     servicios =  await ServiciosServices().getServicios(context, '', '', '', token);
     if (cliente.clienteId != 0) {
-      final loadedUsuarios = await ClientServices()
-          .getUsuariosXCliente(context, cliente.clienteId.toString(), token);
-      final loadedServiciosCliente = await ClientServices()
-          .getClienteServices(context, cliente.clienteId.toString(), token);
+      final loadedUsuarios = await ClientServices().getUsuariosXCliente(context, cliente.clienteId.toString(), token);
+      final loadedServiciosCliente = await ClientServices().getClienteServices(context, cliente.clienteId.toString(), token);
       setState(() {
         usuariosXClientes = loadedUsuarios ?? [];
         serviciosCliente = loadedServiciosCliente ?? [];
@@ -243,16 +241,16 @@ class _BodyState extends State<Body> {
                           children: [
                             const Text('Nombre Fantasia  '),
                             SizedBox(
-                                width: 300,
-                                child: CustomTextFormField(
-                                    controller: _nombFantasiaController,
-                                    label: 'Nombre Fantasia',
-                                    maxLines: 1)),
+                              width: 300,
+                              child: CustomTextFormField(
+                                controller: _nombFantasiaController,
+                                label: 'Nombre Fantasia',
+                                maxLines: 1
+                              )
+                            ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
+                        const SizedBox(height: 20,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -265,27 +263,26 @@ class _BodyState extends State<Body> {
                                     maxLines: 1)),
                           ],
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
+                        const SizedBox(height: 20,),
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             const Text('Direccion  '),
                             SizedBox(
-                                width: 300,
-                                child: CustomTextFormField(
-                                    controller: _direccionController,
-                                    label: 'Direccion',
-                                    maxLines: 1)),
+                              width: 300,
+                              child: CustomTextFormField(
+                                controller: _direccionController,
+                                label: 'Direccion',
+                                maxLines: 1
+                              )
+                            ),
                           ],
                         ),
                         SizedBox(
                           height: 20,
                           child: TextButton(
                             onPressed: () {
-                              MapsLauncher.launchQuery(
-                                  '${_direccionController.text}, ${_localidadController.text}');
+                              MapsLauncher.launchQuery('${_direccionController.text}, ${_localidadController.text}');
                             },
                             child: const Text('Buscar por direccion'),
                           ),

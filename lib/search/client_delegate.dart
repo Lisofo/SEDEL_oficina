@@ -19,8 +19,9 @@ class ClientSearchDelegate extends SearchDelegate {
     return [
       IconButton(onPressed: () => query = '', icon: const Icon(Icons.clear)),
       IconButton(
-          onPressed: () => close(context, null),
-          icon: const Icon(Icons.more_horiz)),
+        onPressed: () => close(context, null),
+        icon: const Icon(Icons.more_horiz)
+      ),
     ];
   }
 
@@ -61,8 +62,7 @@ class ClientSearchDelegate extends SearchDelegate {
 
     return FutureBuilder(
       // Especifica explícitamente el tipo de dato para el FutureBuilder
-      future:
-          clientServices.getClientes(context, nombre, codigo.toString(), '', '', token),
+      future: clientServices.getClientes(context, nombre, codigo.toString(), '', '', token),
       builder: (_, AsyncSnapshot snapshot) {
         if (snapshot.hasError) {
           return const ListTile(
@@ -88,18 +88,18 @@ class ClientSearchDelegate extends SearchDelegate {
 
   Widget _showClient(List<Cliente> clients) {
     return ListView.builder(
-        itemCount: clients.length,
-        itemBuilder: (context, i) {
-          final cliente = clients[i];
-          return ListTile(
-            title: Text(cliente.nombre.toString()),
-            subtitle: Text(cliente.codCliente.toString()),
-            onTap: () {
-              Provider.of<OrdenProvider>(context, listen: false)
-                  .setCliente(cliente,nombreProvider);
-              close(context, cliente);
-            },
-          );
-        });
+      itemCount: clients.length,
+      itemBuilder: (context, i) {
+        final cliente = clients[i];
+        return ListTile(
+          title: Text(cliente.nombre.toString()),
+          subtitle: Text(cliente.codCliente.toString()),
+          onTap: () {
+            Provider.of<OrdenProvider>(context, listen: false).setCliente(cliente,nombreProvider);
+            close(context, cliente);
+          },
+        );
+      }
+    );
   }
 }
