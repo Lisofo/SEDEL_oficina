@@ -10,26 +10,26 @@ import 'package:sedel_oficina_maqueta/models/plaga_objetivo.dart';
 import 'package:sedel_oficina_maqueta/models/revision_orden.dart';
 import 'package:sedel_oficina_maqueta/models/revision_pto_inspeccion.dart';
 import 'package:sedel_oficina_maqueta/models/tipos_ptos_inspeccion.dart';
-import 'package:sedel_oficina_maqueta/pages/menusRevisiones/ptosInspeccion/zona.dart';
+import 'package:sedel_oficina_maqueta/models/zona.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/plagas_objetivo_services.dart';
 import 'package:sedel_oficina_maqueta/services/ptos_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 
-class RevisionPtosInspeccionMenu extends StatefulWidget {
+class RevisionPtosInspeccionMobile extends StatefulWidget {
   List<RevisionPtoInspeccion> ptosInspeccion;
   final RevisionOrden? revision;
-  RevisionPtosInspeccionMenu({super.key, required this.ptosInspeccion, required this.revision});
+  RevisionPtosInspeccionMobile({super.key, required this.ptosInspeccion, required this.revision});
   
   
 
   @override
-  State<RevisionPtosInspeccionMenu> createState() =>
-      _RevisionPtosInspeccionMenuState();
+  State<RevisionPtosInspeccionMobile> createState() =>
+      _RevisionPtosInspeccionMobileState();
 }
 
-class _RevisionPtosInspeccionMenuState extends State<RevisionPtosInspeccionMenu> {
+class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMobile> {
   List<TipoPtosInspeccion> tiposDePuntos = [];
   late TipoPtosInspeccion selectedTipoPto = TipoPtosInspeccion.empty();
   List<RevisionPtoInspeccion> selectedPuntosDeInspeccion = [];
@@ -48,6 +48,7 @@ class _RevisionPtosInspeccionMenuState extends State<RevisionPtosInspeccionMenu>
   bool pendientes = false;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
   late int revisionId = 0;
+  int buttonIndex = 0;
 
   List<ZonaPI> zonas = [
     ZonaPI(zona: 'Interior', codZona: 'I'),
@@ -99,124 +100,130 @@ class _RevisionPtosInspeccionMenuState extends State<RevisionPtosInspeccionMenu>
     print(revisionId);
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Column(children: [
-        Container(
-          width: Constantes().ancho,
-          decoration: BoxDecoration(
-              border: Border.all(
-                  width: 1, color: colors.primary),
-              borderRadius: BorderRadius.circular(5)),
-          child: DropdownButtonFormField(
-            decoration: const InputDecoration(border: InputBorder.none),
-            hint: const Padding(
-              padding: EdgeInsets.only(left: 8.0),
-              child: Text('Ptos de Inspeccion'),
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.91,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+          Container(
+            width: Constantes().ancho,
+            decoration: BoxDecoration(
+                border: Border.all(
+                    width: 1, color: colors.primary),
+                borderRadius: BorderRadius.circular(5)),
+            child: DropdownButtonFormField(
+              decoration: const InputDecoration(border: InputBorder.none),
+              hint: const Padding(
+                padding: EdgeInsets.only(left: 8.0),
+                child: Text('Ptos de Inspeccion'),
+              ),
+              items: tiposDePuntos.map((e) {
+                return DropdownMenuItem(
+                  value: e,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      e.descripcion,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                );
+              }).toList(),
+              isDense: true,
+              isExpanded: true,
+              onChanged: (value) {
+                setState(() {
+                  Provider.of<OrdenProvider>(context, listen: false).setTipoPTI(value!);
+                  selectedTipoPto = value;
+                  selectAll = false;
+                  for (var i = 0; i < ptosFiltrados.length; i++) {
+                    ptosFiltrados[i].seleccionado = false;
+                  }                
+                });
+              },
             ),
-            items: tiposDePuntos.map((e) {
-              return DropdownMenuItem(
-                value: e,
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    e.descripcion,
-                    overflow: TextOverflow.ellipsis,
+          ),
+          SizedBox(
+              height: MediaQuery.of(context).size.height * 0.7,
+              width: Constantes().ancho,
+              child: RefreshIndicator(
+                  key: _refreshIndicatorKey,
+                  onRefresh: refreshData,
+                  child: listaDePuntos())
+          ),
+          BottomAppBar(
+            elevation: 0,
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    if (selectedTipoPto.tipoPuntoInspeccionId != 0) {
+                      if (widget.revision?.ordinal == 0) {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('No se puede modificar esta revisión.'),
+                        ));
+                      } else {
+                        _mostrarBottomSheet();
+                      }
+                    }
+                  },
+                  icon: Icon(
+                    Icons.control_point,
+                    size: 35,
+                    color: selectedTipoPto.tipoPuntoInspeccionId != 0
+                      ? colors.primary
+                      : Colors.grey,
                   ),
                 ),
-              );
-            }).toList(),
-            isDense: true,
-            isExpanded: true,
-            onChanged: (value) {
-              setState(() {
-                Provider.of<OrdenProvider>(context, listen: false).setTipoPTI(value!);
-                selectedTipoPto = value;
-                selectAll = false;
-                for (var i = 0; i < ptosFiltrados.length; i++) {
-                  ptosFiltrados[i].seleccionado = false;
-                }                
-              });
-            },
-          ),
-        ),
-        SizedBox(
-            height: 469,
-            width: Constantes().ancho,
-            child: RefreshIndicator(
-                key: _refreshIndicatorKey,
-                onRefresh: refreshData,
-                child: listaDePuntos())),
-        SizedBox(
-          width: Constantes().ancho,
-          child: Row(
-            children: [
-              IconButton(
-                onPressed: () {
-                  if (selectedTipoPto.tipoPuntoInspeccionId != 0) {
-                    if (widget.revision?.ordinal == 0) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('No se puede modificar esta revisión.'),
-                      ));
-                    } else {
-                      _mostrarBottomSheet();
-                    }
-                  }
-                },
-                icon: Icon(
-                  Icons.control_point,
-                  size: 35,
-                  color: selectedTipoPto.tipoPuntoInspeccionId != 0
-                    ? colors.primary
-                    : Colors.grey,
-                ),
-              ),
-              Switch(
+                Switch(
+                    activeColor: colors.primary,
+                    value: filtro,
+                    onChanged: (value) {
+                      setState(() {
+                        filtro = value;
+                        pendientes = filtro;
+                        Provider.of<OrdenProvider>(context, listen: false)
+                            .setPendiente(pendientes);
+                        selectAll = false;
+                        for (var i = 0; i < ptosFiltrados.length; i++) {
+                          ptosFiltrados[i].seleccionado = false;
+                        }
+                        listaDePuntos();
+                      });
+                    }),
+                const Spacer(),
+                Checkbox(
                   activeColor: colors.primary,
-                  value: filtro,
-                  onChanged: (value) {
+                  value: selectAll,
+                  onChanged: (newValue) {
                     setState(() {
-                      filtro = value;
-                      pendientes = filtro;
-                      Provider.of<OrdenProvider>(context, listen: false)
-                          .setPendiente(pendientes);
-                      selectAll = false;
-                      for (var i = 0; i < ptosFiltrados.length; i++) {
-                        ptosFiltrados[i].seleccionado = false;
+                      selectAll = newValue!;
+                      for (var ptos
+                          in context.read<OrdenProvider>().listaPuntos) {
+                        ptos.seleccionado = selectAll;
                       }
-                      listaDePuntos();
                     });
-                  }),
-              const Spacer(),
-              Checkbox(
-                activeColor: colors.primary,
-                value: selectAll,
-                onChanged: (newValue) {
-                  setState(() {
-                    selectAll = newValue!;
-                    for (var ptos
-                        in context.read<OrdenProvider>().listaPuntos) {
-                      ptos.seleccionado = selectAll;
-                    }
-                  });
-                },
-              ),
-              IconButton(
-                  onPressed: () async {
-                    if (widget.revision?.ordinal == 0) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('No se puede modificar esta revisión.'),
-                      ));
-                      return Future.value(false);
-                    }
-                    borrarAccion();
                   },
-                  icon: const Icon(
-                    Icons.delete,
-                    color: Colors.red,
-                  ))
-            ],
-          ),
-        ),
-      ]),
+                ),
+                IconButton(
+                    onPressed: () async {
+                      if (widget.revision?.ordinal == 0) {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('No se puede modificar esta revisión.'),
+                        ));
+                        return Future.value(false);
+                      }
+                      borrarAccion();
+                    },
+                    icon: const Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ))
+              ],
+            ),
+            ),
+        ]),
+      ),
     );
   }
 

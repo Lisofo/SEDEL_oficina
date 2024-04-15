@@ -1,4 +1,6 @@
 import 'package:go_router/go_router.dart';
+import 'package:sedel_oficina_maqueta/models/revision_orden.dart';
+import 'package:sedel_oficina_maqueta/pages/Monitoreo%20Diario/revision_orden.dart';
 import '../../pages/pages.dart';
 
 final router = GoRouter(initialLocation: '/', routes: [
@@ -104,7 +106,7 @@ final router = GoRouter(initialLocation: '/', routes: [
   ),
   GoRoute(
     path: '/revisionOrden',
-    builder: (context, state) => const RevisionOrdenPage(),
+    builder: (context, state) => const RevisionOrdenMain()
   ),
   GoRoute(
     path: '/ptosInspeccionActividad',

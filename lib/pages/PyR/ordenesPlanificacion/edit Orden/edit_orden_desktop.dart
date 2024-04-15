@@ -58,6 +58,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
   late Cliente selectedCliente = Cliente.empty();
   List<Cliente> historial = [];
   int tecnicoFiltro = 0;
+  int buttonIndex = 0;
 
   @override
   void initState() {
@@ -97,6 +98,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     if(orden.ordenTrabajoId != 0){
       tipoOrdenInicial = orden.tipoOrden;
       _instruccionesController.text = orden.instrucciones;
@@ -592,69 +594,128 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
             ),
           ),
         ),
-        bottomNavigationBar: BottomAppBar(
-          elevation: 0,
-          color: Colors.grey.shade200,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                if(orden.ordenTrabajoId != 0)...[
-                  CustomButton(
-                    text: 'Cambiar tecnico',
-                    onPressed: () {
-                      cambiarTecnico();
-                    },
-                    disabled: orden.estado == 'DESCARTADA',
-                    tamano: 20,
-                  ),
-                  const SizedBox(width: 30,),
-                ],
-                if(orden.ordenTrabajoId != 0)...[
-                  CustomButton(
-                  text: 'Cambiar estado',
-                  onPressed: () {
-                    cambiarEstado();
-                  },
-                  disabled: orden.estado == 'DESCARTADA',
-                  tamano: 20,
-                ),
-                const SizedBox(width: 30,),
-                ],                
-                CustomButton(
-                  text: 'Guardar',
-                  onPressed: orden.estado == 'PENDIENTE'
-                      ? () => datosAGuardar(context)
-                      : null,
-                  tamano: 20,
-                  disabled: orden.estado != 'PENDIENTE',
-                ),
-                // SizedBox(
-                //   width: 30,
-                // ),
-                // CustomButton(
-                //   text: 'Eliminar',
-                //   onPressed: () {},
-                //   tamano: 20,
-                // ),
-                const SizedBox(width: 30),
-                if(orden.ordenTrabajoId != 0)
-                CustomButton(
-                  text: 'Revisión',
-                  onPressed: (orden.estado == 'EN PROCESO' ||
-                          orden.estado == 'FINALIZADA' ||
-                          orden.estado == 'REVISADA')
-                      ? () => router.push('/revisionOrden')
-                      : null,
-                  disabled: orden.estado == 'PENDIENTE' ||
-                      orden.estado == 'DESCARTADA',
-                  tamano: 20,
-                ),
-              ],
+
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: buttonIndex,
+          onTap: (index) {
+            setState(() {
+              buttonIndex = index;
+              switch (buttonIndex){
+                case 0: 
+                if(orden.estado == 'DESCARTADA'){
+                }else{
+                  cambiarTecnico();
+                }
+                break;
+                case 1:
+                if(orden.estado == 'DESCARTADA'){
+                }else{
+                  cambiarEstado();
+                }
+                break;
+                case 2:
+                if(orden.estado == 'PENDIENTE'){
+                  datosAGuardar(context);
+                }else{
+                  null;
+                }
+                break;
+                case 3:
+                  if(orden.estado == 'EN PROCESO' || orden.estado == 'FINALIZADA' || orden.estado == 'REVISADA'){
+                    router.push('/revisionOrden');
+                  }else{
+                    null;
+                  }
+                break;
+              }
+
+            });
+          },
+          showUnselectedLabels: true,
+          selectedItemColor: colors.primary,
+          unselectedItemColor: Colors.grey,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.pending_actions),
+              label: 'Cambiar Tecnico',
             ),
-          ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.play_arrow),
+              label: 'Cambiar Estado',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.done),
+              label: 'Guardar',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.check),
+              label: 'Revision',
+            ),
+          ],
         ),
+        // bottomNavigationBar: BottomAppBar(
+        //   elevation: 0,
+        //   color: Colors.grey.shade200,
+        //   child: Padding(
+        //     padding: const EdgeInsets.all(8.0),
+        //     child: Row(
+        //       mainAxisAlignment: MainAxisAlignment.end,
+        //       children: [
+        //         if(orden.ordenTrabajoId != 0)...[
+        //           CustomButton(
+        //             text: 'Cambiar tecnico',
+        //             onPressed: () {
+        //               cambiarTecnico();
+        //             },
+        //             disabled: orden.estado == 'DESCARTADA',
+        //             tamano: 20,
+        //           ),
+        //           const SizedBox(width: 30,),
+        //         ],
+        //         if(orden.ordenTrabajoId != 0)...[
+        //           CustomButton(
+        //           text: 'Cambiar estado',
+        //           onPressed: () {
+        //             cambiarEstado();
+        //           },
+        //           disabled: orden.estado == 'DESCARTADA',
+        //           tamano: 20,
+        //         ),
+        //         const SizedBox(width: 30,),
+        //         ],                
+        //         CustomButton(
+        //           text: 'Guardar',
+        //           onPressed: orden.estado == 'PENDIENTE'
+        //               ? () => datosAGuardar(context)
+        //               : null,
+        //           tamano: 20,
+        //           disabled: orden.estado != 'PENDIENTE',
+        //         ),
+        //         // SizedBox(
+        //         //   width: 30,
+        //         // ),
+        //         // CustomButton(
+        //         //   text: 'Eliminar',
+        //         //   onPressed: () {},
+        //         //   tamano: 20,
+        //         // ),
+        //         const SizedBox(width: 30),
+        //         if(orden.ordenTrabajoId != 0)
+        //         CustomButton(
+        //           text: 'Revisión',
+        //           onPressed: (orden.estado == 'EN PROCESO' ||
+        //                   orden.estado == 'FINALIZADA' ||
+        //                   orden.estado == 'REVISADA')
+        //               ? () => router.push('/revisionOrden')
+        //               : null,
+        //           disabled: orden.estado == 'PENDIENTE' ||
+        //               orden.estado == 'DESCARTADA',
+        //           tamano: 20,
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
       ),
     );
   }
