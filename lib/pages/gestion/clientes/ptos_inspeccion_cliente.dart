@@ -11,7 +11,7 @@ import 'package:sedel_oficina_maqueta/models/plaga_objetivo.dart';
 import 'package:sedel_oficina_maqueta/models/plano.dart';
 import 'package:sedel_oficina_maqueta/models/pto_inspeccion.dart';
 import 'package:sedel_oficina_maqueta/models/tipos_ptos_inspeccion.dart';
-import 'package:sedel_oficina_maqueta/pages/menusRevisiones/ptosInspeccion/zona.dart';
+import 'package:sedel_oficina_maqueta/models/zona.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/orden_services.dart';
 import 'package:sedel_oficina_maqueta/services/plagas_objetivo_services.dart';
