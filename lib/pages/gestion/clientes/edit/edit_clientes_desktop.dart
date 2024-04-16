@@ -151,32 +151,26 @@ class _BodyState extends State<Body> {
 
     cargarValoresDeCampo(cliente);
 
-    late Departamento? departamentoIncialSeleccionado =
-        departamentos.isNotEmpty ? departamentos[0] : null;
+    late Departamento? departamentoIncialSeleccionado = departamentos.isNotEmpty ? departamentos[0] : null;
     late TipoCliente? tipoInicialSeleccionado = tipoClientes[0];
-    late Tecnico? tecnicoIncialSeleccionado =
-        tecnicos.isNotEmpty ? tecnicos[0] : null;
+    late Tecnico? tecnicoIncialSeleccionado = tecnicos.isNotEmpty ? tecnicos[0] : null;
     late EstadoCliente? estadoInicialSeleccionado = estados[0];
 
     if (cliente.clienteId > 0) {
       if (selectedTecnico.tecnicoId != 0 && tecnicos.isNotEmpty) {
-        tecnicoIncialSeleccionado = tecnicos
-            .firstWhere((tec) => tec.tecnicoId == selectedTecnico.tecnicoId);
+        tecnicoIncialSeleccionado = tecnicos.firstWhere((tec) => tec.tecnicoId == selectedTecnico.tecnicoId);
       }
-      if (selectedDepartamento.departamentoId != 0 &&
-          departamentos.isNotEmpty) {
+      if (selectedDepartamento.departamentoId != 0 && departamentos.isNotEmpty) {
         departamentoIncialSeleccionado = departamentos.firstWhere(
-            (departamento) =>
-                departamento.departamentoId ==
-                selectedDepartamento.departamentoId);
+          (departamento) => departamento.departamentoId == selectedDepartamento.departamentoId);
       }
       if (tipoClienteSeleccionado.tipoClienteId != 0) {
         tipoInicialSeleccionado = tipoClientes.firstWhere((tipo) =>
-            tipo.tipoClienteId == tipoClienteSeleccionado.tipoClienteId);
+          tipo.tipoClienteId == tipoClienteSeleccionado.tipoClienteId);
       }
       if (estadoSeleccionado.codEstado != '') {
         estadoInicialSeleccionado = estados.firstWhere(
-            (estado) => estado.codEstado == estadoSeleccionado.codEstado);
+          (estado) => estado.codEstado == estadoSeleccionado.codEstado);
       }
     } else {
       tecnicoIncialSeleccionado = null;
@@ -670,8 +664,7 @@ class _BodyState extends State<Body> {
     );
   }
 
-  BottomAppBar BotonesConId(
-      Cliente cliente, BuildContext context, String token, bool tieneId) {
+  BottomAppBar BotonesConId(Cliente cliente, BuildContext context, String token, bool tieneId) {
     return BottomAppBar(
       elevation: 0,
       child: Padding(
