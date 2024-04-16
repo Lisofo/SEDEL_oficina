@@ -17,7 +17,7 @@ export 'package:sedel_oficina_maqueta/pages/gestion/tecnicos/tecnicos.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/tecnicos/edit_tecnicos.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/clientes/busqueda/clientes.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/clientes/busqueda/clientes_desktop.dart';
-export 'package:sedel_oficina_maqueta/pages/gestion/clientes/edit/edit_clientes_desktop.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/clientes/edit/edit_clientes.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/clientes/ptos_inspeccion_cliente.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/plagasObjetivo/plagas_objetivo.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/plagasObjetivo/edit_plagas_objetivo.dart';

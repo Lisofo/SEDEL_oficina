@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, unused_field
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -54,6 +54,8 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
   late Tecnico selectedTecnico;
   late List<Departamento> departamentos = [];
   late Departamento selectedDepartamento;
+  late final PageController _pageController = PageController(initialPage: 0);
+  int _pageIndex = 0;
 
   late List<EstadoCliente> estados = [
     EstadoCliente(codEstado: 'A', descripcion: 'Activo'),
@@ -120,7 +122,6 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
   
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     cargarValoresDeCampo(cliente);
 
     late Departamento? departamentoIncialSeleccionado = departamentos.isNotEmpty ? departamentos[0] : null;
@@ -152,485 +153,502 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
     }
     return SafeArea(
       child: Scaffold(
-        appBar: AppBarDesign(
-          titulo: 'Clientes',
-        ),
-        drawer: const Drawer(),
-        body: Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: SingleChildScrollView(
-        child: Column(
+        appBar: AppBarDesign(titulo: 'Clientes'),
+        //ToDo poner drawer
+        body: PageView(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() {
+              _pageIndex = index;
+            });
+          },
+          scrollDirection: Axis.horizontal,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text('Codigo '),
-                            SizedBox(
-                                width: 300,
-                                child: CustomTextFormField(
-                                    controller: _codController,
-                                    label: 'Codigo',
-                                    maxLines: 1)),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text('Nombre '),
-                            SizedBox(
-                                width: 300,
-                                child: CustomTextFormField(
-                                  controller: _nombreController,
-                                  label: 'Nombre',
-                                  maxLines: 1,
-                                )),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20,
-                          child: TextButton(
-                            onPressed: () {
-                              MapsLauncher.launchQuery(_nombreController.text);
-                            },
-                            child: const Text('Buscar por nombre'),
-                          ),
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text('Nombre Fantasia  '),
-                            SizedBox(
-                              width: 300,
-                              child: CustomTextFormField(
-                                controller: _nombFantasiaController,
-                                label: 'Nombre Fantasia',
-                                maxLines: 1
-                              )
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20,),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            const Text('Email  '),
-                            SizedBox(
-                                width: 300,
-                                child: CustomTextFormField(
-                                    controller: _emailController,
-                                    label: 'Email',
-                                    maxLines: 1)),
-                          ],
-                        ),
-                        const SizedBox(height: 20,),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text('Direccion  '),
-                            SizedBox(
-                              width: 300,
-                              child: CustomTextFormField(
-                                controller: _direccionController,
-                                label: 'Direccion',
-                                maxLines: 1
-                              )
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20,
-                          child: TextButton(
-                            onPressed: () {
-                              MapsLauncher.launchQuery('${_direccionController.text}, ${_localidadController.text}');
-                            },
-                            child: const Text('Buscar por direccion'),
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            const Text('Coordenadas  '),
-                            SizedBox(
-                                width: 300,
-                                child: CustomTextFormField(
-                                    controller: _coordenadasController,
-                                    hint: 'Latitud, longitud',
-                                    maxLines: 1,
-                                    label: 'Coordenadas'))
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20,
-                          child: TextButton(
-                            onPressed: () {
-                              buscarPorCoordenadas(_coordenadasController.text);
-                            },
-                            child: const Text('Buscar por coordenadas'),
-                          ),
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text('Barrio  '),
-                            SizedBox(
-                                width: 300,
-                                child: CustomTextFormField(
-                                    controller: _barrioController,
-                                    label: 'Barrio',
-                                    maxLines: 1)),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text('Localidad  '),
-                            SizedBox(
-                                width: 300,
-                                child: CustomTextFormField(
-                                    controller: _localidadController,
-                                    label: 'Localidad',
-                                    maxLines: 1)),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text('Departamento  '),
-                            SizedBox(
-                              width: 300,
-                              child: CustomDropdownFormMenu(
-                                value: departamentoIncialSeleccionado,
-                                hint: 'Seleccione departamento',
-                                items: departamentos.map((e) {
-                                  return DropdownMenuItem(
-                                    value: e,
-                                    child: Text(e.nombre),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  selectedDepartamento = value;
-                                  cliente.departamentoId =
-                                      (value as Departamento).departamentoId;
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text('Telefono1  '),
-                            SizedBox(
-                                width: 300,
-                                child: CustomTextFormField(
-                                    controller: _tel1Controller,
-                                    label: 'Telefono1',
-                                    maxLines: 1)),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text('Telefono2  '),
-                            SizedBox(
-                                width: 300,
-                                child: CustomTextFormField(
-                                    controller: _tel2Controller,
-                                    label: 'Telefono2',
-                                    maxLines: 1)),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text('RUC  '),
-                            SizedBox(
-                                width: 300,
-                                child: CustomTextFormField(
-                                    controller: _rucController,
-                                    label: 'RUC',
-                                    maxLines: 1)),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text('Estado  '),
-                            SizedBox(
-                                width: 300,
-                                child: CustomDropdownFormMenu(
-                                  value: estadoInicialSeleccionado,
-                                  hint: 'Seleccione un estado',
-                                  items: estados.map((e) {
-                                    return DropdownMenuItem(
-                                        value: e, child: Text(e.descripcion));
-                                  }).toList(),
-                                  onChanged: (newValue) {
-                                    estadoSeleccionado = newValue;
-                                    cliente.estado =
-                                        (newValue as EstadoCliente).codEstado;
-                                  },
-                                )),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text('Tipo de cliente '),
-                            SizedBox(
-                                width: 300,
-                                child: CustomDropdownFormMenu(
-                                    value: tipoInicialSeleccionado,
-                                    hint: 'Seleccione tipo de cliente',
-                                    onChanged: (newValue) {
-                                      tipoClienteSeleccionado = newValue;
-                                      cliente.tipoClienteId =
-                                          (newValue as TipoCliente)
-                                              .tipoClienteId;
-                                    },
-                                    items: tipoClientes.map((e) {
-                                      return DropdownMenuItem(
-                                          value: e, child: Text(e.descripcion));
-                                    }).toList())),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 30,
-                ),
-                Column(
-                  children: [
-                    SizedBox(
-                      width: 500,
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  const Text('Tecnico  '),
-                                  SizedBox(
-                                    width: 300,
-                                    child: CustomDropdownFormMenu(
-                                      value: tecnicoIncialSeleccionado,
-                                      hint: 'Seleccione tecnico',
-                                      items: tecnicos.map((e) {
-                                        return DropdownMenuItem(
-                                          value: e,
-                                          child: Text(e.nombre),
-                                        );
-                                      }).toList(),
-                                      onChanged: (value) {
-                                        selectedTecnico = value;
-                                        cliente.tecnicoId =
-                                            (value as Tecnico).tecnicoId;
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Center(
-                                    child: Text(
-                                      'Servicios',
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  PopUpServicios(
-                                      context,
-                                      cliente.clienteId.toString(),
-                                      cliente,
-                                      servicios,
-                                      token)
-                                ],
-                              ),
-                              SizedBox(
-                                height: 300,
-                                width: 500,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.vertical,
-                                  shrinkWrap: true,
-                                  itemCount: serviciosCliente.length,
-                                  itemBuilder: (context, i) {
-                                    final servicio = serviciosCliente[i];
-                                    return ListTile(
-                                      title: Text(servicio.servicio),
-                                      subtitle: Text(servicio.comentario),
-                                      trailing: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Column(
-                                            children: [
-                                              Text(DateFormat('E, d , MMM, yyyy', 'es').format(servicio.desde!)),
-                                              Text(servicio.hasta == null ? '' : DateFormat('E, d , MMM, yyyy', 'es').format(servicio.hasta!)),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          IconButton(
-                                            onPressed: () {
-                                              popUpBorrar(context, cliente, servicio, token, i);
-                                            },
-                                            icon: const Icon(
-                                              Icons.delete,
-                                              color: Colors.red,
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          IconButton(
-                                            onPressed: () async {
-                                              await showDialog(
-                                                context: context,
-                                                builder: (BuildContext context) {
-                                                  return AddClientServicesDialog(
-                                                    servicioClienteSeleccionado: serviciosCliente[i],
-                                                    cliente: cliente,
-                                                    token: token
-                                                  );
-                                                },
-                                              );
-                                              loadDatos();
-                                            },
-                                            icon: const Icon(
-                                              Icons.edit,
-                                              color: Colors.blue,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    SizedBox(
-                      width: 500,
-                      height: 300,
-                      child: Card(
-                        child: CustomTextFormField(
-                          maxLines: 12,
-                          label: 'Notas del cliente',
-                          controller: _notasClienteController,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  width: 30,
-                ),
-                Card(
-                  child: Column(
-                    children: [
-                      const Center(
-                        child: Text(
-                          'Usuarios asociados',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      SizedBox(
-                        height: 400,
-                        width: 300,
-                        child: ListView.builder(
-                          itemCount: usuariosXClientes.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor:
-                                   colors.primary,
-                                child: Text(
-                                  usuariosXClientes[index].usuarioId.toString(),
-                                  style: const TextStyle(color: Colors.white),
-                                ),
-                              ),
-                              title: Text(usuariosXClientes[index].usuario),
-                              subtitle: Text(
-                                usuariosXClientes[index].login,
-                                style: const TextStyle(fontSize: 13),
-                              ),
-                            );
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
+            _datosCliente(
+              departamentoIncialSeleccionado, 
+              tipoInicialSeleccionado, 
+              tecnicoIncialSeleccionado, 
+              estadoInicialSeleccionado
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                if (cliente.clienteId != 0) ...[
-                  BotonesConId(cliente, context, token, true),
-                ] else ...[
-                  BotonesConId(cliente, context, token, false)
-                ]
-              ],
-            )
+            _serviciosCliente(),
+            _usuariosCliente(usuariosXClientes),
           ],
         ),
-      ),
       )
+    );
+  }
+
+  Widget _datosCliente(Departamento? departamento, TipoCliente? tipoInicial, Tecnico? tecnicoInicial, EstadoCliente? estadoInicial) {
+    final colors = Theme.of(context).colorScheme;
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 4),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: colors.primary,
+                    borderRadius: BorderRadius.circular(5)),
+                  height: 30,
+                  child: const Center(
+                    child: Text(
+                      'Datos del cliente',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10,),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Codigo '),
+                  SizedBox(
+                    width: 300,
+                    child: CustomTextFormField(
+                      controller: _codController,
+                      label: 'Codigo',
+                      maxLines: 1
+                    )
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20,),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Nombre '),
+                  SizedBox(
+                    width: 300,
+                    child: CustomTextFormField(
+                      controller: _nombreController,
+                      label: 'Nombre',
+                      maxLines: 1,
+                    )
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+                child: TextButton(
+                  onPressed: () {
+                    MapsLauncher.launchQuery(_nombreController.text);
+                  },
+                  child: const Text('Buscar por nombre'),
+                ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Nombre Fantasia  '),
+                  SizedBox(
+                    width: 300,
+                    child: CustomTextFormField(
+                      controller: _nombFantasiaController,
+                      label: 'Nombre Fantasia',
+                      maxLines: 1
+                    )
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  const Text('Email  '),
+                  SizedBox(
+                    width: 300,
+                    child: CustomTextFormField(
+                      controller: _emailController,
+                      label: 'Email',
+                      maxLines: 1
+                    )
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20,),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Direccion  '),
+                  SizedBox(
+                    width: 300,
+                    child: CustomTextFormField(
+                      controller: _direccionController,
+                      label: 'Direccion',
+                      maxLines: 1
+                    )
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+                child: TextButton(
+                  onPressed: () {
+                    MapsLauncher.launchQuery('${_direccionController.text}, ${_localidadController.text}');
+                  },
+                  child: const Text('Buscar por direccion'),
+                ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Coordenadas  '),
+                  SizedBox(
+                    width: 300,
+                    child: CustomTextFormField(
+                      controller: _coordenadasController,
+                      hint: 'Latitud, longitud',
+                      maxLines: 1,
+                      label: 'Coordenadas'
+                    )
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 20,
+                child: TextButton(
+                  onPressed: () {
+                    buscarPorCoordenadas(_coordenadasController.text);
+                  },
+                  child: const Text('Buscar por coordenadas'),
+                ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Barrio  '),
+                  SizedBox(
+                    width: 300,
+                    child: CustomTextFormField(
+                      controller: _barrioController,
+                      label: 'Barrio',
+                      maxLines: 1
+                    )
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20,),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Localidad  '),
+                  SizedBox(
+                    width: 300,
+                    child: CustomTextFormField(
+                      controller: _localidadController,
+                      label: 'Localidad',
+                      maxLines: 1
+                    )
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20,),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Departamento  '),
+                  SizedBox(
+                    width: 300,
+                    child: CustomDropdownFormMenu(
+                      value: departamento,
+                      hint: 'Seleccione departamento',
+                      items: departamentos.map((e) {
+                        return DropdownMenuItem(
+                          value: e,
+                          child: Text(e.nombre),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        selectedDepartamento = value;
+                        cliente.departamentoId = (value as Departamento).departamentoId;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20,),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Telefono1  '),
+                  SizedBox(
+                    width: 300,
+                    child: CustomTextFormField(
+                      controller: _tel1Controller,
+                      label: 'Telefono1',
+                      maxLines: 1
+                    )
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20,),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Telefono2  '),
+                  SizedBox(
+                    width: 300,
+                    child: CustomTextFormField(
+                      controller: _tel2Controller,
+                      label: 'Telefono2',
+                      maxLines: 1
+                    )
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20,),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('RUC  '),
+                  SizedBox(
+                    width: 300,
+                    child: CustomTextFormField(
+                      controller: _rucController,
+                      label: 'RUC',
+                      maxLines: 1
+                    )
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20,),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Estado  '),
+                  SizedBox(
+                    width: 300,
+                    child: CustomDropdownFormMenu(
+                      value: estadoInicial,
+                      hint: 'Seleccione un estado',
+                      items: estados.map((e) {
+                        return DropdownMenuItem(
+                          value: e, child: Text(e.descripcion)
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        estadoSeleccionado = newValue;
+                        cliente.estado = (newValue as EstadoCliente).codEstado;
+                      },
+                    )
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20,),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Tipo de cliente '),
+                  SizedBox(
+                    width: 300,
+                    child: CustomDropdownFormMenu(
+                      value: tipoInicial,
+                      hint: 'Seleccione tipo de cliente',
+                      onChanged: (newValue) {
+                        tipoClienteSeleccionado = newValue;
+                        cliente.tipoClienteId = (newValue as TipoCliente).tipoClienteId;
+                      },
+                      items: tipoClientes.map((e) {
+                        return DropdownMenuItem(
+                          value: e, child: Text(e.descripcion)
+                        );
+                      }).toList()
+                    )
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  const Text('Tecnico  '),
+                  SizedBox(
+                    width: 300,
+                    child: CustomDropdownFormMenu(
+                      value: tecnicoInicial,
+                      hint: 'Seleccione tecnico',
+                      items: tecnicos.map((e) {
+                        return DropdownMenuItem(
+                          value: e,
+                          child: Text(e.nombre),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        selectedTecnico = value;
+                        cliente.tecnicoId =
+                            (value as Tecnico).tecnicoId;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20,),
+              SizedBox(
+                width: 500,
+                height: 300,
+                child: CustomTextFormField(
+                  minLines: 2,
+                  maxLines: 12,
+                  label: 'Notas del cliente',
+                  controller: _notasClienteController,
+                ),
+              )
+            ],
+          ),
+        ),
       ),
+    );
+  }
+
+  Widget _serviciosCliente(){
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Center(
+                child: Text(
+                  'Servicios',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
+              ),
+              PopUpServicios(
+                context,
+                cliente.clienteId.toString(),
+                cliente,
+                servicios,
+                token
+              )
+            ],
+          ),
+          SizedBox(
+            height: 300,
+            width: 500,
+            child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: serviciosCliente.length,
+              itemBuilder: (context, i) {
+                final servicio = serviciosCliente[i];
+                return ListTile(
+                  title: Text(servicio.servicio),
+                  subtitle: Text(servicio.comentario),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Column(
+                        children: [
+                          Text(DateFormat('E, d , MMM, yyyy', 'es').format(servicio.desde!)),
+                          Text(servicio.hasta == null ? '' : DateFormat('E, d , MMM, yyyy', 'es').format(servicio.hasta!)),
+                        ],
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          popUpBorrar(context, cliente, servicio, token, i);
+                        },
+                        icon: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
+                      ),
+                      const SizedBox(width: 5,),
+                      IconButton(
+                        onPressed: () async {
+                          await showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AddClientServicesDialog(
+                                servicioClienteSeleccionado: serviciosCliente[i],
+                                cliente: cliente,
+                                token: token
+                              );
+                            },
+                          );
+                          loadDatos();
+                        },
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _usuariosCliente(List<UsuariosXCliente> usuarios) {
+    final colors = Theme.of(context).colorScheme;
+    return Column(
+      children: [
+       Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 4),
+          child: Container(
+            decoration: BoxDecoration(
+              color: colors.primary,
+              borderRadius: BorderRadius.circular(5)),
+            height: 30,
+            child: const Center(
+              child: Text(
+                'Usuarios asociados',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: ListView.builder(
+            itemCount: usuarios.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: colors.primary,
+                  child: Text(
+                    usuarios[index].usuarioId.toString(),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+                title: Text(usuarios[index].usuario),
+                subtitle: Text(
+                  usuarios[index].login,
+                  style: const TextStyle(fontSize: 13),
+                ),
+              );
+            },
+          ),
+        )
+      ],
     );
   }
 

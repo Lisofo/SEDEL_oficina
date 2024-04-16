@@ -268,5 +268,6 @@ class _ClientesMobileState extends State<ClientesMobile> {
     setState(() {
       searchResults = results;
     });
+    router.pop();
   }
 }
