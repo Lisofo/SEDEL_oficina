@@ -86,7 +86,7 @@ class _ClientesDesktopState extends State<ClientesDesktop> {
   }
 
   cargarDatos() {
-    token = context.watch<OrdenProvider>().token;
+    token = context.read<OrdenProvider>().token;
   }
 
   @override
