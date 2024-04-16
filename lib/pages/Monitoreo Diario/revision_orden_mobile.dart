@@ -121,31 +121,55 @@ class _RevisionOrdenMobileState extends State<RevisionOrdenMobile> with SingleTi
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: Container(
-                  width: MediaQuery.of(context).size.width *0.8,
-                  child: CustomDropdownFormMenu(
-                    value: revisiones.isEmpty ? null : revisiones[0],
-                    items: revisiones.map((e){
-                      return DropdownMenuItem(
-                        value: e,
-                        child: Text('Revisión ${e.ordinal} (${e.tipoRevision}): ${e.comentario}'),
-                      );
-                    }).toList(),
-                    hint: 'Seleccione una revisión',
-                    onChanged: (value) async {
-                      await cambioDeRevision(value, context);
-                    },
-                  ),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.95,
+                color: Colors.cyan,
+                child: CustomDropdownFormMenu(
+                  //value: revisiones.isEmpty ? null : revisiones[0],
+                  items: revisiones.map((e){
+                    return DropdownMenuItem(
+                      value: e,
+                      child: SizedBox( // Wrap with SizedBox to limit width
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: Column( // Wrap with Column to allow multi-line text
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Revisión ${e.ordinal} (${e.tipoRevision}): ',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16.0,
+                                color: Colors.red,
+                              ),
+                              overflow: TextOverflow.ellipsis, // Handle overflow with ellipsis
+                            ),
+                            Text(
+                              e.comentario,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16.0,
+                                color: Colors.red
+                              ),
+                              overflow: TextOverflow.ellipsis, // Handle overflow with ellipsis
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                  hint: 'Seleccione una revisión',
+                  onChanged: (value) async {
+                    await cambioDeRevision(value, context);
+                  },
                 ),
               ),
+
             ),
             const SizedBox(height: 10,),
             const Divider(),
             const SizedBox(height: 10,),
             
-            Spacer(),
+            const Spacer(),
             BottomNavigationBar(
               currentIndex: buttonIndex,
               onTap: (index) {
