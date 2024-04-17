@@ -10,12 +10,12 @@ import 'package:sedel_oficina_maqueta/services/tecnico_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/button_delegate.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 
 import '../../../../models/cliente.dart';
 import '../../../../models/orden.dart';
 import '../../../../models/tecnico.dart';
 import '../../../../provider/orden_provider.dart';
-import '../../../../widgets/appbar.dart';
 import '../../../../widgets/drawer.dart';
 
 class OrdenPlanDesktop extends StatefulWidget {
@@ -112,7 +112,7 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBarDesign(titulo: 'Ordenes de trabajo',),
+      appBar: AppBarDesktop(titulo: 'Ordenes de trabajo',),
       drawer: const Drawer(child: BotonesDrawer(),),
       body: Row(
         children: [

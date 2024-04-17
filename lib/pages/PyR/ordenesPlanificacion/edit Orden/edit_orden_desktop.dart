@@ -14,8 +14,7 @@ import 'package:sedel_oficina_maqueta/search/client_delegate.dart';
 import 'package:sedel_oficina_maqueta/services/orden_services.dart';
 import 'package:sedel_oficina_maqueta/services/servicio_services.dart';
 import 'package:sedel_oficina_maqueta/services/tecnico_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar.dart';
-import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 import 'package:intl/intl.dart';
@@ -110,7 +109,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.grey.shade200,
-        appBar: AppBarDesign(
+        appBar: AppBarDesktop(
           titulo: 'Detalles de la orden',
         ),
         drawer: const Drawer(

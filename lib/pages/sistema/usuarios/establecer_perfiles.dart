@@ -7,7 +7,7 @@ import 'package:sedel_oficina_maqueta/models/perfil_usuario.dart';
 import 'package:sedel_oficina_maqueta/models/usuario.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/user_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 
 class EstablecerPerfiles extends StatefulWidget {
@@ -49,7 +49,7 @@ class _EstablecerPerfilesState extends State<EstablecerPerfiles> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarDesign(titulo: 'Establecer perfiles de usuario ${user.nombre}'),
+      appBar: AppBarDesktop(titulo: 'Establecer perfiles de usuario ${user.nombre}'),
       drawer: const Drawer(
         child: BotonesDrawer(),
       ),

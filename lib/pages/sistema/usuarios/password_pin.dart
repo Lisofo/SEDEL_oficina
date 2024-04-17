@@ -6,7 +6,7 @@ import 'package:sedel_oficina_maqueta/services/user_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 
-import '../../../widgets/appbar.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import '../../../widgets/drawer.dart';
 
 class EditPwdPin extends StatefulWidget {
@@ -44,7 +44,7 @@ class _EditPwdPinState extends State<EditPwdPin> {
     final token = context.read<OrdenProvider>().token;
 
     return Scaffold(
-      appBar: AppBarDesign(
+      appBar: AppBarDesktop(
         titulo: 'Usuarios',
       ),
       drawer: const Drawer(

@@ -17,7 +17,7 @@ import 'package:sedel_oficina_maqueta/services/orden_services.dart';
 import 'package:sedel_oficina_maqueta/services/plagas_objetivo_services.dart';
 import 'package:sedel_oficina_maqueta/services/planos_services.dart';
 import 'package:sedel_oficina_maqueta/services/ptos_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
@@ -124,7 +124,7 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBarDesign(titulo: 'Ptos de inspeccions'),
+      appBar: AppBarDesktop(titulo: 'Ptos de inspeccions'),
       drawer: const Drawer(
         child: BotonesDrawer(),
       ),

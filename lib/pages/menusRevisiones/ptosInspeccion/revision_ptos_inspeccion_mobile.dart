@@ -100,7 +100,7 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
     print(revisionId);
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Container(
+      child: SizedBox(
         height: MediaQuery.of(context).size.height * 0.91,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

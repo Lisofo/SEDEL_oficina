@@ -4,7 +4,7 @@ import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/control.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/control_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
@@ -36,7 +36,7 @@ class _ControlesPageState extends State<ControlesPage> {
     final colors = Theme.of(context).colorScheme;
     return SafeArea(
       child: Scaffold(
-        appBar: AppBarDesign(titulo: 'Controles',),
+        appBar: AppBarDesktop(titulo: 'Controles',),
         drawer: const Drawer(
           child: BotonesDrawer(),
         ),

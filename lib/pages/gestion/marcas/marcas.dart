@@ -8,7 +8,7 @@ import 'package:sedel_oficina_maqueta/models/tecnico.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/marcas_services.dart';
 import 'package:sedel_oficina_maqueta/services/tecnico_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 
@@ -71,7 +71,7 @@ class _MarcasPageState extends State<MarcasPage> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBarDesign(
+      appBar: AppBarDesktop(
         titulo: 'Marcas',
       ),
       drawer: const Drawer(

@@ -4,7 +4,7 @@ import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/plaga.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/plaga_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 
@@ -27,7 +27,7 @@ class _PlagasPageState extends State<PlagasPage> {
     final token = context.watch<OrdenProvider>().token;
     return SafeArea(
       child: Scaffold(
-        appBar: AppBarDesign(titulo: 'Plagas',),
+        appBar: AppBarDesktop(titulo: 'Plagas',),
         drawer: const Drawer(
           child: BotonesDrawer(),
         ),

@@ -7,7 +7,7 @@ import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/estado_cliente.dart';
 import 'package:sedel_oficina_maqueta/models/tecnico.dart';
 import 'package:sedel_oficina_maqueta/services/tecnico_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
@@ -92,7 +92,7 @@ class _ClientesDesktopState extends State<ClientesDesktop> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarDesign(
+      appBar: AppBarDesktop(
         titulo: 'Clientes',
       ),
       drawer: const Drawer(

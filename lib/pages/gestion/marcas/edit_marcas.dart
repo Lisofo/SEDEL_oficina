@@ -10,7 +10,7 @@ import 'package:sedel_oficina_maqueta/models/tecnico.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/marcas_services.dart';
 import 'package:sedel_oficina_maqueta/services/tecnico_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
@@ -215,7 +215,7 @@ class _EditMarcasPageState extends State<EditMarcasPage> {
 
 
     return Scaffold(
-      appBar: AppBarDesign(titulo: 'Marcas'),
+      appBar: AppBarDesktop(titulo: 'Marcas'),
       drawer: const Drawer(
         child: BotonesDrawer(),
       ),

@@ -9,7 +9,7 @@ import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 
 import '../../../services/plaga_services.dart';
-import '../../../widgets/appbar.dart';
+import '../../../widgets/appbar_desktop.dart';
 import '../../../widgets/drawer.dart';
 
 class EditPlagasPage extends StatefulWidget {
@@ -48,7 +48,7 @@ class _EditPlagasPageState extends State<EditPlagasPage> {
     _descripcionController.text = plagaSeleccionada.descripcion;
 
     return Scaffold(
-      appBar: AppBarDesign(titulo: 'Plagas',),
+      appBar: AppBarDesktop(titulo: 'Plagas',),
       drawer: const Drawer(
         child: BotonesDrawer(),
       ),

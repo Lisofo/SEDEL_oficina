@@ -17,8 +17,7 @@ import 'package:sedel_oficina_maqueta/services/client_services.dart';
 import 'package:sedel_oficina_maqueta/services/servicio_services.dart';
 import 'package:sedel_oficina_maqueta/services/tecnico_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/add_client_services_dialog.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar.dart';
-import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_mobile.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 
@@ -56,6 +55,8 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
   late Departamento selectedDepartamento;
   late final PageController _pageController = PageController(initialPage: 0);
   int _pageIndex = 0;
+  int buttonIndex = 0;
+  bool tieneId = false;
 
   late List<EstadoCliente> estados = [
     EstadoCliente(codEstado: 'A', descripcion: 'Activo'),
@@ -98,6 +99,9 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
   Future<void> loadDatos() async {
     token = context.read<OrdenProvider>().token;
     cliente = context.read<OrdenProvider>().cliente;
+    if(cliente.clienteId != 0){
+      tieneId = true;
+    }
     final List<Tecnico> loadedTecnicos = await TecnicoServices().getAllTecnicos(context,token);
     final List<Departamento> loadedDepartamentos = await ClientServices().getClientesDepartamentos(context,token);
     servicios =  await ServiciosServices().getServicios(context, '', '', '', token);
@@ -123,7 +127,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
   @override
   Widget build(BuildContext context) {
     cargarValoresDeCampo(cliente);
-
+    final colors = Theme.of(context).colorScheme;
     late Departamento? departamentoIncialSeleccionado = departamentos.isNotEmpty ? departamentos[0] : null;
     late TipoCliente? tipoInicialSeleccionado = tipoClientes[0];
     late Tecnico? tecnicoIncialSeleccionado = tecnicos.isNotEmpty ? tecnicos[0] : null;
@@ -153,7 +157,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
     }
     return SafeArea(
       child: Scaffold(
-        appBar: AppBarDesign(titulo: 'Clientes'),
+        appBar: AppBarMobile(titulo: 'Clientes'),
         //ToDo poner drawer
         body: PageView(
           controller: _pageController,
@@ -170,8 +174,53 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
               tecnicoIncialSeleccionado, 
               estadoInicialSeleccionado
             ),
-            _serviciosCliente(),
+            
+            _serviciosCliente(servicios),
             _usuariosCliente(usuariosXClientes),
+          ],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: buttonIndex,
+          onTap: (index) async {
+            buttonIndex = index;
+            switch (buttonIndex){
+              case 0: 
+                establecerValoresDeCampo(cliente, estadoSeleccionado);
+              if (cliente.clienteId != 0) {
+                await ClientServices().putCliente(context, cliente, token);
+              } else {
+                await ClientServices().postCliente(context, cliente, token);
+                setState(() {});
+              }
+              break;
+              case 1:
+                if(tieneId){
+                  router.push('/ptosInspeccionCliente');
+                }
+              break;
+              case 2:
+                await borrarClientDialog(context, cliente, token);
+              break;
+            }
+          },
+          showUnselectedLabels: true,
+          selectedItemColor: colors.primary,
+          unselectedItemColor: Colors.grey,
+          items: [
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.save_as),
+              label: 'Guardar',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.place),
+              label: 'Puntos de inspeccion',
+            ),
+            if(tieneId)...[
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.delete),
+                label: 'Eliminar',
+              ),
+            ]
           ],
         ),
       )
@@ -212,7 +261,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                 children: [
                   const Text('Codigo '),
                   SizedBox(
-                    width: 300,
+                    width: MediaQuery.of(context).size.width * 0.75,
                     child: CustomTextFormField(
                       controller: _codController,
                       label: 'Codigo',
@@ -227,7 +276,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                 children: [
                   const Text('Nombre '),
                   SizedBox(
-                    width: 300,
+                    width: MediaQuery.of(context).size.width * 0.65,
                     child: CustomTextFormField(
                       controller: _nombreController,
                       label: 'Nombre',
@@ -250,7 +299,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                 children: [
                   const Text('Nombre Fantasia  '),
                   SizedBox(
-                    width: 300,
+                    width: MediaQuery.of(context).size.width * 0.60,
                     child: CustomTextFormField(
                       controller: _nombFantasiaController,
                       label: 'Nombre Fantasia',
@@ -265,7 +314,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                 children: [
                   const Text('Email  '),
                   SizedBox(
-                    width: 300,
+                    width: MediaQuery.of(context).size.width * 0.65,
                     child: CustomTextFormField(
                       controller: _emailController,
                       label: 'Email',
@@ -280,7 +329,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                 children: [
                   const Text('Direccion  '),
                   SizedBox(
-                    width: 300,
+                    width: MediaQuery.of(context).size.width * 0.65,
                     child: CustomTextFormField(
                       controller: _direccionController,
                       label: 'Direccion',
@@ -303,7 +352,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                 children: [
                   const Text('Coordenadas  '),
                   SizedBox(
-                    width: 300,
+                    width: MediaQuery.of(context).size.width * 0.65,
                     child: CustomTextFormField(
                       controller: _coordenadasController,
                       hint: 'Latitud, longitud',
@@ -327,7 +376,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                 children: [
                   const Text('Barrio  '),
                   SizedBox(
-                    width: 300,
+                    width: MediaQuery.of(context).size.width * 0.65,
                     child: CustomTextFormField(
                       controller: _barrioController,
                       label: 'Barrio',
@@ -342,7 +391,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                 children: [
                   const Text('Localidad  '),
                   SizedBox(
-                    width: 300,
+                    width: MediaQuery.of(context).size.width * 0.65,
                     child: CustomTextFormField(
                       controller: _localidadController,
                       label: 'Localidad',
@@ -357,7 +406,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                 children: [
                   const Text('Departamento  '),
                   SizedBox(
-                    width: 300,
+                    width: MediaQuery.of(context).size.width * 0.60,
                     child: CustomDropdownFormMenu(
                       value: departamento,
                       hint: 'Seleccione departamento',
@@ -381,7 +430,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                 children: [
                   const Text('Telefono1  '),
                   SizedBox(
-                    width: 300,
+                    width: MediaQuery.of(context).size.width * 0.65,
                     child: CustomTextFormField(
                       controller: _tel1Controller,
                       label: 'Telefono1',
@@ -396,7 +445,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                 children: [
                   const Text('Telefono2  '),
                   SizedBox(
-                    width: 300,
+                    width: MediaQuery.of(context).size.width * 0.65,
                     child: CustomTextFormField(
                       controller: _tel2Controller,
                       label: 'Telefono2',
@@ -411,7 +460,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                 children: [
                   const Text('RUC  '),
                   SizedBox(
-                    width: 300,
+                    width: MediaQuery.of(context).size.width * 0.65,
                     child: CustomTextFormField(
                       controller: _rucController,
                       label: 'RUC',
@@ -426,7 +475,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                 children: [
                   const Text('Estado  '),
                   SizedBox(
-                    width: 300,
+                    width: MediaQuery.of(context).size.width * 0.65,
                     child: CustomDropdownFormMenu(
                       value: estadoInicial,
                       hint: 'Seleccione un estado',
@@ -449,7 +498,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                 children: [
                   const Text('Tipo de cliente '),
                   SizedBox(
-                    width: 300,
+                    width: MediaQuery.of(context).size.width * 0.65,
                     child: CustomDropdownFormMenu(
                       value: tipoInicial,
                       hint: 'Seleccione tipo de cliente',
@@ -472,7 +521,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                 children: [
                   const Text('Tecnico  '),
                   SizedBox(
-                    width: 300,
+                    width: MediaQuery.of(context).size.width * 0.65,
                     child: CustomDropdownFormMenu(
                       value: tecnicoInicial,
                       hint: 'Seleccione tecnico',
@@ -493,7 +542,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
               ),
               const SizedBox(height: 20,),
               SizedBox(
-                width: 500,
+                width: MediaQuery.of(context).size.width,
                 height: 300,
                 child: CustomTextFormField(
                   minLines: 2,
@@ -509,11 +558,11 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
     );
   }
 
-  Widget _serviciosCliente(){
+  Widget _serviciosCliente(List<Servicio> servicios){
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
             mainAxisSize: MainAxisSize.min,
@@ -527,7 +576,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                   ),
                 ),
               ),
-              PopUpServicios(
+              popUpServicios(
                 context,
                 cliente.clienteId.toString(),
                 cliente,
@@ -537,8 +586,8 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
             ],
           ),
           SizedBox(
-            height: 300,
-            width: 500,
+            height: MediaQuery.of(context).size.height * 0.70,
+            width: MediaQuery.of(context).size.width,
             child: ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
@@ -622,11 +671,9 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
             ),
           ),
         ),
-        const SizedBox(
-          height: 20,
-        ),
+        const SizedBox(height: 20,),
         SizedBox(
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery.of(context).size.height * 0.60,
           width: MediaQuery.of(context).size.width,
           child: ListView.builder(
             itemCount: usuarios.length,
@@ -649,59 +696,6 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
           ),
         )
       ],
-    );
-  }
-
-  BottomAppBar BotonesConId(Cliente cliente, BuildContext context, String token, bool tieneId) {
-    return BottomAppBar(
-      elevation: 0,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            CustomButton(
-                onPressed: () async {
-                  establecerValoresDeCampo(cliente, estadoSeleccionado);
-                  if (cliente.clienteId != 0) {
-                    await ClientServices().putCliente(context, cliente, token);
-                  } else {
-                    await ClientServices().postCliente(context, cliente, token);
-                    setState(() {
-                      tieneId = true;
-                      BotonesConId(cliente, context, token, tieneId);
-                    });
-                  }
-                },
-                text: 'Guardar',
-                tamano: 20,
-                ),
-            const SizedBox(
-              width: 30,
-            ),
-            if (tieneId) ...[
-              CustomButton(
-                onPressed: () async {
-                    await borrarClientDialog(context, cliente, token);
-                },
-                text:'Eliminar',
-                tamano: 20,
-              ),
-            ],
-            const SizedBox(
-              width: 30,
-            ),
-            if(tieneId)
-            CustomButton(
-              onPressed: () {
-                router.push('/ptosInspeccionCliente');
-              },
-              text: 'Puntos de inspeccion',
-              tamano: 20,
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -795,8 +789,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
     MapsLauncher.launchCoordinates(double.parse(coord[0]), double.parse(coord[1]));
   }
 
-  Widget PopUpServicios(BuildContext context, String clienteId, Cliente cliente,
-      List servicios, String token) {
+  Widget popUpServicios(BuildContext context, String clienteId, Cliente cliente, List servicios, String token) {
     return InkWell(
       onTap: () async {
         if (clienteId != '0') {
@@ -817,8 +810,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
     );
   }
 
-  Future<dynamic> borrarClientDialog(
-      BuildContext context, Cliente clienteSeleccionado, String token) {
+  Future<dynamic> borrarClientDialog(BuildContext context, Cliente clienteSeleccionado, String token) {
     return showDialog(
       context: context,
       builder: (context) {
@@ -827,16 +819,16 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
           content: const Text('Desea borrar el cliente?'),
           actions: [
             TextButton(
-                onPressed: () async {
-                  ClientServices()
-                      .deleteCliente(context, clienteSeleccionado, token);
-                },
-                child: const Text('Borrar')),
+              onPressed: () async {
+                ClientServices().deleteCliente(context, clienteSeleccionado, token);
+              },
+              child: const Text('Borrar')),
             TextButton(
-                onPressed: () {
-                  router.pop();
-                },
-                child: const Text('Cancelar'))
+              onPressed: () {
+                router.pop();
+              },
+              child: const Text('Cancelar')
+            )
           ],
         );
       },

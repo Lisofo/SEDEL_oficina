@@ -6,7 +6,7 @@ import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/usuario.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/user_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 
@@ -31,7 +31,7 @@ class _UsuariosPageState extends State<UsuariosPage> {
     print('pantalla usuarios');
     return SafeArea(
       child: Scaffold(
-        appBar: AppBarDesign(
+        appBar: AppBarDesktop(
           titulo: 'Usuarios',
         ),
         drawer: const Drawer(

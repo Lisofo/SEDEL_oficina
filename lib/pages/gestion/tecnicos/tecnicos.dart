@@ -4,7 +4,7 @@ import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/tecnico.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/tecnico_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 import 'package:intl/intl.dart';
@@ -29,7 +29,7 @@ class _TecnicosPageState extends State<TecnicosPage> {
     final token = context.watch<OrdenProvider>().token;
     return SafeArea(
       child: Scaffold(
-        appBar: AppBarDesign(
+        appBar: AppBarDesktop(
           titulo: 'Tecnicos',
         ),
         drawer: const Drawer(

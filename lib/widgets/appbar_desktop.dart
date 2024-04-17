@@ -2,19 +2,19 @@
 
 import 'package:flutter/material.dart';
 
-class AppBarDesign extends StatefulWidget implements PreferredSizeWidget {
+class AppBarDesktop extends StatefulWidget implements PreferredSizeWidget {
   late String titulo;
 
-  AppBarDesign({super.key, required this.titulo});
+  AppBarDesktop({super.key, required this.titulo});
 
   @override
-  State<AppBarDesign> createState() => _AppBarDesignState();
+  State<AppBarDesktop> createState() => _AppBarDesktopState();
 
   @override
   Size get preferredSize => Size.fromHeight(AppBar().preferredSize.height);
 }
 
-class _AppBarDesignState extends State<AppBarDesign> {
+class _AppBarDesktopState extends State<AppBarDesktop> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;

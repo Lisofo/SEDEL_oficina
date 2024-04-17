@@ -7,7 +7,7 @@ import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/indisponibilidades.dart';
 import 'package:sedel_oficina_maqueta/services/indis_services.dart';
 import 'package:sedel_oficina_maqueta/services/tecnico_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/button_delegate.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
@@ -96,7 +96,7 @@ class _IndisponibilidadesDesktopState extends State<IndisponibilidadesDesktop> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBarDesign(titulo: 'Indisponibilidades',),
+      appBar: AppBarDesktop(titulo: 'Indisponibilidades',),
       drawer: const Drawer(
         child: BotonesDrawer(),
       ),

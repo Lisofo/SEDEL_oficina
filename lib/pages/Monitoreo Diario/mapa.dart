@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/tecnico_services.dart';
 import 'package:sedel_oficina_maqueta/services/ubicaciones_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/button_delegate.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
@@ -98,7 +98,7 @@ class _MapaPageState extends State<MapaPage>
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          appBar: AppBarDesign(
+          appBar: AppBarDesktop(
             titulo: 'Mapa',
           ),
           drawer: const Drawer(

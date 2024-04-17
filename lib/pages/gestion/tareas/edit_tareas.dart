@@ -9,7 +9,7 @@ import 'package:sedel_oficina_maqueta/services/tareas_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 
-import '../../../widgets/appbar.dart';
+import '../../../widgets/appbar_desktop.dart';
 import '../../../widgets/drawer.dart';
 
 class EditTareasPage extends StatefulWidget {
@@ -50,7 +50,7 @@ class _EditTareasPageState extends State<EditTareasPage> {
     _descripcionController.text = tareaSeleccionada.descripcion;
 
     return Scaffold(
-      appBar: AppBarDesign(titulo: 'Tareas',),      
+      appBar: AppBarDesktop(titulo: 'Tareas',),      
       drawer: const Drawer(
         child: BotonesDrawer(),
       ),

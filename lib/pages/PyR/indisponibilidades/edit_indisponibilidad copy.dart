@@ -2,7 +2,7 @@
 // // ignore_for_file: file_names
 
 // import 'package:flutter/material.dart';
-// import 'package:sedel_oficina_maqueta/widgets/appbar.dart';
+// import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 // import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 
 // class EditIndisponibilidad extends StatefulWidget {
@@ -17,7 +17,7 @@
 //   Widget build(BuildContext context) {
 //     return Scaffold(
 //       backgroundColor: Colors.grey.shade200,
-//       appBar: AppBarDesign(
+//       appBar: AppBarDesktop(
 //         titulo: '',
 //       ),
 //       drawer: Drawer(

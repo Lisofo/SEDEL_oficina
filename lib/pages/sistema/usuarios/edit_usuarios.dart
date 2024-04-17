@@ -9,7 +9,7 @@ import 'package:sedel_oficina_maqueta/services/user_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 
-import '../../../widgets/appbar.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import '../../../widgets/drawer.dart';
 
 class EditUsuariosPage extends StatefulWidget {
@@ -52,7 +52,7 @@ class _EditUsuariosPageState extends State<EditUsuariosPage> {
     _telefonoController.text = userSeleccionado.telefono;
 
     return Scaffold(
-      appBar: AppBarDesign(titulo: 'Usuarios',),
+      appBar: AppBarDesktop(titulo: 'Usuarios',),
       drawer: const Drawer(
         child: BotonesDrawer(),
       ),

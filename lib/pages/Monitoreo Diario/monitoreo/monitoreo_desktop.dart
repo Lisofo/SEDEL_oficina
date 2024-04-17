@@ -9,7 +9,7 @@ import 'package:sedel_oficina_maqueta/models/orden.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/orden_services.dart';
 import 'package:sedel_oficina_maqueta/services/tecnico_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/button_delegate.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 import 'package:intl/intl.dart';
@@ -152,7 +152,7 @@ class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBarDesign(
+        appBar: AppBarDesktop(
           titulo: 'Monitoreo de ordenes',
         ),
         drawer: const Drawer(

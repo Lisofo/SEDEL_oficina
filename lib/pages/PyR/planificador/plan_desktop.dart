@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 import 'package:sedel_oficina_maqueta/widgets/timetable.dart';
 
@@ -14,7 +14,7 @@ class _PlanDesktopState extends State<PlanDesktop> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarDesign(titulo: 'Planificador',),
+      appBar: AppBarDesktop(titulo: 'Planificador',),
       drawer: const Drawer(
         child: BotonesDrawer(),
       ),

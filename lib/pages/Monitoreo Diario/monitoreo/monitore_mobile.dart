@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -11,7 +13,7 @@ import '../../../models/orden.dart';
 import '../../../models/tecnico.dart';
 import '../../../provider/orden_provider.dart';
 import '../../../services/orden_services.dart';
-import '../../../widgets/appbar.dart';
+import '../../../widgets/appbar_desktop.dart';
 import '../../../widgets/button_delegate.dart';
 
 class MonitoreoMobile extends StatefulWidget {
@@ -149,7 +151,7 @@ class _MonitoreoMobileState extends State<MonitoreoMobile> {
   final colors = Theme.of(context).colorScheme;
   return SafeArea(
     child: Scaffold(
-      appBar: AppBarDesign(
+      appBar: AppBarDesktop(
         titulo: 'Monitoreo de ordenes',
       ),
       drawer: Drawer(

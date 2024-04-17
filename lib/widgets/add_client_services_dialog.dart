@@ -41,8 +41,7 @@ class _AddClientServicesDialogState extends State<AddClientServicesDialog> {
   }
 
   cargarLista() async {
-    servicios = await ServiciosServices()
-        .getServicios(context, '', '', '', widget.token);
+    servicios = await ServiciosServices().getServicios(context, '', '', '', widget.token);
     setState(() {
       servicioSeleccionado = servicios.isNotEmpty ? null : null;
     });
@@ -63,8 +62,7 @@ class _AddClientServicesDialogState extends State<AddClientServicesDialog> {
         servicioInicial = null;
       } else {
         servicioInicial = servicios.firstWhere((servicio) =>
-            servicio.servicioId ==
-            widget.servicioClienteSeleccionado?.servicioId);
+          servicio.servicioId == widget.servicioClienteSeleccionado?.servicioId);
       }
     }
 
@@ -98,33 +96,29 @@ class _AddClientServicesDialogState extends State<AddClientServicesDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextButton(
-                  onPressed: () async {
-                    final fechaDesdeSeleccionada = await showDatePicker(
-                        context: context,
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2099));
-                    setState(() {
-                      if (fechaDesdeSeleccionada == null) {
-                        fechaDesde = fechaDesde;
-                      } else {
-                        fechaDesde = fechaDesdeSeleccionada;
-                        if (widget.servicioClienteSeleccionado != null) {
-                          setState(() {
-                            widget.servicioClienteSeleccionado!.desde =
-                                fechaDesdeSeleccionada;
-                            widget.servicioClienteSeleccionado?.comentario =
-                                comentarioController.text;
-                          });
-                        }
+                onPressed: () async {
+                  final fechaDesdeSeleccionada = await showDatePicker(
+                      context: context,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2099));
+                  setState(() {
+                    if (fechaDesdeSeleccionada == null) {
+                      fechaDesde = fechaDesde;
+                    } else {
+                      fechaDesde = fechaDesdeSeleccionada;
+                      if (widget.servicioClienteSeleccionado != null) {
+                        setState(() {
+                          widget.servicioClienteSeleccionado!.desde = fechaDesdeSeleccionada;
+                          widget.servicioClienteSeleccionado?.comentario = comentarioController.text;
+                        });
                       }
-                    });
-                  },
-                  child: const Text('Seleccione fecha desde')),
-              const SizedBox(
-                width: 8,
+                    }
+                  });
+                },
+                child: const Text('Seleccione fecha desde')
               ),
-              Text(
-                (DateFormat('E, d , MMM, yyyy', 'es').format(fechaDesde)),
+              const SizedBox(width: 8,),
+              Text((DateFormat('E, d , MMM, yyyy', 'es').format(fechaDesde)),
               )
             ],
           ),
@@ -133,45 +127,41 @@ class _AddClientServicesDialogState extends State<AddClientServicesDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextButton(
-                  onPressed: () async {
-                    final fechaHastaSeleccionada = await showDatePicker(
-                        context: context,
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2099));
-                    setState(() {
-                      if (fechaHastaSeleccionada == null) {
-                        fechaHasta = fechaHasta;
-                      } else {
-                        fechaHasta = fechaHastaSeleccionada;
-                        if (widget.servicioClienteSeleccionado != null) {
-                          setState(() {
-                            widget.servicioClienteSeleccionado!.hasta =
-                                fechaHastaSeleccionada;
-                            widget.servicioClienteSeleccionado?.comentario =
-                                comentarioController.text;
-                          });
-                        }
+                onPressed: () async {
+                  final fechaHastaSeleccionada = await showDatePicker(
+                    context: context,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2099)
+                  );
+                  setState(() {
+                    if (fechaHastaSeleccionada == null) {
+                      fechaHasta = fechaHasta;
+                    } else {
+                      fechaHasta = fechaHastaSeleccionada;
+                      if (widget.servicioClienteSeleccionado != null) {
+                        setState(() {
+                          widget.servicioClienteSeleccionado!.hasta = fechaHastaSeleccionada;
+                          widget.servicioClienteSeleccionado?.comentario = comentarioController.text;
+                        });
                       }
-                    });
-                  },
-                  child: const Text('Seleccione fecha hasta')),
-              const SizedBox(
-                width: 8,
+                    }
+                  });
+                },
+                child: const Text('Seleccione fecha hasta')
               ),
+              const SizedBox(width: 8,),
               Text(
-                fechaHasta == null
-                    ? ''
-                    : (DateFormat('E, d , MMM, yyyy', 'es')
-                        .format(fechaHasta!)),
+                fechaHasta == null ? '' : (DateFormat('E, d , MMM, yyyy', 'es').format(fechaHasta!)),
               ),
               IconButton(
-                  onPressed: () {
-                    setState(() {
-                      fechaHasta = null;
-                      widget.servicioClienteSeleccionado?.hasta = null;
-                    });
-                  },
-                  icon: const Icon(Icons.clear))
+                onPressed: () {
+                  setState(() {
+                    fechaHasta = null;
+                    widget.servicioClienteSeleccionado?.hasta = null;
+                  });
+                },
+                icon: const Icon(Icons.clear)
+              )
             ],
           ),
           SizedBox(
@@ -211,8 +201,7 @@ class _AddClientServicesDialogState extends State<AddClientServicesDialog> {
                 context,
                 widget.cliente.clienteId.toString(),
                 widget.servicioClienteSeleccionado,
-                widget.servicioClienteSeleccionado!.clienteServicioId
-                    .toString(),
+                widget.servicioClienteSeleccionado!.clienteServicioId.toString(),
                 widget.token,
               );
             } else {

@@ -15,7 +15,7 @@ import 'package:sedel_oficina_maqueta/services/client_services.dart';
 import 'package:sedel_oficina_maqueta/services/servicio_services.dart';
 import 'package:sedel_oficina_maqueta/services/tecnico_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/add_client_services_dialog.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
@@ -36,7 +36,7 @@ class _EditClientesDesktopState extends State<EditClientesDesktop> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBarDesign(
+        appBar: AppBarDesktop(
           titulo: 'Clientes',
         ),
         drawer: const Drawer(
@@ -717,8 +717,7 @@ class _BodyState extends State<Body> {
     );
   }
 
-  void popUpBorrar(BuildContext context, Cliente cliente,
-      ServicioCliente servicio, String token, int i) {
+  void popUpBorrar(BuildContext context, Cliente cliente, ServicioCliente servicio, String token, int i) {
     showDialog(
       context: context,
       builder: (context) {

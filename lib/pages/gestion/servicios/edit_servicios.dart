@@ -8,7 +8,7 @@ import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 
-import '../../../widgets/appbar.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import '../../../widgets/drawer.dart';
 
 class EditServiciosPage extends StatefulWidget {
@@ -63,7 +63,7 @@ class _EditServiciosPageState extends State<EditServiciosPage> {
     }
 
     return Scaffold(
-      appBar: AppBarDesign(titulo: 'Servicios',),
+      appBar: AppBarDesktop(titulo: 'Servicios',),
       drawer: const Drawer(
         child: BotonesDrawer(),
       ),

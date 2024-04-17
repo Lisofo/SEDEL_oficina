@@ -9,7 +9,7 @@ import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/search/client_delegate.dart';
 import 'package:sedel_oficina_maqueta/services/user_services.dart';
 
-import '../../../widgets/appbar.dart';
+import '../../../widgets/appbar_desktop.dart';
 import '../../../widgets/drawer.dart';
 
 class EstablecerClientes extends StatefulWidget {
@@ -44,7 +44,7 @@ class _EstablecerClientesState extends State<EstablecerClientes> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBarDesign(
+      appBar: AppBarDesktop(
         titulo: 'Usuarios',
       ),
       drawer: const Drawer(

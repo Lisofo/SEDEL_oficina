@@ -34,12 +34,8 @@ class ServicioCliente {
       ServicioCliente(
         clienteServicioId: json["clienteServicioId"] as int? ?? 0,
         servicioId: json["servicioId"] as int? ?? 0,
-        desde: (json["desde"] == null || json['desde'] == 'null')
-            ? null
-            : DateTime.tryParse(json['desde']),
-        hasta: (json["hasta"] == null || json['hasta'] == 'null')
-            ? null
-            : DateTime.tryParse(json['hasta']),
+        desde: (json["desde"] == null || json['desde'] == 'null') ? null : DateTime.tryParse(json['desde']),
+        hasta: (json["hasta"] == null || json['hasta'] == 'null') ? null : DateTime.tryParse(json['hasta']),
         comentario: json["comentario"] as String? ?? '',
         codServicio: json["codServicio"] as String? ?? '',
         servicio: json["servicio"] as String? ?? '',

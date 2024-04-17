@@ -1,7 +1,5 @@
 // ignore_for_file: use_build_context_synchronously, unused_element
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/material.dart';
@@ -27,7 +25,7 @@ import 'package:sedel_oficina_maqueta/services/materiales_services.dart';
 import 'package:sedel_oficina_maqueta/services/plaga_services.dart';
 import 'package:sedel_oficina_maqueta/services/ptos_services.dart';
 import 'package:sedel_oficina_maqueta/services/revision_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:sedel_oficina_maqueta/widgets/icons.dart';
@@ -111,11 +109,11 @@ class _RevisionOrdenMobileState extends State<RevisionOrdenMobile> with SingleTi
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBarDesign(titulo: 'Revisión orden ${orden.ordenTrabajoId}'),
+      appBar: AppBarDesktop(titulo: 'Revisión orden ${orden.ordenTrabajoId}'),
       drawer: Drawer(
         child: Column(
           children: [
-            Container(
+            SizedBox(
               height: 400,
               child: _listaItems()
             ),

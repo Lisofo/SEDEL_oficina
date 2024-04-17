@@ -24,7 +24,7 @@ import 'package:sedel_oficina_maqueta/services/materiales_services.dart';
 import 'package:sedel_oficina_maqueta/services/plaga_services.dart';
 import 'package:sedel_oficina_maqueta/services/ptos_services.dart';
 import 'package:sedel_oficina_maqueta/services/revision_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
@@ -108,7 +108,7 @@ class _RevisionOrdenDesktopState extends State<RevisionOrdenDesktop> with Single
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarDesign(titulo: 'Revisión orden ${orden.ordenTrabajoId}'),
+      appBar: AppBarDesktop(titulo: 'Revisión orden ${orden.ordenTrabajoId}'),
       drawer: const Drawer(
         child: BotonesDrawer(),
       ),

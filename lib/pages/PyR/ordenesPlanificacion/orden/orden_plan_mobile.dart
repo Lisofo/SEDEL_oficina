@@ -14,7 +14,7 @@ import '../../../../models/cliente.dart';
 import '../../../../models/orden.dart';
 import '../../../../models/tecnico.dart';
 import '../../../../provider/orden_provider.dart';
-import '../../../../widgets/appbar.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 
 class OrdenPlanMobile extends StatefulWidget {
   const OrdenPlanMobile({super.key});
@@ -141,7 +141,7 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBarDesign(titulo: 'Ordenes de trabajo',),
+      appBar: AppBarDesktop(titulo: 'Ordenes de trabajo',),
       drawer: Drawer(
         child:Container(
           decoration: BoxDecoration(

@@ -7,7 +7,7 @@ import 'package:sedel_oficina_maqueta/services/materiales_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 
-import '../../../widgets/appbar.dart';
+import '../../../widgets/appbar_desktop.dart';
 import '../../../widgets/drawer.dart';
 
 class EditMaterialesPage extends StatefulWidget {
@@ -63,7 +63,7 @@ class _EditMaterialesPageState extends State<EditMaterialesPage> {
     cargarValoresDeCampo(materialSeleccionado);
 
     return Scaffold(
-      appBar: AppBarDesign(titulo: 'Materiales',),
+      appBar: AppBarDesktop(titulo: 'Materiales',),
       drawer: const Drawer(
         child: BotonesDrawer(),
       ),
