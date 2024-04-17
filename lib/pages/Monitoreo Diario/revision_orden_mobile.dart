@@ -62,6 +62,7 @@ class _RevisionOrdenMobileState extends State<RevisionOrdenMobile> with SingleTi
   late List<ClienteFirma> firmas = [];
   bool filtro = false;
   int buttonIndex = 0;
+  String valorComentario = '';
 
   @override
   void initState() {
@@ -111,57 +112,52 @@ class _RevisionOrdenMobileState extends State<RevisionOrdenMobile> with SingleTi
     return Scaffold(
       appBar: AppBarDesktop(titulo: 'Revisión orden ${orden.ordenTrabajoId}'),
       drawer: Drawer(
+        width: MediaQuery.of(context).size.width * 0.85,
         child: Column(
           children: [
             SizedBox(
-              height: 400,
+              height: MediaQuery.of(context).size.height * 0.7,
               child: _listaItems()
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.95,
-                color: Colors.cyan,
-                child: CustomDropdownFormMenu(
-                  //value: revisiones.isEmpty ? null : revisiones[0],
-                  items: revisiones.map((e){
-                    return DropdownMenuItem(
-                      value: e,
-                      child: SizedBox( // Wrap with SizedBox to limit width
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        child: Column( // Wrap with Column to allow multi-line text
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Revisión ${e.ordinal} (${e.tipoRevision}): ',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16.0,
-                                color: Colors.red,
-                              ),
-                              overflow: TextOverflow.ellipsis, // Handle overflow with ellipsis
-                            ),
-                            Text(
-                              e.comentario,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16.0,
-                                color: Colors.red
-                              ),
-                              overflow: TextOverflow.ellipsis, // Handle overflow with ellipsis
-                            ),
-                          ],
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: CustomDropdownFormMenu(
+                //value: revisiones.isEmpty ? null : revisiones[0],
+                items: revisiones.map((e){
+                  return DropdownMenuItem(
+                    value: e,
+                    child: SizedBox( // Wrap with SizedBox to limit width
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: Text(
+                        'Revisión ${e.ordinal} (${e.tipoRevision}): ',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16.0,
+                          color: Colors.black,
                         ),
+                        overflow: TextOverflow.ellipsis, // Handle overflow with ellipsis
                       ),
-                    );
-                  }).toList(),
-                  hint: 'Seleccione una revisión',
-                  onChanged: (value) async {
-                    await cambioDeRevision(value, context);
-                  },
-                ),
+                    ),
+                  );
+                }).toList(),
+                hint: 'Seleccione una revisión',
+                onChanged: (value) async {
+                  await cambioDeRevision(value, context);
+                  valorComentario = value.comentario;
+                },
               ),
 
+            ),
+            Container(
+              child:  Text(
+                        valorComentario,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16.0,
+                          color: Colors.black,
+                        ),
+                        overflow: TextOverflow.ellipsis, // Handle overflow with ellipsis
+                      ),
             ),
             const SizedBox(height: 10,),
             const Divider(),

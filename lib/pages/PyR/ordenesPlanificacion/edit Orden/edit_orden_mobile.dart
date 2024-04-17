@@ -819,7 +819,7 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Cambio de estado de la orden'),
+            title: const Text('Cambio de Tecnico de la orden'),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

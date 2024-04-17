@@ -3,6 +3,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/config.dart';
 import 'package:sedel_oficina_maqueta/models/clientesFirmas.dart';
@@ -185,8 +186,8 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
     final colors = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: SizedBox(
-        height: 700,
+      child: Container(
+        height: MediaQuery.of(context).size.height* 0.88,
         child: Column(
           children: [
             Container(
@@ -325,8 +326,8 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
               ],
             ),
             if (exportedImage != null) Image.memory(exportedImage!),
-            SizedBox(
-              height: 184,
+            Container(
+              height: MediaQuery.of(context).size.height * 0.27,
               width: Constantes().ancho,
               child: ListView.builder(
                 itemCount: widget.firmas.length,

@@ -30,6 +30,7 @@ class CustomDropdownFormMenu extends StatelessWidget {
       items: items,
       onChanged: onChanged,
       decoration: InputDecoration(
+        constraints: BoxConstraints.tightFor(width: MediaQuery.of(context).size.width * 0.95),
         enabled: enabled,
         enabledBorder: border,
         focusedBorder: border.copyWith(),

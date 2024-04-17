@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
@@ -143,6 +144,7 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
     return Scaffold(
       appBar: AppBarDesktop(titulo: 'Ordenes de trabajo',),
       drawer: Drawer(
+        width: MediaQuery.of(context).size.width * 0.95,
         child:Container(
           decoration: BoxDecoration(
             border: Border.symmetric(horizontal: BorderSide(color: colors.primary, width: 15)),  
@@ -263,7 +265,8 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
                 const SizedBox(height: 10,),
                 const Divider(),
                 const SizedBox(height: 10,),
-                const Row(
+                 const Row(
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text('Cliente: '),
@@ -274,6 +277,7 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
                       colorSeleccionado: Colors.black,
                       nombreProvider: 'Ordenes',
                     ),
+                    
                   ],
                 ),
                 const SizedBox(height: 10,),

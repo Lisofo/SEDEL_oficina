@@ -17,16 +17,19 @@ class ButtonDelegate extends StatefulWidget {
 }
 
 class _ButtonDelegateState extends State<ButtonDelegate> {
-  late Cliente selectedCliente = Cliente.empty();
+  late Cliente selectedCliente = context.read<OrdenProvider>().clienteOrdenes;
   List<Cliente> historial = [];
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         TextButton(
           style: ButtonStyle(
+            maximumSize: MaterialStatePropertyAll(Size.fromWidth(MediaQuery.of(context).size.width * 0.5 )),
             backgroundColor: MaterialStatePropertyAll(colors.secondary),
             shape: MaterialStatePropertyAll(ContinuousRectangleBorder(borderRadius: BorderRadius.circular(20)))
           ),
@@ -60,8 +63,8 @@ class _ButtonDelegateState extends State<ButtonDelegate> {
             }
           },
         ),
-        const SizedBox(
-          width: 20,
+        SizedBox(
+          width: 10,
         ),
         IconButton(
           tooltip: 'Limpiar filtro cliente',
