@@ -57,7 +57,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
   late Cliente selectedCliente = Cliente.empty();
   List<Cliente> historial = [];
   int tecnicoFiltro = 0;
-  int buttonIndex = 0;
+  int buttonIndex = 2;
 
   @override
   void initState() {
@@ -474,6 +474,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                             trailing: IconButton(
                                               onPressed: (){
                                                 serviciosSeleccionados.removeAt(i);
+                                                setState(() {});
                                               }, 
                                               icon: const Icon(Icons.delete, color: Colors.red,)
                                             ),
@@ -595,15 +596,17 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
         ),
 
         bottomNavigationBar: BottomNavigationBar(
+
           currentIndex: buttonIndex,
           onTap: (index) {
             setState(() {
               buttonIndex = index;
               switch (buttonIndex){
                 case 0: 
-                if(orden.estado == 'DESCARTADA'){
+                if(orden.estado == 'PENDIENTE'){
+                  datosAGuardar(context);
                 }else{
-                  cambiarTecnico();
+                  null;
                 }
                 break;
                 case 1:
@@ -613,10 +616,9 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                 }
                 break;
                 case 2:
-                if(orden.estado == 'PENDIENTE'){
-                  datosAGuardar(context);
+                if(orden.estado == 'DESCARTADA'){
                 }else{
-                  null;
+                  cambiarTecnico();
                 }
                 break;
                 case 3:
@@ -635,16 +637,16 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
           unselectedItemColor: Colors.grey,
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.pending_actions),
-              label: 'Cambiar Tecnico',
+              icon: Icon(Icons.save_as),
+              label: 'Guardar',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.play_arrow),
+              icon: Icon(Icons.settings_backup_restore_rounded),
               label: 'Cambiar Estado',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.done),
-              label: 'Guardar',
+              icon: Icon(Icons.person_add),
+              label: 'Cambiar Tecnico',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.check),

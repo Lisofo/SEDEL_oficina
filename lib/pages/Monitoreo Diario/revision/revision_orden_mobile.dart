@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, unused_element
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/material.dart';
 import 'package:sedel_oficina_maqueta/models/observacion.dart';
 import 'package:sedel_oficina_maqueta/models/orden.dart';
@@ -9,7 +10,7 @@ import 'package:sedel_oficina_maqueta/models/revision_materiales.dart';
 import 'package:sedel_oficina_maqueta/models/revision_orden.dart';
 import 'package:sedel_oficina_maqueta/models/revision_plaga.dart';
 import 'package:sedel_oficina_maqueta/models/revision_tarea.dart';
-import 'package:sedel_oficina_maqueta/pages/menusRevisiones/ptosInspeccion/revision_ptos_inspeccion_desktop.dart';
+import 'package:sedel_oficina_maqueta/pages/menusRevisiones/ptosInspeccion/revision_ptos_inspeccion_mobile.dart';
 import 'package:sedel_oficina_maqueta/pages/menusRevisiones/revision_cuestionario.dart';
 import 'package:sedel_oficina_maqueta/pages/menusRevisiones/revision_firmas.dart';
 import 'package:sedel_oficina_maqueta/pages/menusRevisiones/revision_materiales.dart';
@@ -25,24 +26,22 @@ import 'package:sedel_oficina_maqueta/services/plaga_services.dart';
 import 'package:sedel_oficina_maqueta/services/ptos_services.dart';
 import 'package:sedel_oficina_maqueta/services/revision_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
-import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
-import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 import 'package:sedel_oficina_maqueta/widgets/icons.dart';
 import 'package:sedel_oficina_maqueta/models/revision_pto_inspeccion.dart';
 
-import '../../models/clientesFirmas.dart';
+import '../../../models/clientesFirmas.dart';
 
 
-class RevisionOrdenDesktop extends StatefulWidget {
-  const RevisionOrdenDesktop({super.key});
+class RevisionOrdenMobile extends StatefulWidget {
+  const RevisionOrdenMobile({super.key});
 
   @override
-  State<RevisionOrdenDesktop> createState() => _RevisionOrdenDesktopState();
+  State<RevisionOrdenMobile> createState() => _RevisionOrdenMobileState();
 }
 
-class _RevisionOrdenDesktopState extends State<RevisionOrdenDesktop> with SingleTickerProviderStateMixin {
+class _RevisionOrdenMobileState extends State<RevisionOrdenMobile> with SingleTickerProviderStateMixin {
   final TextEditingController comentarioController = TextEditingController();
   late Orden orden = Orden.empty();
   late AnimationController _animationController;
@@ -62,6 +61,8 @@ class _RevisionOrdenDesktopState extends State<RevisionOrdenDesktop> with Single
   RevisionOrden? selectedRevision = RevisionOrden.empty();
   late List<ClienteFirma> firmas = [];
   bool filtro = false;
+  int buttonIndex = 0;
+  String valorComentario = '';
 
   @override
   void initState() {
@@ -107,33 +108,104 @@ class _RevisionOrdenDesktopState extends State<RevisionOrdenDesktop> with Single
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBarDesktop(titulo: 'Revisión orden ${orden.ordenTrabajoId}'),
-      drawer: const Drawer(
-        child: BotonesDrawer(),
+      drawer: Drawer(
+        width: MediaQuery.of(context).size.width * 0.85,
+        child: Column(
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.7,
+              child: _listaItems()
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: CustomDropdownFormMenu(
+                //value: revisiones.isEmpty ? null : revisiones[0],
+                items: revisiones.map((e){
+                  return DropdownMenuItem(
+                    value: e,
+                    child: SizedBox( // Wrap with SizedBox to limit width
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: Text(
+                        'Revisión ${e.ordinal} (${e.tipoRevision}): ',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16.0,
+                          color: Colors.black,
+                        ),
+                        overflow: TextOverflow.ellipsis, // Handle overflow with ellipsis
+                      ),
+                    ),
+                  );
+                }).toList(),
+                hint: 'Seleccione una revisión',
+                onChanged: (value) async {
+                  await cambioDeRevision(value, context);
+                  valorComentario = value.comentario;
+                },
+              ),
+
+            ),
+            Container(
+              child:  Text(
+                        valorComentario,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16.0,
+                          color: Colors.black,
+                        ),
+                        overflow: TextOverflow.ellipsis, // Handle overflow with ellipsis
+                      ),
+            ),
+            const SizedBox(height: 10,),
+            const Divider(),
+            const SizedBox(height: 10,),
+            
+            const Spacer(),
+            BottomNavigationBar(
+              currentIndex: buttonIndex,
+              onTap: (index) {
+                setState(() {
+                  buttonIndex = index;
+                  switch (buttonIndex){
+                    case 0: 
+                      _showCreateDeleteDialog(context);
+                    break;
+                    case 1:
+                      _showCreateCopyDialog(context);
+                    break;
+                    
+                  }
+
+                });
+              },
+              showUnselectedLabels: true,
+              selectedItemColor: colors.primary,
+              unselectedItemColor: Colors.grey,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.delete),
+                  label: 'Borrar Revision',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.add_circle),
+                  label: 'Crear Copia',
+                ),
+              ],
+            ),
+          ],
+        ),
+        
       ),
-      body: Row(
+      body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              height: 395,
-              width: 300,
-              child: Card(
-                child: Column(
-                  children: [
-                    Expanded(child: _listaItems())
-                  ],
-                ),
-              ),
-            ),
-          ),
           const SizedBox(
             width: 200,
           ),
-          if (menu == 'Ptos de Inspeccion') RevisionPtosInspeccionDesktop(
-            //todo cambiar a general no solo desktop
+          if (menu == 'Ptos de Inspeccion') RevisionPtosInspeccionMobile(
             ptosInspeccion: ptosInspeccion,
             revision: selectedRevision
           ),
@@ -173,46 +245,8 @@ class _RevisionOrdenDesktopState extends State<RevisionOrdenDesktop> with Single
           ),
         ],
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.29,
-              child: CustomDropdownFormMenu(
-                value: revisiones.isEmpty ? null : revisiones[0],
-                items: revisiones.map((e){
-                  return DropdownMenuItem(
-                    value: e,
-                    child: Text('Revisión ${e.ordinal} (${e.tipoRevision}) : ${e.comentario}'),
-                  );
-                }).toList(),
-                hint: 'Seleccione una revisión',
-                onChanged: (value) async {
-                  await cambioDeRevision(value, context);
-                },
-              ),
-            ),
-            const Spacer(),
-            CustomButton(
-              onPressed: (){
-                _showCreateDeleteDialog(context);
-              },
-              text: 'Borrar revisión',
-              tamano: 20,
-            ),
-            const SizedBox(width: 10,),
-            CustomButton(
-              onPressed: (){
-                _showCreateCopyDialog(context);
-              },
-              text: 'Crear copia',
-              tamano: 20,
-            ),
-          ],
-        ),
-      ),
+       
+      //todo bottomnavigation   
     );
   }
 
@@ -399,6 +433,7 @@ void _showCreateDeleteDialog(BuildContext context) {
         ),
         onTap: () {
           menu = opt['texto'];
+          router.pop();
           setState(() {});
         },
       );

@@ -40,7 +40,7 @@ class _BotonesDrawerState extends State<BotonesDrawer> {
   }
 }
 
-List<Widget> _filaBotones2(data, context, opciones) {
+List<Widget> _filaBotones2(data, context, opciones,) {
   final List<Widget> opcionesRet = [];
   opciones.forEach((opt) {
     final widgetTemp = Padding(
@@ -52,6 +52,8 @@ List<Widget> _filaBotones2(data, context, opciones) {
               onPressed: () {
                 Provider.of<OrdenProvider>(context, listen: false).setPageName(opt['texto']);
                 router.push(opt['ruta']);
+                
+                
               },
               child: Text(opt['texto'],
                style: const TextStyle(color: Colors.black),

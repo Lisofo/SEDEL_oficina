@@ -13,18 +13,18 @@ import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 import 'package:intl/intl.dart';
 
-import '../../models/cliente.dart';
-import '../../models/tecnico.dart';
-import '../../models/ubicacion.dart';
+import '../../../models/cliente.dart';
+import '../../../models/tecnico.dart';
+import '../../../models/ubicacion.dart';
 
-class MapaPage extends StatefulWidget {
-  const MapaPage({super.key});
+class MapaPageDesktop extends StatefulWidget {
+  const MapaPageDesktop({super.key});
 
   @override
-  State<MapaPage> createState() => _MapaPageState();
+  State<MapaPageDesktop> createState() => _MapaPageDesktopState();
 }
 
-class _MapaPageState extends State<MapaPage>
+class _MapaPageDesktopState extends State<MapaPageDesktop>
     with SingleTickerProviderStateMixin {
   Tecnico? selectedTecnico;
   Cliente? selectedCliente;

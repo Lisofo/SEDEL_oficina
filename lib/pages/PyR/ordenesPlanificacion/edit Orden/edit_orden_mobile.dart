@@ -110,7 +110,7 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
       child: Scaffold(
         backgroundColor: Colors.grey.shade200,
         appBar: AppBarMobile(
-          titulo: 'Detalles de la orden',
+          titulo: 'Detalles de la orden ${orden.ordenTrabajoId}',
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -473,6 +473,7 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
                                         trailing: IconButton(
                                           onPressed: (){
                                             serviciosSeleccionados.removeAt(i);
+                                            setState(() {});
                                           }, 
                                           icon: const Icon(Icons.delete, color: Colors.red,)
                                         ),
@@ -613,9 +614,10 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
               buttonIndex = index;
               switch (buttonIndex){
                 case 0: 
-                if(orden.estado == 'DESCARTADA'){
+                if(orden.estado == 'PENDIENTE'){
+                  datosAGuardar(context);
                 }else{
-                  cambiarTecnico();
+                  null;
                 }
                 break;
                 case 1:
@@ -625,10 +627,9 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
                 }
                 break;
                 case 2:
-                if(orden.estado == 'PENDIENTE'){
-                  datosAGuardar(context);
+                if(orden.estado == 'DESCARTADA'){
                 }else{
-                  null;
+                  cambiarTecnico();
                 }
                 break;
                 case 3:
@@ -647,16 +648,16 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
           unselectedItemColor: Colors.grey,
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.person_add),
-              label: 'Cambiar Tecnico',
+              icon: Icon(Icons.save_as),
+              label: 'Guardar',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings_backup_restore_rounded),
               label: 'Cambiar Estado',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.save_as),
-              label: 'Guardar',
+              icon: Icon(Icons.person_add),
+              label: 'Cambiar Tecnico',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.check),

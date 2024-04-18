@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sedel_oficina_maqueta/pages/Monitoreo%20Diario/revision_orden_Desktop.dart';
-import 'package:sedel_oficina_maqueta/pages/Monitoreo%20Diario/revision_orden_mobile.dart';
+
+import 'package:sedel_oficina_maqueta/pages/Monitoreo%20Diario/revision/revision_orden_desktop.dart';
+
+import 'package:sedel_oficina_maqueta/pages/Monitoreo%20Diario/revision/revision_orden_mobile.dart';
 
 
 class RevisionOrdenMain extends StatefulWidget {

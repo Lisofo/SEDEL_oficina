@@ -51,6 +51,7 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
   // late Cliente _clienteSeleccionado = context.read<OrdenProvider>().cliente;
   late String token = '';
   final TextEditingController nroOrdenController = TextEditingController();
+  int buttonIndex = 0;
 
   void filtro() {
     ordenesFiltradas = ordenes
@@ -385,73 +386,41 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
                 ),
                 const SizedBox(height: 10,),
                 const Divider(),
-                const SizedBox(height: 50,),
+                const SizedBox(height: 30,),
 
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children:[
-                     ElevatedButton(
-                      style: const ButtonStyle(
-                          backgroundColor:
-                              MaterialStatePropertyAll(Colors.white),
-                          elevation: MaterialStatePropertyAll(10),
-                          shape: MaterialStatePropertyAll(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.horizontal(
-                                      left: Radius.circular(50),
-                                      right: Radius.circular(50))))),
-                      onPressed: () {
-                        Provider.of<OrdenProvider>(context,listen: false)
-                          .clearSelectedOrden();
+                BottomNavigationBar(
+                  currentIndex: buttonIndex,
+                  onTap: (index) async{   
+                    buttonIndex = index;
+                    switch (buttonIndex){
+                      case 0: 
+                        Provider.of<OrdenProvider>(context,listen: false).clearSelectedOrden();
                         router.push('/editOrden');
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.5),
-                        child: Text(
-                          'Crear Orden',
-                          style: TextStyle(
-                            color: colors.primary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      )
-                    ),
-                    const SizedBox(width: 30,),
-                    ElevatedButton(
-                      style: const ButtonStyle(
-                          backgroundColor:
-                              MaterialStatePropertyAll(Colors.white),
-                          elevation: MaterialStatePropertyAll(10),
-                          shape: MaterialStatePropertyAll(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.horizontal(
-                                      left: Radius.circular(50),
-                                      right: Radius.circular(50))))),
-                      onPressed: () async {
+                        setState(() {});
+                      case 1:
                         await buscar(token);
                         updateFilteredItems(ordenesFiltradas);
+                        setState(() {});
                         router.pop();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.5),
-                        child: Text(
-                          'Buscar',
-                          style: TextStyle(
-                            color: colors.primary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      )
+                      break;
+                      
+                    }  
+                  },
+                  showUnselectedLabels: true,
+                  selectedItemColor: colors.primary,
+                  unselectedItemColor: Colors.grey,
+                  items: const [
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.add_comment_outlined),
+                      label: 'Crear Orden',
                     ),
-
-
-
-                  ]
-
-
-
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.search),
+                      label: 'Buscar'
+                    ),
+                  ],
                 ),
+               
               ],
             ),
           ),

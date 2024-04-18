@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 
 class AppBarDesktop extends StatefulWidget implements PreferredSizeWidget {
   late String titulo;
@@ -28,7 +29,7 @@ class _AppBarDesktopState extends State<AppBarDesktop> {
       actions: [
         IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              router.pop();
             },
             icon: const Icon(
               Icons.arrow_back_ios_new,
