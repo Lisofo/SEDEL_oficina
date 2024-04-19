@@ -17,11 +17,35 @@ class ButtonDelegate extends StatefulWidget {
 }
 
 class _ButtonDelegateState extends State<ButtonDelegate> {
-  late Cliente selectedCliente = context.read<OrdenProvider>().clienteOrdenes;
+  
+  late Cliente selectedCliente = Cliente.empty();
   List<Cliente> historial = [];
 
   @override
   Widget build(BuildContext context) {
+    switch (widget.nombreProvider) {
+      case 'Monitoreo':
+        selectedCliente = context.read<OrdenProvider>().clienteMonitoreo;
+        break;
+      case 'Mapa':
+        selectedCliente = context.read<OrdenProvider>().clienteMapa;
+        break;
+      case 'Planificador': 
+        selectedCliente = context.read<OrdenProvider>().clientePlanificador;
+        break;
+      case 'Ordenes':
+        selectedCliente = context.read<OrdenProvider>().clienteOrdenes;
+        break;
+      case 'editOrdenes':
+        selectedCliente = context.read<OrdenProvider>().clienteEditOrdenes;
+        break;
+      case 'Indisponibilidad':
+        selectedCliente = context.read<OrdenProvider>().clienteIndisponibilidad;
+        break;
+      case 'editIndisponibilidad':
+        selectedCliente = context.read<OrdenProvider>().clienteEditIndisponibilidad;
+        break;
+    }
     final colors = Theme.of(context).colorScheme;
     return Row(
       mainAxisSize: MainAxisSize.min,
