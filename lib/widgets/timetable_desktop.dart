@@ -16,14 +16,14 @@ import 'package:sedel_oficina_maqueta/widgets/button_delegate.dart';
 
 import '../provider/orden_provider.dart';
 
-class CustomizedTimetableScreen extends StatefulWidget {
-  const CustomizedTimetableScreen({super.key});
+class CustomizedTimetableDesktop extends StatefulWidget {
+  const CustomizedTimetableDesktop({super.key});
   @override
-  State<CustomizedTimetableScreen> createState() =>
-      _CustomizedTimetableScreenState();
+  State<CustomizedTimetableDesktop> createState() =>
+      _CustomizedTimetableDesktopState();
 }
 
-class _CustomizedTimetableScreenState extends State<CustomizedTimetableScreen> {
+class _CustomizedTimetableDesktopState extends State<CustomizedTimetableDesktop> {
   late List<TimetableItem<Orden>> items = [];
   final controller = TimetableController(
     start: DateUtils.dateOnly(DateTime.now()).subtract(const Duration(days: 30)),

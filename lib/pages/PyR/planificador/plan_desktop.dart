@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
-import 'package:sedel_oficina_maqueta/widgets/timetable.dart';
+import 'package:sedel_oficina_maqueta/widgets/timetable_desktop.dart';
 
 class PlanDesktop extends StatefulWidget {
   const PlanDesktop({super.key});
@@ -23,7 +23,7 @@ class _PlanDesktopState extends State<PlanDesktop> {
         children: [
           SizedBox(
             width: MediaQuery.of(context).size.width,
-            child: const CustomizedTimetableScreen(),
+            child: const CustomizedTimetableDesktop(),
           )
         ],
       ),
