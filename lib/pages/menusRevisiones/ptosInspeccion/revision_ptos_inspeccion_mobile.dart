@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print, must_be_immutable, void_checks
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/config.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
@@ -101,7 +100,7 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
     print(revisionId);
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Container(
+      child: SizedBox(
         height: MediaQuery.of(context).size.height * 0.88,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -144,7 +143,7 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
               },
             ),
           ),
-          Container(
+          SizedBox(
               height: MediaQuery.of(context).size.height * 0.60,
               width: Constantes().ancho,
               child: RefreshIndicator(

@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
@@ -387,7 +386,6 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
                 const SizedBox(height: 10,),
                 const Divider(),
                 const SizedBox(height: 30,),
-
                 BottomNavigationBar(
                   currentIndex: buttonIndex,
                   onTap: (index) async{   
@@ -420,7 +418,6 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
                     ),
                   ],
                 ),
-               
               ],
             ),
           ),

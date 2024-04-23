@@ -10,6 +10,8 @@ class CustomDropdownFormMenu extends StatelessWidget {
   final Function()? onTap;
   final dynamic value;
   final bool enabled;
+  final bool isDense;
+  final bool isExpanded;
 
   const CustomDropdownFormMenu(
       {super.key, this.items,
@@ -20,7 +22,10 @@ class CustomDropdownFormMenu extends StatelessWidget {
       this.onSaved,
       this.onTap,
       this.value,
-      this.enabled = true});
+      this.enabled = true,
+      this.isDense = false,
+      this.isExpanded = false,
+    });
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +52,8 @@ class CustomDropdownFormMenu extends StatelessWidget {
       onSaved: onSaved,
       onTap: onTap,
       value: value,
+      isDense: isDense,
+      isExpanded: isExpanded,
     );
   }
 }

@@ -23,14 +23,14 @@ import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 
-class PtosInspeccionClientes extends StatefulWidget {
-  const PtosInspeccionClientes({super.key});
+class PtosInspeccionClientesDesktop extends StatefulWidget {
+  const PtosInspeccionClientesDesktop({super.key});
 
   @override
-  State<PtosInspeccionClientes> createState() => _PtosInspeccionClientesState();
+  State<PtosInspeccionClientesDesktop> createState() => _PtosInspeccionClientesDesktopState();
 }
 
-class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
+class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDesktop> {
   late List<Plano> planos = [];
   late Plano nuevoPlanoACrear = Plano.empty();
   late String token = '';
@@ -124,7 +124,7 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBarDesktop(titulo: 'Ptos de inspeccions'),
+      appBar: AppBarDesktop(titulo: 'Ptos de inspección'),
       drawer: const Drawer(
         child: BotonesDrawer(),
       ),
@@ -146,43 +146,41 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
                     ),
                     const SizedBox(height: 10,),
                     Expanded(
-                        child: ListView.builder(
-                            itemCount: planos.length,
-                            itemBuilder: (context, i) {
-                              var plano = planos[i];
-                              return ListTile(
-                                title: Text('Plano ${plano.codPlano}'),
-                                subtitle: Row(
-                                  children: [
-                                    Text('Desde: ${DateFormat('d/MM/yyyy').format(plano.desde)}'),
-                                    const SizedBox(width: 30,),
-                                    Text('Hasta: ${plano.hasta == null ? '' : DateFormat('d/MM/yyyy').format(plano.hasta!)}'),
-                                    const SizedBox(width: 30,),
-                                    Text('Estado: ${plano.estado}')
-                                  ],
-                                ),
-                                trailing: IconButton(
-                                  onPressed: (){
-                                    nuevoPlano(plano);
-                                  }, 
-                                  icon: const Icon(Icons.edit)),
-                                  onTap: () async {
-                                    mostrarLista = true;
-                                    planoSeleccionado = plano;
-                                    puntos = await PlanosServices().getPuntosPlano(context, cliente, plano, token);
-                                    setState(() {});
-                                  },
-                              );
-                            }
+                      child: ListView.builder(
+                        itemCount: planos.length,
+                        itemBuilder: (context, i) {
+                          var plano = planos[i];
+                          return ListTile(
+                            title: Text('Plano ${plano.codPlano}'),
+                            subtitle: Row(
+                              children: [
+                                Text('Desde: ${DateFormat('d/MM/yyyy').format(plano.desde)}'),
+                                const SizedBox(width: 30,),
+                                Text('Hasta: ${plano.hasta == null ? '' : DateFormat('d/MM/yyyy').format(plano.hasta!)}'),
+                                const SizedBox(width: 30,),
+                                Text('Estado: ${plano.estado}')
+                              ],
+                            ),
+                            trailing: IconButton(
+                            onPressed: () {
+                              nuevoPlano(plano);
+                            }, 
+                            icon: const Icon(Icons.edit)),
+                            onTap: () async {
+                              mostrarLista = true;
+                              planoSeleccionado = plano;
+                              puntos = await PlanosServices().getPuntosPlano(context, cliente, plano, token);
+                              setState(() {});
+                            },
+                          );
+                        }
                       )
                     ),
                   ],
                 ),
               ),
             ),
-            const SizedBox(
-              width: 150,
-            ),
+            const SizedBox(width: 150,),
             if (mostrarLista)
             copiando ? const Center(
               child: Column(
@@ -194,111 +192,112 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
                   CircularProgressIndicator()
                 ],
               ),
-            ) : Column(
-      children: [
-        Container(
-          width: Constantes().ancho,
-          decoration: BoxDecoration(
-              border: Border.all(
-                  width: 1, color: colors.primary),
-              borderRadius: BorderRadius.circular(5)),
-          child: DropdownButtonFormField(
-            decoration: const InputDecoration(border: InputBorder.none),
-            hint: const Padding(
-              padding: EdgeInsets.only(left: 8.0),
-              child: Text('Ptos de Inspeccion'),
-            ),
-            items: tiposDePuntos.map((e) {
-              return DropdownMenuItem(
-                value: e,
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    e.descripcion,
-                    overflow: TextOverflow.ellipsis,
+            ) 
+            : Column(
+              children: [
+                Container(
+                  width: Constantes().ancho,
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 1, color: colors.primary),
+                    borderRadius: BorderRadius.circular(5)
+                  ),
+                  child: DropdownButtonFormField(
+                    decoration: const InputDecoration(border: InputBorder.none),
+                    hint: const Padding(
+                      padding: EdgeInsets.only(left: 8.0),
+                      child: Text('Ptos de Inspeccion'),
+                    ),
+                    items: tiposDePuntos.map((e) {
+                      return DropdownMenuItem(
+                        value: e,
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Text(
+                            e.descripcion,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    isDense: true,
+                    isExpanded: true,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedTipoPto = value!;
+                        for (var i = 0; i < ptosFiltrados.length; i++) {
+                          ptosFiltrados[i].seleccionado = false;
+                        }
+                      });
+                    },
                   ),
                 ),
-              );
-            }).toList(),
-            isDense: true,
-            isExpanded: true,
-            onChanged: (value) {
-              setState(() {
-                selectedTipoPto = value!;
-                for (var i = 0; i < ptosFiltrados.length; i++) {
-                  ptosFiltrados[i].seleccionado = false;
-                }
-              });
-            },
-          ),
-        ),
-        SizedBox(
-          width: Constantes().ancho,
-          height: 495,
-          child: ListView.separated(
-            itemCount: ptosFiltrados.length,
-            itemBuilder: (context, i) {
-              var punto = ptosFiltrados[i];
-              return ListTile(
-                title: Text('Punto ${punto.codPuntoInspeccion}'),
-                subtitle: Row(
-                  children: [
-                    Text('Zona: ${punto.zona}'),
-                    const SizedBox(width: 20,),
-                    Text('Sector: ${punto.sector}'),
-                    const SizedBox(width: 20,),
-                    Text('Estado: ${punto.estado}'),
-                    const SizedBox(width: 20,),
-                    Text('Subestado: ${punto.subEstado}'),
-                  ],
+                SizedBox(
+                  width: Constantes().ancho,
+                  height: 495,
+                  child: ListView.separated(
+                    itemCount: ptosFiltrados.length,
+                    itemBuilder: (context, i) {
+                      var punto = ptosFiltrados[i];
+                      return ListTile(
+                        title: Text('Punto ${punto.codPuntoInspeccion}'),
+                        subtitle: Row(
+                          children: [
+                            Text('Zona: ${punto.zona}'),
+                            const SizedBox(width: 20,),
+                            Text('Sector: ${punto.sector}'),
+                            const SizedBox(width: 20,),
+                            Text('Estado: ${punto.estado}'),
+                            const SizedBox(width: 20,),
+                            Text('Subestado: ${punto.subEstado}'),
+                          ],
+                        ),
+                        trailing: Checkbox(
+                          activeColor: colors.primary,
+                          value: punto.seleccionado,
+                          splashRadius: 40,
+                          onChanged: (bool? newValue) {
+                            setState(() {
+                              punto.seleccionado = newValue ?? false;
+                            });
+                          },
+                        ),
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return const Divider();
+                    },
+                  ),
                 ),
-                trailing: Checkbox(
-                  activeColor: colors.primary,
-                  value: punto.seleccionado,
-                  splashRadius: 40,
-                  onChanged: (bool? newValue) {
-                    setState(() {
-                      punto.seleccionado = newValue ?? false;
-                    });
-                  },
-                ),
-              );
-            },
-            separatorBuilder: (BuildContext context, int index) {
-              return const Divider();
-            },
-          ),
-        ),
-        SizedBox(
-          width: Constantes().ancho,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              CustomButton(
-                text: 'Editar estado/sub estado', 
-                onPressed: () {
-                  cambiarEstadoPunto(puntosSeleccionados);
-                }
-              ),
-              const SizedBox(width: 10,),
-              CustomButton(
-                text: 'Borrar punto', 
-                onPressed: (){
-                  borrarPunto(puntosSeleccionados);
-                }
-              ),
-              const SizedBox(width: 10,),
-              CustomButton(
-                onPressed: (){
-                  editarPunto(puntosSeleccionados);
-                }, 
-                text: 'Editar punto'
-              ),
-            ],
-          ),
-        )
-      ],
-    )
+                SizedBox(
+                  width: Constantes().ancho,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CustomButton(
+                        text: 'Editar estado/sub estado', 
+                        onPressed: () {
+                          cambiarEstadoPunto(puntosSeleccionados);
+                        }
+                      ),
+                      const SizedBox(width: 10,),
+                      CustomButton(
+                        text: 'Borrar punto', 
+                        onPressed: (){
+                          borrarPunto(puntosSeleccionados);
+                        }
+                      ),
+                      const SizedBox(width: 10,),
+                      CustomButton(
+                        onPressed: (){
+                          editarPunto(puntosSeleccionados);
+                        }, 
+                        text: 'Editar punto'
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            )
           ],
         ),
       ),
@@ -317,7 +316,8 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
                 text: 'Nuevo punto', 
                 onPressed: (){nuevoPuntoDeInspeccion();},
                 disabled: selectedTipoPto.tipoPuntoInspeccionId == 0,
-                tamano: 20,),
+                tamano: 20,
+              ),
             ]
           ],
         ),
@@ -334,111 +334,107 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
     zonaSeleccionada = ZonaPI.empty();
 
     showDialog(
-            context: context,
-            builder: (context) {
-              return SingleChildScrollView(
-                child: AlertDialog(
-                  title: const Text('Nuevo Punto'),
-                  content: SizedBox(
-                    width: Constantes().ancho,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CustomTextFormField(
-                          controller: codPuntoInspeccionController,
-                          maxLines: 1,
-                          hint: 'Codigo punto de inspeccion',
-                          label: 'Codigo punto de inspeccion',
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        CustomDropdownFormMenu(
-                            hint: 'Zona',
-                            value: zonaSeleccionada.codZona != ''
-                                ? zonaSeleccionada
-                                : null,
-                            items: zonas.map((e) {
-                              return DropdownMenuItem(
-                                value: e,
-                                child: Text(
-                                  e.zona,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              zonaSeleccionada = value;
-                            }),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        CustomTextFormField(
-                          controller: sectorController,
-                          maxLines: 1,
-                          hint: 'Sector',
-                          label: "Sector",
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        CustomDropdownFormMenu(
-                            hint: 'Plaga objetivo',
-                            value: plagaObjetivoSeleccionada.plagaObjetivoId != 0 ? plagaObjetivoSeleccionada : null,
-                            items: plagasObjetivo.map((e) {
-                              return DropdownMenuItem<PlagaObjetivo>(
-                                value: e,
-                                child: SizedBox(
-                                  width: 180,
-                                  child: Text(
-                                    e.descripcion,
-                                    softWrap: true,
-                                    overflow: TextOverflow.fade,
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              plagaObjetivoSeleccionada = value;
-                            }),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        CustomTextFormField(
-                            controller: comentarioController,
-                            maxLines: 1,
-                            hint: 'Comentario',
-                            label: 'Comentario'),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        CustomTextFormField(
-                          controller: codigoBarraController,
-                          maxLines: 1,
-                          hint: 'Codigo de barras',
-                          label: 'Codigo de barras',
-                        ),
-                      ],
-                    ),
+      context: context,
+      builder: (context) {
+        return SingleChildScrollView(
+          child: AlertDialog(
+            title: const Text('Nuevo Punto'),
+            content: SizedBox(
+              width: Constantes().ancho,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomTextFormField(
+                    controller: codPuntoInspeccionController,
+                    maxLines: 1,
+                    hint: 'Codigo punto de inspeccion',
+                    label: 'Codigo punto de inspeccion',
                   ),
-                  actions: <Widget>[
-                    TextButton(
-                      child: const Text('Cancelar'),
-                      onPressed: () {
-                        router.pop(context);
-                      },
-                    ),
-                    TextButton(
-                      child: const Text('Confirmar'),
-                      onPressed: () async {
-                        router.pop(context);
-                        crearNuevoPunto();
-                      },
-                    ),
-                  ],
-                ),
-              );
-            });
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomDropdownFormMenu(
+                    hint: 'Zona',
+                    value: zonaSeleccionada.codZona != ''
+                      ? zonaSeleccionada
+                      : null,
+                    items: zonas.map((e) {
+                      return DropdownMenuItem(
+                        value: e,
+                        child: Text(
+                          e.zona,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      zonaSeleccionada = value;
+                    }
+                  ),
+                  const SizedBox(height: 10,),
+                  CustomTextFormField(
+                    controller: sectorController,
+                    maxLines: 1,
+                    hint: 'Sector',
+                    label: "Sector",
+                  ),
+                  const SizedBox(height: 10,),
+                  CustomDropdownFormMenu(
+                    hint: 'Plaga objetivo',
+                    value: plagaObjetivoSeleccionada.plagaObjetivoId != 0 ? plagaObjetivoSeleccionada : null,
+                    items: plagasObjetivo.map((e) {
+                      return DropdownMenuItem<PlagaObjetivo>(
+                        value: e,
+                        child: SizedBox(
+                          width: 180,
+                          child: Text(
+                            e.descripcion,
+                            softWrap: true,
+                            overflow: TextOverflow.fade,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      plagaObjetivoSeleccionada = value;
+                    }
+                  ),
+                  const SizedBox(height: 10,),
+                  CustomTextFormField(
+                    controller: comentarioController,
+                    maxLines: 1,
+                    hint: 'Comentario',
+                    label: 'Comentario'
+                  ),
+                  const SizedBox(height: 10,),
+                  CustomTextFormField(
+                    controller: codigoBarraController,
+                    maxLines: 1,
+                    hint: 'Codigo de barras',
+                    label: 'Codigo de barras',
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Cancelar'),
+                onPressed: () {
+                  router.pop(context);
+                },
+              ),
+              TextButton(
+                child: const Text('Confirmar'),
+                onPressed: () async {
+                  router.pop(context);
+                  crearNuevoPunto();
+                },
+              ),
+            ],
+          ),
+        );
+      }
+    );
   }
 
   crearNuevoPunto() async {
@@ -460,7 +456,7 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
       subEstado: 'NUEVO', 
       comentario: comentarioController.text,
       seleccionado: false,
-      );
+    );
 
     await PlanosServices().postPtoInspeccion(context, cliente, planoSeleccionado, nuevoPuntoInspeccion, token);
     await PlanosServices.showDialogs(context, 'Punto creado correctamente',false,false);
@@ -571,14 +567,15 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
   }
 
   crearNuevoPlano() async {
-   var nuevoPlanoACrear = Plano(
+    var nuevoPlanoACrear = Plano(
       planoId: 0, 
       clienteId: cliente.clienteId, 
       codPlano: codPlanoController.text, 
       descripcion: descripcionController.text, 
       desde: DateTime(fechaDesdePlano!.year,fechaDesdePlano!.month,fechaDesdePlano!.day,0,0,0), 
       hasta: DateTime(fechaHastaPlano!.year,fechaHastaPlano!.month,fechaHastaPlano!.day,0,0,0),
-      estado: '');
+      estado: ''
+    );
 
     await PlanosServices().postPlano(context, cliente, nuevoPlanoACrear, token);
     planos = await PlanosServices().getClientPlano(context, cliente, token);
@@ -590,7 +587,8 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
     planoAEditar.codPlano = codPlanoController.text;
     planoAEditar.descripcion = descripcionController.text;
     planoAEditar.desde = DateTime(fechaDesdePlano!.year,fechaDesdePlano!.month,fechaDesdePlano!.day,0,0,0);
-    planoAEditar.hasta = plano.hasta == null ? null : DateTime(fechaHastaPlano!.year,fechaHastaPlano!.month,fechaHastaPlano!.day,0,0,0);
+    planoAEditar.hasta = plano.hasta == null ? null : DateTime(fechaHastaPlano!.year,fechaHastaPlano!.month,fechaHastaPlano!.day,0,0,0
+  );
 
     await PlanosServices().putPlano(context, cliente, planoAEditar, token);
     planos = await PlanosServices().getClientPlano(context, cliente, token);
@@ -648,11 +646,9 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
   editarPunto(List<Ptoinspeccion> puntos){
     if(puntosSeleccionados.length == 1){
       codPuntoInspeccionController.text = puntosSeleccionados[0].codPuntoInspeccion;
-      zonaSeleccionada = zonas.firstWhere((element) =>
-        element.codZona == puntosSeleccionados[0].zona);
+      zonaSeleccionada = zonas.firstWhere((element) => element.codZona == puntosSeleccionados[0].zona);
       sectorController.text = puntosSeleccionados[0].sector;
-      plagaObjetivoSeleccionada = plagasObjetivo.firstWhere(
-                    (element) => element.plagaObjetivoId == puntosSeleccionados[0].plagaObjetivoId);
+      plagaObjetivoSeleccionada = plagasObjetivo.firstWhere((element) => element.plagaObjetivoId == puntosSeleccionados[0].plagaObjetivoId);
       comentarioController.text = puntosSeleccionados[0].comentario;
       codigoBarraController.text = puntosSeleccionados[0].codigoBarra;
     }else{
@@ -682,71 +678,59 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
                     hint: 'Codigo punto de inspeccion',
                     label: 'Codigo punto de inspeccion',
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10,),
                   CustomDropdownFormMenu(
-                      hint: 'Zona',
-                      value: zonaSeleccionada.codZona != ''
-                          ? zonaSeleccionada
-                          : null,
-                      items: zonas.map((e) {
-                        return DropdownMenuItem(
-                          value: e,
-                          child: Text(
-                            e.zona,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        zonaSeleccionada = value;
-                      }),
-                  const SizedBox(
-                    height: 10,
+                    hint: 'Zona',
+                    value: zonaSeleccionada.codZona != '' ? zonaSeleccionada : null,
+                    items: zonas.map((e) {
+                      return DropdownMenuItem(
+                        value: e,
+                        child: Text(
+                          e.zona,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      zonaSeleccionada = value;
+                    }
                   ),
+                  const SizedBox(height: 10,),
                   CustomTextFormField(
                     controller: sectorController,
                     maxLines: 1,
                     hint: 'Sector',
                     label: "Sector",
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10,),
                   CustomDropdownFormMenu(
-                      hint: 'Plaga objetivo',
-                      value:
-                          plagaObjetivoSeleccionada.plagaObjetivoId != 0
-                              ? plagaObjetivoSeleccionada
-                              : null,
-                      items: plagasObjetivo.map((e) {
-                        return DropdownMenuItem<PlagaObjetivo>(
-                          value: e,
-                          child: SizedBox(
-                            width: 180,
-                            child: Text(
-                              e.descripcion,
-                              softWrap: true,
-                              overflow: TextOverflow.fade,
-                            ),
+                    hint: 'Plaga objetivo',
+                    value: plagaObjetivoSeleccionada.plagaObjetivoId != 0 ? plagaObjetivoSeleccionada : null,
+                    items: plagasObjetivo.map((e) {
+                      return DropdownMenuItem<PlagaObjetivo>(
+                        value: e,
+                        child: SizedBox(
+                          width: 180,
+                          child: Text(
+                            e.descripcion,
+                            softWrap: true,
+                            overflow: TextOverflow.fade,
                           ),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        plagaObjetivoSeleccionada = value;
-                      }),
-                  const SizedBox(
-                    height: 10,
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      plagaObjetivoSeleccionada = value;
+                    }
                   ),
+                  const SizedBox(height: 10,),
                   CustomTextFormField(
-                      controller: comentarioController,
-                      maxLines: 1,
-                      hint: 'Comentario',
-                      label: 'Comentario'),
-                  const SizedBox(
-                    height: 10,
+                    controller: comentarioController,
+                    maxLines: 1,
+                    hint: 'Comentario',
+                    label: 'Comentario'
                   ),
+                  const SizedBox(height: 10,),
                   if(puntosSeleccionados.length == 1)
                   CustomTextFormField(
                     controller: codigoBarraController,
@@ -769,38 +753,35 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
                 onPressed: () async {
                   for (var i = 0; i < puntosSeleccionados.length; i++) {
                     Ptoinspeccion nuevoPtoInspeccion = Ptoinspeccion(
-                        puntoInspeccionId: puntosSeleccionados[i].puntoInspeccionId,                        
-                        planoId: puntosSeleccionados[i].planoId,
-                        tipoPuntoInspeccionId: puntosSeleccionados[i].tipoPuntoInspeccionId,
-                        codTipoPuntoInspeccion: puntosSeleccionados[i].codTipoPuntoInspeccion,
-                        plagaObjetivoId: puntosSeleccionados[i].plagaObjetivoId,
-                        codPuntoInspeccion: puntosSeleccionados.length == 1 ? codPuntoInspeccionController.text : puntosSeleccionados[i].codPuntoInspeccion,
-                        codigoBarra: puntosSeleccionados.length == 1 ? codigoBarraController.text : puntosSeleccionados[i].codigoBarra,
-                        zona: zonaSeleccionada.codZona,
-                        sector: sectorController.text,
-                        comentario: comentarioController.text,
-                        seleccionado: puntosSeleccionados[i].seleccionado,
-                        codPlagaObjetivo: puntosSeleccionados[i].codPlagaObjetivo,
-                        descPlagaObjetivo: puntosSeleccionados[i].descPlagaObjetivo,
-                        descTipoPunto: puntosSeleccionados[i].descTipoPunto,
-                        desde: puntosSeleccionados[i].desde,
-                        estado: puntosSeleccionados[i].estado,
-                        subEstado: puntosSeleccionados[i].subEstado
-                      );
+                      puntoInspeccionId: puntosSeleccionados[i].puntoInspeccionId,                        
+                      planoId: puntosSeleccionados[i].planoId,
+                      tipoPuntoInspeccionId: puntosSeleccionados[i].tipoPuntoInspeccionId,
+                      codTipoPuntoInspeccion: puntosSeleccionados[i].codTipoPuntoInspeccion,
+                      plagaObjetivoId: puntosSeleccionados[i].plagaObjetivoId,
+                      codPuntoInspeccion: puntosSeleccionados.length == 1 ? codPuntoInspeccionController.text : puntosSeleccionados[i].codPuntoInspeccion,
+                      codigoBarra: puntosSeleccionados.length == 1 ? codigoBarraController.text : puntosSeleccionados[i].codigoBarra,
+                      zona: zonaSeleccionada.codZona,
+                      sector: sectorController.text,
+                      comentario: comentarioController.text,
+                      seleccionado: puntosSeleccionados[i].seleccionado,
+                      codPlagaObjetivo: puntosSeleccionados[i].codPlagaObjetivo,
+                      descPlagaObjetivo: puntosSeleccionados[i].descPlagaObjetivo,
+                      descTipoPunto: puntosSeleccionados[i].descTipoPunto,
+                      desde: puntosSeleccionados[i].desde,
+                      estado: puntosSeleccionados[i].estado,
+                      subEstado: puntosSeleccionados[i].subEstado
+                    );
 
                     if (puntosSeleccionados[i].puntoInspeccionId != 0) {
                       await PlanosServices().putPtoInspeccion(context, cliente, planoSeleccionado, nuevoPtoInspeccion, token);
                     } 
                   }
-
                   if(puntosSeleccionados.length == 1){
                    await PlanosServices.showDialogs(context, 'Punto actualizado correctamente', true, false);
                   }else{
                    await PlanosServices.showDialogs(context, 'Puntos actualizados correctamente', true, false);
                   }
-
                   await actualizar(puntos);
-                  
                 },
               ),
             ],
@@ -826,7 +807,7 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
           content: SizedBox(
             child: Text(
               puntos.length == 1 ? 'Esta por borrar el punto ${puntos[0].codPuntoInspeccion}. Esta seguro de borrarlo?' 
-                : 'Esta por borrar multiples puntos seleccionados. Esta seguro de borrarlos?' )
+              : 'Esta por borrar multiples puntos seleccionados. Esta seguro de borrarlos?' )
           ),
           actions: <Widget>[
             TextButton(
@@ -838,7 +819,6 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
             TextButton(
               child: const Text('Confirmar'),
               onPressed: () async {
-
                 if(puntos.length == 1 ) {
                   await PlanosServices().deletePtoInspeccion(context, cliente, planoSeleccionado, puntos[0], token);
                   await PlanosServices.showDialogs(context, 'Punto borrado correctamente', true, false);
@@ -878,8 +858,10 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(puntos.length == 1 ? 'Esta por cambiar el estado del punto ${puntos[0].codPuntoInspeccion} del tipo ${selectedTipoPto.descripcion}' 
-                    : 'Esta por cambiar el estado a multiples puntos'),
+                  Text(
+                    puntos.length == 1 ? 'Esta por cambiar el estado del punto ${puntos[0].codPuntoInspeccion} del tipo ${selectedTipoPto.descripcion}' 
+                    : 'Esta por cambiar el estado a multiples puntos'
+                  ),
                   const SizedBox(height: 10,),
                   CustomDropdownFormMenu(
                     hint: 'Estado / Subestado',
@@ -916,7 +898,8 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
                     items: ordenesCliente.map((e) {
                       return DropdownMenuItem(
                         value: e,
-                        child: Text('Orden ${e.ordenTrabajoId} - ${DateFormat('dd/MM/yyyy').format(e.fechaOrdenTrabajo)}'));
+                        child: Text('Orden ${e.ordenTrabajoId} - ${DateFormat('dd/MM/yyyy').format(e.fechaOrdenTrabajo)}')
+                      );
                     }).toList(),
                   )
                 ],
@@ -936,18 +919,18 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
               var estadoYSubEstado = estadoPuntoSeleccionado.split(' / ');
                 
                 for (var i = 0; i < puntosSeleccionados.length; i++) {
-                  await PlanosServices().
-                    patchEstadoPunto(
-                      context, 
-                      cliente, 
-                      planoSeleccionado, 
-                      puntosSeleccionados[0],
-                      estadoYSubEstado[0],
-                      estadoYSubEstado[1],
-                      comentarioController.text, 
-                      fechaDesdePatch,
-                      ordenSeleccionada.ordenTrabajoId, 
-                      token);
+                  await PlanosServices().patchEstadoPunto(
+                    context, 
+                    cliente, 
+                    planoSeleccionado, 
+                    puntosSeleccionados[0],
+                    estadoYSubEstado[0],
+                    estadoYSubEstado[1],
+                    comentarioController.text, 
+                    fechaDesdePatch,
+                    ordenSeleccionada.ordenTrabajoId, 
+                    token
+                  );
                 }
                 PlanosServices.showDialogs(context, 'Estado y subestado cambiados correctamente', true, false);
                 await actualizar(puntos);
@@ -962,11 +945,12 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
   Future<Null> _selectFechaDesdePatch(BuildContext context) async {
     
     final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        initialDatePickerMode: DatePickerMode.day,
-        firstDate: DateTime(1900),
-        lastDate: DateTime(2099));
+      context: context,
+      initialDate: DateTime.now(),
+      initialDatePickerMode: DatePickerMode.day,
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2099)
+    );
     if (picked != null) {
       setState(() {
         fechaDesdePatch = picked;
@@ -975,11 +959,12 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
   }
   Future<Null> _selectFechaDesdePlano(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        initialDatePickerMode: DatePickerMode.day,
-        firstDate: DateTime(1900),
-        lastDate: DateTime(2099));
+      context: context,
+      initialDate: DateTime.now(),
+      initialDatePickerMode: DatePickerMode.day,
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2099)
+    );
     if (picked != null) {
       setState(() {
         fechaDesdePlano = picked;
@@ -989,11 +974,12 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
   }
   Future<Null> _selectFechaHastaPlano(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        initialDatePickerMode: DatePickerMode.day,
-        firstDate: DateTime(1900),
-        lastDate: DateTime(2099));
+      context: context,
+      initialDate: DateTime.now(),
+      initialDatePickerMode: DatePickerMode.day,
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2099)
+    );
     if (picked != null) {
       setState(() {
         fechaHastaPlano = picked;
@@ -1028,24 +1014,24 @@ class _PtosInspeccionClientesState extends State<PtosInspeccionClientes> {
             ],
           ),
           actions: <Widget>[
-              TextButton(
-                child: const Text('Cancelar'),
-                onPressed: () {
-                  router.pop(context);
-                },
-              ),
-              TextButton(
-                child: const Text('Confirmar'),
-                onPressed: () async {                  
-                  await PlanosServices().patchEstadoPlano(context, cliente, plano, estadoPlanoSeleccionado, token);
-                  PlanosServices.showDialogs(context, 'Estado cambiado correctamente', true, false);
-                  setState(() {});
-                },
-
-              ),
-            ],
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                router.pop(context);
+              },
+            ),
+            TextButton(
+              child: const Text('Confirmar'),
+              onPressed: () async {                  
+                await PlanosServices().patchEstadoPlano(context, cliente, plano, estadoPlanoSeleccionado, token);
+                PlanosServices.showDialogs(context, 'Estado cambiado correctamente', true, false);
+                setState(() {});
+              },
+            ),
+          ],
         );
       }
     );
   }
+
 }

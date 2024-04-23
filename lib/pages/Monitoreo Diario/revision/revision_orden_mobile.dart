@@ -148,21 +148,18 @@ class _RevisionOrdenMobileState extends State<RevisionOrdenMobile> with SingleTi
               ),
 
             ),
-            Container(
-              child:  Text(
-                        valorComentario,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16.0,
-                          color: Colors.black,
-                        ),
-                        overflow: TextOverflow.ellipsis, // Handle overflow with ellipsis
-                      ),
+            Text(
+              valorComentario,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16.0,
+                color: Colors.black,
+              ),
+              overflow: TextOverflow.ellipsis, // Handle overflow with ellipsis
             ),
             const SizedBox(height: 10,),
             const Divider(),
             const SizedBox(height: 10,),
-            
             const Spacer(),
             BottomNavigationBar(
               currentIndex: buttonIndex,
@@ -176,9 +173,7 @@ class _RevisionOrdenMobileState extends State<RevisionOrdenMobile> with SingleTi
                     case 1:
                       _showCreateCopyDialog(context);
                     break;
-                    
                   }
-
                 });
               },
               showUnselectedLabels: true,

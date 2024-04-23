@@ -87,14 +87,11 @@ class _ButtonDelegateState extends State<ButtonDelegate> {
             }
           },
         ),
-        SizedBox(
-          width: 10,
-        ),
+        const SizedBox(width: 10,),
         IconButton(
           tooltip: 'Limpiar filtro cliente',
           onPressed: () {
-            Provider.of<OrdenProvider>(context, listen: false)
-                .clearSelectedCliente(widget.nombreProvider);
+            Provider.of<OrdenProvider>(context, listen: false).clearSelectedCliente(widget.nombreProvider);
             setState(() {
               selectedCliente = Cliente.empty();
             });

@@ -1,9 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
@@ -12,7 +10,6 @@ import 'package:sedel_oficina_maqueta/services/ubicaciones_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/button_delegate.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
-import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 import 'package:intl/intl.dart';
 
 import '../../../models/cliente.dart';
@@ -105,187 +102,184 @@ class _MapaPageMobileState extends State<MapaPageMobile>
           appBar: AppBarDesktop(
             titulo: 'Mapa',
           ),
-          drawer:  Container(
-            child: Drawer(
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: Column(
-                children: [
-                  const SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width *0.9,
-                      child: CustomTextFormField(
-                        controller: filtroController,
-                        onChanged: (value) {
-                          cargarUbicacion();
-                          cargarMarkers();
-                        },
-                        onFieldSubmitted: (value) {
-                          cargarUbicacion();
-                          cargarMarkers();
-                          setState(() {});
-                        },
-                        maxLines: 1,
-                        label: 'Filtrar por número de orden',
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10,),
-                  const Text(
-                    'Tecnico: ',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    child: DropdownSearch(
-                      dropdownDecoratorProps: const DropDownDecoratorProps(
-                          dropdownSearchDecoration: InputDecoration(
-                              hintText: 'Seleccione un tecnico')),
-                      items: tecnicos,
-                      popupProps: const PopupProps.menu(
-                          showSearchBox: true, searchDelay: Duration.zero),
-                      onChanged: (value) {
-                        setState(() {
-                          selectedTecnico = value;
-                          tecnicoFiltro = value!.tecnicoId;
-                        });
-                      },
-                    ),
-                  ),
-                                  
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        'Cliente: ',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      ButtonDelegate(
-                        colorSeleccionado: Colors.black,
-                        nombreProvider: 'Mapa'),
-                      SizedBox(
-                        height: 10,
-                      ),    
-                    ],
-                  ),
-                            
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      IconButton(
-                          onPressed: () async {
-                            final pickedDate = await showDatePicker(
-                              initialDate: selectedDate,
-                              firstDate: DateTime(2022),
-                              lastDate: DateTime(2099),
-                              context: context,
-                            );
-                                      
-                            if (pickedDate != null &&
-                                pickedDate != selectedDate) {
-                              setState(() {
-                                selectedDate = pickedDate;
-                              });
-                            }
-                          },
-                          icon: Container(
-                            child: const Icon(Icons.calendar_month,), 
-                            decoration: BoxDecoration(
-                              color: colors.secondary,
-                              border: Border.all(),
-                              borderRadius: BorderRadius.circular(3)
-                            ),
-
-                          )
-                      ),
-                      const Text('Fecha: ',style: TextStyle(fontSize: 18),),
-                       Text(DateFormat("E d, MMM", 'es').format(selectedDate),
-                         style: const TextStyle(fontSize: 18),
-                       ),
-                    ],
-                  ),
-                  Divider(),
-                  SizedBox(
+          drawer:  Drawer(
+            width: MediaQuery.of(context).size.width * 0.9,
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: SizedBox(
                     width: MediaQuery.of(context).size.width *0.9,
-                    height:
-                        MediaQuery.of(context).size.height * 0.55,
-                    child: ListView.builder(
-                        itemCount: ubicacionesFiltradas.length,
-                        itemBuilder: (context, i) {
-                          var ubicacion = ubicacionesFiltradas[i];
-                          return CheckboxListTile(
-                            title: Text(
-                              ubicacion.cliente.nombre,
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                            subtitle: Text(
-                                '${ubicacion.ordenTrabajoId} - ${DateFormat('HH:mm', 'es').format(ubicacion.fechaDate)}'),
-                            value: ubicacion.seleccionado,
-                            onChanged: (value) {
-                              ubicacion.seleccionado = value!;
-                              setState(() {
-                                cargarMarkers();
-                              });
-                            },
-                          );
-                        }
-                    )
+                    child: CustomTextFormField(
+                      controller: filtroController,
+                      onChanged: (value) {
+                        cargarUbicacion();
+                        cargarMarkers();
+                      },
+                      onFieldSubmitted: (value) {
+                        cargarUbicacion();
+                        cargarMarkers();
+                        setState(() {});
+                      },
+                      maxLines: 1,
+                      label: 'Filtrar por número de orden',
+                    ),
                   ),
-                  const Spacer(),
-                  BottomNavigationBar(
-                    currentIndex: buttonIndex,
-                    onTap: (index) async{
-                      buttonIndex = index;
-                      switch (buttonIndex){
-                        case 0: 
-                          ubicaciones = await UbicacionesServices().getUbicaciones(context,selectedTecnico!.tecnicoId,
-                          selectedDate.toIso8601String(),selectedDate.add(const Duration(days: 1)).toIso8601String(),token);       
-                          cargarUbicacion();
-                          cargarMarkers();
-                          setState(() {});
-                        break;
-                        case 1:
-                          selectAll = !selectAll;
-                          for (var ubicacion in ubicacionesFiltradas) {
-                            ubicacion.seleccionado = selectAll;
-                          }
-                          cargarMarkers();
-                          setState(() {
-                            
-                          });
-                        break;
-                      }
-            
-                      
+                ),
+                const SizedBox(height: 10,),
+                const Text(
+                  'Tecnico: ',
+                  style: TextStyle(fontSize: 18),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  child: DropdownSearch(
+                    dropdownDecoratorProps: const DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                            hintText: 'Seleccione un tecnico')),
+                    items: tecnicos,
+                    popupProps: const PopupProps.menu(
+                        showSearchBox: true, searchDelay: Duration.zero),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedTecnico = value;
+                        tecnicoFiltro = value!.tecnicoId;
+                      });
                     },
-                    showUnselectedLabels: true,
-                    selectedItemColor: colors.primary,
-                    unselectedItemColor: Colors.grey,
-                    items: const [
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.search),
-                        label: 'Buscar',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.check_box_outlined),
-                        label: 'Marcar Todos',
-                      ),
-                    ],
                   ),
-                ],
-              
-                
-              ),
+                ),
+                                
+                const SizedBox(
+                  height: 10,
+                ),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      'Cliente: ',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    ButtonDelegate(
+                      colorSeleccionado: Colors.black,
+                      nombreProvider: 'Mapa'),
+                    SizedBox(
+                      height: 10,
+                    ),    
+                  ],
+                ),
+                          
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                        onPressed: () async {
+                          final pickedDate = await showDatePicker(
+                            initialDate: selectedDate,
+                            firstDate: DateTime(2022),
+                            lastDate: DateTime(2099),
+                            context: context,
+                          );
+                                    
+                          if (pickedDate != null &&
+                              pickedDate != selectedDate) {
+                            setState(() {
+                              selectedDate = pickedDate;
+                            });
+                          }
+                        },
+                        icon: Container(
+                          decoration: BoxDecoration(
+                            color: colors.secondary,
+                            border: Border.all(),
+                            borderRadius: BorderRadius.circular(3)
+                          ),
+                          child: const Icon(Icons.calendar_month,),
+          
+                        )
+                    ),
+                    const Text('Fecha: ',style: TextStyle(fontSize: 18),),
+                     Text(DateFormat("E d, MMM", 'es').format(selectedDate),
+                       style: const TextStyle(fontSize: 18),
+                     ),
+                  ],
+                ),
+                const Divider(),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width *0.9,
+                  height:
+                      MediaQuery.of(context).size.height * 0.55,
+                  child: ListView.builder(
+                      itemCount: ubicacionesFiltradas.length,
+                      itemBuilder: (context, i) {
+                        var ubicacion = ubicacionesFiltradas[i];
+                        return CheckboxListTile(
+                          title: Text(
+                            ubicacion.cliente.nombre,
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                          subtitle: Text(
+                              '${ubicacion.ordenTrabajoId} - ${DateFormat('HH:mm', 'es').format(ubicacion.fechaDate)}'),
+                          value: ubicacion.seleccionado,
+                          onChanged: (value) {
+                            ubicacion.seleccionado = value!;
+                            setState(() {
+                              cargarMarkers();
+                            });
+                          },
+                        );
+                      }
+                  )
+                ),
+                const Spacer(),
+                BottomNavigationBar(
+                  currentIndex: buttonIndex,
+                  onTap: (index) async{
+                    buttonIndex = index;
+                    switch (buttonIndex){
+                      case 0: 
+                        ubicaciones = await UbicacionesServices().getUbicaciones(context,selectedTecnico!.tecnicoId,
+                        selectedDate.toIso8601String(),selectedDate.add(const Duration(days: 1)).toIso8601String(),token);       
+                        cargarUbicacion();
+                        cargarMarkers();
+                        setState(() {});
+                      break;
+                      case 1:
+                        selectAll = !selectAll;
+                        for (var ubicacion in ubicacionesFiltradas) {
+                          ubicacion.seleccionado = selectAll;
+                        }
+                        cargarMarkers();
+                        setState(() {
+                          
+                        });
+                      break;
+                    }
+          
+                    
+                  },
+                  showUnselectedLabels: true,
+                  selectedItemColor: colors.primary,
+                  unselectedItemColor: Colors.grey,
+                  items: const [
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.search),
+                      label: 'Buscar',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.check_box_outlined),
+                      label: 'Marcar Todos',
+                    ),
+                  ],
+                ),
+              ],
+            
               
             ),
             
