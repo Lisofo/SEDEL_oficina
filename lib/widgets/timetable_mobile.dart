@@ -2,7 +2,6 @@
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_timetable/flutter_timetable.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';

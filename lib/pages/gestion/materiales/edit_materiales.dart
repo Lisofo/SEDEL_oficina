@@ -1,3 +1,6 @@
+// ignore_for_file: avoid_print
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
@@ -228,12 +231,7 @@ class _EditMaterialesPageState extends State<EditMaterialesPage> {
                           title: Text(manual.filename),
                           trailing: IconButton(
                             onPressed: () async {
-                              final url = Uri.parse(manual.filepath);
-                              if (await canLaunchUrl(url)) {
-                                await launchUrl(url,
-                                mode: LaunchMode.inAppWebView,
-                                webViewConfiguration: WebViewConfiguration(headers: <String, String> {'token': token}),);
-                              }
+                              await launchURL(manual.filepath, token);
                             }, 
                             icon: const Icon(Icons.open_in_browser)
                           ),
@@ -351,4 +349,33 @@ class _EditMaterialesPageState extends State<EditMaterialesPage> {
     }
     setState(() {});
   }
+
+  launchURL(String url, String token) async {
+  Dio dio = Dio();
+  
+  try {
+    // Realizar la solicitud HTTP con el encabezado de autorización
+    Response response = await dio.get(
+      url,
+      options: Options(
+        headers: {
+          'Authorization': 'headers $token',
+        },
+      ),
+    );
+
+    // Verificar si la solicitud fue exitosa (código de estado 200)
+    if (response.statusCode == 200) {
+      // Si la respuesta fue exitosa, abrir la URL en el navegador
+      Uri uri = Uri.parse(url);
+      await launchUrl(uri);
+    } else {
+      // Si la solicitud no fue exitosa, mostrar un mensaje de error
+      print('Error al cargar la URL: ${response.statusCode}');
+    }
+  } catch (e) {
+    // Manejar errores de solicitud
+    print('Error al realizar la solicitud: $e');
+  }
+}
 }
