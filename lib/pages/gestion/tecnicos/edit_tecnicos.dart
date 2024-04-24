@@ -208,8 +208,9 @@ class _EditTecnicosPageState extends State<EditTecnicosPage> {
                         Row(
                           children: [
                             IconButton.filledTonal(
-                                onPressed: () => _selectFechaNacimiento(context),
-                                icon: const Icon(Icons.calendar_month)),
+                              onPressed: () => _selectFechaNacimiento(context),
+                              icon: const Icon(Icons.calendar_month)
+                            ),
                             SizedBox(
                               width: 300,
                               child: CustomTextFormField(
@@ -223,9 +224,7 @@ class _EditTecnicosPageState extends State<EditTecnicosPage> {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
+                        const SizedBox(height: 20,),
                         Row(
                           children: [
                             const Text('Cargo'),
@@ -250,14 +249,13 @@ class _EditTecnicosPageState extends State<EditTecnicosPage> {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
+                        const SizedBox(height: 20,),
                         Row(
                           children: [
                             IconButton.filledTonal(
-                                onPressed: () => _selectFechaIngreso(context),
-                                icon: const Icon(Icons.calendar_month)),
+                              onPressed: () => _selectFechaIngreso(context),
+                              icon: const Icon(Icons.calendar_month)
+                            ),
                             SizedBox(
                               width: 300,
                               child: CustomTextFormField(
@@ -271,15 +269,13 @@ class _EditTecnicosPageState extends State<EditTecnicosPage> {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
+                        const SizedBox(height: 20,),
                         Row(
                           children: [
                             IconButton.filledTonal(
-                                onPressed: () =>
-                                    _selectFechaVtoCarneSalud(context),
-                                icon: const Icon(Icons.calendar_month)),
+                              onPressed: () => _selectFechaVtoCarneSalud(context),
+                              icon: const Icon(Icons.calendar_month)
+                            ),
                             SizedBox(
                               width: 300,
                               child: CustomTextFormField(
@@ -293,9 +289,7 @@ class _EditTecnicosPageState extends State<EditTecnicosPage> {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
+                        const SizedBox(height: 20,),
                       ],
                     ),
                   ),
@@ -305,61 +299,71 @@ class _EditTecnicosPageState extends State<EditTecnicosPage> {
           ),
         ),
         bottomNavigationBar: BottomAppBar(
-            elevation: 0,
-            child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                  ElevatedButton(
-                      style: const ButtonStyle(
-                          backgroundColor:
-                              MaterialStatePropertyAll(Colors.white),
-                          elevation: MaterialStatePropertyAll(10),
-                          shape: MaterialStatePropertyAll(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.horizontal(
-                                      left: Radius.circular(50),
-                                      right: Radius.circular(50))))),
-                      onPressed: () async {
-                        await postTecnico(context);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.5),
-                        child: Text(
-                          'Guardar',
-                          style: TextStyle(
-                              color: colors.primary,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20),
-                        ),
-                      )),
-                  const SizedBox(
-                    width: 30,
+          elevation: 0,
+          child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                ElevatedButton(
+                  style: const ButtonStyle(
+                    backgroundColor: MaterialStatePropertyAll(Colors.white),
+                    elevation: MaterialStatePropertyAll(10),
+                    shape: MaterialStatePropertyAll(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.horizontal(
+                          left: Radius.circular(50),
+                          right: Radius.circular(50)
+                        )
+                      )
+                    )
                   ),
-                  if (tieneId)
-                    ElevatedButton(
-                        style: const ButtonStyle(
-                            backgroundColor:
-                                MaterialStatePropertyAll(Colors.white),
-                            elevation: MaterialStatePropertyAll(10),
-                            shape: MaterialStatePropertyAll(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.horizontal(
-                                        left: Radius.circular(50),
-                                        right: Radius.circular(50))))),
-                        onPressed: () async {
-                          borrarTecnico(context, selectedTecnico, token);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.5),
-                          child: Text(
-                            'Eliminar',
-                            style: TextStyle(
-                                color: colors.primary,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
-                          ),
-                        )),
-                ]))),
+                  onPressed: () async {
+                    await postTecnico(context);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.5),
+                    child: Text(
+                      'Guardar',
+                      style: TextStyle(
+                        color: colors.primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20
+                      ),
+                    ),
+                  )
+                ),
+                const SizedBox(width: 30,),
+                if (tieneId)
+                  ElevatedButton(
+                    style: const ButtonStyle(
+                    backgroundColor: MaterialStatePropertyAll(Colors.white),
+                    elevation: MaterialStatePropertyAll(10),
+                    shape: MaterialStatePropertyAll(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.horizontal(
+                          left: Radius.circular(50),
+                          right: Radius.circular(50)
+                        )
+                      )
+                    )
+                  ),
+                  onPressed: () async {
+                    borrarTecnico(context, selectedTecnico, token);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.5),
+                    child: Text(
+                      'Eliminar',
+                      style: TextStyle(
+                          color: colors.primary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                    ),
+                  )
+                ),
+              ]
+            )
+          )
+        ),
       ),
     );
   }
@@ -368,14 +372,11 @@ class _EditTecnicosPageState extends State<EditTecnicosPage> {
     selectedTecnico.codTecnico = _codController.text;
     selectedTecnico.documento = _docController.text;
     selectedTecnico.nombre = _nombreController.text;
-    selectedTecnico.fechaNacimiento = DateTime(selectedDateNacimiento.year,
-        selectedDateNacimiento.month, selectedDateNacimiento.day);
+    selectedTecnico.fechaNacimiento = DateTime(selectedDateNacimiento.year, selectedDateNacimiento.month, selectedDateNacimiento.day);
     selectedTecnico.cargo = cargoSeleccionado;
     selectedTecnico.cargoId = cargoSeleccionado!.cargoId;
-    selectedTecnico.fechaIngreso = DateTime(selectedDateIngreso.year,
-        selectedDateIngreso.month, selectedDateIngreso.day);
-    selectedTecnico.fechaVtoCarneSalud = DateTime(selectedDateCarneSalud.year,
-        selectedDateCarneSalud.month, selectedDateCarneSalud.day);
+    selectedTecnico.fechaIngreso = DateTime(selectedDateIngreso.year, selectedDateIngreso.month, selectedDateIngreso.day);
+    selectedTecnico.fechaVtoCarneSalud = DateTime(selectedDateCarneSalud.year, selectedDateCarneSalud.month, selectedDateCarneSalud.day);
 
     if (selectedTecnico.tecnicoId == 0) {
       await TecnicoServices().postTecnico(context, selectedTecnico, token);
@@ -409,11 +410,12 @@ class _EditTecnicosPageState extends State<EditTecnicosPage> {
 
   Future<Null> _selectFechaNacimiento(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDateNacimiento,
-        initialDatePickerMode: DatePickerMode.day,
-        firstDate: DateTime(1900),
-        lastDate: DateTime(2099));
+      context: context,
+      initialDate: selectedDateNacimiento,
+      initialDatePickerMode: DatePickerMode.day,
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2099)
+    );
     if (picked != null) {
       setState(() {
         selectedDateNacimiento = picked;
@@ -426,16 +428,16 @@ class _EditTecnicosPageState extends State<EditTecnicosPage> {
 
   Future<Null> _selectFechaIngreso(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDateIngreso,
-        initialDatePickerMode: DatePickerMode.day,
-        firstDate: DateTime(1900),
-        lastDate: DateTime(2099));
+      context: context,
+      initialDate: selectedDateIngreso,
+      initialDatePickerMode: DatePickerMode.day,
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2099)
+    );
     if (picked != null) {
       setState(() {
         selectedDateIngreso = picked;
-        _dateIngresoController.text =
-            DateFormat.yMd().format(selectedDateNacimiento);
+        _dateIngresoController.text = DateFormat.yMd().format(selectedDateNacimiento);
         setState(() {});
       });
     }
@@ -443,23 +445,22 @@ class _EditTecnicosPageState extends State<EditTecnicosPage> {
 
   Future<Null> _selectFechaVtoCarneSalud(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDateCarneSalud,
-        initialDatePickerMode: DatePickerMode.day,
-        firstDate: DateTime(1900),
-        lastDate: DateTime(2099));
+      context: context,
+      initialDate: selectedDateCarneSalud,
+      initialDatePickerMode: DatePickerMode.day,
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2099)
+    );
     if (picked != null) {
       setState(() {
         selectedDateCarneSalud = picked;
-        _dateCarneSaludController.text =
-            DateFormat.yMd().format(selectedDateNacimiento);
+        _dateCarneSaludController.text = DateFormat.yMd().format(selectedDateNacimiento);
         setState(() {});
       });
     }
   }
 
-  Future<dynamic> borrarTecnico(
-      BuildContext context, Tecnico tecnico, String token) {
+  Future<dynamic> borrarTecnico(BuildContext context, Tecnico tecnico, String token) {
     return showDialog(
       context: context,
       builder: (context) {
@@ -468,15 +469,17 @@ class _EditTecnicosPageState extends State<EditTecnicosPage> {
           content: const Text('Desea borrar el tecnico?'),
           actions: [
             TextButton(
-                onPressed: () async {
-                  TecnicoServices().deleteTecnico(context, tecnico, token);
-                },
-                child: const Text('Borrar')),
+              onPressed: () async {
+                TecnicoServices().deleteTecnico(context, tecnico, token);
+              },
+              child: const Text('Borrar')
+            ),
             TextButton(
-                onPressed: () {
-                  router.pop();
-                },
-                child: const Text('Cancelar'))
+              onPressed: () {
+                router.pop();
+              },
+              child: const Text('Cancelar')
+            )
           ],
         );
       },

@@ -305,12 +305,17 @@ class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDe
         elevation: 0,        
         child: Row(
           children: [
-            CustomButton(text: 'Nuevo plano', onPressed: (){nuevoPlano(nuevoPlanoACrear);},tamano: 20,),
+            CustomButton(text: 'Nuevo plano', onPressed: (){nuevoPlano(nuevoPlanoACrear);}, tamano: 20,),
             const SizedBox(width: 10,),
-            CustomButton(text: 'Cambiar estado del plano', onPressed: (){cambiarEstadoPlano(planoSeleccionado);},tamano: 20,),
+            CustomButton(text: 'Cambiar estado del plano', onPressed: (){cambiarEstadoPlano(planoSeleccionado);}, tamano: 20,),
             const Spacer(),
             if(mostrarLista)...[
-              CustomButton(text: 'Guardar puntos', onPressed: (){confirmacion();},tamano: 20,),
+              CustomButton(
+                text: 'Guardar puntos',
+                onPressed: (){confirmacion();},
+                tamano: 20,
+                disabled: planoSeleccionadoACopiar == null,
+              ),
               const SizedBox(width: 10,),
               CustomButton(
                 text: 'Nuevo punto', 

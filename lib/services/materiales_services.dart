@@ -3,6 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sedel_oficina_maqueta/config/config.dart';
+import 'package:sedel_oficina_maqueta/models/manuales_materiales.dart';
 import 'package:sedel_oficina_maqueta/models/material.dart';
 import 'package:sedel_oficina_maqueta/models/materialesTPI.dart';
 import 'package:sedel_oficina_maqueta/models/orden.dart';
@@ -1076,6 +1077,84 @@ class MaterialesServices {
       }
       return;
       
+    } catch (e) {
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+              return "Error: ${error['message']}";
+            }).toList();
+            showErrorDialog(context, errorMessages.join('\n'));
+          }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: ${e.message}');
+        }
+      }
+    }
+  }
+
+  Future getManualesMateriales(BuildContext context, int id, String token) async {
+    String link = apiLink += '$id/manuales';
+    try {
+      var headers = {'Authorization': token};
+      var resp = await _dio.request(
+        link,
+        options: Options(
+          method: 'GET',
+          headers: headers,
+        ),
+      );
+
+      final List<dynamic> materialList = resp.data;
+
+      return materialList.map((obj) => ManualesMateriales.fromJson(obj)).toList();
+    } catch (e) {
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+              return "Error: ${error['message']}";
+            }).toList();
+            showErrorDialog(context, errorMessages.join('\n'));
+          }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: ${e.message}');
+        }
+      }
+    }
+  }
+
+  Future postManualesMateriales(BuildContext context, String id, String token) async {
+    String link = apiLink += '$id/manuales';
+    try {
+      var headers = {'Authorization': token};
+      var resp = await _dio.request(
+        link,
+        options: Options(
+          method: 'POST',
+          headers: headers,
+        ),
+      );
+
+      final List<dynamic> materialList = resp.data;
+
+      return materialList.map((obj) => ManualesMateriales.fromJson(obj)).toList();
     } catch (e) {
       if (e is DioException) {
         if (e.response != null) {

@@ -17,7 +17,6 @@ import 'package:sedel_oficina_maqueta/services/orden_services.dart';
 import 'package:sedel_oficina_maqueta/services/plagas_objetivo_services.dart';
 import 'package:sedel_oficina_maqueta/services/planos_services.dart';
 import 'package:sedel_oficina_maqueta/services/ptos_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
@@ -124,7 +123,50 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBarDesktop(titulo: 'Ptos de inspección'),
+      appBar: AppBar(
+        title: const Text('Ptos de inspección', style: TextStyle(color: Colors.white),),
+        backgroundColor: colors.primary,
+        iconTheme: IconThemeData(
+          color: colors.background
+        ),
+        actions: [
+          IconButton(
+            onPressed: (){
+              router.pop();
+            }, 
+            icon: const Icon(Icons.arrow_back_ios_new)
+          ),
+          PopupMenuButton<String>(
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'editar_estado',
+                child: Text('Editar estado/sub estado'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'borrar_punto',
+                child: Text('Borrar punto'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'editar_punto',
+                child: Text('Editar punto'),
+              ),
+            ],
+            onSelected: (String value) {
+              switch (value) {
+                case 'editar_estado':
+                  cambiarEstadoPunto(puntosSeleccionados);
+                  break;
+                case 'borrar_punto':
+                  borrarPunto(puntosSeleccionados);
+                  break;
+                case 'editar_punto':
+                  editarPunto(puntosSeleccionados);
+                  break;
+              }
+            },
+          )
+        ],  
+      ),
       drawer: Drawer(
         child: Container(
           decoration: BoxDecoration(
@@ -220,7 +262,7 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
             : Column(
               children: [
                 Container(
-                  width: MediaQuery.of(context).size.width * 0.8,
+                  width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                     border: Border.all(width: 1, color: colors.primary),
                     borderRadius: BorderRadius.circular(5)
@@ -252,25 +294,29 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
                   ),
                 ),
                 SizedBox(
-                  height: 500,
-                  width: MediaQuery.of(context).size.width * 0.85,
+                  height: MediaQuery.of(context).size.height * 0.7,
+                  width: MediaQuery.of(context).size.width,
                   child: ListView.separated(
                     itemCount: ptosFiltrados.length,
                     itemBuilder: (context, i) {
                       var punto = ptosFiltrados[i];
                       return ListTile(
                         title: Text('Punto ${punto.codPuntoInspeccion}'),
-                        subtitle: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text('Zona: ${punto.zona}'),
-                            const SizedBox(width: 20,),
-                            Text('Sector: ${punto.sector}'),
-                            const SizedBox(width: 20,),
-                            Text('Estado: ${punto.estado}'),
-                            const SizedBox(width: 20,),
-                            Text('Subestado: ${punto.subEstado}'),
-                          ],
+                        subtitle: FittedBox(
+                          fit: BoxFit.contain,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('Zona: ${punto.zona}'),
+                              const SizedBox(width: 15,),
+                              Text('Sector: ${punto.sector}'),
+                              const SizedBox(width: 15,),
+                              Text('Estado: ${punto.estado}'),
+                              const SizedBox(width: 15,),
+                              Text('Subestado: ${punto.subEstado}'),
+                            ],
+                          ),
                         ),
                         trailing: Checkbox(
                           activeColor: colors.primary,
@@ -289,33 +335,6 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
                     },
                   ),
                 ),
-                SizedBox(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      CustomButton(
-                        text: 'Editar estado/sub estado', 
-                        onPressed: () {
-                          cambiarEstadoPunto(puntosSeleccionados);
-                        }
-                      ),
-                      const SizedBox(width: 10,),
-                      CustomButton(
-                        text: 'Borrar punto', 
-                        onPressed: (){
-                          borrarPunto(puntosSeleccionados);
-                        }
-                      ),
-                      const SizedBox(width: 10,),
-                      CustomButton(
-                        onPressed: (){
-                          editarPunto(puntosSeleccionados);
-                        }, 
-                        text: 'Editar punto'
-                      ),
-                    ],
-                  ),
-                )
               ],
             )
           ],
@@ -327,11 +346,20 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
           mainAxisSize: MainAxisSize.min,
           children: [
             if(mostrarLista)...[
-              CustomButton(text: 'Guardar puntos', onPressed: (){confirmacion();},tamano: 15,),
+              CustomButton(
+                text: 'Guardar puntos', 
+                onPressed: (){
+                  confirmacion();
+                },
+                tamano: 15,
+                disabled: planoSeleccionadoACopiar == null,  
+              ),
               const SizedBox(width: 10,),
               CustomButton(
                 text: 'Nuevo punto', 
-                onPressed: (){nuevoPuntoDeInspeccion();},
+                onPressed: (){
+                  nuevoPuntoDeInspeccion();
+                },
                 disabled: selectedTipoPto.tipoPuntoInspeccionId == 0,
                 tamano: 15,
               ),
@@ -571,7 +599,7 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
                   }else if(plano.planoId > 0) {
                     editarPlano(plano);
                     if(planoSeleccionadoACopiar?.planoId != null){
-                    traerPuntosDeOtroPlano();
+                      traerPuntosDeOtroPlano();
                     }
                   }
                 },

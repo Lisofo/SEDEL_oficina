@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
+import 'package:sedel_oficina_maqueta/models/manuales_materiales.dart';
 import 'package:sedel_oficina_maqueta/models/material.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/materiales_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../widgets/appbar_desktop.dart';
 import '../../../widgets/drawer.dart';
@@ -31,6 +33,7 @@ class _EditMaterialesPageState extends State<EditMaterialesPage> {
   bool filtro2 = false;
   late Materiales materialSeleccionado = Materiales.empty();
   late String token = '';
+  late List<ManualesMateriales> manuales = [];
 
   @override
   void initState() {
@@ -38,9 +41,11 @@ class _EditMaterialesPageState extends State<EditMaterialesPage> {
     cargarDatos();
   }
 
-  cargarDatos(){
+  cargarDatos() async {
     materialSeleccionado = context.read<OrdenProvider>().materiales;
     token = context.read<OrdenProvider>().token;
+    manuales = await MaterialesServices().getManualesMateriales(context, materialSeleccionado.materialId, token);
+    setState(() {});
   }
 
   @override
@@ -55,8 +60,6 @@ class _EditMaterialesPageState extends State<EditMaterialesPage> {
     super.dispose();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -69,197 +72,234 @@ class _EditMaterialesPageState extends State<EditMaterialesPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Form(
-              key: _formKey,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Text("Codigo  "),
+                          const SizedBox(
+                            width: 27,
+                          ),
+                          SizedBox(
+                            width: 300,
+                            child: CustomTextFormField(
+                              maxLines: 1,
+                              label: 'Codigo',
+                              controller: _codMaterialController,
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 20,),
+                      Row(
+                        children: [
+                          const Text("Descripcion  "),
+                          SizedBox(
+                            width: 500,
+                            child: CustomTextFormField(
+                              label: 'Descripcion',
+                              maxLines: 1,
+                              controller: _descripcionController,
+                              maxLength: 100,
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 20,),
+                      Row(
+                        children: [
+                          const Text("Dosis  "),
+                          const SizedBox(
+                            width: 40,
+                          ),
+                          SizedBox(
+                            width: 800,
+                            child: CustomTextFormField(
+                              label: 'Dosis',
+                              maxLines: 1,
+                              controller: _dosisController,
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 20,),
+                      Row(
+                        children: [
+                          const Text("Unidad  "),
+                          const SizedBox(
+                            width: 35,
+                          ),
+                          SizedBox(
+                            width: 300,
+                            child: CustomTextFormField(
+                              label: 'Unidad',
+                              maxLines: 1,
+                              controller: _unidadController,
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 20,),
+                      Row(
+                        children: [
+                          const Text("Fabricante/Proveedor  "),
+                          const SizedBox(
+                            width: 35,
+                          ),
+                          SizedBox(
+                            width: 300,
+                            child: CustomTextFormField(
+                              label: 'Fabricante/Proveedor',
+                              maxLines: 1,
+                              controller: _favProbController,
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 20,),
+                      Row(
+                        children: [
+                          const Text('En App Tecnico'),
+                          Switch(
+                            activeColor: colors.primary,
+                            value: materialSeleccionado.enAppTecnico == 'S',
+                            onChanged: (value) {
+                              setState(() {
+                                filtro = value;
+                                establecerValoresDeCampo(materialSeleccionado);
+                                value ? materialSeleccionado.enAppTecnico = 'S' : materialSeleccionado.enAppTecnico = 'N';
+                              });
+                            }
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20,),
+                      Row(
+                        children: [
+                          const Text('En uso'),
+                          Switch(
+                            activeColor: colors.primary,
+                            value: materialSeleccionado.enUso == 'S' ? filtro2 = true : filtro2 = false,
+                            onChanged: (value) {
+                              setState(() {
+                                filtro2 = value;
+                                value ? materialSeleccionado.enUso = 'S' : materialSeleccionado.enUso = 'N';
+                                establecerValoresDeCampo(materialSeleccionado);
+                              });
+                            }
+                          ),
+                        ],
+                      ),
+                      // const Spacer(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Card(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      const Text("Codigo  "),
-                      const SizedBox(
-                        width: 27,
-                      ),
-                      SizedBox(
-                        width: 300,
-                        child: CustomTextFormField(
-                          maxLines: 1,
-                          label: 'Codigo',
-                          controller: _codMaterialController,
-                        ),
-                      )
+                      IconButton(onPressed: (){}, icon: const Icon(Icons.upload),)
                     ],
                   ),
                   const SizedBox(height: 20,),
-                  Row(
-                    children: [
-                      const Text("Descripcion  "),
-                      SizedBox(
-                        width: 500,
-                        child: CustomTextFormField(
-                          label: 'Descripcion',
-                          maxLines: 1,
-                          controller: _descripcionController,
-                          maxLength: 100,
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 20,),
-                  Row(
-                    children: [
-                      const Text("Dosis  "),
-                      const SizedBox(
-                        width: 40,
-                      ),
-                      SizedBox(
-                        width: 800,
-                        child: CustomTextFormField(
-                          label: 'Dosis',
-                          maxLines: 1,
-                          controller: _dosisController,
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 20,),
-                  Row(
-                    children: [
-                      const Text("Unidad  "),
-                      const SizedBox(
-                        width: 35,
-                      ),
-                      SizedBox(
-                        width: 300,
-                        child: CustomTextFormField(
-                          label: 'Unidad',
-                          maxLines: 1,
-                          controller: _unidadController,
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 20,),
-                  Row(
-                    children: [
-                      const Text("Fabricante/Proveedor  "),
-                      const SizedBox(
-                        width: 35,
-                      ),
-                      SizedBox(
-                        width: 300,
-                        child: CustomTextFormField(
-                          label: 'Fabricante/Proveedor',
-                          maxLines: 1,
-                          controller: _favProbController,
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 20,),
-                  Row(
-                    children: [
-                      const Text('En App Tecnico'),
-                      Switch(
-                        activeColor: colors.primary,
-                        value: materialSeleccionado.enAppTecnico == 'S',
-                        onChanged: (value) {
-                          setState(() {
-                            filtro = value;
-                            establecerValoresDeCampo(materialSeleccionado);
-                            value
-                                ? materialSeleccionado.enAppTecnico = 'S'
-                                : materialSeleccionado.enAppTecnico = 'N';
-                          });
-                        }
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    children: [
-                      const Text('En uso'),
-                      Switch(
-                        activeColor: colors.primary,
-                        value: materialSeleccionado.enUso == 'S'
-                            ? filtro2 = true
-                            : filtro2 = false,
-                        onChanged: (value) {
-                          setState(() {
-                            filtro2 = value;
-                            value
-                                ? materialSeleccionado.enUso = 'S'
-                                : materialSeleccionado.enUso = 'N';
-                            establecerValoresDeCampo(materialSeleccionado);
-                          });
-                        }
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  BottomAppBar(
-                    elevation: 0,
-                    color: Colors.transparent,
-                    child: Padding(padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          if(materialSeleccionado.materialId != 0)...[
-                            CustomButton(
-                            text: 'Habilitaciones', 
-                            onPressed: (){
-                              router.push('/habilitacionesMaterial');
-                            }, 
-                            tamano: 20,
-                          ),
-                          const SizedBox(width: 30,),
-                          CustomButton(
-                            text: 'Detalles', 
-                            onPressed: (){
-                              router.push('/detallesMaterial');
-                            }, 
-                            tamano: 20,
-                          ),
-                          const SizedBox(width: 30,),
-                          CustomButton(
-                            text: 'Lotes', 
-                            onPressed: (){
-                              router.push('/lotes');
-                            }, 
-                            tamano: 20,
-                          ),
-                          const SizedBox(width: 30,),
-                          ],                          
-                          CustomButton(
+                  SizedBox(
+                    height: 500,
+                    width: 300,
+                    child: ListView.builder(
+                      itemCount: manuales.length,
+                      itemBuilder: (context, i){
+                        var manual = manuales[i];
+                        return ListTile(
+                          leading: Text('$i'),
+                          title: Text(manual.filename),
+                          trailing: IconButton(
                             onPressed: () async {
-                              await postPut(context);
-                            },
-                            text: 'Guardar',
-                            tamano: 20,
+                              final url = Uri.parse(manual.filepath);
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url,
+                                mode: LaunchMode.inAppWebView,
+                                webViewConfiguration: WebViewConfiguration(headers: <String, String> {'token': token}),);
+                              }
+                            }, 
+                            icon: const Icon(Icons.open_in_browser)
                           ),
-                          if(materialSeleccionado.materialId != 0)...[
-                            const SizedBox(width: 30,),
-                            CustomButton(
-                              onPressed: () async {
-                                await borrarMaterial(materialSeleccionado);
-                              },
-                              text:'Eliminar',
-                              tamano: 20,
-                            ),
-                          ]
-                        ]
-                      )
+                        );
+                      }
                     )
                   )
                 ],
               ),
-            ),
-          ),
+            )
+          ],
         ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        elevation: 0,
+        color: Colors.transparent,
+        child: Padding(padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              if(materialSeleccionado.materialId != 0)...[
+                CustomButton(
+                text: 'Habilitaciones', 
+                onPressed: (){
+                  router.push('/habilitacionesMaterial');
+                }, 
+                tamano: 20,
+              ),
+              const SizedBox(width: 30,),
+              CustomButton(
+                text: 'Detalles', 
+                onPressed: (){
+                  router.push('/detallesMaterial');
+                }, 
+                tamano: 20,
+              ),
+              const SizedBox(width: 30,),
+              CustomButton(
+                text: 'Lotes', 
+                onPressed: (){
+                  router.push('/lotes');
+                }, 
+                tamano: 20,
+              ),
+              const SizedBox(width: 30,),
+              ],                          
+              CustomButton(
+                onPressed: () async {
+                  await postPut(context);
+                },
+                text: 'Guardar',
+                tamano: 20,
+              ),
+              if(materialSeleccionado.materialId != 0)...[
+                const SizedBox(width: 30,),
+                CustomButton(
+                  onPressed: () async {
+                    await borrarMaterial(materialSeleccionado);
+                  },
+                  text:'Eliminar',
+                  tamano: 20,
+                ),
+              ]
+            ]
+          )
+        )
       ),
     );
   }
