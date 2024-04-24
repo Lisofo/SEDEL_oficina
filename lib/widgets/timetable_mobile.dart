@@ -51,7 +51,7 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
   late Cliente clienteSeleccionado = Cliente.empty();
   bool cargando = false;
   late List<Orden> ordenesFiltradas = [];
-  int columnas = 1;
+  int columnas = 7;
 
   @override
   void initState() {
@@ -175,6 +175,7 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
             width: 220,
             child: DropdownSearch(
               dropdownDecoratorProps: const DropDownDecoratorProps(
+                textAlign: TextAlign.center,
                   baseStyle: TextStyle(color: Colors.black),
                   dropdownSearchDecoration: InputDecoration(
                     border: InputBorder.none,
@@ -208,6 +209,11 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               TextButton(
+                style: ButtonStyle(
+                  maximumSize: MaterialStatePropertyAll(Size.fromWidth(MediaQuery.of(context).size.width * 0.5 )),
+                  backgroundColor: MaterialStatePropertyAll(colors.secondary),
+                  shape: MaterialStatePropertyAll(ContinuousRectangleBorder(borderRadius: BorderRadius.circular(20)))
+                ),
                   onPressed: () async {
                     final pickedDate = await showDateRangePicker(
                         context: context,
@@ -252,7 +258,9 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
             style: const TextStyle(color: Colors.black),
           ),
           const Spacer(),
+          const Divider(),
           Wrap(
+            
             children: [
               IconButton(
                 onPressed: () async {
@@ -377,7 +385,7 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
           child: Container(
             decoration: BoxDecoration(
               color: colores[item.data!.estado],
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
                     color: Colors.black.withOpacity(0.2),
@@ -387,10 +395,10 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
             ),
             child: Center(
               child: Padding(
-                padding: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(top: 5),
                 child: SingleChildScrollView(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       FittedBox(
                         fit: BoxFit.contain,
@@ -401,12 +409,32 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
                         ),
                       ),
                       if(columnas == 1) ... [
-                        myFittedBox(item.data!.cliente.codCliente),
-                        myFittedBox(item.data!.cliente.nombre),
-                        myFittedBox(item.data!.tipoOrden.descripcion),
+                        myFittedBox('${item.data!.cliente.codCliente} ${item.data!.cliente.nombre}'),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            myFittedBox(item.data!.tipoOrden.descripcion),
+                            const SizedBox(width: 30,),
+                            if(item.data!.tipoOrden.tipoOrdenId == 1) ... [
+                              const Icon(Icons.web) // normal
+                            ] else if(item.data!.tipoOrden.tipoOrdenId == 2) ...[
+                              const Icon(Icons.align_horizontal_left_rounded) // diagnostico
+                            ] else if (item.data!.tipoOrden.tipoOrdenId == 3) ... [
+                              const Icon(Icons.fact_check_rounded), // control de calidad
+                            ]
+                          ],
+                        ),
+                        
                         myFittedBox(item.data!.estado),
                       ] else ... [
                         myFittedBox(item.data!.cliente.codCliente),
+                        if(item.data!.tipoOrden.tipoOrdenId == 1) ... [
+                          const Icon(Icons.web) // normal
+                        ] else if(item.data!.tipoOrden.tipoOrdenId == 2) ...[
+                          const Icon(Icons.align_horizontal_left_rounded) // diagnostico
+                        ] else if (item.data!.tipoOrden.tipoOrdenId == 3) ... [
+                          const Icon(Icons.fact_check_rounded) // control de calidad
+                        ]
                       ],
                       
                       // for (var i = 0; i < item.data!.servicio.length; i++) ...[
@@ -419,6 +447,7 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
             ),
           ),
         ),
+        
         nowIndicatorColor: Colors.red,
         snapToDay: true,
       ),
@@ -483,14 +512,14 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
                   children: [
                     TextButton(
                     onPressed: () async {
-                      Navigator.pop(context);
+                      router.pop(context);
                       await cargandoPlanificacion();
                     },
                     child: const Text('Confirmar')
                     ),
                     TextButton(
                       onPressed: () {
-                       Navigator.pop(context);
+                       router.pop(context);
                      },
                       child: const Text('Cancelar')
                     ),
