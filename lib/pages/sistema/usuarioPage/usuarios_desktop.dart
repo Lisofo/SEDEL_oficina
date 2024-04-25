@@ -10,14 +10,14 @@ import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 
-class UsuariosPage extends StatefulWidget {
-  const UsuariosPage({super.key});
+class UsuariosDesktop extends StatefulWidget {
+  const UsuariosDesktop({super.key});
 
   @override
-  State<UsuariosPage> createState() => _UsuariosPageState();
+  State<UsuariosDesktop> createState() => _UsuariosDesktopState();
 }
 
-class _UsuariosPageState extends State<UsuariosPage> {
+class _UsuariosDesktopState extends State<UsuariosDesktop> {
   List<Usuario> usuarios = [];
   final _userServices = UserServices();
   final _apellidoController = TextEditingController();

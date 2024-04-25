@@ -37,7 +37,7 @@ export 'package:sedel_oficina_maqueta/pages/gestion/marcas/edit_marcas.dart';
 
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarios/password_pin.dart';
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarios/edit_usuarios.dart';
-export 'package:sedel_oficina_maqueta/pages/sistema/usuarios/usuarios.dart';
+export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/usuarios_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarios/establecer_clientes.dart';
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarios/establecer_perfiles.dart';
 
