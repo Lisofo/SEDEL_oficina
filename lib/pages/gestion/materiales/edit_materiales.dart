@@ -1,5 +1,4 @@
-// ignore_for_file: avoid_print
-
+// ignore_for_file: avoid_print, use_build_context_synchronously, avoid_web_libraries_in_flutter
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +13,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../widgets/appbar_desktop.dart';
 import '../../../widgets/drawer.dart';
+import 'dart:html' as html;
+import 'dart:typed_data';
+import 'package:crypto/crypto.dart';
+
 
 class EditMaterialesPage extends StatefulWidget {
   const EditMaterialesPage({super.key});
@@ -37,6 +40,7 @@ class _EditMaterialesPageState extends State<EditMaterialesPage> {
   late Materiales materialSeleccionado = Materiales.empty();
   late String token = '';
   late List<ManualesMateriales> manuales = [];
+  String _md5Hash = '';
 
   @override
   void initState() {
@@ -215,7 +219,9 @@ class _EditMaterialesPageState extends State<EditMaterialesPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      IconButton(onPressed: (){}, icon: const Icon(Icons.upload),)
+                      IconButton(onPressed: () async {
+                        await _openFileExplorer();
+                      }, icon: const Icon(Icons.upload),)
                     ],
                   ),
                   const SizedBox(height: 20,),
@@ -351,31 +357,58 @@ class _EditMaterialesPageState extends State<EditMaterialesPage> {
   }
 
   launchURL(String url, String token) async {
-  Dio dio = Dio();
-  
-  try {
-    // Realizar la solicitud HTTP con el encabezado de autorización
-    Response response = await dio.get(
-      url,
-      options: Options(
-        headers: {
-          'Authorization': 'headers $token',
-        },
-      ),
-    );
-
-    // Verificar si la solicitud fue exitosa (código de estado 200)
-    if (response.statusCode == 200) {
-      // Si la respuesta fue exitosa, abrir la URL en el navegador
-      Uri uri = Uri.parse(url);
-      await launchUrl(uri);
-    } else {
-      // Si la solicitud no fue exitosa, mostrar un mensaje de error
-      print('Error al cargar la URL: ${response.statusCode}');
+    Dio dio = Dio();
+    String link = url += '?authorization=$token';
+    print(link);
+    try {
+      // Realizar la solicitud HTTP con el encabezado de autorización
+      Response response = await dio.get(
+        link,
+        options: Options(
+          headers: {
+            'Authorization': 'headers $token',
+          },
+        ),
+      );
+      // Verificar si la solicitud fue exitosa (código de estado 200)
+      if (response.statusCode == 200) {
+        // Si la respuesta fue exitosa, abrir la URL en el navegador
+        Uri uri = Uri.parse(url);
+        await launchUrl(uri);
+      } else {
+        // Si la solicitud no fue exitosa, mostrar un mensaje de error
+        print('Error al cargar la URL: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Manejar errores de solicitud
+      print('Error al realizar la solicitud: $e');
     }
-  } catch (e) {
-    // Manejar errores de solicitud
-    print('Error al realizar la solicitud: $e');
   }
-}
+
+  Future<void> _openFileExplorer() async {
+    final html.FileUploadInputElement input = html.FileUploadInputElement();
+    input.click();
+
+    input.onChange.listen((event) {
+      final files = input.files;
+      if (files != null && files.length == 1) {
+        final file = files[0];
+
+        final reader = html.FileReader();
+        reader.readAsArrayBuffer(file);
+
+        reader.onLoadEnd.listen((event) async {
+          final bytes = Uint8List.fromList(reader.result as List<int>);
+          final digest = md5.convert(bytes);
+          setState(() {
+            _md5Hash = digest.toString();
+          });
+
+          // Llamar al método postManualesMateriales después de calcular el MD5
+          await MaterialesServices().postManualesMateriales(context, materialSeleccionado.materialId, token, file, _md5Hash);
+        });
+        setState(() {});
+      }
+    });
+  }
 }

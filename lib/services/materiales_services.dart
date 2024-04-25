@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously
 
+import 'dart:html';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sedel_oficina_maqueta/config/config.dart';
@@ -1140,21 +1142,28 @@ class MaterialesServices {
     }
   }
 
-  Future postManualesMateriales(BuildContext context, String id, String token) async {
+  Future postManualesMateriales(BuildContext context, int id, String token, File file, String md5) async {
     String link = apiLink += '$id/manuales';
     try {
       var headers = {'Authorization': token};
-      var resp = await _dio.request(
+      var formData = FormData.fromMap({
+        'manuales': await MultipartFile.fromFile(file.relativePath!, filename: file.name),
+        'manualesMD5': md5,
+      });
+
+      var resp = await _dio.post(
         link,
+        data: formData,
         options: Options(
-          method: 'POST',
+          contentType: 'multipart/form-data',
           headers: headers,
         ),
       );
 
-      final List<dynamic> materialList = resp.data;
-
-      return materialList.map((obj) => ManualesMateriales.fromJson(obj)).toList();
+      if (resp.statusCode == 201) {
+        showDialogs(context, 'PDF subido', false, false);
+      }
+      return;
     } catch (e) {
       if (e is DioException) {
         if (e.response != null) {
@@ -1178,4 +1187,5 @@ class MaterialesServices {
       }
     }
   }
+
 }
