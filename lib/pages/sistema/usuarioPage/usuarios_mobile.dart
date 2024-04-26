@@ -110,7 +110,7 @@ class _UsuariosMobileState extends State<UsuariosMobile> {
                   const SizedBox(
                     height: 20,
                   ),
-                  Spacer(),
+                  const Spacer(),
                   BottomNavigationBar(
                     currentIndex: buttonIndex,
                     onTap: (index) async{   
