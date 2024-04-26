@@ -1,6 +1,7 @@
-// ignore_for_file: avoid_print, use_build_context_synchronously
+// ignore_for_file: avoid_print, use_build_context_synchronously, avoid_web_libraries_in_flutter
 
-import 'dart:html';
+import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -1142,15 +1143,17 @@ class MaterialesServices {
     }
   }
 
-  Future postManualesMateriales(BuildContext context, int id, String token, File file, String md5) async {
+  Future postManualesMateriales(BuildContext context, int id, String token, Uint8List? manual, String? fileName, String md5) async {
     String link = apiLink += '$id/manuales';
+    List<String> listaMd5 = [];
+    listaMd5.add(md5);
     try {
       var headers = {'Authorization': token};
       var formData = FormData.fromMap({
-        'manuales': await MultipartFile.fromFile(file.relativePath!, filename: file.name),
-        'manualesMD5': md5,
+        'manuales': MultipartFile.fromBytes(manual as List<int>, filename: fileName),
+        'manualesMD5': jsonEncode(listaMd5),
       });
-
+      print(formData);
       var resp = await _dio.post(
         link,
         data: formData,

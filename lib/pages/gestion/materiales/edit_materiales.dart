@@ -1,4 +1,5 @@
-// ignore_for_file: avoid_print, use_build_context_synchronously, avoid_web_libraries_in_flutter
+// ignore_for_file: avoid_print, use_build_context_synchronously, avoid_web_libraries_in_flutter, avoid_init_to_null
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,7 @@ import '../../../widgets/drawer.dart';
 import 'dart:html' as html;
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
+
 
 
 class EditMaterialesPage extends StatefulWidget {
@@ -41,6 +43,8 @@ class _EditMaterialesPageState extends State<EditMaterialesPage> {
   late String token = '';
   late List<ManualesMateriales> manuales = [];
   String _md5Hash = '';
+  late Uint8List? manualSeleccionado = null;
+  late String? fileName = '';
 
   @override
   void initState() {
@@ -218,10 +222,18 @@ class _EditMaterialesPageState extends State<EditMaterialesPage> {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
+                   
                     children: [
-                      IconButton(onPressed: () async {
-                        await _openFileExplorer();
-                      }, icon: const Icon(Icons.upload),)
+                      const Text('Subir PDF'),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          await _uploadPdf();
+                        }, 
+                        icon: const Icon(Icons.upload),
+                        )
                     ],
                   ),
                   const SizedBox(height: 20,),
@@ -385,30 +397,44 @@ class _EditMaterialesPageState extends State<EditMaterialesPage> {
     }
   }
 
-  Future<void> _openFileExplorer() async {
+  Future<void> _uploadPdf() async {
     final html.FileUploadInputElement input = html.FileUploadInputElement();
+    input.accept = 'application/pdf';
     input.click();
 
-    input.onChange.listen((event) {
+    input.onChange.listen((e) async {
       final files = input.files;
-      if (files != null && files.length == 1) {
-        final file = files[0];
-
+      if (files!.isNotEmpty) {
         final reader = html.FileReader();
-        reader.readAsArrayBuffer(file);
-
-        reader.onLoadEnd.listen((event) async {
-          final bytes = Uint8List.fromList(reader.result as List<int>);
-          final digest = md5.convert(bytes);
+        reader.readAsArrayBuffer(
+            files[0]); // Leer el archivo como una matriz de bytes
+        reader.onLoadEnd.listen((e) {
           setState(() {
-            _md5Hash = digest.toString();
-          });
+            // Asignar los bytes del archivo a pdfBytes
+            manualSeleccionado = reader.result as Uint8List?;
+            fileName = files[0].name;
+            // Calcular el MD5 del archivo
+            _md5Hash = calculateMD5(manualSeleccionado!);
+            print('MD5 del archivo: $_md5Hash');
 
-          // Llamar al método postManualesMateriales después de calcular el MD5
-          await MaterialesServices().postManualesMateriales(context, materialSeleccionado.materialId, token, file, _md5Hash);
+            // Llamar a la función para subir el PDF al servidor
+            uploadPDFtoApi();
+          });
         });
-        setState(() {});
       }
     });
+  }
+
+  Future<void> uploadPDFtoApi() async {
+    if (manualSeleccionado != null) {
+      await MaterialesServices().postManualesMateriales(context, materialSeleccionado.materialId, token, manualSeleccionado, fileName, _md5Hash);
+      manuales = await MaterialesServices().getManualesMateriales(context, materialSeleccionado.materialId, token);
+    }
+    setState(() {});
+  }
+  
+  String calculateMD5(List<int> bytes) {
+    var md5c = md5.convert(bytes);
+    return md5c.toString();
   }
 }
