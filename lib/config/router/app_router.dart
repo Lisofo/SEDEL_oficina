@@ -1,6 +1,4 @@
 import 'package:go_router/go_router.dart';
-import 'package:sedel_oficina_maqueta/pages/Monitoreo%20Diario/revision/revision_orden.dart';
-import 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/usuarios.dart';
 import '../../pages/pages.dart';
 
 final router = GoRouter(initialLocation: '/', routes: [
@@ -78,7 +76,7 @@ final router = GoRouter(initialLocation: '/', routes: [
   ),
   GoRoute(
     path: '/editUsuarios',
-    builder: (context, state) => const EditUsuariosPage(),
+    builder: (context, state) => const AddUsuarioPage(),
   ),
   GoRoute(
     path: '/editPwdPin',
@@ -86,7 +84,7 @@ final router = GoRouter(initialLocation: '/', routes: [
   ),
   GoRoute(
     path: '/establecerClientes',
-    builder: (context, state) => const EstablecerClientes(),
+    builder: (context, state) => const EstablecerClientesDesktop(),
   ),
   GoRoute(
     path: '/servicios',

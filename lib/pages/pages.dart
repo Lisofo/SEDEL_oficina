@@ -36,13 +36,22 @@ export 'package:sedel_oficina_maqueta/pages/gestion/marcas/marcas.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/marcas/edit_marcas.dart';
 
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarios/password_pin.dart';
-export 'package:sedel_oficina_maqueta/pages/sistema/usuarios/edit_usuarios.dart';
+export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/addUsuario/add_ususario_mobile.dart';
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/usuarios_desktop.dart';
-export 'package:sedel_oficina_maqueta/pages/sistema/usuarios/establecer_clientes.dart';
-export 'package:sedel_oficina_maqueta/pages/sistema/usuarios/establecer_perfiles.dart';
+export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/clientes/establecer_clientes_desktop.dart';
+export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/perfiles/establecer_perfiles_desktop.dart';
+export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/perfiles/establecer_perfiles.dart';
+export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/usuarios.dart';
+export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/addUsuario/addUsuario.dart';
 
 export 'package:sedel_oficina_maqueta/pages/Monitoreo%20Diario/monitoreo/monitoreo.dart';
 export 'package:sedel_oficina_maqueta/pages/Monitoreo%20Diario/mapa/mapa.dart';
 export 'package:sedel_oficina_maqueta/pages/Monitoreo%20Diario/revision/revision_orden_desktop.dart';
+export 'package:sedel_oficina_maqueta/pages/Monitoreo%20Diario/revision/revision_orden.dart';
+
 export 'package:sedel_oficina_maqueta/pages/menusRevisiones/ptosInspeccion/revision_ptos_inspeccion_actividad.dart';
 export 'package:sedel_oficina_maqueta/pages/menusRevisiones/ptosInspeccion/revision_ptos_inspeccion_revision.dart';
+
+
+
+

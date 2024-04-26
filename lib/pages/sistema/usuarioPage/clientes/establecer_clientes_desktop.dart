@@ -9,17 +9,17 @@ import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/search/client_delegate.dart';
 import 'package:sedel_oficina_maqueta/services/user_services.dart';
 
-import '../../../widgets/appbar_desktop.dart';
-import '../../../widgets/drawer.dart';
+import '../../../../widgets/appbar_desktop.dart';
+import '../../../../widgets/drawer.dart';
 
-class EstablecerClientes extends StatefulWidget {
-  const EstablecerClientes({super.key});
+class EstablecerClientesDesktop extends StatefulWidget {
+  const EstablecerClientesDesktop({super.key});
 
   @override
-  State<EstablecerClientes> createState() => _EstablecerClientesState();
+  State<EstablecerClientesDesktop> createState() => _EstablecerClientesDesktopState();
 }
 
-class _EstablecerClientesState extends State<EstablecerClientes> {
+class _EstablecerClientesDesktopState extends State<EstablecerClientesDesktop> {
   final _userServices = UserServices();
   List<ClienteUsuario> clientes = [];
   late Usuario userSeleccionado;

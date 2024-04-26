@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/usuario.dart';
@@ -36,10 +35,9 @@ class _UsuariosMobileState extends State<UsuariosMobile> {
         appBar: AppBarDesktop(
           titulo: 'Usuarios',
         ),
-        body: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
+        drawer: Drawer(
+          width: MediaQuery.of(context).size.width * 0.95,
+          child: Container(
               width: MediaQuery.of(context).size.width,
               alignment: Alignment.center,
               child: Column(
@@ -123,6 +121,7 @@ class _UsuariosMobileState extends State<UsuariosMobile> {
                           router.push('/editUsuarios');
                         case 1:
                           await buscar(context, token);
+                          router.pop();
                         break;
                         
                       }  
@@ -145,36 +144,35 @@ class _UsuariosMobileState extends State<UsuariosMobile> {
                 ],
               ),
             ),
-            Flexible(
-              flex: 4,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: ListView.builder(
-                  itemCount: usuarios.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: colors.primary,
-                          child: Text(
-                            usuarios[index].usuarioId.toString(),
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        title: Text('${usuarios[index].nombre} ${usuarios[index].apellido}'),
-                        subtitle: Text(usuarios[index].login),
-                        onTap: () {
-                          Provider.of<OrdenProvider>(context, listen: false)
-                              .setUsuario(usuarios[index]);
-                          router.push('/editUsuarios');
-                        },
+        ),
+        body: Flexible(
+          flex: 4,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: ListView.builder(
+              itemCount: usuarios.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: colors.primary,
+                      child: Text(
+                        usuarios[index].usuarioId.toString(),
+                        style: const TextStyle(color: Colors.white),
                       ),
-                    );
-                  },
-                ),
-              ),
-            )
-          ],
+                    ),
+                    title: Text('${usuarios[index].nombre} ${usuarios[index].apellido}'),
+                    subtitle: Text(usuarios[index].login),
+                    onTap: () {
+                      Provider.of<OrdenProvider>(context, listen: false)
+                          .setUsuario(usuarios[index]);
+                      router.push('/editUsuarios');
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
         ),
       ),
     );
