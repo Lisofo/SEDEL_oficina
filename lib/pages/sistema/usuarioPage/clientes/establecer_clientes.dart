@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sedel_oficina_maqueta/pages/pages.dart';
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 import 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/clientes/establecer_clientes_mobile.dart';
 
 

@@ -10,8 +10,6 @@ import 'package:sedel_oficina_maqueta/search/client_delegate.dart';
 import 'package:sedel_oficina_maqueta/services/user_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/appbar_mobile.dart';
 
-import '../../../../widgets/appbar_desktop.dart';
-import '../../../../widgets/drawer.dart';
 
 class EstablecerClientesMobile extends StatefulWidget {
   const EstablecerClientesMobile({super.key});

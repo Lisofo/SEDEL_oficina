@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sedel_oficina_maqueta/pages/pages.dart';
 
-import 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/clientes/establecer_clientes_mobile.dart';
+
 import 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/password/password_mobile.dart';
 
 

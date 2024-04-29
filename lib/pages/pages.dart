@@ -41,15 +41,10 @@ export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/usuarios/usuario
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/clientes/establecer_clientes_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/perfiles/establecer_perfiles_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/perfiles/establecer_perfiles.dart';
-<<<<<<< Updated upstream
-export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/usuarios.dart';
-export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/addUsuario/add_usuario.dart';
-=======
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/usuarios/usuarios.dart';
-export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/addUsuario/addUsuario.dart';
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/clientes/establecer_clientes.dart';
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/password/password.dart';
->>>>>>> Stashed changes
+export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/addUsuario/add_usuario.dart';
 
 export 'package:sedel_oficina_maqueta/pages/Monitoreo%20Diario/monitoreo/monitoreo.dart';
 export 'package:sedel_oficina_maqueta/pages/Monitoreo%20Diario/mapa/mapa.dart';
