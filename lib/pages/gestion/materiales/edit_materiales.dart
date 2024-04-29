@@ -210,7 +210,6 @@ class _EditMaterialesPageState extends State<EditMaterialesPage> {
                           ),
                         ],
                       ),
-                      // const Spacer(),
                     ],
                   ),
                 ),
@@ -222,7 +221,6 @@ class _EditMaterialesPageState extends State<EditMaterialesPage> {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                   
                     children: [
                       const Text('Subir PDF'),
                       const SizedBox(

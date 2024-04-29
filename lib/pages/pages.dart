@@ -42,7 +42,7 @@ export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/clientes/estable
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/perfiles/establecer_perfiles_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/perfiles/establecer_perfiles.dart';
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/usuarios.dart';
-export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/addUsuario/addUsuario.dart';
+export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/addUsuario/add_usuario.dart';
 
 export 'package:sedel_oficina_maqueta/pages/Monitoreo%20Diario/monitoreo/monitoreo.dart';
 export 'package:sedel_oficina_maqueta/pages/Monitoreo%20Diario/mapa/mapa.dart';
