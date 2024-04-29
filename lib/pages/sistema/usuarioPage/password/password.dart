@@ -1,31 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:sedel_oficina_maqueta/pages/pages.dart';
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 import 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/clientes/establecer_clientes_mobile.dart';
+import 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/password/password_mobile.dart';
 
 
-class EstablecerClientes extends StatefulWidget {
-  const EstablecerClientes({super.key});
+class EditPassword extends StatefulWidget {
+  const EditPassword({super.key});
 
   @override
-  State<EstablecerClientes> createState() => _EstablecerClientesState();
+  State<EditPassword> createState() => _EditPasswordState();
 }
 
-class _EstablecerClientesState extends State<EstablecerClientes> {
+class _EditPasswordState extends State<EditPassword> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(body: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth < 800) {
-            return const EstablecerClientesMobile();
+            return const EditPasswordMobile();
           } else if (constraints.maxWidth > 900) {
-            return const EstablecerClientesDesktop();
+            return const EditPasswordDesktop();
           }
-          return const EstablecerClientesDesktop();
+          return const EditPasswordDesktop();
         },
       )),
     );

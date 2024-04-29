@@ -7,16 +7,16 @@ import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 
 import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
-import '../../../widgets/drawer.dart';
+import '../../../../widgets/drawer.dart';
 
-class EditPwdPin extends StatefulWidget {
-  const EditPwdPin({super.key});
+class EditPasswordDesktop extends StatefulWidget {
+  const EditPasswordDesktop({super.key});
 
   @override
-  State<EditPwdPin> createState() => _EditPwdPinState();
+  State<EditPasswordDesktop> createState() => _EditPasswordDesktopState();
 }
 
-class _EditPwdPinState extends State<EditPwdPin> {
+class _EditPasswordDesktopState extends State<EditPasswordDesktop> {
   final _userServices = UserServices();
   final _passwordController = TextEditingController();
   final _rePasswordController = TextEditingController();

@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+
 import '../../pages/pages.dart';
 
 final router = GoRouter(initialLocation: '/', routes: [
@@ -80,11 +81,11 @@ final router = GoRouter(initialLocation: '/', routes: [
   ),
   GoRoute(
     path: '/editPwdPin',
-    builder: (context, state) => const EditPwdPin(),
+    builder: (context, state) => const EditPassword(),
   ),
   GoRoute(
     path: '/establecerClientes',
-    builder: (context, state) => const EstablecerClientesDesktop(),
+    builder: (context, state) => const EstablecerClientes(),
   ),
   GoRoute(
     path: '/servicios',

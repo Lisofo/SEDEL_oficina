@@ -8,6 +8,7 @@ import 'package:sedel_oficina_maqueta/models/usuario.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/search/client_delegate.dart';
 import 'package:sedel_oficina_maqueta/services/user_services.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_mobile.dart';
 
 import '../../../../widgets/appbar_desktop.dart';
 import '../../../../widgets/drawer.dart';
@@ -26,6 +27,7 @@ class _EstablecerClientesMobileState extends State<EstablecerClientesMobile> {
   late String token;
   List<Cliente> historial = [];
   late Cliente selectedCliente;
+  int buttonIndex = 0;
   @override
   void initState() {
     super.initState();
@@ -44,106 +46,98 @@ class _EstablecerClientesMobileState extends State<EstablecerClientesMobile> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBarDesktop(
-        titulo: 'Usuarios',
-      ),
-      drawer: const Drawer(
-        child: BotonesDrawer(),
-      ),
+      appBar: AppBarMobile(
+        titulo: 'Establecer Cliente'
+        ),
+      
       body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Card(
-              child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(children: [
-              SizedBox(
-                  height: 400,
-                  child: ListView.separated(
-                    itemCount: clientes.length,
-                    itemBuilder: (context, index) {
-                      final _clientes = clientes;
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 300),
-                        child: ListTile(
-                          title: Text(
-                            _clientes[index].cliente,
-                            textAlign: TextAlign.center,
-                          ),
-                          subtitle: Text(
-                            _clientes[index].codCliente,
-                            textAlign: TextAlign.center,
-                          ),
-                          trailing: IconButton(
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      title: const Text('Confirmar accion'),
-                                      content: Text(
-                                          'Desea borrar ${_clientes[index].cliente}?'),
-                                      actions: [
-                                        TextButton(
-                                            onPressed: () async {
-                                              await _userServices
-                                                  .deleteClientUsers(
-                                                      context,
-                                                      userSeleccionado.usuarioId
-                                                          .toString(),
-                                                      _clientes[index]
-                                                          .clienteId
-                                                          .toString(),
-                                                      token);
-                                              await getClientes(
-                                                  userSeleccionado, token);
-                                            },
-                                            child: const Text('Borrar')),
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text('Cancelar'))
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                              icon: const Icon(Icons.delete)),
-                        ),
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 300),
-                        child: Divider(
-                          thickness: 3,
-                          color: Colors.green,
-                        ),
-                      );
-                    },
-                  )),
-            ]),
-          ))),
-      bottomNavigationBar: BottomAppBar(
-        elevation: 0,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ElevatedButton(
-                  style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll(Colors.white),
-                      elevation: MaterialStatePropertyAll(10),
-                      shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.horizontal(
-                              left: Radius.circular(50),
-                              right: Radius.circular(50))))),
-                  onPressed: () async {
-                    final cliente = await showSearch(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(children: [
+      SizedBox(
+          height: 400,
+          width: MediaQuery.of(context).size.width,
+          child: Container(
+            child: ListView.separated(
+              itemCount: clientes.length,
+              itemBuilder: (context, index) {
+                final _clientes = clientes;
+                return ListTile(
+                  title: Text(
+                    _clientes[index].cliente,
+                    textAlign: TextAlign.center,
+                  ),
+                  subtitle: Text(
+                    _clientes[index].codCliente,
+                    textAlign: TextAlign.center,
+                  ),
+                  trailing: IconButton(
+                    color: colors.primary,
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Confirmar accion'),
+                              content: Text(
+                                  'Desea borrar ${_clientes[index].cliente}?'),
+                              actions: [
+                                TextButton(
+                                    onPressed: () async {
+                                      await _userServices
+                                          .deleteClientUsers(
+                                              context,
+                                              userSeleccionado.usuarioId
+                                                  .toString(),
+                                              _clientes[index]
+                                                  .clienteId
+                                                  .toString(),
+                                              token);
+                                      await getClientes(
+                                          userSeleccionado, token);
+                                    },
+                                    child: const Text('Borrar')),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Cancelar'))
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      icon: const Icon(Icons.delete)
+                    )
+                    ,
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 300),
+                  child: Divider(
+                    thickness: 3,
+                    color: Colors.green,
+                  ),
+                );
+              },
+            ),
+          )),
+                  ]),
+                ),
+
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: colors.primary)
+          ),
+          height: MediaQuery.of(context).size.height *0.1,
+          child: InkWell(
+            
+            onTap: () async{
+              final cliente = await showSearch(
                         context: context,
                         delegate: ClientSearchDelegate(
-                            'Buscar Cliente', historial, ''));
+                            'Buscar Cliente', historial, '')
+                        );
                     if (cliente != null) {
                       setState(() {
                         selectedCliente = cliente;
@@ -187,21 +181,21 @@ class _EstablecerClientesMobileState extends State<EstablecerClientesMobile> {
                         },
                       );
                     }
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.5),
-                    child: Text(
-                      'Agregar cliente',
-                      style: TextStyle(
-                          color: colors.primary,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
-                    ),
-                  )),
-            ],
+            },
+            child: Padding(
+              padding: EdgeInsets.only(top: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.add_comment_outlined, color: colors.primary,),
+                  Text('Agregar Cliente', style: TextStyle(color: colors.primary),)
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+        )
+            
+          
     );
   }
 

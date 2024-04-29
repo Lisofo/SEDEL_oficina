@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sedel_oficina_maqueta/pages/pages.dart';
-import 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/usuarios_mobile.dart';
+import 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/usuarios/usuarios_mobile.dart';
 
 
 class UsuariosPage extends StatefulWidget {
