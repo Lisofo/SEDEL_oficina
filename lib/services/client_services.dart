@@ -431,7 +431,7 @@ class ClientServices {
     try {
       final resp = await _dio.request(link += cliente.clienteId.toString(),
           data: map, options: Options(method: 'PUT', headers: headers));
-
+      print(resp.statusCode);
       if (resp.statusCode == 200) {
         await showDialogs(
             context, 'Cliente actualizado correctamente', false, false);

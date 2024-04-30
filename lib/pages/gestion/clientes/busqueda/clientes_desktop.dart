@@ -2,6 +2,7 @@
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/estado_cliente.dart';
@@ -231,26 +232,30 @@ class _ClientesDesktopState extends State<ClientesDesktop> {
               ),
             ),
           ),
-          Flexible(
-            flex: 4,
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: ListView.builder(
-                itemCount: searchResults.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      title: Text(searchResults[index].nombre),
-                      subtitle: Text('Codigo: ${searchResults[index].codCliente} \nTelefono: ${searchResults[index].telefono1}'),
-                      onTap: () {
-                        Provider.of<OrdenProvider>(context, listen: false).setCliente(searchResults[index], '');
-                        router.push('/editClientes');
-                      },
-                    ),
-                  );
-                },
+          Flex(
+            direction: Axis.vertical,
+            children: [Flexible(
+              flex: 4,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: ListView.builder(
+                  itemCount: searchResults.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      child: ListTile(
+                        title: Text(searchResults[index].nombre),
+                        subtitle: Text('Codigo: ${searchResults[index].codCliente} \nTelefono: ${searchResults[index].telefono1}'),
+                        onTap: () {
+                          Provider.of<OrdenProvider>(context, listen: false).setCliente(searchResults[index], '');
+                          router.push('/editClientes');
+                        },
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
+            ]
           )
         ],
       )

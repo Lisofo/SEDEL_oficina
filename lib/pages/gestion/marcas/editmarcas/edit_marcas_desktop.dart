@@ -15,14 +15,14 @@ import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 
-class EditMarcasPage extends StatefulWidget {
-  const EditMarcasPage({super.key});
+class EditMarcasDesktop extends StatefulWidget {
+  const EditMarcasDesktop({super.key});
 
   @override
-  State<EditMarcasPage> createState() => _EditMarcasPageState();
+  State<EditMarcasDesktop> createState() => _EditMarcasDesktopState();
 }
 
-class _EditMarcasPageState extends State<EditMarcasPage> {
+class _EditMarcasDesktopState extends State<EditMarcasDesktop> {
   final _formKey = GlobalKey<FormState>();
   DateTime selectedDateDesde = DateTime.now();
   DateTime selectedDateHasta = DateTime.now();

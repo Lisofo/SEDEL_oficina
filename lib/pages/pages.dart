@@ -32,8 +32,8 @@ export 'package:sedel_oficina_maqueta/pages/gestion/metodosAplicacion/metodos_ap
 export 'package:sedel_oficina_maqueta/pages/gestion/metodosAplicacion/edit_metodos_aplicacion.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/controles/controles.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/controles/edit_controles.dart';
-export 'package:sedel_oficina_maqueta/pages/gestion/marcas/marcas.dart';
-export 'package:sedel_oficina_maqueta/pages/gestion/marcas/edit_marcas.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/marcas/marcas_desltop.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/marcas/editmarcas/edit_marcas_desktop.dart';
 
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/password/password_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/addUsuario/add_ususario_mobile.dart';

@@ -186,6 +186,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
             switch (buttonIndex){
               case 0: 
                 establecerValoresDeCampo(cliente, estadoSeleccionado);
+                
               if (cliente.clienteId != 0) {
                 await ClientServices().putCliente(context, cliente, token);
               } else {
