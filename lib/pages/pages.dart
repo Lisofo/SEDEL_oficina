@@ -23,8 +23,8 @@ export 'package:sedel_oficina_maqueta/pages/gestion/plagasObjetivo/plagas_objeti
 export 'package:sedel_oficina_maqueta/pages/gestion/plagasObjetivo/edit_plagas_objetivo.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/servicios/servicios.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/servicios/edit_servicios.dart';
-export 'package:sedel_oficina_maqueta/pages/gestion/materiales/materiales.dart';
-export 'package:sedel_oficina_maqueta/pages/gestion/materiales/edit_materiales.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/materiales/materiales/materiales.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/materiales/edit%20materiales/edit_materiales.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/materiales/lotes.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/materiales/detalles_materiales.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/materiales/habilitaciones_materiales.dart';
