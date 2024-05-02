@@ -14,14 +14,14 @@ import 'package:intl/intl.dart';
 import 'dart:typed_data';
 import 'package:universal_html/html.dart' as html;
 
-class EditTecnicosPage extends StatefulWidget {
-  const EditTecnicosPage({super.key});
+class EditTecnicosDesktop extends StatefulWidget {
+  const EditTecnicosDesktop({super.key});
 
   @override
-  State<EditTecnicosPage> createState() => _EditTecnicosPageState();
+  State<EditTecnicosDesktop> createState() => _EditTecnicosDesktopState();
 }
 
-class _EditTecnicosPageState extends State<EditTecnicosPage> {
+class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
   late Tecnico selectedTecnico = context.read<OrdenProvider>().tecnico;
   late List<Cargo> cargos = [
     Cargo(cargoId: 1, codCargo: '1', descripcion: 'Aprendiz'),

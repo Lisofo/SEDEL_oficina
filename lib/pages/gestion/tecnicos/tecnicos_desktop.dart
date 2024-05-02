@@ -1,38 +1,36 @@
-// ignore_for_file: avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
-import 'package:sedel_oficina_maqueta/models/usuario.dart';
+import 'package:sedel_oficina_maqueta/models/tecnico.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
-import 'package:sedel_oficina_maqueta/services/user_services.dart';
+import 'package:sedel_oficina_maqueta/services/tecnico_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
+import 'package:intl/intl.dart';
 
-class UsuariosDesktop extends StatefulWidget {
-  const UsuariosDesktop({super.key});
+class TecnicosPageDesktop extends StatefulWidget {
+  const TecnicosPageDesktop({super.key});
 
   @override
-  State<UsuariosDesktop> createState() => _UsuariosDesktopState();
+  State<TecnicosPageDesktop> createState() => _TecnicosPageDesktopState();
 }
 
-class _UsuariosDesktopState extends State<UsuariosDesktop> {
-  List<Usuario> usuarios = [];
-  final _userServices = UserServices();
-  final _apellidoController = TextEditingController();
-  final _loginTextController = TextEditingController();
+class _TecnicosPageDesktopState extends State<TecnicosPageDesktop> {
+  List<Tecnico> tecnicos = [];
+  final _tecnicoServices = TecnicoServices();
   final _nombreController = TextEditingController();
+  final _documentoController = TextEditingController();
+  final _codTecnicoController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final token = context.watch<OrdenProvider>().token;
-    print('pantalla usuarios');
     return SafeArea(
       child: Scaffold(
         appBar: AppBarDesktop(
-          titulo: 'Usuarios',
+          titulo: 'Tecnicos',
         ),
         drawer: const Drawer(
           child: BotonesDrawer(),
@@ -46,20 +44,16 @@ class _UsuariosDesktopState extends State<UsuariosDesktop> {
                 child: Column(
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Login: '),
-                        const SizedBox(
-                          width: 60,
-                        ),
+                        const Text('Documento: '),
                         SizedBox(
                           width: 300,
                           child: CustomTextFormField(
-                            controller: _loginTextController,
+                            controller: _documentoController,
                             maxLines: 1,
-                            label: 'Login',
+                            label: 'Documento',
                             onFieldSubmitted: (value) async {
-                              await buscar(context, token);
+                              await buscarTecnico(token);
                             },
                           ),
                         ),
@@ -69,41 +63,42 @@ class _UsuariosDesktopState extends State<UsuariosDesktop> {
                       height: 20,
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Nombre: '),
+                        const Text('Codigo: '),
                         const SizedBox(
-                          width: 45,
+                          width: 30,
                         ),
                         SizedBox(
                           width: 300,
                           child: CustomTextFormField(
-                            controller: _nombreController,
+                            controller: _codTecnicoController,
                             maxLines: 1,
-                            label: 'Nombre',
+                            label: 'Codigo',
                             onFieldSubmitted: (value) async {
-                              await buscar(context, token);
+                              await buscarTecnico(token);
                             },
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(
-                      height: 35,
+                      height: 20,
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Apellido: '),
+                        const Text('Nombre: '),
                         const SizedBox(
-                          width: 44,
+                          width: 20,
                         ),
                         SizedBox(
                           width: 300,
                           child: CustomTextFormField(
                             maxLines: 1,
-                            label: 'Apellido',
-                            controller: _apellidoController,
+                            label: 'Nombre',
+                            controller: _nombreController,
+                            onFieldSubmitted: (value) async {
+                              await buscarTecnico(token);
+                            },
                           ),
                         ),
                       ],
@@ -123,7 +118,7 @@ class _UsuariosDesktopState extends State<UsuariosDesktop> {
                                           left: Radius.circular(50),
                                           right: Radius.circular(50))))),
                           onPressed: () async {
-                            await buscar(context, token);
+                            await buscarTecnico(token);
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.5),
@@ -150,13 +145,13 @@ class _UsuariosDesktopState extends State<UsuariosDesktop> {
                                           right: Radius.circular(50))))),
                           onPressed: () {
                             Provider.of<OrdenProvider>(context, listen: false)
-                                .clearSelectedUsuario();
-                            router.push('/editUsuarios');
+                                .clearSelectedTecnico();
+                            router.push('/editTecnicos');
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.5),
                             child: Text(
-                              'Agregar usuario',
+                              'Agregar Tecnico',
                               style: TextStyle(
                                   color: colors.primary,
                                   fontWeight: FontWeight.bold,
@@ -168,38 +163,38 @@ class _UsuariosDesktopState extends State<UsuariosDesktop> {
                 ),
               ),
             ),
-            Flex(
-              direction: Axis.vertical,
-              children: [Flexible(
-                flex: 4,
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView.builder(
-                    itemCount: usuarios.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: colors.primary,
-                            child: Text(
-                              usuarios[index].usuarioId.toString(),
-                              style: const TextStyle(color: Colors.white),
-                            ),
+            Flexible(
+              flex: 4,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: ListView.builder(
+                  itemCount: tecnicos.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor:
+                             colors.primary,
+                          child: Text(
+                            tecnicos[index].codTecnico,
+                            style: const TextStyle(color: Colors.white),
                           ),
-                          title: Text('${usuarios[index].nombre} ${usuarios[index].apellido}'),
-                          subtitle: Text(usuarios[index].login),
-                          onTap: () {
-                            Provider.of<OrdenProvider>(context, listen: false)
-                                .setUsuario(usuarios[index]);
-                            router.push('/editUsuarios');
-                          },
                         ),
-                      );
-                    },
-                  ),
+                        title: Text(tecnicos[index].nombre),
+                        subtitle:
+                            Text('Documento: ${tecnicos[index].documento}'),
+                        trailing: Text(
+                            'Fecha vencimiento del carne de salud: ${DateFormat("E d, MMM, yyyy", 'es').format(tecnicos[index].fechaVtoCarneSalud as DateTime)}'),
+                        onTap: () {
+                          Provider.of<OrdenProvider>(context, listen: false)
+                              .setTecnico(tecnicos[index]);
+                          router.push('/editTecnicos');
+                        },
+                      ),
+                    );
+                  },
                 ),
               ),
-              ]
             )
           ],
         ),
@@ -207,15 +202,15 @@ class _UsuariosDesktopState extends State<UsuariosDesktop> {
     );
   }
 
-  Future<void> buscar(BuildContext context, String token) async {
-    List<Usuario> results = await _userServices.getUsers(
+  Future<void> buscarTecnico(String token) async {
+    List<Tecnico> results = await _tecnicoServices.getTecnicos(
       context, 
-      _loginTextController.text,
+      _documentoController.text,
+      _codTecnicoController.text,
       _nombreController.text,
-      _apellidoController.text,
       token);
     setState(() {
-      usuarios = results;
+      tecnicos = results;
     });
   }
 }

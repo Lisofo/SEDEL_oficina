@@ -9,17 +9,17 @@ import 'package:sedel_oficina_maqueta/services/tareas_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 
-import '../../../widgets/appbar_desktop.dart';
-import '../../../widgets/drawer.dart';
+import '../../../../widgets/appbar_desktop.dart';
+import '../../../../widgets/drawer.dart';
 
-class EditTareasPage extends StatefulWidget {
-  const EditTareasPage({super.key});
+class EditTareasDesktop extends StatefulWidget {
+  const EditTareasDesktop({super.key});
 
   @override
-  State<EditTareasPage> createState() => _EditTareasPageState();
+  State<EditTareasDesktop> createState() => _EditTareasDesktopState();
 }
 
-class _EditTareasPageState extends State<EditTareasPage> {
+class _EditTareasDesktopState extends State<EditTareasDesktop> {
   final _codController = TextEditingController();
   final _descripcionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();

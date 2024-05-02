@@ -11,10 +11,10 @@ export 'package:sedel_oficina_maqueta/pages/PyR/ordenesPlanificacion/edit%20Orde
 
 export 'package:sedel_oficina_maqueta/pages/gestion/plagas/plagas.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/plagas/edit_plagas.dart';
-export 'package:sedel_oficina_maqueta/pages/gestion/tareas/tareas.dart';
-export 'package:sedel_oficina_maqueta/pages/gestion/tareas/edit_tareas.dart';
-export 'package:sedel_oficina_maqueta/pages/gestion/tecnicos/tecnicos.dart';
-export 'package:sedel_oficina_maqueta/pages/gestion/tecnicos/edit_tecnicos.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/tareas/tareas_desktop.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/tareas/edit%20Tareas/edit_tareas_desktop.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/tecnicos/tecnicos_desktop.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/tecnicos/edit%20Tecnicos/edit_tecnicos_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/clientes/busqueda/clientes.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/clientes/busqueda/clientes_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/clientes/edit/edit_clientes.dart';
@@ -32,7 +32,7 @@ export 'package:sedel_oficina_maqueta/pages/gestion/metodosAplicacion/metodos_ap
 export 'package:sedel_oficina_maqueta/pages/gestion/metodosAplicacion/edit_metodos_aplicacion.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/controles/controles.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/controles/edit_controles.dart';
-export 'package:sedel_oficina_maqueta/pages/gestion/marcas/marcas_desltop.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/marcas/marcas_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/marcas/editmarcas/edit_marcas_desktop.dart';
 
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/password/password_desktop.dart';

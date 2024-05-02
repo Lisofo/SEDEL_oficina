@@ -3,36 +3,35 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
-import 'package:sedel_oficina_maqueta/models/usuario.dart';
+import 'package:sedel_oficina_maqueta/models/tarea.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
-import 'package:sedel_oficina_maqueta/services/user_services.dart';
+import 'package:sedel_oficina_maqueta/services/tareas_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 
-class UsuariosDesktop extends StatefulWidget {
-  const UsuariosDesktop({super.key});
+class TareasDesktop extends StatefulWidget {
+  const TareasDesktop({super.key});
 
   @override
-  State<UsuariosDesktop> createState() => _UsuariosDesktopState();
+  State<TareasDesktop> createState() => _TareasDesktopState();
 }
 
-class _UsuariosDesktopState extends State<UsuariosDesktop> {
-  List<Usuario> usuarios = [];
-  final _userServices = UserServices();
-  final _apellidoController = TextEditingController();
-  final _loginTextController = TextEditingController();
+class _TareasDesktopState extends State<TareasDesktop> {
+  List<Tarea> tareas = [];
+  final _tareaServices = TareasServices();
   final _nombreController = TextEditingController();
+  final _descripcionController = TextEditingController();
+  final _codTareaController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final token = context.watch<OrdenProvider>().token;
-    print('pantalla usuarios');
     return SafeArea(
       child: Scaffold(
         appBar: AppBarDesktop(
-          titulo: 'Usuarios',
+          titulo: 'Tareas',
         ),
         drawer: const Drawer(
           child: BotonesDrawer(),
@@ -46,18 +45,14 @@ class _UsuariosDesktopState extends State<UsuariosDesktop> {
                 child: Column(
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Login: '),
-                        const SizedBox(
-                          width: 60,
-                        ),
+                        const Text('Descripcion: '),
                         SizedBox(
                           width: 300,
                           child: CustomTextFormField(
-                            controller: _loginTextController,
+                            controller: _descripcionController,
                             maxLines: 1,
-                            label: 'Login',
+                            label: 'Descripcion',
                             onFieldSubmitted: (value) async {
                               await buscar(context, token);
                             },
@@ -69,18 +64,17 @@ class _UsuariosDesktopState extends State<UsuariosDesktop> {
                       height: 20,
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Nombre: '),
+                        const Text('Codigo: '),
                         const SizedBox(
-                          width: 45,
+                          width: 30,
                         ),
                         SizedBox(
                           width: 300,
                           child: CustomTextFormField(
-                            controller: _nombreController,
+                            controller: _codTareaController,
                             maxLines: 1,
-                            label: 'Nombre',
+                            label: 'Codigo',
                             onFieldSubmitted: (value) async {
                               await buscar(context, token);
                             },
@@ -89,12 +83,11 @@ class _UsuariosDesktopState extends State<UsuariosDesktop> {
                       ],
                     ),
                     const SizedBox(
-                      height: 35,
+                      height: 20,
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Apellido: '),
+                        const Text('Tipo: '),
                         const SizedBox(
                           width: 44,
                         ),
@@ -102,8 +95,8 @@ class _UsuariosDesktopState extends State<UsuariosDesktop> {
                           width: 300,
                           child: CustomTextFormField(
                             maxLines: 1,
-                            label: 'Apellido',
-                            controller: _apellidoController,
+                            label: 'Tipo',
+                            controller: _nombreController,
                           ),
                         ),
                       ],
@@ -150,13 +143,13 @@ class _UsuariosDesktopState extends State<UsuariosDesktop> {
                                           right: Radius.circular(50))))),
                           onPressed: () {
                             Provider.of<OrdenProvider>(context, listen: false)
-                                .clearSelectedUsuario();
-                            router.push('/editUsuarios');
+                                .clearSelectedTarea();
+                            router.push('/editTareas');
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.5),
                             child: Text(
-                              'Agregar usuario',
+                              'Agregar Tarea',
                               style: TextStyle(
                                   color: colors.primary,
                                   fontWeight: FontWeight.bold,
@@ -168,38 +161,34 @@ class _UsuariosDesktopState extends State<UsuariosDesktop> {
                 ),
               ),
             ),
-            Flex(
-              direction: Axis.vertical,
-              children: [Flexible(
-                flex: 4,
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView.builder(
-                    itemCount: usuarios.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: colors.primary,
-                            child: Text(
-                              usuarios[index].usuarioId.toString(),
-                              style: const TextStyle(color: Colors.white),
-                            ),
+            Flexible(
+              flex: 4,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: ListView.builder(
+                  itemCount: tareas.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: colors.primary,
+                          child: Text(
+                            tareas[index].tareaId.toString(),
+                            style: const TextStyle(color: Colors.white),
                           ),
-                          title: Text('${usuarios[index].nombre} ${usuarios[index].apellido}'),
-                          subtitle: Text(usuarios[index].login),
-                          onTap: () {
-                            Provider.of<OrdenProvider>(context, listen: false)
-                                .setUsuario(usuarios[index]);
-                            router.push('/editUsuarios');
-                          },
                         ),
-                      );
-                    },
-                  ),
+                        title: Text(tareas[index].descripcion),
+                        trailing: Text(tareas[index].codTarea),
+                        onTap: () {
+                          Provider.of<OrdenProvider>(context, listen: false)
+                              .setTarea(tareas[index]);
+                          router.push('/editTareas');
+                        },
+                      ),
+                    );
+                  },
                 ),
               ),
-              ]
             )
           ],
         ),
@@ -208,14 +197,12 @@ class _UsuariosDesktopState extends State<UsuariosDesktop> {
   }
 
   Future<void> buscar(BuildContext context, String token) async {
-    List<Usuario> results = await _userServices.getUsers(
-      context, 
-      _loginTextController.text,
-      _nombreController.text,
-      _apellidoController.text,
-      token);
+    print(_descripcionController.text);
+    print(_codTareaController.text);
+    List<Tarea> results = await _tareaServices.getTareas(
+        context, _descripcionController.text, _codTareaController.text, token);
     setState(() {
-      usuarios = results;
+      tareas = results;
     });
   }
 }

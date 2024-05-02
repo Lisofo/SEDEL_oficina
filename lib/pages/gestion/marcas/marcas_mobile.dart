@@ -1,7 +1,5 @@
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
@@ -11,9 +9,7 @@ import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/marcas_services.dart';
 import 'package:sedel_oficina_maqueta/services/tecnico_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar_mobile.dart';
-import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
-import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
+
 
 class MarcasPageMobile extends StatefulWidget {
   const MarcasPageMobile({super.key});

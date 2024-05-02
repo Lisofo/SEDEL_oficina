@@ -1,6 +1,10 @@
 import 'package:go_router/go_router.dart';
 import 'package:sedel_oficina_maqueta/pages/gestion/marcas/editmarcas/edit_marcas.dart';
 import 'package:sedel_oficina_maqueta/pages/gestion/marcas/marcas.dart';
+import 'package:sedel_oficina_maqueta/pages/gestion/tareas/edit%20Tareas/edit_tareas.dart';
+import 'package:sedel_oficina_maqueta/pages/gestion/tareas/tareas.dart';
+import 'package:sedel_oficina_maqueta/pages/gestion/tecnicos/edit%20Tecnicos/edit_tecnicos.dart';
+import 'package:sedel_oficina_maqueta/pages/gestion/tecnicos/tecnicos.dart';
 
 
 import '../../pages/pages.dart';
@@ -48,7 +52,7 @@ final router = GoRouter(initialLocation: '/', routes: [
   ),
   GoRoute(
     path: '/editTecnicos',
-    builder: (context, state) => const EditTecnicosPage(),
+    builder: (context, state) => const EditTecnicos(),
   ),
   GoRoute(
     path: '/tareas',
@@ -56,7 +60,7 @@ final router = GoRouter(initialLocation: '/', routes: [
   ),
   GoRoute(
     path: '/editTareas',
-    builder: (context, state) => const EditTareasPage(),
+    builder: (context, state) => const EditTareas(),
   ),
   GoRoute(
     path: '/plagas',
