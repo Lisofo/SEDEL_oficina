@@ -8,14 +8,14 @@ import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 
-class MaterialesPage extends StatefulWidget {
-  const MaterialesPage({super.key});
+class MaterialesPageDesktop extends StatefulWidget {
+  const MaterialesPageDesktop({super.key});
 
   @override
-  State<MaterialesPage> createState() => _MaterialesPageState();
+  State<MaterialesPageDesktop> createState() => _MaterialesPageDesktopState();
 }
 
-class _MaterialesPageState extends State<MaterialesPage> {
+class _MaterialesPageDesktopState extends State<MaterialesPageDesktop> {
   List<Materiales> materiales = [];
   final _materialesServices = MaterialesServices();
   final _descripcionController = TextEditingController();

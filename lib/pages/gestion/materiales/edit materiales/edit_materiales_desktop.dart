@@ -12,22 +12,22 @@ import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../widgets/appbar_desktop.dart';
-import '../../../widgets/drawer.dart';
+import '../../../../widgets/appbar_desktop.dart';
+import '../../../../widgets/drawer.dart';
 import 'dart:html' as html;
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 
 
 
-class EditMaterialesPage extends StatefulWidget {
-  const EditMaterialesPage({super.key});
+class EditMaterialesPageDesktop extends StatefulWidget {
+  const EditMaterialesPageDesktop({super.key});
 
   @override
-  State<EditMaterialesPage> createState() => _EditMaterialesPageState();
+  State<EditMaterialesPageDesktop> createState() => _EditMaterialesPageDesktopState();
 }
 
-class _EditMaterialesPageState extends State<EditMaterialesPage> {
+class _EditMaterialesPageDesktopState extends State<EditMaterialesPageDesktop> {
   final _materialesServices = MaterialesServices();
   final _codMaterialController = TextEditingController();
   final _descripcionController = TextEditingController();
@@ -219,21 +219,15 @@ class _EditMaterialesPageState extends State<EditMaterialesPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      const Text('Subir PDF'),
-                      const SizedBox(
-                        width: 20,
+                  Padding(
+                      padding: const EdgeInsets.only(left: 8, top: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          CustomButton(text: 'Subir PDF', onPressed: () async {await _uploadPdf();})
+                        ],
                       ),
-                      IconButton(
-                        onPressed: () async {
-                          await _uploadPdf();
-                        }, 
-                        icon: const Icon(Icons.upload),
-                        )
-                    ],
-                  ),
+                    ),
                   const SizedBox(height: 20,),
                   SizedBox(
                     height: 500,

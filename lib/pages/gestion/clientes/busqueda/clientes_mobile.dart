@@ -245,23 +245,24 @@ class _ClientesMobileState extends State<ClientesMobile> {
       ),
       body: Flex(
         direction: Axis.vertical,
-        children: [Expanded(
-          child: ListView.builder(
-            itemCount: searchResults.length,
-            itemBuilder: (context, index) {
-              return Card(
-                child: ListTile(
-                  title: Text(searchResults[index].nombre),
-                  subtitle: Text('Codigo: ${searchResults[index].codCliente} \nTelefono: ${searchResults[index].telefono1}'),
-                  onTap: () {
-                    Provider.of<OrdenProvider>(context, listen: false).setCliente(searchResults[index], '');
-                    router.push('/editClientes');
-                  },
-                ),
-              );
-            },
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: searchResults.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  child: ListTile(
+                    title: Text(searchResults[index].nombre),
+                    subtitle: Text('Codigo: ${searchResults[index].codCliente} \nTelefono: ${searchResults[index].telefono1}'),
+                    onTap: () {
+                      Provider.of<OrdenProvider>(context, listen: false).setCliente(searchResults[index], '');
+                      router.push('/editClientes');
+                    },
+                  ),
+                );
+              },
+            ),
           ),
-        ),
         ]
       )
     );

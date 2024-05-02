@@ -10,11 +10,8 @@ import 'package:sedel_oficina_maqueta/models/tecnico.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/marcas_services.dart';
 import 'package:sedel_oficina_maqueta/services/tecnico_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/appbar_mobile.dart';
-import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
-import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 
 class EditMarcasMobile extends StatefulWidget {
   const EditMarcasMobile({super.key});
@@ -37,141 +34,140 @@ class _EditMarcasMobileState extends State<EditMarcasMobile> {
   
   
 
-  Future<Null> _selectDateDesde(BuildContext context) async {
-    
+  Future<Null> _selectDateDesde(BuildContext context) async { 
     return await showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Seleccionar fecha y hora desde'),
-            content: StatefulBuilder(
-              builder: (context, setStateBd) => Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(
-                    title: const Text('Fecha'),
-                    subtitle: Text(DateFormat('EEEE d , MMM, yyyy', 'es').format(selectedDateDesde)),
-                    onTap: () async {
-                      final DateTime? picked = await showDatePicker(
-                          context: context,
-                          initialDate: selectedDateDesde,
-                          initialDatePickerMode: DatePickerMode.day,
-                          firstDate: DateTime(2015),
-                          lastDate: DateTime(2099));
-                      if (picked != null) {
-                        setStateBd(() {
-                          selectedDateDesde = picked;
-                        });
-                      }
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Hora'),
-                    subtitle: Text(_formatTime(selectedDateDesde)),
-                    onTap: () async {
-                      TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Seleccionar fecha y hora desde'),
+          content: StatefulBuilder(
+            builder: (context, setStateBd) => Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  title: const Text('Fecha'),
+                  subtitle: Text(DateFormat('EEEE d , MMM, yyyy', 'es').format(selectedDateDesde)),
+                  onTap: () async {
+                    final DateTime? picked = await showDatePicker(
                         context: context,
-                        initialTime: TimeOfDay.fromDateTime(selectedDateDesde),
+                        initialDate: selectedDateDesde,
+                        initialDatePickerMode: DatePickerMode.day,
+                        firstDate: DateTime(2015),
+                        lastDate: DateTime(2099));
+                    if (picked != null) {
+                      setStateBd(() {
+                        selectedDateDesde = picked;
+                      });
+                    }
+                  },
+                ),
+                ListTile(
+                  title: const Text('Hora'),
+                  subtitle: Text(_formatTime(selectedDateDesde)),
+                  onTap: () async {
+                    TimeOfDay? pickedTime = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.fromDateTime(selectedDateDesde),
+                    );
+                    if (pickedTime != null) {
+                      selectedDateDesde = DateTime(
+                        selectedDateDesde.year,
+                        selectedDateDesde.month,
+                        selectedDateDesde.day,
+                        pickedTime.hour,
+                        pickedTime.minute,
                       );
-                      if (pickedTime != null) {
-                        selectedDateDesde = DateTime(
-                          selectedDateDesde.year,
-                          selectedDateDesde.month,
-                          selectedDateDesde.day,
-                          pickedTime.hour,
-                          pickedTime.minute,
-                        );
-                      }
-                      setStateBd(() {});
-                    },
-                  ),
-                ],
-              ),
+                    }
+                    setStateBd(() {});
+                  },
+                ),
+              ],
             ),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    router.pop();
-                  },
-                  child: const Text('Cancelar')),
-              TextButton(
-                  onPressed: () {
-                    router.pop();
-                    setState(() {});
-                  },
-                  child: const Text('Confirmar')),
-            ],
-          );
-        });
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  router.pop();
+                },
+                child: const Text('Cancelar')),
+            TextButton(
+                onPressed: () {
+                  router.pop();
+                  setState(() {});
+                },
+                child: const Text('Confirmar')),
+          ],
+        );
+      }
+    );
   }
 
   Future<Null> _selectDateHasta(BuildContext context) async {
-    
-
     return await showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Seleccionar fecha y hora hasta'),
-            content: StatefulBuilder(
-              builder: (context, setStateBd) => Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(
-                    title: const Text('Fecha'),
-                    subtitle: Text(DateFormat('EEEE d , MMM, yyyy', 'es').format(selectedDateHasta)),
-                    onTap: () async {
-                      final DateTime? picked = await showDatePicker(
-                          context: context,
-                          initialDate: selectedDateHasta,
-                          initialDatePickerMode: DatePickerMode.day,
-                          firstDate: DateTime(2015),
-                          lastDate: DateTime(2099));
-                      if (picked != null) {
-                        setStateBd(() {
-                          selectedDateHasta = picked;
-                        });
-                      }
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Hora'),
-                    subtitle: Text(_formatTime(selectedDateHasta)),
-                    onTap: () async {
-                      TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Seleccionar fecha y hora hasta'),
+          content: StatefulBuilder(
+            builder: (context, setStateBd) => Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  title: const Text('Fecha'),
+                  subtitle: Text(DateFormat('EEEE d , MMM, yyyy', 'es').format(selectedDateHasta)),
+                  onTap: () async {
+                    final DateTime? picked = await showDatePicker(
                         context: context,
-                        initialTime: TimeOfDay.fromDateTime(selectedDateHasta),
+                        initialDate: selectedDateHasta,
+                        initialDatePickerMode: DatePickerMode.day,
+                        firstDate: DateTime(2015),
+                        lastDate: DateTime(2099));
+                    if (picked != null) {
+                      setStateBd(() {
+                        selectedDateHasta = picked;
+                      });
+                    }
+                  },
+                ),
+                ListTile(
+                  title: const Text('Hora'),
+                  subtitle: Text(_formatTime(selectedDateHasta)),
+                  onTap: () async {
+                    TimeOfDay? pickedTime = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.fromDateTime(selectedDateHasta),
+                    );
+                    if (pickedTime != null) {
+                      selectedDateHasta = DateTime(
+                        selectedDateHasta.year,
+                        selectedDateHasta.month,
+                        selectedDateHasta.day,
+                        pickedTime.hour,
+                        pickedTime.minute,
                       );
-                      if (pickedTime != null) {
-                        selectedDateHasta = DateTime(
-                          selectedDateHasta.year,
-                          selectedDateHasta.month,
-                          selectedDateHasta.day,
-                          pickedTime.hour,
-                          pickedTime.minute,
-                        );
-                      }
-                      setStateBd(() {});
-                    },
-                  ),
-                ],
-              ),
+                    }
+                    setStateBd(() {});
+                  },
+                ),
+              ],
             ),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    router.pop();
-                  },
-                  child: const Text('Cancelar')),
-              TextButton(
-                  onPressed: () {
-                    router.pop();
-                    setState(() {});
-                  },
-                  child: const Text('Confirmar')),
-            ],
-          );
-        });
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  router.pop();
+                },
+                child: const Text('Cancelar')),
+            TextButton(
+                onPressed: () {
+                  router.pop();
+                  setState(() {});
+                },
+                child: const Text('Confirmar')),
+          ],
+        );
+      }
+    );
   }
 
   String _formatDateAndTime(DateTime? date) {

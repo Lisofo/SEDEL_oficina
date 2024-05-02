@@ -1,7 +1,5 @@
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
@@ -11,9 +9,6 @@ import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/marcas_services.dart';
 import 'package:sedel_oficina_maqueta/services/tecnico_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar_mobile.dart';
-import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
-import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 
 class MarcasPageMobile extends StatefulWidget {
   const MarcasPageMobile({super.key});
@@ -80,122 +75,117 @@ class _MarcasPageMobileState extends State<MarcasPageMobile> {
       ),
       drawer: Drawer(
         width: MediaQuery.of(context).size.width *0.9,
-        child: Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 10,),
-                  const Text('Seleccione periodo: '),
-                  const SizedBox(height: 10,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      TextButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll(colors.secondary)
-                        ),
-                          onPressed: () async {
-                            final pickedDate = await showDateRangePicker(
-                                context: context,
-                                firstDate: DateTime(2023),
-                                lastDate: DateTime(2025));
-                      
-                            if (pickedDate != null &&
-                                pickedDate != selectedDate) {
-                              setState(() {
-                                selectedDate = pickedDate;
-                              });
-                            }
-                          },
-                          child: const Text(
-                            'Período',
-                            style: TextStyle(color: Colors.black),
-                          )
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 10,),
+                const Text('Seleccione periodo: '),
+                const SizedBox(height: 10,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll(colors.secondary)
                       ),
-                      RichText(
-                      text: TextSpan(
-                          style: const TextStyle(color: Colors.black),
-                          children: <TextSpan>[
-                        TextSpan(text: DateFormat('dd/MM/yyyy', 'es').format(selectedDate.start)),
-                        const TextSpan(text: ' - '),
-                        TextSpan(text: DateFormat('dd/MM/yyyy', 'es').format(selectedDate.end)),
-                      ])
-                      )
-                    ],
-                  ),
-                  
-                  
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  const Text('Tecnico: '),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width *0.7,
-                    child: DropdownSearch(
-                      dropdownDecoratorProps:
-                          const DropDownDecoratorProps(
-                              dropdownSearchDecoration: InputDecoration(
-                                  hintText: 'Seleccione un tecnico')),
-                      items: tecnicos,
-                      popupProps: const PopupProps.menu(
-                          showSearchBox: true,
-                          searchDelay: Duration.zero),
-                      onChanged: (value) {
-                        setState(() {
-                          selectedTecnico = value;
-                          tecnicoFiltro = value!.tecnicoId;
-                        });
-                      },
+                        onPressed: () async {
+                          final pickedDate = await showDateRangePicker(
+                              context: context,
+                              firstDate: DateTime(2023),
+                              lastDate: DateTime(2025));
+                    
+                          if (pickedDate != null &&
+                              pickedDate != selectedDate) {
+                            setState(() {
+                              selectedDate = pickedDate;
+                            });
+                          }
+                        },
+                        child: const Text(
+                          'Período',
+                          style: TextStyle(color: Colors.black),
+                        )
                     ),
+                    RichText(
+                    text: TextSpan(
+                        style: const TextStyle(color: Colors.black),
+                        children: <TextSpan>[
+                      TextSpan(text: DateFormat('dd/MM/yyyy', 'es').format(selectedDate.start)),
+                      const TextSpan(text: ' - '),
+                      TextSpan(text: DateFormat('dd/MM/yyyy', 'es').format(selectedDate.end)),
+                    ])
+                    )
+                  ],
+                ),
+                
+                
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Text('Tecnico: '),
+                const SizedBox(
+                  width: 10,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width *0.7,
+                  child: DropdownSearch(
+                    dropdownDecoratorProps:
+                        const DropDownDecoratorProps(
+                            dropdownSearchDecoration: InputDecoration(
+                                hintText: 'Seleccione un tecnico')),
+                    items: tecnicos,
+                    popupProps: const PopupProps.menu(
+                        showSearchBox: true,
+                        searchDelay: Duration.zero),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedTecnico = value;
+                        tecnicoFiltro = value!.tecnicoId;
+                      });
+                    },
                   ),
-                ],
-              ),
-              
-              const Spacer(),
-              
-              BottomNavigationBar(
-                currentIndex: buttonIndex,
-                onTap: (index) async {
-                  buttonIndex = index;
-                  switch (buttonIndex){
-                    case 0: 
-                      await buscar(token);
-                    break;
-                    case 1:
-                      Provider.of<OrdenProvider>(context,listen: false).clearSelectedMarca();
-                      router.push('/editMarcas');
-                    break;
-                  }
-                },
-                showUnselectedLabels: true,
-                selectedItemColor: colors.primary,
-                unselectedItemColor: Colors.grey,
-                items: const [
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.search),
-                    label: 'Buscar',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.add_box_outlined),
-                    label: 'Crear Marca',
-                  ),
-          
-                ],
-              ),
-            ],
-          
-          ),
+                ),
+              ],
+            ),
+            const Spacer(),            
+            BottomNavigationBar(
+              currentIndex: buttonIndex,
+              onTap: (index) async {
+                buttonIndex = index;
+                switch (buttonIndex){
+                  case 0: 
+                    await buscar(token);
+                  break;
+                  case 1:
+                    Provider.of<OrdenProvider>(context,listen: false).clearSelectedMarca();
+                    router.push('/editMarcas');
+                  break;
+                }
+              },
+              showUnselectedLabels: true,
+              selectedItemColor: colors.primary,
+              unselectedItemColor: Colors.grey,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.search),
+                  label: 'Buscar',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.add_box_outlined),
+                  label: 'Crear Marca',
+                ),
+        
+              ],
+            ),
+          ],
         ),
         
       ),

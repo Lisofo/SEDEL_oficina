@@ -54,71 +54,69 @@ class _EstablecerClientesMobileState extends State<EstablecerClientesMobile> {
       SizedBox(
           height: 400,
           width: MediaQuery.of(context).size.width,
-          child: Container(
-            child: ListView.separated(
-              itemCount: clientes.length,
-              itemBuilder: (context, index) {
-                final _clientes = clientes;
-                return ListTile(
-                  title: Text(
-                    _clientes[index].cliente,
-                    textAlign: TextAlign.center,
-                  ),
-                  subtitle: Text(
-                    _clientes[index].codCliente,
-                    textAlign: TextAlign.center,
-                  ),
-                  trailing: IconButton(
-                    color: colors.primary,
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text('Confirmar accion'),
-                              content: Text(
-                                  'Desea borrar ${_clientes[index].cliente}?'),
-                              actions: [
-                                TextButton(
-                                    onPressed: () async {
-                                      await _userServices
-                                          .deleteClientUsers(
-                                              context,
-                                              userSeleccionado.usuarioId
-                                                  .toString(),
-                                              _clientes[index]
-                                                  .clienteId
-                                                  .toString(),
-                                              token);
-                                      await getClientes(
-                                          userSeleccionado, token);
-                                    },
-                                    child: const Text('Borrar')),
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('Cancelar'))
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      icon: const Icon(Icons.delete)
-                    )
-                    ,
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 300),
-                  child: Divider(
-                    thickness: 3,
-                    color: Colors.green,
-                  ),
-                );
-              },
-            ),
+          child: ListView.separated(
+            itemCount: clientes.length,
+            itemBuilder: (context, index) {
+              final _clientes = clientes;
+              return ListTile(
+                title: Text(
+                  _clientes[index].cliente,
+                  textAlign: TextAlign.center,
+                ),
+                subtitle: Text(
+                  _clientes[index].codCliente,
+                  textAlign: TextAlign.center,
+                ),
+                trailing: IconButton(
+                  color: colors.primary,
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Confirmar accion'),
+                            content: Text(
+                                'Desea borrar ${_clientes[index].cliente}?'),
+                            actions: [
+                              TextButton(
+                                  onPressed: () async {
+                                    await _userServices
+                                        .deleteClientUsers(
+                                            context,
+                                            userSeleccionado.usuarioId
+                                                .toString(),
+                                            _clientes[index]
+                                                .clienteId
+                                                .toString(),
+                                            token);
+                                    await getClientes(
+                                        userSeleccionado, token);
+                                  },
+                                  child: const Text('Borrar')),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Cancelar'))
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.delete)
+                  )
+                  ,
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 300),
+                child: Divider(
+                  thickness: 3,
+                  color: Colors.green,
+                ),
+              );
+            },
           )),
                   ]),
                 ),
@@ -181,7 +179,7 @@ class _EstablecerClientesMobileState extends State<EstablecerClientesMobile> {
                     }
             },
             child: Padding(
-              padding: EdgeInsets.only(top: 8),
+              padding: const EdgeInsets.only(top: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

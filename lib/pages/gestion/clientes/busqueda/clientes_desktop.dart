@@ -2,7 +2,6 @@
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/estado_cliente.dart';
