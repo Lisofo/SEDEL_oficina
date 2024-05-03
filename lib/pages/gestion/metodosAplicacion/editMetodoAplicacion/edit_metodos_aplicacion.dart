@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sedel_oficina_maqueta/pages/gestion/metodosAplicacion/editMetodoAplicacion/edit_metodos_aplicacion_desktop.dart';
 import 'package:sedel_oficina_maqueta/pages/gestion/metodosAplicacion/editMetodoAplicacion/edit_metodos_aplicacion_mobile.dart';
-import 'package:sedel_oficina_maqueta/pages/pages.dart';
 
 class EditMetodosAplicacionPage extends StatefulWidget {
   const EditMetodosAplicacionPage({super.key});
