@@ -7,21 +7,19 @@ import 'package:sedel_oficina_maqueta/models/material.dart';
 import 'package:sedel_oficina_maqueta/models/revision_materiales.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/materiales_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
-import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_mobile.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
-import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 
-import '../../../config/router/app_router.dart';
+import '../../../../config/router/app_router.dart';
 
-class HabilitacionesMaterial extends StatefulWidget {
-  const HabilitacionesMaterial({super.key});
+class HabilitacionesMaterialMobile extends StatefulWidget {
+  const HabilitacionesMaterialMobile({super.key});
 
   @override
-  State<HabilitacionesMaterial> createState() => _HabilitacionesMaterialState();
+  State<HabilitacionesMaterialMobile> createState() => _HabilitacionesMaterialMobileState();
 }
 
-class _HabilitacionesMaterialState extends State<HabilitacionesMaterial> {
+class _HabilitacionesMaterialMobileState extends State<HabilitacionesMaterialMobile> {
   late Materiales materialSeleccionado = Materiales.empty();
   late String token = '';
   late List<MaterialHabilitacion> habilitaciones = [];
@@ -49,10 +47,7 @@ class _HabilitacionesMaterialState extends State<HabilitacionesMaterial> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBarDesktop(titulo: 'Habilitaciones del material'),
-      drawer: const Drawer(
-        child: BotonesDrawer(),
-      ),
+      appBar: AppBarMobile(titulo: 'Habilitaciones del material'),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Card(
@@ -60,7 +55,7 @@ class _HabilitacionesMaterialState extends State<HabilitacionesMaterial> {
             child: Column(
               children: [
                 SizedBox(
-                  height: 600,
+                  height: MediaQuery.of(context).size.height * 0.7,
                   width: Constantes().ancho,
                   child: ListView.separated(
                     itemCount: habilitaciones.length,
@@ -105,21 +100,18 @@ class _HabilitacionesMaterialState extends State<HabilitacionesMaterial> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        elevation: 0,
-        color: Colors.transparent,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            CustomButton(
-              text: 'Nueva habilitación', 
-              onPressed: (){
-                nuevaHabilitacion(habilitacionACrear);
-              },
-              tamano: 20,
-            )
-          ],),
-      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: colors.primary)
+        ),
+        height: MediaQuery.of(context).size.height *0.1,
+        child: InkWell(
+          onTap: () async {
+            await nuevaHabilitacion(habilitacionACrear);
+          },
+          child: Center(child: Text('Crear habilitación', style: TextStyle(color: colors.primary),)),
+        ),
+      )
     );
   }
 

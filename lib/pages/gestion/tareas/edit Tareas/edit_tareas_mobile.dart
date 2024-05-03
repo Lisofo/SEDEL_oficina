@@ -51,103 +51,101 @@ class _EditTareasMobileState extends State<EditTareasMobile> {
 
     return Scaffold(
       appBar: AppBarMobile(titulo: 'Tareas',),      
-      body: Container(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              Column(
-                children: [
-                  const SizedBox(height: 20,),
-                  const Text("Codigo  "),
-                  const SizedBox(height: 10,),
-                  const SizedBox(
-                    width: 27,
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    child: CustomTextFormField(
-                      controller: _codController,
-                      maxLines: 1,
-                      label: 'Codigo',
-                    ),
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Column(
-                children: [
-                  const Text("Descripcion  "),
-                  const SizedBox(height: 10,),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    child: CustomTextFormField(
-                      label: 'Descripcion',
-                      controller: _descripcionController,
-                      maxLines: 4,
-                      maxLength: 100,
-                    ),
-                  )
-                ],
-              ),
-              const Spacer(),
-              if(tareaSeleccionada.tareaId != 0)... [
-                BottomNavigationBar(
-                  currentIndex: buttonIndex,
-                  onTap: (index) async {
-                    buttonIndex = index;
-                    switch (buttonIndex){
-                      case 0:
-                        await postPut(context);
-                      break;
-                      case 1:
-                        await borrarTarea(tareaSeleccionada);
-                      break;
-                    }
-                  },
-                  showUnselectedLabels: true,
-                  selectedItemColor: colors.primary,
-                  unselectedItemColor: Colors.grey,
-                  items: const [
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.save),
-                      label: 'Guardar',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.delete),
-                      label: 'Borrar',
-                    ),
-            
-                  ],
+      body: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            Column(
+              children: [
+                const SizedBox(height: 20,),
+                const Text("Codigo  "),
+                const SizedBox(height: 10,),
+                const SizedBox(
+                  width: 27,
                 ),
-              ]else ... [
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: colors.primary)
-                  ),
-                  height: MediaQuery.of(context).size.height *0.1,
-                  child: InkWell(
-          
-                    onTap: () async{
-                     await postPut(context);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.save, color: colors.primary,),
-                          Text('Guardar', style: TextStyle(color: colors.primary),)
-                        ],
-                      ),
-                    ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: CustomTextFormField(
+                    controller: _codController,
+                    maxLines: 1,
+                    label: 'Codigo',
                   ),
                 )
               ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Column(
+              children: [
+                const Text("Descripcion  "),
+                const SizedBox(height: 10,),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: CustomTextFormField(
+                    label: 'Descripcion',
+                    controller: _descripcionController,
+                    maxLines: 4,
+                    maxLength: 100,
+                  ),
+                )
+              ],
+            ),
+            const Spacer(),
+            if(tareaSeleccionada.tareaId != 0)... [
+              BottomNavigationBar(
+                currentIndex: buttonIndex,
+                onTap: (index) async {
+                  buttonIndex = index;
+                  switch (buttonIndex){
+                    case 0:
+                      await postPut(context);
+                    break;
+                    case 1:
+                      await borrarTarea(tareaSeleccionada);
+                    break;
+                  }
+                },
+                showUnselectedLabels: true,
+                selectedItemColor: colors.primary,
+                unselectedItemColor: Colors.grey,
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.save),
+                    label: 'Guardar',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.delete),
+                    label: 'Borrar',
+                  ),
+          
+                ],
+              ),
+            ]else ... [
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: colors.primary)
+                ),
+                height: MediaQuery.of(context).size.height *0.1,
+                child: InkWell(
+        
+                  onTap: () async{
+                   await postPut(context);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.save, color: colors.primary,),
+                        Text('Guardar', style: TextStyle(color: colors.primary),)
+                      ],
+                    ),
+                  ),
+                ),
+              )
             ],
-          ),
+          ],
         ),
       ),
     );

@@ -8,20 +8,18 @@ import 'package:sedel_oficina_maqueta/models/material.dart';
 import 'package:sedel_oficina_maqueta/models/revision_materiales.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/materiales_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
-import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_mobile.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
-import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 
-class LotesPage extends StatefulWidget {
-  const LotesPage({super.key});
+class LotesPageMobile extends StatefulWidget {
+  const LotesPageMobile({super.key});
 
   @override
-  State<LotesPage> createState() => _LotesPageState();
+  State<LotesPageMobile> createState() => _LotesPageMobileState();
 }
 
-class _LotesPageState extends State<LotesPage> {
+class _LotesPageMobileState extends State<LotesPageMobile> {
   late List<Lote> lotes = [];
   late String token = '';
   late Materiales materialSeleccionado = Materiales.empty();
@@ -52,17 +50,14 @@ class _LotesPageState extends State<LotesPage> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBarDesktop(titulo: 'Lotes'),
-      drawer: const Drawer(
-        child: BotonesDrawer(),
-      ),
+      appBar: AppBarMobile(titulo: 'Lotes'),
       body: Card(
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                height: 500,
+                height: MediaQuery.of(context).size.height * 0.7,
                 width: Constantes().ancho,
                 child: ListView.separated(
                   itemCount: lotes.length,
@@ -108,22 +103,18 @@ class _LotesPageState extends State<LotesPage> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        elevation: 0,
-        color: Colors.transparent,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            CustomButton(
-              text: 'Crear lote',
-              tamano: 20,
-              onPressed: () async {
-                await crearLote(loteACrear);
-              },
-            ),
-          ],
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: colors.primary)
         ),
-      ),
+        height: MediaQuery.of(context).size.height *0.1,
+        child: InkWell(
+          onTap: () async {
+            await crearLote(loteACrear);
+          },
+          child: Center(child: Text('Crear lote', style: TextStyle(color: colors.primary),)),
+        ),
+      )
     );
   }
 

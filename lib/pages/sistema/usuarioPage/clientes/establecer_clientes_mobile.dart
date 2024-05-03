@@ -44,160 +44,140 @@ class _EstablecerClientesMobileState extends State<EstablecerClientesMobile> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBarMobile(
-        titulo: 'Establecer Cliente'
-        ),
-      
+      appBar: AppBarMobile(titulo: 'Establecer Cliente'),
       body: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(children: [
-      SizedBox(
-          height: 400,
-          width: MediaQuery.of(context).size.width,
-          child: ListView.separated(
-            itemCount: clientes.length,
-            itemBuilder: (context, index) {
-              final _clientes = clientes;
-              return ListTile(
-                title: Text(
-                  _clientes[index].cliente,
-                  textAlign: TextAlign.center,
-                ),
-                subtitle: Text(
-                  _clientes[index].codCliente,
-                  textAlign: TextAlign.center,
-                ),
-                trailing: IconButton(
-                  color: colors.primary,
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text('Confirmar accion'),
-                            content: Text(
-                                'Desea borrar ${_clientes[index].cliente}?'),
-                            actions: [
-                              TextButton(
-                                  onPressed: () async {
-                                    await _userServices
-                                        .deleteClientUsers(
-                                            context,
-                                            userSeleccionado.usuarioId
-                                                .toString(),
-                                            _clientes[index]
-                                                .clienteId
-                                                .toString(),
-                                            token);
-                                    await getClientes(
-                                        userSeleccionado, token);
-                                  },
-                                  child: const Text('Borrar')),
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('Cancelar'))
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    icon: const Icon(Icons.delete)
-                  )
-                  ,
-              );
-            },
-            separatorBuilder: (BuildContext context, int index) {
-              return const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 300),
-                child: Divider(
-                  thickness: 3,
-                  color: Colors.green,
-                ),
-              );
-            },
-          )),
-                  ]),
-                ),
-
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            SizedBox(
+                height: 400,
+                width: MediaQuery.of(context).size.width,
+                child: ListView.separated(
+                  itemCount: clientes.length,
+                  itemBuilder: (context, index) {
+                    final _clientes = clientes;
+                    return ListTile(
+                      title: Text(
+                        _clientes[index].cliente,
+                        textAlign: TextAlign.center,
+                      ),
+                      subtitle: Text(
+                        _clientes[index].codCliente,
+                        textAlign: TextAlign.center,
+                      ),
+                      trailing: IconButton(
+                        color: colors.primary,
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('Confirmar accion'),
+                                  content: Text('Desea borrar ${_clientes[index].cliente}?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () async {
+                                        await _userServices.deleteClientUsers( context, userSeleccionado.usuarioId.toString(), _clientes[index].clienteId.toString(), token);
+                                        await getClientes(userSeleccionado, token);
+                                      },
+                                      child: const Text('Borrar')
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Cancelar')
+                                    )
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        icon: const Icon(Icons.delete)
+                      ),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 300),
+                      child: Divider(
+                        thickness: 3,
+                        color: Colors.green,
+                      ),
+                    );
+                  },
+                )
+              ),
+            ]
+          ),
+        ),
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
             border: Border.all(color: colors.primary)
           ),
           height: MediaQuery.of(context).size.height *0.1,
           child: InkWell(
-            
             onTap: () async{
               final cliente = await showSearch(
-                        context: context,
-                        delegate: ClientSearchDelegate(
-                            'Buscar Cliente', historial, '')
+                context: context,
+                delegate: ClientSearchDelegate('Buscar Cliente', historial, ''));
+                  if (cliente != null) {
+                    setState(() {
+                      selectedCliente = cliente;
+                      final int clienteExiste = historial.indexWhere((element) => element.nombre == cliente.nombre);
+                      if (clienteExiste == -1) {
+                        historial.insert(0, cliente);
+                      }
+                    });
+                  } else {
+                    setState(() {
+                      selectedCliente = Cliente.empty();
+                    });
+                  }
+                  if (selectedCliente.clienteId != 0) {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Confirmacion'),
+                          content: Text('Desea agregar al cliente ${selectedCliente.nombre}?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () async {
+                                await _userServices.postClientUsers(context, userSeleccionado.usuarioId.toString(), selectedCliente.clienteId.toString(), token);
+                                await getClientes(userSeleccionado, token);
+                              },
+                              child: const Text('Agregar')
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Cancelar')
+                            ),
+                          ],
                         );
-                    if (cliente != null) {
-                      setState(() {
-                        selectedCliente = cliente;
-                        final int clienteExiste = historial.indexWhere(
-                            (element) => element.nombre == cliente.nombre);
-                        if (clienteExiste == -1) {
-                          historial.insert(0, cliente);
-                        }
-                      });
-                    } else {
-                      setState(() {
-                        selectedCliente = Cliente.empty();
-                      });
-                    }
-                    if (selectedCliente.clienteId != 0) {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text('Confirmacion'),
-                            content: Text(
-                                'Desea agregar al cliente ${selectedCliente.nombre}?'),
-                            actions: [
-                              TextButton(
-                                  onPressed: () async {
-                                    await _userServices.postClientUsers(
-                                        context,
-                                        userSeleccionado.usuarioId.toString(),
-                                        selectedCliente.clienteId.toString(),
-                                        token);
-                                    await getClientes(userSeleccionado, token);
-                                  },
-                                  child: const Text('Agregar')),
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('Cancelar')),
-                            ],
-                          );
-                        },
-                      );
-                    }
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.add_comment_outlined, color: colors.primary,),
-                  Text('Agregar Cliente', style: TextStyle(color: colors.primary),)
-                ],
+                      },
+                    );
+                  }
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.add_comment_outlined, color: colors.primary,),
+                    Text('Agregar Cliente', style: TextStyle(color: colors.primary),)
+                  ],
+                ),
               ),
             ),
-          ),
         )
-            
-          
     );
   }
 
   Future<List<ClienteUsuario>> getClientes(Usuario user, String token) async {
-    clientes =
-        await _userServices.getClientUsers(context, user.usuarioId.toString(), token);
+    clientes = await _userServices.getClientUsers(context, user.usuarioId.toString(), token);
     setState(() {});
     return clientes;
   }
