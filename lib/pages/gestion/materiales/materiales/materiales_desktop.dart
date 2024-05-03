@@ -77,58 +77,68 @@ class _MaterialesPageDesktopState extends State<MaterialesPageDesktop> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 15,),
                     Center(
                       child: ElevatedButton(
-                          style: const ButtonStyle(
-                              backgroundColor:
-                                  MaterialStatePropertyAll(Colors.white),
-                              elevation: MaterialStatePropertyAll(10),
-                              shape: MaterialStatePropertyAll(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.horizontal(
-                                          left: Radius.circular(50),
-                                          right: Radius.circular(50))))),
-                          onPressed: () async {
-                            await buscar(context, token);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.5),
-                            child: Text(
-                              'Buscar',
-                              style: TextStyle(
-                                  color: colors.primary,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
+                        style: const ButtonStyle(
+                          backgroundColor: MaterialStatePropertyAll(Colors.white),
+                          elevation: MaterialStatePropertyAll(10),
+                          shape: MaterialStatePropertyAll(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.horizontal(
+                                left: Radius.circular(50),
+                                right: Radius.circular(50)
+                              )
+                            )
+                          )
+                        ),
+                        onPressed: () async {
+                          await buscar(context, token);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.5),
+                          child: Text(
+                            'Buscar',
+                            style: TextStyle(
+                              color: colors.primary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20
                             ),
-                          )),
+                          ),
+                        )
+                      ),
                     ),
                     const Spacer(),
                     Center(
                       child: ElevatedButton(
-                          style: const ButtonStyle(
-                              backgroundColor:
-                                  MaterialStatePropertyAll(Colors.white),
-                              elevation: MaterialStatePropertyAll(10),
-                              shape: MaterialStatePropertyAll(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.horizontal(
-                                          left: Radius.circular(50),
-                                          right: Radius.circular(50))))),
-                          onPressed: () {
-                            Provider.of<OrdenProvider>(context, listen: false)
-                                .clearSelectedMaterial();
-                            router.push('/editMateriales');
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.5),
-                            child: Text(
-                              'Agregar Material',
-                              style: TextStyle(
-                                  color: colors.primary,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
+                        style: const ButtonStyle(
+                          backgroundColor: MaterialStatePropertyAll(Colors.white),
+                          elevation: MaterialStatePropertyAll(10),
+                          shape: MaterialStatePropertyAll(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.horizontal(
+                                left: Radius.circular(50),
+                                right: Radius.circular(50)
+                              )
+                            )
+                          )
+                        ),
+                        onPressed: () {
+                          Provider.of<OrdenProvider>(context, listen: false).clearSelectedMaterial();
+                          router.push('/editMateriales');
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.5),
+                          child: Text(
+                            'Crear Material',
+                            style: TextStyle(
+                              color: colors.primary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20
                             ),
-                          )),
+                          ),
+                        )
+                      ),
                     ),
                   ],
                 ),
@@ -152,8 +162,7 @@ class _MaterialesPageDesktopState extends State<MaterialesPageDesktop> {
                         ),
                         title: Text(materiales[index].descripcion),
                         onTap: () {
-                          Provider.of<OrdenProvider>(context, listen: false)
-                              .setMateriales(materiales[index]);
+                          Provider.of<OrdenProvider>(context, listen: false).setMateriales(materiales[index]);
                           router.push('/editMateriales');
                         },
                       ),
@@ -169,8 +178,7 @@ class _MaterialesPageDesktopState extends State<MaterialesPageDesktop> {
   }
 
   Future<void> buscar(BuildContext context, String token) async {
-    List<Materiales> results = await _materialesServices.getMateriales(context,
-        _descripcionController.text, _codMateriaController.text, token);
+    List<Materiales> results = await _materialesServices.getMateriales(context, _descripcionController.text, _codMateriaController.text, token);
     setState(() {
       materiales = results;
     });

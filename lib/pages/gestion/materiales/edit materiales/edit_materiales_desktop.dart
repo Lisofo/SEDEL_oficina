@@ -55,7 +55,11 @@ class _EditMaterialesPageDesktopState extends State<EditMaterialesPageDesktop> {
   cargarDatos() async {
     materialSeleccionado = context.read<OrdenProvider>().materiales;
     token = context.read<OrdenProvider>().token;
-    manuales = await MaterialesServices().getManualesMateriales(context, materialSeleccionado.materialId, token);
+    if(materialSeleccionado.materialId != 0){
+      manuales = await MaterialesServices().getManualesMateriales(context, materialSeleccionado.materialId, token);
+    } else {
+      manuales = [];
+    }
     setState(() {});
   }
 
@@ -230,20 +234,31 @@ class _EditMaterialesPageDesktopState extends State<EditMaterialesPageDesktop> {
                     ),
                   const SizedBox(height: 20,),
                   SizedBox(
-                    height: 500,
+                    height: 400,
                     width: 300,
                     child: ListView.builder(
                       itemCount: manuales.length,
                       itemBuilder: (context, i){
                         var manual = manuales[i];
                         return ListTile(
-                          leading: Text('$i'),
+                          // leading: Text('$i'),
                           title: Text(manual.filename),
-                          trailing: IconButton(
-                            onPressed: () async {
-                              await launchURL(manual.filepath, token);
-                            }, 
-                            icon: const Icon(Icons.open_in_browser)
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                onPressed: () async {
+                                  await launchURL(manual.filepath, token);
+                                }, 
+                                icon: const Icon(Icons.open_in_browser)
+                              ),
+                              IconButton(
+                                onPressed: () async {
+                                  await borrarManual(manual.filename);
+                                }, 
+                                icon: const Icon(Icons.delete, color: Colors.red,)
+                              ),
+                            ],
                           ),
                         );
                       }
@@ -429,4 +444,27 @@ class _EditMaterialesPageDesktopState extends State<EditMaterialesPageDesktop> {
     var md5c = md5.convert(bytes);
     return md5c.toString();
   }
+
+  borrarManual(String manual) async {
+    showDialog(
+      context: context, 
+      builder: (context){
+        return AlertDialog(
+          title: const Text('Borrar manual'),
+          content: Text('Esta por borrar el manual $manual, esta seguro de querer borrarlo?'),
+          actions: [
+            TextButton(onPressed: (){router.pop();}, child: const Text('Cancelar')),
+            TextButton(
+              onPressed: () async {
+                await MaterialesServices().deleteManualesMateriales(context, materialSeleccionado.materialId, token, manual);
+                manuales = await MaterialesServices().getManualesMateriales(context, materialSeleccionado.materialId, token);
+                setState(() {});
+              },
+              child: const Text('Confirmar')),
+          ],
+        );
+      }
+    );
+  }
+  
 }

@@ -1191,4 +1191,43 @@ class MaterialesServices {
     }
   }
 
+  Future deleteManualesMateriales(BuildContext context, int id, String token, String? fileName) async {
+    String link = apiLink += '$id/manuales/$fileName';
+    try {
+      var headers = {'Authorization': token};
+      var resp = await _dio.request(
+        link,
+        options: Options(
+          method: 'Delete',
+          headers: headers,
+        ),
+      );
+      if (resp.statusCode == 204) {
+        showDialogs(context, 'PDF borrado', true, false);
+      }
+      return;
+    } catch (e) {
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+              return "Error: ${error['message']}";
+            }).toList();
+            showErrorDialog(context, errorMessages.join('\n'));
+          }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: ${e.message}');
+        }
+      }
+    }
+  }
+
 }

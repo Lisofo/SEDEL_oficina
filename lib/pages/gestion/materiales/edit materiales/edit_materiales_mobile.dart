@@ -55,7 +55,11 @@ class _EditMaterialesPageMobileState extends State<EditMaterialesPageMobile> {
   cargarDatos() async {
     materialSeleccionado = context.read<OrdenProvider>().materiales;
     token = context.read<OrdenProvider>().token;
-    manuales = await MaterialesServices().getManualesMateriales(context, materialSeleccionado.materialId, token);
+    if(materialSeleccionado.materialId != 0){
+      manuales = await MaterialesServices().getManualesMateriales(context, materialSeleccionado.materialId, token);
+    } else {
+      manuales = [];
+    }
     setState(() {});
   }
 
@@ -236,13 +240,24 @@ class _EditMaterialesPageMobileState extends State<EditMaterialesPageMobile> {
                         itemBuilder: (context, i){
                           var manual = manuales[i];
                           return ListTile(
-                            leading: Text('$i'),
+                            // leading: Text('$i'),
                             title: Text(manual.filename),
-                            trailing: IconButton(
-                              onPressed: () async {
-                                await launchURL(manual.filepath, token);
-                              }, 
-                              icon: const Icon(Icons.open_in_browser)
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  onPressed: () async {
+                                    await launchURL(manual.filepath, token);
+                                  }, 
+                                  icon: const Icon(Icons.open_in_browser)
+                                ),
+                                IconButton(
+                                  onPressed: () async {
+                                    await borrarManual(manual.filename);
+                                  }, 
+                                  icon: const Icon(Icons.delete, color: Colors.red,)
+                                ),
+                              ],
                             ),
                           );
                         }
@@ -261,9 +276,20 @@ class _EditMaterialesPageMobileState extends State<EditMaterialesPageMobile> {
         onTap: (index) async {
           buttonIndex = index;
           switch (buttonIndex){
-            case 0: 
+            case 0:
+              await postPut(context);
             break;
             case 1:
+              router.push('/detallesMaterial');
+            break;
+            case 2:
+              router.push('/lotes');
+            break;
+            case 3:
+              router.push('/habilitacionesMaterial');
+            break;
+            case 4:
+              await borrarMaterial(materialSeleccionado);
             break;
           }
         },
@@ -295,60 +321,6 @@ class _EditMaterialesPageMobileState extends State<EditMaterialesPageMobile> {
           ],
         ],
       ),
-      // bottomNavigationBar: BottomAppBar(
-      //   elevation: 0,
-      //   color: Colors.transparent,
-      //   child: Padding(padding: const EdgeInsets.all(8.0),
-      //     child: Row(
-      //       mainAxisAlignment: MainAxisAlignment.end,
-      //       children: [
-      //         if(materialSeleccionado.materialId != 0)...[
-      //           CustomButton(
-      //           text: 'Habilitaciones', 
-      //           onPressed: (){
-      //             router.push('/habilitacionesMaterial');
-      //           }, 
-      //           tamano: 20,
-      //         ),
-      //         const SizedBox(width: 30,),
-      //         CustomButton(
-      //           text: 'Detalles', 
-      //           onPressed: (){
-      //             router.push('/detallesMaterial');
-      //           }, 
-      //           tamano: 20,
-      //         ),
-      //         const SizedBox(width: 30,),
-      //         CustomButton(
-      //           text: 'Lotes', 
-      //           onPressed: (){
-      //             router.push('/lotes');
-      //           }, 
-      //           tamano: 20,
-      //         ),
-      //         const SizedBox(width: 30,),
-      //         ],                          
-      //         CustomButton(
-      //           onPressed: () async {
-      //             await postPut(context);
-      //           },
-      //           text: 'Guardar',
-      //           tamano: 20,
-      //         ),
-      //         if(materialSeleccionado.materialId != 0)...[
-      //           const SizedBox(width: 30,),
-      //           CustomButton(
-      //             onPressed: () async {
-      //               await borrarMaterial(materialSeleccionado);
-      //             },
-      //             text:'Eliminar',
-      //             tamano: 20,
-      //           ),
-      //         ]
-      //       ]
-      //     )
-      //   )
-      // ),
     );
   }
 
@@ -469,4 +441,27 @@ class _EditMaterialesPageMobileState extends State<EditMaterialesPageMobile> {
     var md5c = md5.convert(bytes);
     return md5c.toString();
   }
+
+  borrarManual(String manual) async {
+    showDialog(
+      context: context, 
+      builder: (context){
+        return AlertDialog(
+          title: const Text('Borrar manual'),
+          content: Text('Esta por borrar el manual $manual, esta seguro de querer borrarlo?'),
+          actions: [
+            TextButton(onPressed: (){router.pop();}, child: const Text('Cancelar')),
+            TextButton(
+              onPressed: () async {
+                await MaterialesServices().deleteManualesMateriales(context, materialSeleccionado.materialId, token, manual);
+                manuales = await MaterialesServices().getManualesMateriales(context, materialSeleccionado.materialId, token);
+                setState(() {});
+              },
+              child: const Text('Confirmar')),
+          ],
+        );
+      }
+    );
+  }
+
 }

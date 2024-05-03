@@ -7,21 +7,19 @@ import 'package:sedel_oficina_maqueta/models/material.dart';
 import 'package:sedel_oficina_maqueta/models/revision_materiales.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/materiales_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
-import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
+import 'package:sedel_oficina_maqueta/widgets/appbar_mobile.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
-import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
+import '../../../../config/router/app_router.dart';
 
-import '../../../config/router/app_router.dart';
 
-class DetallesMateriales extends StatefulWidget {
-  const DetallesMateriales({super.key});
+class DetallesMaterialesMobile extends StatefulWidget {
+  const DetallesMaterialesMobile({super.key});
 
   @override
-  State<DetallesMateriales> createState() => _DetallesMaterialesState();
+  State<DetallesMaterialesMobile> createState() => _DetallesMaterialesMobileState();
 }
 
-class _DetallesMaterialesState extends State<DetallesMateriales> {
+class _DetallesMaterialesMobileState extends State<DetallesMaterialesMobile> {
   late Materiales materialSeleccionado = Materiales.empty();
   late String token = '';
   late List<MaterialDetalles> detalles = [];
@@ -49,10 +47,7 @@ class _DetallesMaterialesState extends State<DetallesMateriales> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBarDesktop(titulo: 'Detalles del material'),
-      drawer: const Drawer(
-        child: BotonesDrawer(),
-      ),
+      appBar: AppBarMobile(titulo: 'Detalles del material'),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Card(
@@ -60,7 +55,7 @@ class _DetallesMaterialesState extends State<DetallesMateriales> {
             child: Column(
               children: [
                 SizedBox(
-                  height: 600,
+                  height: MediaQuery.of(context).size.height * 0.7,
                   width: Constantes().ancho,
                   child: ListView.separated(
                     itemCount: detalles.length,
@@ -105,21 +100,18 @@ class _DetallesMaterialesState extends State<DetallesMateriales> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        elevation: 0,
-        color: Colors.transparent,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            CustomButton(
-              text: 'Nuevo detalle', 
-              onPressed: (){
-                nuevoDetalle(detalleACrear);
-              },
-              tamano: 20,
-            )
-          ],),
-      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: colors.primary)
+        ),
+        height: MediaQuery.of(context).size.height *0.1,
+        child: InkWell(
+          onTap: () async {
+            await nuevoDetalle(detalleACrear);
+          },
+          child: Center(child: Text('Crear detalle', style: TextStyle(color: colors.primary),)),
+        ),
+      )
     );
   }
 
