@@ -8,16 +8,16 @@ import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 
-import '../../../config/router/app_router.dart';
+import '../../../../config/router/app_router.dart';
 
-class EditMetodosAplicacionPage extends StatefulWidget {
-  const EditMetodosAplicacionPage({super.key});
+class EditMetodosAplicacionDesktop extends StatefulWidget {
+  const EditMetodosAplicacionDesktop({super.key});
 
   @override
-  State<EditMetodosAplicacionPage> createState() => _EditMetodosAplicacionPageState();
+  State<EditMetodosAplicacionDesktop> createState() => _EditMetodosAplicacionDesktopState();
 }
 
-class _EditMetodosAplicacionPageState extends State<EditMetodosAplicacionPage> {
+class _EditMetodosAplicacionDesktopState extends State<EditMetodosAplicacionDesktop> {
   final _codController = TextEditingController();
   final _descripcionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();

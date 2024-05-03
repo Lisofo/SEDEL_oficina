@@ -28,12 +28,20 @@ export 'package:sedel_oficina_maqueta/pages/gestion/materiales/edit%20materiales
 export 'package:sedel_oficina_maqueta/pages/gestion/materiales/lotes.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/materiales/detalles_materiales.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/materiales/habilitaciones_materiales.dart';
-export 'package:sedel_oficina_maqueta/pages/gestion/metodosAplicacion/metodos_aplicacion.dart';
-export 'package:sedel_oficina_maqueta/pages/gestion/metodosAplicacion/edit_metodos_aplicacion.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/metodosAplicacion/metodos_aplicacion_desktop.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/metodosAplicacion/editMetodoAplicacion/edit_metodos_aplicacion_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/controles/controles.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/controles/edit_controles.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/marcas/marcas_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/marcas/editmarcas/edit_marcas_desktop.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/marcas/editmarcas/edit_marcas.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/marcas/marcas.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/metodosAplicacion/editMetodoAplicacion/edit_metodos_aplicacion.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/metodosAplicacion/metodos_aplicacion.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/tareas/edit%20Tareas/edit_tareas.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/tareas/tareas.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/tecnicos/edit%20Tecnicos/edit_tecnicos.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/tecnicos/tecnicos.dart';
 
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/password/password_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/addUsuario/add_ususario_mobile.dart';

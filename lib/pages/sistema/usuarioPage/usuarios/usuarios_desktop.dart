@@ -168,38 +168,34 @@ class _UsuariosDesktopState extends State<UsuariosDesktop> {
                 ),
               ),
             ),
-            Flex(
-              direction: Axis.vertical,
-              children: [Flexible(
-                flex: 4,
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView.builder(
-                    itemCount: usuarios.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: colors.primary,
-                            child: Text(
-                              usuarios[index].usuarioId.toString(),
-                              style: const TextStyle(color: Colors.white),
-                            ),
+            Flexible(
+              flex: 4,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: ListView.builder(
+                  itemCount: usuarios.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: colors.primary,
+                          child: Text(
+                            usuarios[index].usuarioId.toString(),
+                            style: const TextStyle(color: Colors.white),
                           ),
-                          title: Text('${usuarios[index].nombre} ${usuarios[index].apellido}'),
-                          subtitle: Text(usuarios[index].login),
-                          onTap: () {
-                            Provider.of<OrdenProvider>(context, listen: false)
-                                .setUsuario(usuarios[index]);
-                            router.push('/editUsuarios');
-                          },
                         ),
-                      );
-                    },
-                  ),
+                        title: Text('${usuarios[index].nombre} ${usuarios[index].apellido}'),
+                        subtitle: Text(usuarios[index].login),
+                        onTap: () {
+                          Provider.of<OrdenProvider>(context, listen: false)
+                              .setUsuario(usuarios[index]);
+                          router.push('/editUsuarios');
+                        },
+                      ),
+                    );
+                  },
                 ),
               ),
-              ]
             )
           ],
         ),

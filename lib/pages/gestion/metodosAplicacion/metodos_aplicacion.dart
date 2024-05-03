@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
-import 'package:sedel_oficina_maqueta/models/revision_materiales.dart';
-import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
-import 'package:sedel_oficina_maqueta/services/materiales_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
-import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
-import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
-import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
+import 'package:sedel_oficina_maqueta/pages/gestion/metodosAplicacion/metodos_aplicacion_mobile.dart';
+import 'package:sedel_oficina_maqueta/pages/pages.dart';
 
 class MetodosAplicacionPage extends StatefulWidget {
   const MetodosAplicacionPage({super.key});
@@ -17,130 +10,19 @@ class MetodosAplicacionPage extends StatefulWidget {
 }
 
 class _MetodosAplicacionPageState extends State<MetodosAplicacionPage> {
-  late List<MetodoAplicacion> metodos = [];
-  final TextEditingController _descripcionController = TextEditingController();
-  final TextEditingController _codMetodoController = TextEditingController();
-
-  
-  
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-    final token = context.watch<OrdenProvider>().token;
     return SafeArea(
-      child: Scaffold(
-        appBar: AppBarDesktop(titulo: 'Metodos de aplicación',),
-        drawer: const Drawer(
-          child: BotonesDrawer(),
-        ),
-        body: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        const Text('Codigo: '),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        SizedBox(
-                          width: 300,
-                          child: CustomTextFormField(
-                            controller: _codMetodoController,
-                            maxLines: 1,
-                            label: 'Codigo',
-                            onFieldSubmitted: (value) async {
-                              await buscar(context, token);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20,),
-                    Row(
-                      children: [
-                        const Text('Descripcion: '),
-                        SizedBox(
-                          width: 300,
-                          child: CustomTextFormField(
-                            controller: _descripcionController,
-                            maxLines: 1,
-                            label: 'Descripcion',
-                            onFieldSubmitted: (value) async {
-                              await buscar(context, token);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10,),
-                    Center(
-                      child: CustomButton(
-                        onPressed: () async {
-                            await buscar(context, token);
-                          },
-                        text: 'Buscar',
-                        tamano: 20,
-                      ),
-                    ),
-                    const Spacer(),
-                    Center(
-                      child: CustomButton(
-                          onPressed: () {
-                            Provider.of<OrdenProvider>(context, listen: false).clearSelectedMetodo();
-                            router.push('/editMetodosAplicacion');
-                          },
-                          text: 'Agregar metodo',
-                          tamano: 20,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Flexible(
-              flex: 4,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: ListView.builder(
-                  itemCount: metodos.length,
-                  itemBuilder: (context, i) {
-                    var metodo = metodos[i];
-                    return Card(
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: colors.primary,
-                          child: Text(
-                            metodo.codMetodoAplicacion,
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        title: Text(metodos[i].descripcion),
-                        onTap: () {
-                          Provider.of<OrdenProvider>(context, listen: false).setMetodo(metodo);
-                          router.push('/editMetodosAplicacion');
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
+      child: Scaffold(body: LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth < 800) {
+            return const MetodosAplicacionMobile();
+          } else if (constraints.maxWidth > 900) {
+            return const MetodosAplicacionDesktop();
+          }
+          return const MetodosAplicacionDesktop();
+        },
+      )),
     );
-  }
-
-  Future<void> buscar(BuildContext context, String token) async {
-    List<MetodoAplicacion> results = await MaterialesServices().getMetodosAplicacion(
-        context, _descripcionController.text, _codMetodoController.text, token);
-    setState(() {
-      metodos = results;
-    });
   }
 }

@@ -31,8 +31,8 @@ class _EditPlagasPageState extends State<EditPlagasPage> {
   @override
   void initState() {
     super.initState();
-    plagaSeleccionada =context.watch<OrdenProvider>().plaga;
-    token = context.watch<OrdenProvider>().token;
+    plagaSeleccionada =context.read<OrdenProvider>().plaga;
+    token = context.read<OrdenProvider>().token;
   }
 
   @override
