@@ -8,18 +8,18 @@ import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 
-import '../../../services/plaga_services.dart';
-import '../../../widgets/appbar_desktop.dart';
-import '../../../widgets/drawer.dart';
+import '../../../../services/plaga_services.dart';
+import '../../../../widgets/appbar_desktop.dart';
+import '../../../../widgets/drawer.dart';
 
-class EditPlagasPage extends StatefulWidget {
-  const EditPlagasPage({super.key});
+class EditPlagasDesktop extends StatefulWidget {
+  const EditPlagasDesktop({super.key});
 
   @override
-  State<EditPlagasPage> createState() => _EditPlagasPageState();
+  State<EditPlagasDesktop> createState() => _EditPlagasDesktopState();
 }
 
-class _EditPlagasPageState extends State<EditPlagasPage> {
+class _EditPlagasDesktopState extends State<EditPlagasDesktop> {
   final _plagaServices = PlagaServices();
   final _codController = TextEditingController();
   final _descripcionController = TextEditingController();

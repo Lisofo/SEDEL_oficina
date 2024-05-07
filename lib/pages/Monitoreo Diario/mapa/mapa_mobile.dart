@@ -214,7 +214,7 @@ class _MapaPageMobileState extends State<MapaPageMobile>
                 SizedBox(
                   width: MediaQuery.of(context).size.width *0.9,
                   height:
-                      MediaQuery.of(context).size.height * 0.55,
+                      MediaQuery.of(context).size.height * 0.45,
                   child: ListView.builder(
                       itemCount: ubicacionesFiltradas.length,
                       itemBuilder: (context, i) {

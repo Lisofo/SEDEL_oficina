@@ -3,6 +3,11 @@
         android:label="sedel_oficina_maqueta"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+        <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+        <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+        <uses-permission android:name="android.permission.INTERNET"/>
+        
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -30,6 +35,6 @@
             android:name="flutterEmbedding"
             android:value="2" />
             <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyDXT7F5CCCKNAok1xCYtxDX0sztOnQellM"/>
+               android:value="AIzaSyA-Qk4ZKtKqePitVZrxSQavqxnDC4kxoug"/>
     </application>
 </manifest>

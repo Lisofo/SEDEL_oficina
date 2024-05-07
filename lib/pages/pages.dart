@@ -9,8 +9,8 @@ export 'package:sedel_oficina_maqueta/pages/PyR/ordenesPlanificacion/orden/orden
 export 'package:sedel_oficina_maqueta/pages/PyR/ordenesPlanificacion/edit%20Orden/edit_orden.dart';
 export 'package:sedel_oficina_maqueta/pages/PyR/ordenesPlanificacion/edit%20Orden/edit_orden_desktop.dart';
 
-export 'package:sedel_oficina_maqueta/pages/gestion/plagas/plagas.dart';
-export 'package:sedel_oficina_maqueta/pages/gestion/plagas/edit_plagas.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/plagas/plagas_desktop.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/plagas/editPlagas/edit_plagas_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/tareas/tareas_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/tareas/edit%20Tareas/edit_tareas_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/tecnicos/tecnicos_desktop.dart';
@@ -40,9 +40,11 @@ export 'package:sedel_oficina_maqueta/pages/gestion/tareas/edit%20Tareas/edit_ta
 export 'package:sedel_oficina_maqueta/pages/gestion/tareas/tareas.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/tecnicos/edit%20Tecnicos/edit_tecnicos.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/tecnicos/tecnicos.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/plagas/editPlagas/edit_plagas.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/plagas/plagas.dart';
 
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/password/password_desktop.dart';
-export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/addUsuario/add_ususario_mobile.dart';
+export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/addUsuario/add_usuario_mobile.dart';
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/usuarios/usuarios_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/clientes/establecer_clientes_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/perfiles/establecer_perfiles_desktop.dart';
