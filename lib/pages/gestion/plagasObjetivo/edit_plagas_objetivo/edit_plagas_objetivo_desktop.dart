@@ -10,16 +10,16 @@ import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 
 import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
-import '../../../widgets/drawer.dart';
+import '../../../../widgets/drawer.dart';
 
-class EditPlagasObjetivoPage extends StatefulWidget {
-  const EditPlagasObjetivoPage({super.key});
+class EditPlagasObjetivoDesktop extends StatefulWidget {
+  const EditPlagasObjetivoDesktop({super.key});
 
   @override
-  State<EditPlagasObjetivoPage> createState() => _EditPlagasObjetivoPageState();
+  State<EditPlagasObjetivoDesktop> createState() => _EditPlagasObjetivoDesktopState();
 }
 
-class _EditPlagasObjetivoPageState extends State<EditPlagasObjetivoPage> {
+class _EditPlagasObjetivoDesktopState extends State<EditPlagasObjetivoDesktop> {
   final _codController = TextEditingController();
   final _descripcionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -35,7 +35,7 @@ class _EditPlagasObjetivoPageState extends State<EditPlagasObjetivoPage> {
 
   cargarDatos(){
     plagaSeleccionada = context.read<OrdenProvider>().plagaObjetivo;
-    token = context.watch<OrdenProvider>().token;
+    token = context.read<OrdenProvider>().token;
   }
 
   @override

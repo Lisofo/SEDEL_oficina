@@ -19,8 +19,8 @@ export 'package:sedel_oficina_maqueta/pages/gestion/clientes/busqueda/clientes.d
 export 'package:sedel_oficina_maqueta/pages/gestion/clientes/busqueda/clientes_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/clientes/edit/edit_clientes.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/clientes/ptos_inspeccion/ptos_inspeccion_cliente.dart';
-export 'package:sedel_oficina_maqueta/pages/gestion/plagasObjetivo/plagas_objetivo.dart';
-export 'package:sedel_oficina_maqueta/pages/gestion/plagasObjetivo/edit_plagas_objetivo.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/plagasObjetivo/plagas_objetivo_desktop.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/plagasObjetivo/edit_plagas_objetivo/edit_plagas_objetivo_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/servicios/servicios.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/servicios/edit_servicios.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/materiales/materiales/materiales.dart';
@@ -42,6 +42,8 @@ export 'package:sedel_oficina_maqueta/pages/gestion/tecnicos/edit%20Tecnicos/edi
 export 'package:sedel_oficina_maqueta/pages/gestion/tecnicos/tecnicos.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/plagas/editPlagas/edit_plagas.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/plagas/plagas.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/plagasObjetivo/edit_plagas_objetivo/edit_plagas_objetivo.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/plagasObjetivo/plagas_objetivo.dart';
 
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/password/password_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/addUsuario/add_usuario_mobile.dart';

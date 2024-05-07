@@ -104,7 +104,7 @@ class _EditPlagasMobileState extends State<EditPlagasMobile> {
                       await postPut(context);
                     break;
                     case 1:
-                      borrarPlaga(plagaSeleccionada);
+                      await borrarPlaga(plagaSeleccionada);
                     break;
                   }
                 },
