@@ -245,7 +245,8 @@ class _MapaPageMobileState extends State<MapaPageMobile>
                     switch (buttonIndex){
                       case 0: 
                         ubicaciones = await UbicacionesServices().getUbicaciones(context,selectedTecnico!.tecnicoId,
-                        selectedDate.toIso8601String(),selectedDate.add(const Duration(days: 1)).toIso8601String(),token);       
+                        selectedDate.toIso8601String(),
+                        selectedDate.add(const Duration(days: 1)).toIso8601String(),token);       
                         cargarUbicacion();
                         cargarMarkers();
                         setState(() {});
@@ -337,12 +338,19 @@ class _MapaPageMobileState extends State<MapaPageMobile>
       var coord = ubicacion.ubicacion?.split(',');
 
       if (ubicacion.seleccionado) {
-        print('mostrando ${ubicacion.logId}');
-        addMarker(
+        //print('mostrando ${ubicacion.logId}');
+        //print('Coordenates: $coord'); // Add this line for debugging
+        if (coord != null && coord.length >= 2) {
+          // Ensure that coord contains at least two elements before parsing
+          addMarker(
             ubicacion.logId.toString(),
-            LatLng(double.parse(coord![0]), double.parse(coord[1])),
+            LatLng(double.parse(coord[0]), double.parse(coord[1])),
             'Cliente: ${ubicacion.cliente.nombre}',
-            'Tecnico: ${ubicacion.tecnico.nombre}');
+            'Tecnico: ${ubicacion.tecnico.nombre}'
+          );
+        } else {
+          print('Error: Coordenates not properly formatted'); // Add this line for debugging
+        }
       }
     }
   }
