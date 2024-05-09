@@ -9,14 +9,14 @@ import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 
-class EditControlesPage extends StatefulWidget {
-  const EditControlesPage({super.key});
+class EditControlesDesktop extends StatefulWidget {
+  const EditControlesDesktop({super.key});
 
   @override
-  State<EditControlesPage> createState() => _EditControlesPageState();
+  State<EditControlesDesktop> createState() => _EditControlesDesktopState();
 }
 
-class _EditControlesPageState extends State<EditControlesPage> {
+class _EditControlesDesktopState extends State<EditControlesDesktop> {
   late Control controlSeleccionado = Control.empty();
   late String token = '';
   final _formKey = GlobalKey<FormState>();

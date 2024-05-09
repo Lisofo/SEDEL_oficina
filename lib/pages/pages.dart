@@ -21,16 +21,16 @@ export 'package:sedel_oficina_maqueta/pages/gestion/clientes/edit/edit_clientes.
 export 'package:sedel_oficina_maqueta/pages/gestion/clientes/ptos_inspeccion/ptos_inspeccion_cliente.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/plagasObjetivo/plagas_objetivo_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/plagasObjetivo/edit_plagas_objetivo/edit_plagas_objetivo_desktop.dart';
-export 'package:sedel_oficina_maqueta/pages/gestion/servicios/servicios.dart';
-export 'package:sedel_oficina_maqueta/pages/gestion/servicios/edit_servicios.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/servicios/servicios_desktop.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/servicios/editServicios/edit_servicios_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/materiales/materiales/materiales.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/materiales/edit%20materiales/edit_materiales.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/materiales/lotes/lotes.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/materiales/detalles/detalles.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/materiales/habilitaciones/habilitaciones_materiales.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/metodosAplicacion/metodos_aplicacion.dart';
-export 'package:sedel_oficina_maqueta/pages/gestion/controles/controles.dart';
-export 'package:sedel_oficina_maqueta/pages/gestion/controles/edit_controles.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/controles/controles_desktop.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/controles/editControles/edit_controles_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/marcas/marcas_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/marcas/editmarcas/edit_marcas_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/marcas/editmarcas/edit_marcas.dart';
@@ -44,6 +44,10 @@ export 'package:sedel_oficina_maqueta/pages/gestion/plagas/editPlagas/edit_plaga
 export 'package:sedel_oficina_maqueta/pages/gestion/plagas/plagas.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/plagasObjetivo/edit_plagas_objetivo/edit_plagas_objetivo.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/plagasObjetivo/plagas_objetivo.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/controles/controles.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/controles/editControles/edit_controles.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/servicios/editServicios/edit_servicios.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/servicios/servicios.dart';
 
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/password/password_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/addUsuario/add_usuario_mobile.dart';

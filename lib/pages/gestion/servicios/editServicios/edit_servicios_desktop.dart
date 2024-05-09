@@ -9,16 +9,16 @@ import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 
 import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
-import '../../../widgets/drawer.dart';
+import '../../../../widgets/drawer.dart';
 
-class EditServiciosPage extends StatefulWidget {
-  const EditServiciosPage({super.key});
+class EditServiciosDesktop extends StatefulWidget {
+  const EditServiciosDesktop({super.key});
 
   @override
-  State<EditServiciosPage> createState() => _EditServiciosPageState();
+  State<EditServiciosDesktop> createState() => _EditServiciosDesktopState();
 }
 
-class _EditServiciosPageState extends State<EditServiciosPage> {
+class _EditServiciosDesktopState extends State<EditServiciosDesktop> {
   final _codController = TextEditingController();
   final _descripcionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
