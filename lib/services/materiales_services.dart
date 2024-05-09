@@ -1211,15 +1211,19 @@ class MaterialesServices {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
-            if(e.response!.statusCode == 403){
-              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
-              final errors = responseData['errors'] as List<dynamic>;
-              final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+            if (e.response!.statusCode == 403) {
+              showErrorDialog(context, 'Error: ${responseData['message']}');
+            } else {
+              final errors = responseData['errors'] as List<dynamic>?; // Cambio aquí
+              if (errors != null) {
+                final errorMessages = errors.map((error) {
+                  return "Error: ${error['message']}";
+                }).toList();
+                showErrorDialog(context, errorMessages.join('\n'));
+              } else {
+                showErrorDialog(context, 'Error: ${e.response!.data}');
+              }
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
@@ -1229,5 +1233,6 @@ class MaterialesServices {
       }
     }
   }
+
 
 }
