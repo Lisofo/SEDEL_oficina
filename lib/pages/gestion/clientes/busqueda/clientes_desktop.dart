@@ -231,30 +231,25 @@ class _ClientesDesktopState extends State<ClientesDesktop> {
               ),
             ),
           ),
-          Flex(
-            direction: Axis.vertical,
-            children: [Flexible(
-              flex: 4,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: ListView.builder(
-                  itemCount: searchResults.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: ListTile(
-                        title: Text(searchResults[index].nombre),
-                        subtitle: Text('Codigo: ${searchResults[index].codCliente} \nTelefono: ${searchResults[index].telefono1}'),
-                        onTap: () {
-                          Provider.of<OrdenProvider>(context, listen: false).setCliente(searchResults[index], '');
-                          router.push('/editClientes');
-                        },
-                      ),
-                    );
-                  },
-                ),
+          Flexible(
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: ListView.builder(
+                itemCount: searchResults.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    child: ListTile(
+                      title: Text(searchResults[index].nombre),
+                      subtitle: Text('Codigo: ${searchResults[index].codCliente} \nTelefono: ${searchResults[index].telefono1}'),
+                      onTap: () {
+                        Provider.of<OrdenProvider>(context, listen: false).setCliente(searchResults[index], '');
+                        router.push('/editClientes');
+                      },
+                    ),
+                  );
+                },
               ),
             ),
-            ]
           )
         ],
       )
