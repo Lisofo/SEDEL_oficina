@@ -53,103 +53,101 @@ class _EditControlesMobileState extends State<EditControlesMobile> {
       appBar: AppBarMobile(
         titulo: 'Controles',
       ),
-      body: Container(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  const Text("Grupo"),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    child: CustomTextFormField(
-                      maxLines: 1,
-                      label: 'Grupo',
-                      controller: _grupoController,
-                    ),
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  const Text("Control    "),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    child: CustomTextFormField(
-                      label: 'Control',
-                      controller: _preguntaController,
-                      maxLength: 500,
-                      maxLines: 5,
-                    ),
-                  )
-                ],
-              ),
-              const Spacer(),
-              if (controlSeleccionado.controlId != 0) ...[
-                BottomNavigationBar(
-                  currentIndex: buttonIndex,
-                  onTap: (index) async {
-                    buttonIndex = index;
-                    switch (buttonIndex) {
-                      case 0:
-                        await postPut(context);
-
-                        break;
-                      case 1:
-                        await borrarControl(controlSeleccionado);
-                        break;
-                    }
-                  },
-                  showUnselectedLabels: true,
-                  selectedItemColor: colors.primary,
-                  unselectedItemColor: Colors.grey,
-                  items: const [
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.save),
-                      label: 'Guardar',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.delete),
-                      label: 'Eliminar',
-                    ),
-                  ],
-                ),
-              ] else ...[
-                Container(
-                  decoration:
-                      BoxDecoration(border: Border.all(color: colors.primary)),
-                  height: MediaQuery.of(context).size.height * 0.1,
-                  child: InkWell(
-                    onTap: () async {
-                      await postPut(context);
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.save,
-                          color: colors.primary,
-                        ),
-                        Text(
-                          'Guardar',
-                          style: TextStyle(color: colors.primary),
-                        )
-                      ],
-                    ),
+      body: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Text("Grupo"),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: CustomTextFormField(
+                    maxLines: 1,
+                    label: 'Grupo',
+                    controller: _grupoController,
                   ),
                 )
               ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Text("Control    "),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: CustomTextFormField(
+                    label: 'Control',
+                    controller: _preguntaController,
+                    maxLength: 500,
+                    maxLines: 5,
+                  ),
+                )
+              ],
+            ),
+            const Spacer(),
+            if (controlSeleccionado.controlId != 0) ...[
+              BottomNavigationBar(
+                currentIndex: buttonIndex,
+                onTap: (index) async {
+                  buttonIndex = index;
+                  switch (buttonIndex) {
+                    case 0:
+                      await postPut(context);
+      
+                      break;
+                    case 1:
+                      await borrarControl(controlSeleccionado);
+                      break;
+                  }
+                },
+                showUnselectedLabels: true,
+                selectedItemColor: colors.primary,
+                unselectedItemColor: Colors.grey,
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.save),
+                    label: 'Guardar',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.delete),
+                    label: 'Eliminar',
+                  ),
+                ],
+              ),
+            ] else ...[
+              Container(
+                decoration:
+                    BoxDecoration(border: Border.all(color: colors.primary)),
+                height: MediaQuery.of(context).size.height * 0.1,
+                child: InkWell(
+                  onTap: () async {
+                    await postPut(context);
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.save,
+                        color: colors.primary,
+                      ),
+                      Text(
+                        'Guardar',
+                        style: TextStyle(color: colors.primary),
+                      )
+                    ],
+                  ),
+                ),
+              )
             ],
-          ),
+          ],
         ),
       ),
     );
