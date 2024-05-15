@@ -13,7 +13,7 @@ import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-  import 'dart:html' as html;
+import 'dart:html' as html;
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 
