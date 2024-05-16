@@ -127,7 +127,7 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
         title: const Text('Ptos de inspección', style: TextStyle(color: Colors.white),),
         backgroundColor: colors.primary,
         iconTheme: IconThemeData(
-          color: colors.background
+          color: colors.surface
         ),
         actions: [
           IconButton(

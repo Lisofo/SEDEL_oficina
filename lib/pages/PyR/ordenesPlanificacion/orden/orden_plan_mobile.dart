@@ -163,8 +163,8 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextButton(
                             style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(colors.secondary),
-                              shape: MaterialStatePropertyAll(ContinuousRectangleBorder(borderRadius: BorderRadius.circular(20)))
+                              backgroundColor: WidgetStatePropertyAll(colors.secondary),
+                              shape: WidgetStatePropertyAll(ContinuousRectangleBorder(borderRadius: BorderRadius.circular(20)))
                             ),
                             onPressed: () async {
                               final pickedDate = await showDateRangePicker(

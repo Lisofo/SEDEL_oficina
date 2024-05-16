@@ -209,9 +209,9 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
             children: [
               TextButton(
                 style: ButtonStyle(
-                  maximumSize: MaterialStatePropertyAll(Size.fromWidth(MediaQuery.of(context).size.width * 0.5 )),
-                  backgroundColor: MaterialStatePropertyAll(colors.secondary),
-                  shape: MaterialStatePropertyAll(ContinuousRectangleBorder(borderRadius: BorderRadius.circular(20)))
+                  maximumSize: WidgetStatePropertyAll(Size.fromWidth(MediaQuery.of(context).size.width * 0.5 )),
+                  backgroundColor: WidgetStatePropertyAll(colors.secondary),
+                  shape: WidgetStatePropertyAll(ContinuousRectangleBorder(borderRadius: BorderRadius.circular(20)))
                 ),
                   onPressed: () async {
                     final pickedDate = await showDateRangePicker(
@@ -239,7 +239,7 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
                 icon: const Icon(Icons.search_outlined),
                 tooltip: 'Buscar',
                 style: const ButtonStyle(
-                    iconColor: MaterialStatePropertyAll(Colors.black)),
+                    iconColor: WidgetStatePropertyAll(Colors.black)),
               ),
             ],
           ),
@@ -278,7 +278,7 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
               IconButton(
                 icon: const Icon(Icons.start),
                 style:  ButtonStyle(
-                    iconColor: MaterialStatePropertyAll(colors.primary)),
+                    iconColor: WidgetStatePropertyAll(colors.primary)),
                 onPressed: () {
                   nuevaFecha = selectedDate.start;  
                   controller.jumpTo(selectedDate.start);
@@ -288,7 +288,7 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
               IconButton(
                 icon: const Icon(Icons.calendar_view_day),
                 style:  ButtonStyle(
-                    iconColor: MaterialStatePropertyAll(colors.primary)),
+                    iconColor: WidgetStatePropertyAll(colors.primary)),
                 onPressed: () {
                   controller.setColumns(1);
                   columnas = 1;
@@ -298,14 +298,14 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
               // IconButton(
               //   icon: const Icon(Icons.calendar_view_month_outlined),
               //   style:  ButtonStyle(
-              //       iconColor: MaterialStatePropertyAll(colors.primary)),
+              //       iconColor: WidgetStatePropertyAll(colors.primary)),
               //   onPressed: () => controller.setColumns(30),
               //   tooltip: 'Vista mensual',
               // ),
               IconButton(
                 icon: const Icon(Icons.calendar_view_week),
                 style:  ButtonStyle(
-                    iconColor: MaterialStatePropertyAll(colors.primary)),
+                    iconColor: WidgetStatePropertyAll(colors.primary)),
                 onPressed: () {
                   controller.setColumns(7);
                   columnas = 7;
@@ -315,14 +315,14 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
               IconButton(
                 icon: const Icon(Icons.zoom_in),
                 style:  ButtonStyle(
-                    iconColor: MaterialStatePropertyAll(colors.primary)),
+                    iconColor: WidgetStatePropertyAll(colors.primary)),
                 onPressed: () =>
                     controller.setCellHeight(controller.cellHeight + 10),
               ),
               IconButton(
                 icon: const Icon(Icons.zoom_out),
                 style:  ButtonStyle(
-                    iconColor: MaterialStatePropertyAll(colors.primary)),
+                    iconColor: WidgetStatePropertyAll(colors.primary)),
                 onPressed: () =>
                     controller.setCellHeight(controller.cellHeight - 10),
               ),

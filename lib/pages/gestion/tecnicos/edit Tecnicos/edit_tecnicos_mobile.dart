@@ -147,7 +147,7 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     IconButton(
-                      style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(colors.secondary)),
+                      style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(colors.secondary)),
                       tooltip: 'Subir foto',
                       onPressed: () async {
                         await _uploadPhoto1();
@@ -175,7 +175,7 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     IconButton(
-                      style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(colors.secondary)),
+                      style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(colors.secondary)),
                       tooltip: 'Subir firma',
                       onPressed: () async {
                         await _uploadPhoto2();

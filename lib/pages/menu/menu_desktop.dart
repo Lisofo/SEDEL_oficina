@@ -51,7 +51,7 @@ class _MenuDesktopState extends State<MenuDesktop> {
             elevation: 0,
             child: IconButton.filledTonal(
               style: ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll(colors.primary)
+                backgroundColor: WidgetStatePropertyAll(colors.primary)
               ),
                 onPressed: () {
                   logout();

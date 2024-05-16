@@ -58,8 +58,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
                 ),
                 indentation: const Indentation(style: IndentStyle.squareJoint),
                 onItemTap: (item) {
-                  if (kDebugMode) print("Item tapped: ${item.key}");
-              
+                  if (kDebugMode) print("Item tapped: ${item.key}");        
                   if (showSnackBar) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

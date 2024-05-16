@@ -89,7 +89,7 @@ class _MarcasPageMobileState extends State<MarcasPageMobile> {
                   children: [
                     TextButton(
                       style: ButtonStyle(
-                        backgroundColor: MaterialStatePropertyAll(colors.secondary)
+                        backgroundColor: WidgetStatePropertyAll(colors.secondary)
                       ),
                         onPressed: () async {
                           final pickedDate = await showDateRangePicker(
