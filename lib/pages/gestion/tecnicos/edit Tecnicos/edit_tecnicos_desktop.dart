@@ -305,9 +305,9 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
               child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                 ElevatedButton(
                   style: const ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll(Colors.white),
-                    elevation: MaterialStatePropertyAll(10),
-                    shape: MaterialStatePropertyAll(
+                    backgroundColor: WidgetStatePropertyAll(Colors.white),
+                    elevation: WidgetStatePropertyAll(10),
+                    shape: WidgetStatePropertyAll(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.horizontal(
                           left: Radius.circular(50),
@@ -335,9 +335,9 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
                 if (tieneId)
                   ElevatedButton(
                     style: const ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll(Colors.white),
-                    elevation: MaterialStatePropertyAll(10),
-                    shape: MaterialStatePropertyAll(
+                    backgroundColor: WidgetStatePropertyAll(Colors.white),
+                    elevation: WidgetStatePropertyAll(10),
+                    shape: WidgetStatePropertyAll(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.horizontal(
                           left: Radius.circular(50),

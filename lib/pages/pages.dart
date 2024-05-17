@@ -1,4 +1,3 @@
-
 export 'package:sedel_oficina_maqueta/pages/login/login.dart';
 export 'package:sedel_oficina_maqueta/pages/menu/menu.dart';
 
@@ -48,6 +47,9 @@ export 'package:sedel_oficina_maqueta/pages/gestion/controles/controles.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/controles/editControles/edit_controles.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/servicios/editServicios/edit_servicios.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/servicios/servicios.dart';
+
+export 'package:sedel_oficina_maqueta/pages/analisis/informes/informes.dart';
+
 
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/password/password_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/addUsuario/add_usuario_mobile.dart';

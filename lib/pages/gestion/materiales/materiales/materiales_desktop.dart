@@ -81,9 +81,9 @@ class _MaterialesPageDesktopState extends State<MaterialesPageDesktop> {
                     Center(
                       child: ElevatedButton(
                         style: const ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll(Colors.white),
-                          elevation: MaterialStatePropertyAll(10),
-                          shape: MaterialStatePropertyAll(
+                          backgroundColor: WidgetStatePropertyAll(Colors.white),
+                          elevation: WidgetStatePropertyAll(10),
+                          shape: WidgetStatePropertyAll(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.horizontal(
                                 left: Radius.circular(50),
@@ -112,9 +112,9 @@ class _MaterialesPageDesktopState extends State<MaterialesPageDesktop> {
                     Center(
                       child: ElevatedButton(
                         style: const ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll(Colors.white),
-                          elevation: MaterialStatePropertyAll(10),
-                          shape: MaterialStatePropertyAll(
+                          backgroundColor: WidgetStatePropertyAll(Colors.white),
+                          elevation: WidgetStatePropertyAll(10),
+                          shape: WidgetStatePropertyAll(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.horizontal(
                                 left: Radius.circular(50),

@@ -167,4 +167,8 @@ final router = GoRouter(initialLocation: '/', routes: [
     path: '/editClientes',
     builder: (context, state) => const EditClientesPage(),
   ),
+  GoRoute(
+    path: '/informes',
+    builder: (context, state) => const InformesPage (),
+  ),
 ]);

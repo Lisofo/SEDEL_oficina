@@ -227,7 +227,7 @@ class _CustomizedTimetableDesktopState extends State<CustomizedTimetableDesktop>
             icon: const Icon(Icons.search_outlined),
             tooltip: 'Buscar',
             style: const ButtonStyle(
-                iconColor: MaterialStatePropertyAll(Colors.white)),
+                iconColor: WidgetStatePropertyAll(Colors.white)),
           ),
           const SizedBox(width: 10,),
           Text('${DateFormat("EEEEE d MMMM", 'es').format(selectedDate.start)} - ${DateFormat("EEEEE d MMMM", 'es').format(selectedDate.end)}',
@@ -259,7 +259,7 @@ class _CustomizedTimetableDesktopState extends State<CustomizedTimetableDesktop>
           IconButton(
             icon: const Icon(Icons.start),
             style: const ButtonStyle(
-                iconColor: MaterialStatePropertyAll(Colors.white)),
+                iconColor: WidgetStatePropertyAll(Colors.white)),
             onPressed: () {
               nuevaFecha = selectedDate.start;  
               controller.jumpTo(selectedDate.start);
@@ -269,35 +269,35 @@ class _CustomizedTimetableDesktopState extends State<CustomizedTimetableDesktop>
           IconButton(
             icon: const Icon(Icons.calendar_view_day),
             style: const ButtonStyle(
-                iconColor: MaterialStatePropertyAll(Colors.white)),
+                iconColor: WidgetStatePropertyAll(Colors.white)),
             onPressed: () => controller.setColumns(1),
             tooltip: 'Vista día',
           ),
           IconButton(
             icon: const Icon(Icons.calendar_view_month_outlined),
             style: const ButtonStyle(
-                iconColor: MaterialStatePropertyAll(Colors.white)),
+                iconColor: WidgetStatePropertyAll(Colors.white)),
             onPressed: () => controller.setColumns(30),
             tooltip: 'Vista mensual',
           ),
           IconButton(
             icon: const Icon(Icons.calendar_view_week),
             style: const ButtonStyle(
-                iconColor: MaterialStatePropertyAll(Colors.white)),
+                iconColor: WidgetStatePropertyAll(Colors.white)),
             onPressed: () => controller.setColumns(7),
             tooltip: 'Vista semanal',
           ),
           IconButton(
             icon: const Icon(Icons.zoom_in),
             style: const ButtonStyle(
-                iconColor: MaterialStatePropertyAll(Colors.white)),
+                iconColor: WidgetStatePropertyAll(Colors.white)),
             onPressed: () =>
                 controller.setCellHeight(controller.cellHeight + 10),
           ),
           IconButton(
             icon: const Icon(Icons.zoom_out),
             style: const ButtonStyle(
-                iconColor: MaterialStatePropertyAll(Colors.white)),
+                iconColor: WidgetStatePropertyAll(Colors.white)),
             onPressed: () =>
                 controller.setCellHeight(controller.cellHeight - 10),
           ),

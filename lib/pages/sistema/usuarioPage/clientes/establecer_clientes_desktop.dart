@@ -133,9 +133,9 @@ class _EstablecerClientesDesktopState extends State<EstablecerClientesDesktop> {
             children: [
               ElevatedButton(
                   style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll(Colors.white),
-                      elevation: MaterialStatePropertyAll(10),
-                      shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                      backgroundColor: WidgetStatePropertyAll(Colors.white),
+                      elevation: WidgetStatePropertyAll(10),
+                      shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                           borderRadius: BorderRadius.horizontal(
                               left: Radius.circular(50),
                               right: Radius.circular(50))))),

@@ -54,100 +54,98 @@ class _EditPlagasObjetivoMobileState extends State<EditPlagasObjetivoMobile> {
 
     return Scaffold(
       appBar: AppBarMobile(titulo: 'Plagas objetivo',),
-      body: Container(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  const Text("Codigo  "),
-                  const SizedBox(
-                    width: 1,
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    child: CustomTextFormField(
-                      maxLines: 1,
-                      label: 'Codigo',
-                      controller: _codController,
-                    ),
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  const Text("Descripcion  "),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    child: CustomTextFormField(
-                      label: 'Descripcion',
-                      maxLines: 4,
-                      controller: _descripcionController,
-                      maxLength: 100,
-                    ),
-                  )
-                ],
-              ),
-              const Spacer(),
-              if(plagaSeleccionada.plagaObjetivoId != 0)...[
-                  BottomNavigationBar(
-                  currentIndex: buttonIndex,
-                  onTap: (index) async {
-                    buttonIndex = index;
-                    switch (buttonIndex){
-                      case 0: 
-                        await postPut(context);
-                      break;
-                      case 1:
-                        await borrarPlaga(plagaSeleccionada);
-                      break;
-                    }
-                  },
-                  showUnselectedLabels: true,
-                  selectedItemColor: colors.primary,
-                  unselectedItemColor: Colors.grey,
-                  items: const [
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.save),
-                      label: 'Guardar',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.delete),
-                      label: 'Eliminar',
-                    ),
-                  ],
+      body: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Text("Codigo  "),
+                const SizedBox(
+                  width: 1,
                 ),
-                ] else ... [
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: colors.primary)
-                    ),
-                    height: MediaQuery.of(context).size.height *0.1,
-                    child: InkWell(
-                      onTap: () async{
-                        await postPut(context);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.save, color: colors.primary,),
-                          Text('Guardar', style: TextStyle(color: colors.primary),)
-                        ],
-                      ),
-                    ),
-                  )
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: CustomTextFormField(
+                    maxLines: 1,
+                    label: 'Codigo',
+                    controller: _codController,
+                  ),
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Text("Descripcion  "),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: CustomTextFormField(
+                    label: 'Descripcion',
+                    maxLines: 4,
+                    controller: _descripcionController,
+                    maxLength: 100,
+                  ),
+                )
+              ],
+            ),
+            const Spacer(),
+            if(plagaSeleccionada.plagaObjetivoId != 0)...[
+                BottomNavigationBar(
+                currentIndex: buttonIndex,
+                onTap: (index) async {
+                  buttonIndex = index;
+                  switch (buttonIndex){
+                    case 0: 
+                      await postPut(context);
+                    break;
+                    case 1:
+                      await borrarPlaga(plagaSeleccionada);
+                    break;
+                  }
+                },
+                showUnselectedLabels: true,
+                selectedItemColor: colors.primary,
+                unselectedItemColor: Colors.grey,
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.save),
+                    label: 'Guardar',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.delete),
+                    label: 'Eliminar',
+                  ),
                 ],
-            ],
-          ),
+              ),
+              ] else ... [
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: colors.primary)
+                  ),
+                  height: MediaQuery.of(context).size.height *0.1,
+                  child: InkWell(
+                    onTap: () async{
+                      await postPut(context);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.save, color: colors.primary,),
+                        Text('Guardar', style: TextStyle(color: colors.primary),)
+                      ],
+                    ),
+                  ),
+                )
+              ],
+          ],
         ),
       ),
     );

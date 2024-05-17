@@ -53,9 +53,9 @@ class _ButtonDelegateState extends State<ButtonDelegate> {
       children: [
         TextButton(
           style: ButtonStyle(
-            maximumSize: MaterialStatePropertyAll(Size.fromWidth(MediaQuery.of(context).size.width * 0.5 )),
-            backgroundColor: MaterialStatePropertyAll(colors.secondary),
-            shape: MaterialStatePropertyAll(ContinuousRectangleBorder(borderRadius: BorderRadius.circular(20)))
+            maximumSize: WidgetStatePropertyAll(Size.fromWidth(MediaQuery.of(context).size.width * 0.5 )),
+            backgroundColor: WidgetStatePropertyAll(colors.secondary),
+            shape: WidgetStatePropertyAll(ContinuousRectangleBorder(borderRadius: BorderRadius.circular(20)))
           ),
           child: selectedCliente.nombre == ''
               ? Text(
