@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/models/informes.dart';
@@ -153,7 +152,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
                   //   Text('Archivo: ${selectedNodeData.archivo}'),
                   //   // Agrega más campos si es necesario
                   // ],
-                  Container(
+                  SizedBox(
                     height: 600,
                     child: GridView.builder(
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2), 
