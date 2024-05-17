@@ -51,7 +51,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
     for (int i = 0; i < informes.length; i++) {
       var informe = informes[i];
       TreeNode node = TreeNode(
-        key: '${informe.objetoArbol}-${informe.nombre}',
+        key: informe.nombre,
         data: informe,
       );
       node.addAll(_convertInformeHijosToTreeNode(informe.hijos, '${informe.objetoArbol}-${informe.nombre}'));
@@ -65,7 +65,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
     for (int i = 0; i < hijos.length; i++) {
       var hijo = hijos[i];
       TreeNode node = TreeNode(
-        key: hijo.nombre != null ? '${hijo.objetoArbol}-${hijo.nombre}-Nivel:$i' : '${hijo.objetoArbol}-${hijo.informe}',
+        key: hijo.objetoArbol == 'informe' ? '${hijo.informe}' : '${hijo.nombre}',
         data: hijo,
       );
       node.addAll(_convertHijoHijosToTreeNode(hijo.hijos, '${hijo.objetoArbol}-${hijo.nombre}'));
@@ -79,7 +79,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
     for (int i = 0; i < hijos.length; i++) {
       var hijo = hijos[i];
       TreeNode node = TreeNode(
-        key: '$i-${hijo.objetoArbol}-${hijo.informe}',
+        key: hijo.informe,
         data: hijo,
       );
       node.addAll(_convertHijoHijosToTreeNode(hijo.hijos, '${hijo.objetoArbol}-${hijo.informe}'));
@@ -127,7 +127,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
                 color: colors.tertiary,
                 child: ListTile(
                   title: Text(node.key),
-                  subtitle: Text('Level ${node.level}'),
+                  // subtitle: Text('Level ${node.level}'),
                 ),
               ),
             ),
