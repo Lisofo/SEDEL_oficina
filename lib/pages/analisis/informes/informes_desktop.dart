@@ -24,6 +24,13 @@ class _InformesDesktopState extends State<InformesDesktop> {
   TreeNode sampleTree = TreeNode.root();
   dynamic selectedNodeData; // Variable para guardar los datos del nodo seleccionado
   late List<Parametro> parametros = [];
+  late String campoCliente = 'Cliente';
+  late String campoPlagaObjetivo = 'Plaga Objetivo';
+  late String campoFecha = 'Fecha';
+  late String campoFechaDesde = 'Fecha desde';
+  late String campoFechaHasta = 'Fecha hasta';
+  late String campoOrdenTrabajo = 'Orden de trabajo';
+  late String campoIdRevision = 'Id de Revision';
 
   @override
   void initState() {
@@ -106,7 +113,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
               onItemTap: (item) async {
                 if(item.data.objetoArbol == 'informe'){
                   parametros = await InformesServices().getParametros(context, token, item.data.informeId);
-                  print(parametros[0].parametroId);
+                  // print(parametros[0].parametroId);
                 }
                 setState(() {
                   selectedNodeData = item.data; // Actualizar los datos del nodo seleccionado
@@ -132,7 +139,13 @@ class _InformesDesktopState extends State<InformesDesktop> {
           Expanded(
             child: Column(
               children: [
+                const SizedBox(height: 10,),
                 const Text('Detalles del nodo seleccionado:'),
+                Divider(
+                  color: colors.primary,
+                  endIndent: 20,
+                  indent: 20,
+                ),
                 if (selectedNodeData != null) ...[
                   // if (selectedNodeData is Informe) ...[
                   //   Text('Nombre: ${selectedNodeData.nombre}'),
@@ -152,40 +165,58 @@ class _InformesDesktopState extends State<InformesDesktop> {
                   //   Text('Archivo: ${selectedNodeData.archivo}'),
                   //   // Agrega más campos si es necesario
                   // ],
-                  SizedBox(
-                    height: 600,
-                    child: GridView.builder(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2), 
-                      itemCount: parametros.length,
-                      itemBuilder: (context, i) {
-                        var parametro = parametros[i];
-                        return Card(
-                          color: colors.tertiary,
-                          child: Text(parametro.parametro),
-                        );
-                      }
-                    ),
-                  ),
-                  if(selectedNodeData.objetoArbol == 'informe')...[
-                    const Spacer(),
-                    BottomNavigationBar(
-                      showUnselectedLabels: true,
-                      selectedItemColor: colors.primary,
-                      unselectedItemColor: Colors.grey,
-                      items: const [
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.save_as),
-                          label: 'Guardar',
+                  if(parametros.isNotEmpty)...[
+                    SizedBox(
+                      height: 500,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: ListView.builder(
+                          itemCount: parametros.length,
+                          itemBuilder: (context, i) {
+                            var parametro = parametros[i];
+                            return Row(
+                              children: [
+                                TextButton(onPressed: (){}, child: Text(parametro.parametro)),
+                                const SizedBox(width: 30,),
+                                Text(parametro.comparador),
+                                const SizedBox(width: 30,),
+                                if(parametro.parametro == 'Orden de Trabajo')...[
+                                  Text(campoOrdenTrabajo)
+                                ] else if (parametro.parametro == 'Id de Revision')...[
+                                  Text(campoIdRevision)
+                                ] else if(parametro.parametro == 'Cliente')...[
+                                  Text(campoCliente)
+                                ] else if(parametro.parametro == 'Plaga Objetivo')...[
+                                  Text(campoPlagaObjetivo)
+                                ] else if (parametro.parametro == 'Fecha Hasta')...[
+                                  Text(campoFechaHasta)
+                                ]
+                              ],
+                            );
+                          }
                         ),
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.place),
-                          label: 'Puntos de inspeccion',
-                        ),
-                      ],
+                      ),
                     ),
+                    if(selectedNodeData.objetoArbol == 'informe')...[
+                      const Spacer(),
+                      BottomNavigationBar(
+                        showUnselectedLabels: true,
+                        selectedItemColor: colors.primary,
+                        unselectedItemColor: Colors.grey,
+                        items: const [
+                          BottomNavigationBarItem(
+                            icon: Icon(Icons.save_as),
+                            label: 'Guardar',
+                          ),
+                          BottomNavigationBarItem(
+                            icon: Icon(Icons.place),
+                            label: 'Puntos de inspeccion',
+                          ),
+                        ],
+                      ),
+                    ]
                   ]
                 ],
-                
               ],
             ),
           ),
