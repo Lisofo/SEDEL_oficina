@@ -60,6 +60,7 @@ class OrdenProvider with ChangeNotifier {
   String get username => _username;
   bool get pendientes => _pendientes;
   int? get statusCode => _statusCode;
+  List<RevisionPtoInspeccion> get _ptosInspeccionCompleta => listaPuntos;
 
   TipoPtosInspeccion get tipoPtosInspeccion => _tipoPtosInspeccion;
   List<RevisionPtoInspeccion> get ptosInspeccion => _ptosInspeccion;
@@ -332,6 +333,16 @@ class OrdenProvider with ChangeNotifier {
 
   void setRevisionId(int revision){
     _revisionId = revision;
+    notifyListeners();
+  }
+
+  void filtrarPuntosInspeccion1(String criterio) {
+    _ptosInspeccion = _ptosInspeccionCompleta.where((pto) => pto.codPuntoInspeccion.contains(criterio)).toList();
+    notifyListeners();
+  }
+
+  void filtrarPuntosInspeccion2(String criterio) {
+    _ptosInspeccion = _ptosInspeccionCompleta.where((pto) => pto.codigoBarra.contains(criterio)).toList();
     notifyListeners();
   }
 }
