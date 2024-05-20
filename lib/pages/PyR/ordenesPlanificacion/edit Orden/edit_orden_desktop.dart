@@ -284,15 +284,15 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                             ],
                                           ),
                                         ),
-                                        if (editarOrden)
+                                        if (editarOrden)...[
                                           TextButton.icon(
-                                              onPressed: () {
-                                                _selectDateOrden(context);
-                                              },
-                                              icon: const Icon(
-                                                  Icons.calendar_today),
-                                              label: const Text(
-                                                  'Editar fecha de la orden'))
+                                            onPressed: () {
+                                              _selectDateOrden(context);
+                                            },
+                                            icon: const Icon(Icons.calendar_today),
+                                            label: const Text('Editar fecha de la orden')
+                                          )
+                                        ]
                                       ],
                                     ),
                                     const SizedBox(height: 10),

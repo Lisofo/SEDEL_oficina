@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/informes.dart';
+import 'package:sedel_oficina_maqueta/models/informes_values.dart';
 import 'package:sedel_oficina_maqueta/models/parametro.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
+import 'package:sedel_oficina_maqueta/search/parametro_cliente_values.dart';
 import 'package:sedel_oficina_maqueta/services/informes_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
+import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
+import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 import 'package:animated_tree_view/animated_tree_view.dart';
 
@@ -24,13 +30,16 @@ class _InformesDesktopState extends State<InformesDesktop> {
   TreeNode sampleTree = TreeNode.root();
   dynamic selectedNodeData; // Variable para guardar los datos del nodo seleccionado
   late List<Parametro> parametros = [];
-  late String campoCliente = 'Cliente';
-  late String campoPlagaObjetivo = 'Plaga Objetivo';
-  late String campoFecha = 'Fecha';
-  late String campoFechaDesde = 'Fecha desde';
-  late String campoFechaHasta = 'Fecha hasta';
-  late String campoOrdenTrabajo = 'Orden de trabajo';
-  late String campoIdRevision = 'Id de Revision';
+  late ParametrosValues campoCliente = ParametrosValues.empty();
+  late ParametrosValues campoPlagaObjetivo = ParametrosValues.empty();
+  late String campoFecha = '';
+  late String campoFechaDesde = '';
+  late String campoFechaHasta = '';
+  late String campoOrdenTrabajo = '';
+  late String campoIdRevision = '';
+  List<ParametrosValues> historial = [];
+  List<ParametrosValues> parametrosValues = [];
+  final TextEditingController campoController = TextEditingController();
 
   @override
   void initState() {
@@ -44,48 +53,6 @@ class _InformesDesktopState extends State<InformesDesktop> {
     setState(() {
       sampleTree = convertInformesToTreeNode(informes);
     });
-  }
-
-  TreeNode convertInformesToTreeNode(List<Informe> informes) {
-    TreeNode root = TreeNode.root();
-    for (int i = 0; i < informes.length; i++) {
-      var informe = informes[i];
-      TreeNode node = TreeNode(
-        key: informe.nombre,
-        data: informe,
-      );
-      node.addAll(_convertInformeHijosToTreeNode(informe.hijos, '${informe.objetoArbol}-${informe.nombre}'));
-      root.add(node);
-    }
-    return root;
-  }
-
-  List<TreeNode> _convertInformeHijosToTreeNode(List<InformeHijo> hijos, String parentKey) {
-    List<TreeNode> nodes = [];
-    for (int i = 0; i < hijos.length; i++) {
-      var hijo = hijos[i];
-      TreeNode node = TreeNode(
-        key: hijo.objetoArbol == 'informe' ? '${hijo.informe}' : '${hijo.nombre}',
-        data: hijo,
-      );
-      node.addAll(_convertHijoHijosToTreeNode(hijo.hijos, '${hijo.objetoArbol}-${hijo.nombre}'));
-      nodes.add(node);
-    }
-    return nodes;
-  }
-
-  List<TreeNode> _convertHijoHijosToTreeNode(List<HijoHijo> hijos, String parentKey) {
-    List<TreeNode> nodes = [];
-    for (int i = 0; i < hijos.length; i++) {
-      var hijo = hijos[i];
-      TreeNode node = TreeNode(
-        key: hijo.informe,
-        data: hijo,
-      );
-      node.addAll(_convertHijoHijosToTreeNode(hijo.hijos, '${hijo.objetoArbol}-${hijo.informe}'));
-      nodes.add(node);
-    }
-    return nodes;
   }
 
   @override
@@ -147,27 +114,9 @@ class _InformesDesktopState extends State<InformesDesktop> {
                   indent: 20,
                 ),
                 if (selectedNodeData != null) ...[
-                  // if (selectedNodeData is Informe) ...[
-                  //   Text('Nombre: ${selectedNodeData.nombre}'),
-                  //   Text('Objeto Arbol: ${selectedNodeData.objetoArbol}'),
-                  //   Text('Rol: ${selectedNodeData.rol}'),
-                  //   Text('Sistema: ${selectedNodeData.sistema}'),
-                  // ] else if (selectedNodeData is InformeHijo) ...[
-                  //   Text('Nombre: ${selectedNodeData.nombre ?? ''}'),
-                  //   Text('Objeto Arbol: ${selectedNodeData.objetoArbol}'),
-                  //   Text('Informe ID: ${selectedNodeData.informeId}'),
-                  //   Text('Archivo: ${selectedNodeData.archivo ?? ''}'),
-                  //   // Agrega más campos si es necesario
-                  // ] else if (selectedNodeData is HijoHijo) ...[
-                  //   Text('Informe: ${selectedNodeData.informe}'),
-                  //   Text('Objeto Arbol: ${selectedNodeData.objetoArbol}'),
-                  //   Text('Informe ID: ${selectedNodeData.informeId}'),
-                  //   Text('Archivo: ${selectedNodeData.archivo}'),
-                  //   // Agrega más campos si es necesario
-                  // ],
                   if(parametros.isNotEmpty)...[
                     SizedBox(
-                      height: 500,
+                      height: MediaQuery.of(context).size.height * 0.7,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: ListView.builder(
@@ -176,7 +125,30 @@ class _InformesDesktopState extends State<InformesDesktop> {
                             var parametro = parametros[i];
                             return Row(
                               children: [
-                                TextButton(onPressed: (){}, child: Text(parametro.parametro)),
+                                TextButton(
+                                  onPressed: () async {
+                                    if (parametro.control == 'D') {
+                                      await _selectDate(context, parametro.parametro, parametro.control);
+                                      print(parametro.parametro);
+                                    } else if(parametro.control == 'L'){
+                                      final cliente = await showSearch(
+                                        context: context, 
+                                        delegate: ParametroClientSearchDelegate('Buscar cliente', historial, parametro.informeId, parametro.parametroId)
+                                      );
+                                      if(cliente != null) {
+                                        setState(() {
+                                          campoCliente = cliente;
+                                        });
+                                      } else{
+                                        campoCliente = ParametrosValues.empty();
+                                      }
+                                    } else {
+                                      await _showPopup(context, parametro);
+                                      print(parametro.parametro);
+                                    }
+                                  },
+                                  child: Text(parametro.parametro),
+                                ),
                                 const SizedBox(width: 30,),
                                 Text(parametro.comparador),
                                 const SizedBox(width: 30,),
@@ -185,9 +157,9 @@ class _InformesDesktopState extends State<InformesDesktop> {
                                 ] else if (parametro.parametro == 'Id de Revision')...[
                                   Text(campoIdRevision)
                                 ] else if(parametro.parametro == 'Cliente')...[
-                                  Text(campoCliente)
+                                  Text(campoCliente.descripcion)
                                 ] else if(parametro.parametro == 'Plaga Objetivo')...[
-                                  Text(campoPlagaObjetivo)
+                                  Text(campoPlagaObjetivo.descripcion)
                                 ] else if (parametro.parametro == 'Fecha Hasta')...[
                                   Text(campoFechaHasta)
                                 ]
@@ -209,8 +181,8 @@ class _InformesDesktopState extends State<InformesDesktop> {
                             label: 'Guardar',
                           ),
                           BottomNavigationBarItem(
-                            icon: Icon(Icons.place),
-                            label: 'Puntos de inspeccion',
+                            icon: Icon(Icons.save),
+                            label: 'Generar informe',
                           ),
                         ],
                       ),
@@ -224,4 +196,136 @@ class _InformesDesktopState extends State<InformesDesktop> {
       ),
     );
   }
+
+  Future<void> _showPopup(BuildContext context, Parametro parametro) async {
+    campoController.text = '';
+    if(parametro.sql != ''){
+      parametrosValues = await InformesServices().getParametrosValues(context, token, parametro.informeId, parametro.parametroId);
+      for (var values in parametrosValues){
+        print(values.descripcion);
+      }
+    }
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(parametro.parametro),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if(parametro.control == 'C')...[
+                SizedBox(
+                  width: 370,
+                  child: CustomDropdownFormMenu(
+                    items: parametrosValues.map((e) {
+                     return DropdownMenuItem(
+                      value: e,
+                      child: Text(e.descripcion)); 
+                    }).toList(),
+                    onChanged: (value){
+                      campoPlagaObjetivo = value;
+                    }
+                  ),
+                )
+              ] else if (parametro.control == 'T')...[
+                SizedBox(
+                  width: 370,
+                  child: CustomTextFormField(
+                    controller: campoController,
+                    hint: parametro.parametro,
+                    maxLines: 1,
+                  ),
+                )
+              ]
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: (){
+                router.pop();
+              }, 
+              child: const Text('Cancelar')
+            ),
+            TextButton(
+              child: const Text('Aceptar'),
+              onPressed: () {
+                if(campoController.text != ''){
+                  campoOrdenTrabajo = campoController.text;
+                }
+                router.pop();
+                setState(() {});
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _selectDate(BuildContext context, String title, String control) async {
+    DateTime selectedDate = DateTime.now();
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        final formattedDate = '${selectedDate.toLocal()}'.split(' ')[0];
+
+        if (control == 'D') {
+          campoFecha = formattedDate;
+        } else if (control == 'Dd') {
+          campoFechaDesde = DateFormat('d/M/y', 'es').format(picked);
+        } else if (control == 'Dh') {
+          campoFechaHasta = DateFormat('d/M/y', 'es').format(picked);
+        }
+      });
+    }
+  }
+
+  TreeNode convertInformesToTreeNode(List<Informe> informes) {
+    TreeNode root = TreeNode.root();
+    for (int i = 0; i < informes.length; i++) {
+      var informe = informes[i];
+      TreeNode node = TreeNode(
+        key: informe.nombre,
+        data: informe,
+      );
+      node.addAll(_convertInformeHijosToTreeNode(informe.hijos, '${informe.objetoArbol}-${informe.nombre}'));
+      root.add(node);
+    }
+    return root;
+  }
+
+  List<TreeNode> _convertInformeHijosToTreeNode(List<InformeHijo> hijos, String parentKey) {
+    List<TreeNode> nodes = [];
+    for (int i = 0; i < hijos.length; i++) {
+      var hijo = hijos[i];
+      TreeNode node = TreeNode(
+        key: hijo.objetoArbol == 'informe' ? '${hijo.informe}' : '${hijo.nombre}',
+        data: hijo,
+      );
+      node.addAll(_convertHijoHijosToTreeNode(hijo.hijos, '${hijo.objetoArbol}-${hijo.nombre}'));
+      nodes.add(node);
+    }
+    return nodes;
+  }
+
+  List<TreeNode> _convertHijoHijosToTreeNode(List<HijoHijo> hijos, String parentKey) {
+    List<TreeNode> nodes = [];
+    for (int i = 0; i < hijos.length; i++) {
+      var hijo = hijos[i];
+      TreeNode node = TreeNode(
+        key: hijo.informe,
+        data: hijo,
+      );
+      node.addAll(_convertHijoHijosToTreeNode(hijo.hijos, '${hijo.objetoArbol}-${hijo.informe}'));
+      nodes.add(node);
+    }
+    return nodes;
+  }
+
 }

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sedel_oficina_maqueta/config/config.dart';
 import 'package:sedel_oficina_maqueta/models/informes.dart';
+import 'package:sedel_oficina_maqueta/models/informes_values.dart';
 import 'package:sedel_oficina_maqueta/models/parametro.dart';
 
 class InformesServices {
@@ -133,4 +134,43 @@ class InformesServices {
       }
     }
   }
+
+  Future getParametrosValues(BuildContext context, String token, int informeId, int parametroId) async {
+    String link = '$apiLink$informeId/parametros/$parametroId/values';
+    try {
+      var headers = {'Authorization': token};
+      var resp = await _dio.request(
+        link,
+        options: Options(
+          method: 'GET',
+          headers: headers,
+        ),
+      );
+      final List<dynamic> parametrosValuesList = resp.data;
+
+      return parametrosValuesList.map((obj) => ParametrosValues.fromJson(obj)).toList();
+    } catch (e) {
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+              return "Error: ${error['message']}";
+            }).toList();
+            showErrorDialog(context, errorMessages.join('\n'));
+          }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: ${e.message}');
+        }
+      }
+    }
+  }
+
 }
