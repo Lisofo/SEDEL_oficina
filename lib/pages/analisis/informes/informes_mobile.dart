@@ -38,7 +38,7 @@ class _InformesMobileState extends State<InformesMobile> {
   late String campoIdRevision = '';
   List<ParametrosValues> historial = [];
   List<ParametrosValues> parametrosValues = [];
-  final TextEditingController campoController = TextEditingController();
+  final Map<String, TextEditingController> _controllers = {};
 
   @override
   void initState() {
@@ -133,7 +133,7 @@ class _InformesMobileState extends State<InformesMobile> {
                                 TextButton(
                                   onPressed: () async {
                                     if (parametro.control == 'D') {
-                                      await _selectDate(context, parametro.parametro, parametro.control);
+                                      await _selectDate(context, parametro.parametro, parametro.control, parametro);
                                       print(parametro.parametro);
                                     } else if(parametro.control == 'L'){
                                       final cliente = await showSearch(
@@ -158,32 +158,35 @@ class _InformesMobileState extends State<InformesMobile> {
                                   ),
                                 ),
                                 Text(parametro.comparador,),
-                                if(parametro.parametro == 'Orden de Trabajo')...[
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width * 0.4,
-                                    child: Text(campoOrdenTrabajo,textAlign: TextAlign.center)
-                                  )
-                                ] else if (parametro.parametro == 'Id de Revision')...[
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width * 0.4,
-                                    child: Text(campoIdRevision,textAlign: TextAlign.center)
-                                  )
-                                ] else if(parametro.parametro == 'Cliente')...[
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width * 0.4,
-                                    child: Text(campoCliente.descripcion,textAlign: TextAlign.center)
-                                  )
-                                ] else if(parametro.parametro == 'Plaga Objetivo')...[
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width * 0.4,
-                                    child: Text(campoPlagaObjetivo.descripcion,textAlign: TextAlign.center,)
-                                  )
-                                ] else if (parametro.parametro == 'Fecha Hasta')...[
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width * 0.4,
-                                    child: Text(campoFechaHasta,textAlign: TextAlign.center)
-                                  )
-                                ]
+                                // if(parametro.parametro == 'Orden de Trabajo')...[
+                                //   SizedBox(
+                                //     width: MediaQuery.of(context).size.width * 0.4,
+                                //     child: Text(campoOrdenTrabajo,textAlign: TextAlign.center)
+                                //   )
+                                // ] else if (parametro.parametro == 'Id de Revision')...[
+                                //   SizedBox(
+                                //     width: MediaQuery.of(context).size.width * 0.4,
+                                //     child: Text(campoIdRevision,textAlign: TextAlign.center)
+                                //   )
+                                // ] else if(parametro.parametro == 'Cliente')...[
+                                //   SizedBox(
+                                //     width: MediaQuery.of(context).size.width * 0.4,
+                                //     child: Text(campoCliente.descripcion,textAlign: TextAlign.center)
+                                //   )
+                                // ] else if(parametro.parametro == 'Plaga Objetivo')...[
+                                //   SizedBox(
+                                //     width: MediaQuery.of(context).size.width * 0.4,
+                                //     child: Text(campoPlagaObjetivo.descripcion,textAlign: TextAlign.center,)
+                                //   )
+                                // ] else if (parametro.parametro == 'Fecha Hasta')...[
+                                //   SizedBox(
+                                //     width: MediaQuery.of(context).size.width * 0.4,
+                                //     child: Text(campoFechaHasta,textAlign: TextAlign.center)
+                                //   )
+                                // ]
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width * 0.4,
+                                  child: Text(parametro.valor.toString(), textAlign: TextAlign.center))
                               ],
                             );
                           }
@@ -218,44 +221,40 @@ class _InformesMobileState extends State<InformesMobile> {
     );
   }
 
-  Future<void> _showPopup(BuildContext context, Parametro parametro) async {
-    campoController.text = '';
+  Future<void> _showPopup(BuildContext context, Parametro parametro,) async {
+    if (parametro.control == 'T') {
+      _controllers[parametro.parametro] = TextEditingController();
+    }
     if(parametro.sql != ''){
-      parametrosValues = await InformesServices().getParametrosValues(context, token, parametro.informeId, parametro.parametroId);
-      for (var values in parametrosValues){
-        print(values.descripcion);
-      }
+      parametrosValues = await InformesServices().getParametrosValues(context, token, parametro.informeId, parametro.parametroId,'','');
     }
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          
           title: Text(parametro.parametro),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               if(parametro.control == 'C')...[
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.7,
+                  width: 370,
                   child: CustomDropdownFormMenu(
-                    //isDense: true,
-                    isExpanded: true,
                     items: parametrosValues.map((e) {
                      return DropdownMenuItem(
                       value: e,
-                      child: Text(e.descripcion, overflow: TextOverflow.clip,)); 
+                      child: Text(e.descripcion)); 
                     }).toList(),
                     onChanged: (value){
-                      campoPlagaObjetivo = value;
+                      parametro.valor = (value as ParametrosValues).descripcion;
                     }
                   ),
                 )
               ] else if (parametro.control == 'T')...[
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.7,
+                  width: 370,
                   child: CustomTextFormField(
-                    controller: campoController,
+                    controller: _controllers[parametro.parametro],
                     hint: parametro.parametro,
                     maxLines: 1,
                   ),
@@ -273,8 +272,8 @@ class _InformesMobileState extends State<InformesMobile> {
             TextButton(
               child: const Text('Aceptar'),
               onPressed: () {
-                if(campoController.text != ''){
-                  campoOrdenTrabajo = campoController.text;
+                if(_controllers[parametro.parametro]?.text != '' && parametro.control == 'T'){
+                  parametro.valor = _controllers[parametro.parametro]?.text;
                 }
                 router.pop();
                 setState(() {});
@@ -286,7 +285,7 @@ class _InformesMobileState extends State<InformesMobile> {
     );
   }
 
-  Future<void> _selectDate(BuildContext context, String title, String control) async {
+  Future<void> _selectDate(BuildContext context, String title, String tipo, Parametro parametro) async {
     DateTime selectedDate = DateTime.now();
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -297,14 +296,12 @@ class _InformesMobileState extends State<InformesMobile> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        final formattedDate = '${selectedDate.toLocal()}'.split(' ')[0];
-
-        if (control == 'D') {
-          campoFecha = formattedDate;
-        } else if (control == 'Dd') {
-          campoFechaDesde = DateFormat('d/M/y', 'es').format(picked);
-        } else if (control == 'Dh') {
-          campoFechaHasta = DateFormat('d/M/y', 'es').format(picked);
+        if (tipo == 'D') {
+          parametro.valor = DateFormat('d/M/y', 'es').format(picked);
+        } else if (tipo == 'Dd') {
+          parametro.valor = DateFormat('d/M/y', 'es').format(picked);
+        } else if (tipo == 'Dh') {
+          parametro.valor = DateFormat('d/M/y', 'es').format(picked);
         }
       });
     }

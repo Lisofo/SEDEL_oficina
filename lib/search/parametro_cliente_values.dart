@@ -43,9 +43,27 @@ class ParametroClientSearchDelegate extends SearchDelegate {
     final clientServices = InformesServices();
     final token = context.watch<OrdenProvider>().token;
 
+    final List<String> searchParams = query.split(" ");
+
+    String id = '';
+    String descripcion = '';
+
+    if (searchParams.length >= 2) {
+      id = searchParams[0];
+      descripcion = searchParams.sublist(1).join(' ');
+    } else {
+      if (int.tryParse(searchParams[0]) != null) {
+        id = searchParams[0];
+        descripcion = '';
+      } else {
+        id = '';
+        descripcion = searchParams[0];
+      }
+    }
+
     return FutureBuilder(
       // Especifica explícitamente el tipo de dato para el FutureBuilder
-      future: clientServices.getParametrosValues(context, token, informeId, parametroId),
+      future: clientServices.getParametrosValues(context, token, informeId, parametroId, id, descripcion),
       builder: (_, AsyncSnapshot snapshot) {
         if (snapshot.hasError) {
           return const ListTile(

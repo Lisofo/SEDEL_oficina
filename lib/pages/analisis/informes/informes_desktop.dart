@@ -39,7 +39,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
   late String campoIdRevision = '';
   List<ParametrosValues> historial = [];
   List<ParametrosValues> parametrosValues = [];
-  final TextEditingController campoController = TextEditingController();
+  final Map<String, TextEditingController> _controllers = {};
 
   @override
   void initState() {
@@ -50,9 +50,11 @@ class _InformesDesktopState extends State<InformesDesktop> {
   cargarDatos() async {
     token = context.read<OrdenProvider>().token;
     informes = await InformesServices().getInformes(context, token);
+    
     setState(() {
       sampleTree = convertInformesToTreeNode(informes);
     });
+   
   }
 
   @override
@@ -82,6 +84,12 @@ class _InformesDesktopState extends State<InformesDesktop> {
                   parametros = await InformesServices().getParametros(context, token, item.data.informeId);
                   // print(parametros[0].parametroId);
                 }
+                for (var param in parametros) {
+                  if (param.control == 'T') {
+                    _controllers[param.parametro] = TextEditingController();
+                  }
+                }
+                 print(_controllers);
                 setState(() {
                   selectedNodeData = item.data; // Actualizar los datos del nodo seleccionado
                 });
@@ -128,7 +136,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
                                 TextButton(
                                   onPressed: () async {
                                     if (parametro.control == 'D') {
-                                      await _selectDate(context, parametro.parametro, parametro.control);
+                                      await _selectDate(context, parametro.parametro, parametro.tipo, parametro);
                                       print(parametro.parametro);
                                     } else if(parametro.control == 'L'){
                                       final cliente = await showSearch(
@@ -137,14 +145,14 @@ class _InformesDesktopState extends State<InformesDesktop> {
                                       );
                                       if(cliente != null) {
                                         setState(() {
-                                          campoCliente = cliente;
+                                          parametro.valor = cliente.descripcion;
                                         });
                                       } else{
-                                        campoCliente = ParametrosValues.empty();
+                                        parametro.valor = '';
                                       }
                                     } else {
                                       await _showPopup(context, parametro);
-                                      print(parametro.parametro);
+                                      print(parametro.valor);
                                     }
                                   },
                                   child: Text(parametro.parametro),
@@ -152,17 +160,18 @@ class _InformesDesktopState extends State<InformesDesktop> {
                                 const SizedBox(width: 30,),
                                 Text(parametro.comparador),
                                 const SizedBox(width: 30,),
-                                if(parametro.parametro == 'Orden de Trabajo')...[
-                                  Text(campoOrdenTrabajo)
-                                ] else if (parametro.parametro == 'Id de Revision')...[
-                                  Text(campoIdRevision)
-                                ] else if(parametro.parametro == 'Cliente')...[
-                                  Text(campoCliente.descripcion)
-                                ] else if(parametro.parametro == 'Plaga Objetivo')...[
-                                  Text(campoPlagaObjetivo.descripcion)
-                                ] else if (parametro.parametro == 'Fecha Hasta')...[
-                                  Text(campoFechaHasta)
-                                ]
+                                // if(parametro.parametro == 'Orden de Trabajo')...[
+                                //   Text(campoOrdenTrabajo)
+                                // ] else if (parametro.parametro == 'Id de Revision')...[
+                                //   Text(campoIdRevision)
+                                // ] else if(parametro.parametro == 'Cliente')...[
+                                //   Text(campoCliente.descripcion)
+                                // ] else if(parametro.parametro == 'Plaga Objetivo')...[
+                                //   Text(campoPlagaObjetivo.descripcion)
+                                // ] else if (parametro.parametro == 'Fecha Hasta')...[
+                                //   Text(campoFechaHasta)
+                                // ]
+                                Text(parametro.valor.toString())
                               ],
                             );
                           }
@@ -197,13 +206,12 @@ class _InformesDesktopState extends State<InformesDesktop> {
     );
   }
 
-  Future<void> _showPopup(BuildContext context, Parametro parametro) async {
-    campoController.text = '';
+  Future<void> _showPopup(BuildContext context, Parametro parametro,) async {
+    if (parametro.control == 'T') {
+      _controllers[parametro.parametro] = TextEditingController();
+    }
     if(parametro.sql != ''){
-      parametrosValues = await InformesServices().getParametrosValues(context, token, parametro.informeId, parametro.parametroId);
-      for (var values in parametrosValues){
-        print(values.descripcion);
-      }
+      parametrosValues = await InformesServices().getParametrosValues(context, token, parametro.informeId, parametro.parametroId,'','');
     }
     return showDialog<void>(
       context: context,
@@ -223,7 +231,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
                       child: Text(e.descripcion)); 
                     }).toList(),
                     onChanged: (value){
-                      campoPlagaObjetivo = value;
+                      parametro.valor = (value as ParametrosValues).descripcion;
                     }
                   ),
                 )
@@ -231,7 +239,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
                 SizedBox(
                   width: 370,
                   child: CustomTextFormField(
-                    controller: campoController,
+                    controller: _controllers[parametro.parametro],
                     hint: parametro.parametro,
                     maxLines: 1,
                   ),
@@ -249,8 +257,8 @@ class _InformesDesktopState extends State<InformesDesktop> {
             TextButton(
               child: const Text('Aceptar'),
               onPressed: () {
-                if(campoController.text != ''){
-                  campoOrdenTrabajo = campoController.text;
+                if(_controllers[parametro.parametro]?.text != '' && parametro.control == 'T'){
+                  parametro.valor = _controllers[parametro.parametro]?.text;
                 }
                 router.pop();
                 setState(() {});
@@ -262,7 +270,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
     );
   }
 
-  Future<void> _selectDate(BuildContext context, String title, String control) async {
+  Future<void> _selectDate(BuildContext context, String title, String tipo, Parametro parametro) async {
     DateTime selectedDate = DateTime.now();
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -273,14 +281,12 @@ class _InformesDesktopState extends State<InformesDesktop> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        final formattedDate = '${selectedDate.toLocal()}'.split(' ')[0];
-
-        if (control == 'D') {
-          campoFecha = formattedDate;
-        } else if (control == 'Dd') {
-          campoFechaDesde = DateFormat('d/M/y', 'es').format(picked);
-        } else if (control == 'Dh') {
-          campoFechaHasta = DateFormat('d/M/y', 'es').format(picked);
+        if (tipo == 'D') {
+          parametro.valor = DateFormat('d/M/y', 'es').format(picked);
+        } else if (tipo == 'Dd') {
+          parametro.valor = DateFormat('d/M/y', 'es').format(picked);
+        } else if (tipo == 'Dh') {
+          parametro.valor = DateFormat('d/M/y', 'es').format(picked);
         }
       });
     }

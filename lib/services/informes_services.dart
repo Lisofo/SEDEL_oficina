@@ -135,8 +135,19 @@ class InformesServices {
     }
   }
 
-  Future getParametrosValues(BuildContext context, String token, int informeId, int parametroId) async {
+  Future getParametrosValues(BuildContext context, String token, int informeId, int parametroId, String id, String descripcion) async {
     String link = '$apiLink$informeId/parametros/$parametroId/values';
+    bool yaTieneFiltro = false;
+    if (id != '') {
+      link += '&id=$id';
+      yaTieneFiltro = true;
+    }
+    if (descripcion != '') {
+      yaTieneFiltro ? link += '&' : link += '?';
+      link += 'descripcion=$descripcion';
+      yaTieneFiltro = true;
+    }
+   
     try {
       var headers = {'Authorization': token};
       var resp = await _dio.request(

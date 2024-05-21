@@ -83,8 +83,7 @@ class ClientServices {
     );
   }
 
-  Future getClientes(BuildContext context, String nombre, String codCliente,
-      String? estado, String tecnicoId, String token) async {
+  Future getClientes(BuildContext context, String nombre, String codCliente, String? estado, String tecnicoId, String token) async {
     String link = '${apiUrl}api/v1/clientes/?offset=0&sort=nombre';
     bool yaTieneFiltro = true;
     if (nombre != '') {
