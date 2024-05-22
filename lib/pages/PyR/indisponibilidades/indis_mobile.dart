@@ -8,7 +8,6 @@ import 'package:sedel_oficina_maqueta/models/indisponibilidades.dart';
 import 'package:sedel_oficina_maqueta/services/indis_services.dart';
 import 'package:sedel_oficina_maqueta/services/tecnico_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
-import 'package:sedel_oficina_maqueta/widgets/appbar_mobile.dart';
 import 'package:sedel_oficina_maqueta/widgets/button_delegate.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
@@ -88,6 +87,10 @@ class _IndisponibilidadesMobileState extends State<IndisponibilidadesMobile> {
               fechaIngreso: DateTime.now(),
               fechaVtoCarneSalud: DateTime.now(),
               deshabilitado: false,
+              firmaPath: '',
+              firmaMd5: '',
+              avatarPath: '',
+              avatarMd5: '',
               cargo: Cargo.empty(),
               cargoId: 0));
     });
