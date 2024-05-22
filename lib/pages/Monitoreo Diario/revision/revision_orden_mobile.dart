@@ -178,7 +178,7 @@ class _RevisionOrdenMobileState extends State<RevisionOrdenMobile> with SingleTi
               },
               showUnselectedLabels: true,
               selectedItemColor: colors.primary,
-              unselectedItemColor: Colors.grey,
+              unselectedItemColor: colors.primary,
               items: const [
                 BottomNavigationBarItem(
                   icon: Icon(Icons.delete),

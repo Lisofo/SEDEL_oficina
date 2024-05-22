@@ -82,7 +82,7 @@ class _ControlesMobileState extends State<ControlesMobile> {
                 },
                 showUnselectedLabels: true,
                 selectedItemColor: colors.primary,
-                unselectedItemColor: Colors.grey,
+                unselectedItemColor: colors.primary,
                 items: const [
                   BottomNavigationBarItem(
                     icon: Icon(Icons.add_box_outlined),

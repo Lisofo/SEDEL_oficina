@@ -3,7 +3,7 @@ export 'package:sedel_oficina_maqueta/pages/menu/menu.dart';
 
 export 'package:sedel_oficina_maqueta/pages/PyR/planificador/planificador.dart';
 export 'package:sedel_oficina_maqueta/pages/PyR/indisponibilidades/indisponibilidades.dart';
-export 'package:sedel_oficina_maqueta/pages/PyR/indisponibilidades/edit_indisponibilidad.dart';
+export 'package:sedel_oficina_maqueta/pages/PyR/indisponibilidades/edit_indisponibilidad/edit_indisponibilidad_desktop.dart';
 export 'package:sedel_oficina_maqueta/pages/PyR/ordenesPlanificacion/orden/orden_trabajo.dart';
 export 'package:sedel_oficina_maqueta/pages/PyR/ordenesPlanificacion/edit%20Orden/edit_orden.dart';
 export 'package:sedel_oficina_maqueta/pages/PyR/ordenesPlanificacion/edit%20Orden/edit_orden_desktop.dart';

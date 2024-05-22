@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:sedel_oficina_maqueta/pages/PyR/indisponibilidades/edit_indisponibilidad/edit_inidisponibilidad.dart';
 
 import '../../pages/pages.dart';
 
@@ -25,7 +26,7 @@ final router = GoRouter(initialLocation: '/', routes: [
   ),
   GoRoute(
     path: '/editIndisponibilidades',
-    builder: (context, state) => const EditIndisponibilidad(),
+    builder: (context, state) => const EditIndisponibilidades(),
   ),
   GoRoute(
     path: '/mapa',

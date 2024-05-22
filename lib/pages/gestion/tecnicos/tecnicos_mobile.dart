@@ -116,7 +116,7 @@ class _TecnicosPageMobileState extends State<TecnicosPageMobile> {
                     },
                     showUnselectedLabels: true,
                     selectedItemColor: colors.primary,
-                    unselectedItemColor: Colors.grey,
+                    unselectedItemColor: colors.primary,
                     items: const [
                       BottomNavigationBarItem(
                         icon: Icon(Icons.add_box_outlined),

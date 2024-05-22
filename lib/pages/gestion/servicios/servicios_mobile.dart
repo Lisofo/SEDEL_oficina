@@ -124,7 +124,7 @@ class _ServiciosMobileState extends State<ServiciosMobile> {
                 },
                 showUnselectedLabels: true,
                 selectedItemColor: colors.primary,
-                unselectedItemColor: Colors.grey,
+                unselectedItemColor: colors.primary,
                 items: const [
                   BottomNavigationBarItem(
                     icon: Icon(Icons.add_box_outlined),

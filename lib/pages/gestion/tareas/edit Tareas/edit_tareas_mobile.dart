@@ -108,7 +108,7 @@ class _EditTareasMobileState extends State<EditTareasMobile> {
                 },
                 showUnselectedLabels: true,
                 selectedItemColor: colors.primary,
-                unselectedItemColor: Colors.grey,
+                unselectedItemColor: colors.primary,
                 items: const [
                   BottomNavigationBarItem(
                     icon: Icon(Icons.save),

@@ -94,7 +94,7 @@ class _PlagasObjetivoMobileState extends State<PlagasObjetivoMobile> {
                   },
                   showUnselectedLabels: true,
                   selectedItemColor: colors.primary,
-                  unselectedItemColor: Colors.grey,
+                  unselectedItemColor: colors.primary,
                   items: const [
                     BottomNavigationBarItem(
                       icon: Icon(Icons.add_box_outlined),

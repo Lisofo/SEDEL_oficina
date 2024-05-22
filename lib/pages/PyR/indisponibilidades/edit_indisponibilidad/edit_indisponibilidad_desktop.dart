@@ -18,14 +18,14 @@ import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 import 'package:intl/intl.dart';
 
-class EditIndisponibilidad extends StatefulWidget {
-  const EditIndisponibilidad({super.key});
+class EditIndisponibilidadDesktop extends StatefulWidget {
+  const EditIndisponibilidadDesktop({super.key});
 
   @override
-  State<EditIndisponibilidad> createState() => _EditIndisponibilidadState();
+  State<EditIndisponibilidadDesktop> createState() => _EditIndisponibilidadDesktopState();
 }
 
-class _EditIndisponibilidadState extends State<EditIndisponibilidad> {
+class _EditIndisponibilidadDesktopState extends State<EditIndisponibilidadDesktop> {
   final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
   final TextEditingController _clienteController = TextEditingController();
   final TextEditingController _obsController = TextEditingController();
@@ -392,7 +392,7 @@ class _EditIndisponibilidadState extends State<EditIndisponibilidad> {
                                         const SizedBox(
                                           height: 20,
                                         ),
-                                        if (indisponibilidad.tipoIndisponibilidad.tipoIndisponibilidadId == 2 || selectedTipo.tipoIndisponibilidadId == 2) ...[
+                                        if (indisponibilidad.tipoIndisponibilidad.tipoIndisponibilidadId == 2 || selectedTipo.tipoIndisponibilidadId == 2 || selectedTipo.codTipoIndisponibilidad == '2') ...[
                                           Row(
                                             children: [
                                               if (indisponibilidad.indisponibilidadId != 0) ...[
@@ -418,7 +418,7 @@ class _EditIndisponibilidadState extends State<EditIndisponibilidad> {
                                             ],
                                           )
                                         ],
-                                        if (indisponibilidad.tipoIndisponibilidad.tipoIndisponibilidadId == 3 || selectedTipo.tipoIndisponibilidadId == 3) ...[
+                                        if (indisponibilidad.tipoIndisponibilidad.tipoIndisponibilidadId == 3 || selectedTipo.tipoIndisponibilidadId == 3 || selectedTipo.codTipoIndisponibilidad == '3') ...[
                                           Container(
                                             width: 300,
                                             decoration: BoxDecoration(

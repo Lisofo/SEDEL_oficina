@@ -39,6 +39,7 @@ class _InformesMobileState extends State<InformesMobile> {
   List<ParametrosValues> historial = [];
   List<ParametrosValues> parametrosValues = [];
   final Map<String, TextEditingController> _controllers = {};
+  late String nombreInforme = '';
 
   @override
   void initState() {
@@ -78,6 +79,7 @@ class _InformesMobileState extends State<InformesMobile> {
               ),
               indentation: const Indentation(style: IndentStyle.squareJoint),
               onItemTap: (item) async {
+
                 if(item.data.objetoArbol == 'informe'){
                   parametros = await InformesServices().getParametros(context, token, item.data.informeId);
                   // print(parametros[0].parametroId);
@@ -86,7 +88,9 @@ class _InformesMobileState extends State<InformesMobile> {
                   selectedNodeData = item.data; // Actualizar los datos del nodo seleccionado
                 });
                 if(item.data.objetoArbol == 'informe' && item.childrenAsList.isEmpty){
+                  nombreInforme = item.key;
                   router.pop();
+
                 }
 
               },
@@ -98,6 +102,7 @@ class _InformesMobileState extends State<InformesMobile> {
                 color: colors.tertiary,
                 child: ListTile(
                   title: Text(node.key),
+                  
                   // subtitle: Text('Level ${node.level}'),
                 ),
               ),
@@ -111,7 +116,7 @@ class _InformesMobileState extends State<InformesMobile> {
             child: Column(
               children: [
                 const SizedBox(height: 10,),
-                const Text('Detalles del nodo seleccionado:'),
+                Text('Parametros del informe: $nombreInforme'),
                 Divider(
                   color: colors.primary,
                   endIndent: 20,
@@ -198,7 +203,7 @@ class _InformesMobileState extends State<InformesMobile> {
                       BottomNavigationBar(
                         showUnselectedLabels: true,
                         selectedItemColor: colors.primary,
-                        unselectedItemColor: Colors.grey,
+                        unselectedItemColor: colors.primary,
                         items: const [
                           BottomNavigationBarItem(
                             icon: Icon(Icons.save_as),

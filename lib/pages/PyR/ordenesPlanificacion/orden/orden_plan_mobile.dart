@@ -406,7 +406,7 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
                   },
                   showUnselectedLabels: true,
                   selectedItemColor: colors.primary,
-                  unselectedItemColor: Colors.grey,
+                  unselectedItemColor: colors.primary,
                   items: const [
                     BottomNavigationBarItem(
                       icon: Icon(Icons.add_comment_outlined),

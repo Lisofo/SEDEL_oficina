@@ -266,7 +266,7 @@ class _MonitoreoMobileState extends State<MonitoreoMobile> {
         },
         showUnselectedLabels: true,
         selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.grey,
+        unselectedItemColor: colors.primary,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.pending_actions),
