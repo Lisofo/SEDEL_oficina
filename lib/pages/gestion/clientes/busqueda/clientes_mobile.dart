@@ -77,6 +77,10 @@ class _ClientesMobileState extends State<ClientesMobile> {
           fechaIngreso: null,
           fechaVtoCarneSalud: null,
           deshabilitado: false,
+          firmaPath: '' ,
+          firmaMd5: '' ,
+          avatarPath: '' ,
+          avatarMd5: '' ,
           cargo: null
         )
       );

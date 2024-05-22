@@ -132,6 +132,10 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
           fechaIngreso: null,
           fechaVtoCarneSalud: null,
           deshabilitado: false,
+          firmaPath: '' ,
+          firmaMd5: '' ,
+          avatarPath: '' ,
+          avatarMd5: '' ,
           cargo: null
         )
       );

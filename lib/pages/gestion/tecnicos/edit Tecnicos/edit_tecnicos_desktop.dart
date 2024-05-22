@@ -44,6 +44,7 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
   late bool tieneId = false;
   late Uint8List? _avatarTecnico = null;
   late Uint8List? _firmaTecnico = null;
+  late String? _avatarTecnico2 = '';
 
   String _formatDateAndTime(DateTime? date) {
     return '${date?.day.toString().padLeft(2, '0')}/${date?.month.toString().padLeft(2, '0')}/${date?.year.toString().padLeft(4, '0')}';
@@ -100,6 +101,9 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
     selectedDateIngreso = selectedTecnico.fechaIngreso!;
     selectedDateCarneSalud = selectedTecnico.fechaVtoCarneSalud!;
     tieneId = selectedTecnico.tecnicoId > 0;
+    if(selectedTecnico.avatarPath != ''){
+      _avatarTecnico2 = selectedTecnico.avatarPath;
+    }
     setState(() {});
   }
 
@@ -151,8 +155,9 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _avatarTecnico != null ? 
-                        Image.memory(_avatarTecnico!, width: 200, height: 200) : 
+                        //ToDo arreglar esto
+                        _avatarTecnico2 != '' ? 
+                        Image.network('$_avatarTecnico2?authorization:$token', width: 200, height: 200) : 
                         const SizedBox(
                           width: 200,
                           height: 200,

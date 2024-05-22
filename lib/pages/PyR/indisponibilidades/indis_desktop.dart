@@ -85,6 +85,10 @@ class _IndisponibilidadesDesktopState extends State<IndisponibilidadesDesktop> {
           fechaIngreso: DateTime.now(),
           fechaVtoCarneSalud: DateTime.now(),
           deshabilitado: false,
+          firmaPath: '',
+          firmaMd5: '',
+          avatarPath: '',
+          avatarMd5: '',
           cargo: Cargo.empty(),
           cargoId: 0
         )

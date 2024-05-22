@@ -124,7 +124,7 @@ class _PlagasObjetivoMobileState extends State<PlagasObjetivoMobile> {
                         leading: CircleAvatar(
                           backgroundColor: colors.primary,
                           child: Text(
-                            plagasObjetivo[index].plagaObjetivoId.toString(),
+                            plagasObjetivo[index].codPlagaObjetivo,
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),

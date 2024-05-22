@@ -144,23 +144,29 @@ class _LotesPageDesktopState extends State<LotesPageDesktop> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CustomTextFormField(
-                label: 'Lote',
-                controller: loteController,
-                hint: 'Escriba el lote del material',
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.3,
+                child: CustomTextFormField(
+                  label: 'Lote',
+                  controller: loteController,
+                  hint: 'Escriba el lote del material',
+                ),
               ),
               const SizedBox(height: 20,),
-              CustomDropdownFormMenu(
-                value: estadoSeleccionado,
-                items: estados.map((e) 
-                  => DropdownMenuItem(
-                    value: e,
-                    child: Text(e)
-                )).toList(),
-                hint: 'Seleccione el estado',
-                onChanged: (value){
-                  estadoSeleccionado = value;
-                }
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.3,
+                child: CustomDropdownFormMenu(
+                  value: estadoSeleccionado,
+                  items: estados.map((e) 
+                    => DropdownMenuItem(
+                      value: e,
+                      child: Text(e)
+                  )).toList(),
+                  hint: 'Seleccione el estado',
+                  onChanged: (value){
+                    estadoSeleccionado = value;
+                  }
+                ),
               )
             ],
           ),

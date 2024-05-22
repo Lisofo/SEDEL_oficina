@@ -17,6 +17,10 @@ class Tecnico {
   late DateTime? fechaIngreso;
   late DateTime? fechaVtoCarneSalud;
   late bool? deshabilitado;
+  late String? firmaPath;
+  late String? firmaMd5;
+  late String? avatarPath;
+  late String? avatarMd5;
   late Cargo? cargo;
   late int cargoId;
 
@@ -29,48 +33,47 @@ class Tecnico {
     required this.fechaIngreso,
     required this.fechaVtoCarneSalud,
     required this.deshabilitado,
+    required this.firmaPath,
+    required this.firmaMd5,
+    required this.avatarPath,
+    required this.avatarMd5,
     required this.cargo,
     required this.cargoId,
   });
 
   factory Tecnico.fromJson(Map<String, dynamic> json) => Tecnico(
-        tecnicoId: json["tecnicoId"] as int? ?? 0,
-        codTecnico: json["codTecnico"] as String? ?? '',
-        nombre: json["nombre"] as String? ?? '',
-        fechaNacimiento: (json["fechaNacimiento"] == null ||
-                json["fechaNacimiento"] == 'null')
-            ? null
-            : DateTime.tryParse(json["fechaNacimiento"]),
-        documento: json["documento"] as String? ?? '',
-        fechaIngreso:
-            (json["fechaIngreso"] == null || json["fechaIngreso"] == 'null')
-                ? null
-                : DateTime.tryParse(json["fechaIngreso"]),
-        fechaVtoCarneSalud: (json["fechaVtoCarneSalud"] == null ||
-                json["fechaVtoCarneSalud"] == 'null')
-            ? null
-            : DateTime.tryParse(json["fechaVtoCarneSalud"]),
-        deshabilitado: json["deshabilitado"] as bool? ?? false,
-        cargo: json["cargo"] != null ? Cargo.fromJson(json["cargo"]) : null,
-        cargoId: 0,
-      );
+    tecnicoId: json["tecnicoId"] as int? ?? 0,
+    codTecnico: json["codTecnico"] as String? ?? '',
+    nombre: json["nombre"] as String? ?? '',
+    fechaNacimiento: (json["fechaNacimiento"] == null || json["fechaNacimiento"] == 'null') ? null : DateTime.tryParse(json["fechaNacimiento"]),
+    documento: json["documento"] as String? ?? '',
+    fechaIngreso: (json["fechaIngreso"] == null || json["fechaIngreso"] == 'null') ? null : DateTime.tryParse(json["fechaIngreso"]),
+    fechaVtoCarneSalud: (json["fechaVtoCarneSalud"] == null || json["fechaVtoCarneSalud"] == 'null') ? null : DateTime.tryParse(json["fechaVtoCarneSalud"]),
+    deshabilitado: json["deshabilitado"] as bool? ?? false,
+    firmaPath: json["firmaPath"] as String? ?? '',
+    firmaMd5: json["firmaMD5"] as String? ?? '',
+    avatarPath: json["avatarPath"] as String? ?? '',
+    avatarMd5: json["avatarMD5"] as String? ?? '',
+    cargo: json["cargo"] != null ? Cargo.fromJson(json["cargo"]) : null,
+    cargoId: 0,
+  );
 
   Map<String, dynamic> toMap() => {
-        "tecnicoId": tecnicoId,
-        "codTecnico": codTecnico,
-        "nombre": nombre,
-        "fechaNacimiento":
-            fechaNacimiento == null ? null : fechaNacimiento!.toIso8601String(),
-        "documento": documento,
-        "fechaIngreso":
-            fechaIngreso == null ? null : fechaIngreso!.toIso8601String(),
-        "fechaVtoCarneSalud": fechaVtoCarneSalud == null
-            ? null
-            : fechaVtoCarneSalud!.toIso8601String(),
-        "deshabilitado": deshabilitado,
-        "cargo": cargo == null ? Cargo.empty() : cargo!.toMap(),
-        "cargoId": cargoId
-      };
+    "tecnicoId": tecnicoId,
+    "codTecnico": codTecnico,
+    "nombre": nombre,
+    "fechaNacimiento": fechaNacimiento == null ? null : fechaNacimiento!.toIso8601String(),
+    "documento": documento,
+    "fechaIngreso": fechaIngreso == null ? null : fechaIngreso!.toIso8601String(),
+    "fechaVtoCarneSalud": fechaVtoCarneSalud == null ? null : fechaVtoCarneSalud!.toIso8601String(),
+    "deshabilitado": deshabilitado,
+    "firmaPath": firmaPath,
+    "firmaMD5": firmaMd5,
+    "avatarPath": avatarPath,
+    "avatarMD5": avatarMd5,
+    "cargo": cargo == null ? Cargo.empty() : cargo!.toMap(),
+    "cargoId": cargoId
+  };
 
   Tecnico.empty() {
     tecnicoId = 0;
@@ -81,6 +84,10 @@ class Tecnico {
     fechaIngreso = DateTime.now();
     fechaVtoCarneSalud = DateTime.now();
     deshabilitado = false;
+    firmaPath = '';
+    firmaMd5 = '';
+    avatarPath = '';
+    avatarMd5 = '';
     cargoId = 0;
     cargo = Cargo(cargoId: 0, codCargo: '', descripcion: '');
   }
@@ -103,16 +110,16 @@ class Cargo {
   });
 
   factory Cargo.fromJson(Map<String, dynamic> json) => Cargo(
-        cargoId: json["cargoId"],
-        codCargo: json["codCargo"],
-        descripcion: json["descripcion"],
-      );
+    cargoId: json["cargoId"] as int? ?? 0,
+    codCargo: json["codCargo"] as String? ?? '',
+    descripcion: json["descripcion"] as String? ?? '',
+  );
 
   Map<String, dynamic> toMap() => {
-        "cargoId": cargoId,
-        "codCargo": codCargo,
-        "descripcion": descripcion,
-      };
+    "cargoId": cargoId,
+    "codCargo": codCargo,
+    "descripcion": descripcion,
+  };
   Cargo.empty() {
     cargoId = 0;
     codCargo = '';

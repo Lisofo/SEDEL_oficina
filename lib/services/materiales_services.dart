@@ -1198,7 +1198,7 @@ class MaterialesServices {
       var resp = await _dio.request(
         link,
         options: Options(
-          method: 'Delete',
+          method: 'DELETE',
           headers: headers,
         ),
       );

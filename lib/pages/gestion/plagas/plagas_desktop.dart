@@ -146,7 +146,7 @@ class _PlagasDessktopState extends State<PlagasDessktop> {
                         leading: CircleAvatar(
                           backgroundColor: colors.primary,
                           child: Text(
-                            plagas[index].plagaId.toString(),
+                            plagas[index].codPlaga,
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),

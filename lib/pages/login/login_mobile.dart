@@ -99,7 +99,6 @@ class _LoginMobileState extends State<LoginMobile> {
                     controller: passwordController,
                     obscureText: isObscured,
                     focusNode: passwordFocusNode,
-                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderSide: const BorderSide(),

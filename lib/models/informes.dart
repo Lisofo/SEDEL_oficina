@@ -1,126 +1,111 @@
+// To parse this JSON data, do
+//
+//     final informe = informeFromMap(jsonString);
+
 import 'dart:convert';
 
-List<Informe> informesFromJson(String str) => List<Informe>.from(json.decode(str).map((x) => Informe.fromJson(x)));
+List<Informe> informeFromMap(String str) => List<Informe>.from(json.decode(str).map((x) => Informe.fromJson(x)));
 
-String informesToJson(List<Informe> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String informeToMap(List<Informe> data) => json.encode(List<dynamic>.from(data.map((x) => x.toMap())));
 
 class Informe {
-  late String objetoArbol;
-  late String nombre;
-  late String rol;
-  late String sistema;
-  late List<InformeHijo> hijos;
+    String objetoArbol;
+    String nombre;
+    String rol;
+    String sistema;
+    List<InformeHijo> hijos;
 
-  Informe({
-    required this.objetoArbol,
-    required this.nombre,
-    required this.rol,
-    required this.sistema,
-    required this.hijos,
-  });
+    Informe({
+        required this.objetoArbol,
+        required this.nombre,
+        required this.rol,
+        required this.sistema,
+        required this.hijos,
+    });
 
-  factory Informe.fromJson(Map<String, dynamic> json) => Informe(
-    objetoArbol: json["objetoArbol"] as String? ?? '',
-    nombre: json["nombre"] as String? ?? '',
-    rol: json["rol"] as String? ?? '',
-    sistema: json["sistema"] as String? ?? '',
-    hijos: List<InformeHijo>.from(json["hijos"].map((x) => InformeHijo.fromJson(x))),
-  );
-  Map<String, dynamic> toJson() => {
-    "objetoArbol": objetoArbol,
-    "nombre": nombre,
-    "rol": rol,
-    "sistema": sistema,
-    "hijos": List<dynamic>.from(hijos.map((x) => x.toJson())),
-  };
+    factory Informe.fromJson(Map<String, dynamic> json) => Informe(
+        objetoArbol: json["objetoArbol"],
+        nombre: json["nombre"],
+        rol: json["rol"],
+        sistema: json["sistema"],
+        hijos: List<InformeHijo>.from(json["hijos"].map((x) => InformeHijo.fromMap(x))),
+    );
 
-  Informe.empty(){
-    objetoArbol = '';
-    nombre = '';
-    rol = '';
-    sistema = '';
-    hijos = [];
-  }
+    Map<String, dynamic> toMap() => {
+        "objetoArbol": objetoArbol,
+        "nombre": nombre,
+        "rol": rol,
+        "sistema": sistema,
+        "hijos": List<dynamic>.from(hijos.map((x) => x.toMap())),
+    };
 }
 
 class InformeHijo {
-  late String objetoArbol;
-  late String? nombre;
-  late List<HijoHijo> hijos;
-  late int? informeId;
-  late String? informe;
-  late String? archivo;
-  late dynamic salida;
-  late String? formato;
-  late dynamic indicadorEmpresa;
-  late String? tipo;
-  late String? codInforme;
-  late String? claveImpresora;
-  late dynamic almacenId;
+    String objetoArbol;
+    String? nombre;
+    List<HijoHijo> hijos;
+    int? informeId;
+    String? informe;
+    String? archivo;
+    dynamic salida;
+    String? formato;
+    dynamic indicadorEmpresa;
+    String? tipo;
+    String? codInforme;
+    String? claveImpresora;
+    dynamic almacenId;
+    List<TiposImpresion>? tiposImpresion;
 
-  InformeHijo({
-    required this.objetoArbol,
-    this.nombre,
-    required this.hijos,
-    this.informeId,
-    this.informe,
-    this.archivo,
-    this.salida,
-    this.formato,
-    this.indicadorEmpresa,
-    this.tipo,
-    this.codInforme,
-    this.claveImpresora,
-    this.almacenId,
-  });
+    InformeHijo({
+        required this.objetoArbol,
+        this.nombre,
+        required this.hijos,
+        this.informeId,
+        this.informe,
+        this.archivo,
+        this.salida,
+        this.formato,
+        this.indicadorEmpresa,
+        this.tipo,
+        this.codInforme,
+        this.claveImpresora,
+        this.almacenId,
+        this.tiposImpresion,
+    });
 
-  factory InformeHijo.fromJson(Map<String, dynamic> json) => InformeHijo(
-    objetoArbol: json["objetoArbol"] as String? ?? '',
-    nombre: json["nombre"] as String? ?? '',
-    hijos: List<HijoHijo>.from(json["hijos"].map((x) => HijoHijo.fromJson(x))),
-    informeId: json["informeId"] as int? ?? 0,
-    informe: json["informe"] as String? ?? '',
-    archivo: json["archivo"] as String? ?? '',
-    salida: json["salida"] as int? ?? 0,
-    formato: json["formato"] as String? ?? '',
-    indicadorEmpresa: json["indicadorEmpresa"],
-    tipo: json["tipo"] as String? ?? '',
-    codInforme: json["codInforme"] as String? ?? '',
-    claveImpresora: json["claveImpresora"] as String? ?? '',
-    almacenId: json["almacenId"] as int? ?? 0,
-  );
+    factory InformeHijo.fromMap(Map<String, dynamic> json) => InformeHijo(
+        objetoArbol: json["objetoArbol"],
+        nombre: json["nombre"],
+        hijos: List<HijoHijo>.from(json["hijos"].map((x) => HijoHijo.fromMap(x))),
+        informeId: json["informeId"],
+        informe: json["informe"],
+        archivo: json["archivo"],
+        salida: json["salida"],
+        formato: json["formato"],
+        indicadorEmpresa: json["indicadorEmpresa"],
+        tipo: json["tipo"],
+        codInforme: json["codInforme"],
+        claveImpresora: json["claveImpresora"],
+        almacenId: json["almacenId"],
+        tiposImpresion: json["tiposImpresion"] == null ? [] : List<TiposImpresion>.from(json["tiposImpresion"]!.map((x) => TiposImpresion.fromMap(x))),
+    );
 
-  Map<String, dynamic> toJson() => {
-    "objetoArbol": objetoArbol,
-    "nombre": nombre,
-    "hijos": List<dynamic>.from(hijos.map((x) => x.toJson())),
-    "informeId": informeId,
-    "informe": informe,
-    "archivo": archivo,
-    "salida": salida,
-    "formato": formato,
-    "indicadorEmpresa": indicadorEmpresa,
-    "tipo": tipo,
-    "codInforme": codInforme,
-    "claveImpresora": claveImpresora,
-    "almacenId": almacenId,
-  };
-
-  InformeHijo.empty(){
-    objetoArbol = '';
-    nombre = '';
-    hijos = [];
-    informeId = 0;
-    informe = '';
-    archivo = '';
-    salida = null;
-    formato = '';
-    indicadorEmpresa = null;
-    tipo = '';
-    codInforme = '';
-    claveImpresora = '';
-    almacenId = null;
-  }
+    Map<String, dynamic> toMap() => {
+        "objetoArbol": objetoArbol,
+        "nombre": nombre,
+        "hijos": List<dynamic>.from(hijos.map((x) => x.toMap())),
+        "informeId": informeId,
+        "informe": informe,
+        "archivo": archivo,
+        "salida": salida,
+        "formato": formato,
+        "indicadorEmpresa": indicadorEmpresa,
+        "tipo": tipo,
+        "codInforme": codInforme,
+        "claveImpresora": claveImpresora,
+        "almacenId": almacenId,
+        "tiposImpresion": tiposImpresion == null ? [] : List<dynamic>.from(tiposImpresion!.map((x) => x.toMap())),
+    };
 }
 
 class HijoHijo {
@@ -136,6 +121,7 @@ class HijoHijo {
   late String claveImpresora;
   late dynamic almacenId;
   late List<HijoHijo> hijos;
+  late List<TiposImpresion> tiposImpresion;
   late String? grupo;
   late String? subGrupo;
 
@@ -152,28 +138,30 @@ class HijoHijo {
     required this.claveImpresora,
     required this.almacenId,
     required this.hijos,
+    required this.tiposImpresion,
     this.grupo,
     this.subGrupo,
   });
 
-  factory HijoHijo.fromJson(Map<String, dynamic> json) => HijoHijo(
-    objetoArbol: json["objetoArbol"] as String? ?? '',
-    informeId: json["informeId"] as int? ?? 0,
-    informe: json["informe"] as String? ?? '',
-    archivo: json["archivo"] as String? ?? '',
+  factory HijoHijo.fromMap(Map<String, dynamic> json) => HijoHijo(
+    objetoArbol: json["objetoArbol"],
+    informeId: json["informeId"],
+    informe: json["informe"],
+    archivo: json["archivo"],
     salida: json["salida"],
-    formato: json["formato"] as String? ?? '',
+    formato: json["formato"],
     indicadorEmpresa: json["indicadorEmpresa"],
-    tipo: json["tipo"] as String? ?? '',
-    codInforme: json["codInforme"] as String? ?? '',
-    claveImpresora: json["claveImpresora"] as String? ?? '',
-    almacenId: json["almacenId"] as int? ?? 0,
-    hijos: List<HijoHijo>.from(json["hijos"].map((x) => HijoHijo.fromJson(x))),
-    grupo: json["grupo"] as String? ?? '',
-    subGrupo: json["subGrupo"] as String? ?? '',
+    tipo: json["tipo"],
+    codInforme: json["codInforme"],
+    claveImpresora: json["claveImpresora"],
+    almacenId: json["almacenId"],
+    hijos: List<HijoHijo>.from(json["hijos"].map((x) => HijoHijo.fromMap(x))),
+    tiposImpresion: List<TiposImpresion>.from(json["tiposImpresion"].map((x) => TiposImpresion.fromMap(x))),
+    grupo: json["grupo"],
+    subGrupo: json["subGrupo"],
   );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
     "objetoArbol": objetoArbol,
     "informeId": informeId,
     "informe": informe,
@@ -185,7 +173,8 @@ class HijoHijo {
     "codInforme": codInforme,
     "claveImpresora": claveImpresora,
     "almacenId": almacenId,
-    "hijos": List<dynamic>.from(hijos.map((x) => x.toJson())),
+    "hijos": List<dynamic>.from(hijos.map((x) => x.toMap())),
+    "tiposImpresion": List<dynamic>.from(tiposImpresion.map((x) => x.toMap())),
     "grupo": grupo,
     "subGrupo": subGrupo,
   };
@@ -195,15 +184,41 @@ class HijoHijo {
     informeId = 0;
     informe = '';
     archivo = '';
-    salida = [];
+    salida = null;
     formato = '';
-    indicadorEmpresa = [];
+    indicadorEmpresa = null;
     tipo = '';
     codInforme = '';
     claveImpresora = '';
     almacenId = 0;
     hijos = [];
+    tiposImpresion = [];
     grupo = '';
     subGrupo = '';
+  }
+}
+
+class TiposImpresion {
+  late String tipo;
+  late String descripcion;
+
+  TiposImpresion({
+    required this.tipo,
+    required this.descripcion,
+  });
+
+  factory TiposImpresion.fromMap(Map<String, dynamic> json) => TiposImpresion(
+    tipo: json["tipo"] as String? ?? '',
+    descripcion: json["descripcion"] as String? ?? '',
+  );
+
+  Map<String, dynamic> toMap() => {
+    "tipo": tipo,
+    "descripcion": descripcion,
+  };
+
+  TiposImpresion.empty(){
+    tipo = '';
+    descripcion = '';
   }
 }

@@ -213,7 +213,7 @@ class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDe
                         child: SizedBox(
                           width: double.infinity,
                           child: Text(
-                            e.descripcion,
+                            nombreYCantidad(e),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -231,9 +231,10 @@ class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDe
                     },
                   ),
                 ),
+                
                 SizedBox(
                   width: Constantes().ancho,
-                  height: 495,
+                  height: 370,
                   child: ListView.separated(
                     itemCount: ptosFiltrados.length,
                     itemBuilder: (context, i) {
@@ -265,9 +266,11 @@ class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDe
                     },
                     separatorBuilder: (BuildContext context, int index) {
                       return const Divider();
+                      
                     },
                   ),
                 ),
+                const SizedBox(height: 20,),
                 SizedBox(
                   width: Constantes().ancho,
                   child: Row(
@@ -328,6 +331,13 @@ class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDe
         ),
       ),
     );
+  }
+
+  String nombreYCantidad(TipoPtosInspeccion e) { 
+    String retorno = '';
+    String cantidad = puntos.where((pto) => pto.tipoPuntoInspeccionId == e.tipoPuntoInspeccionId).toList().length.toString();
+     retorno = '${e.descripcion} ($cantidad)';
+    return retorno;
   }
 
   nuevoPuntoDeInspeccion(){
@@ -1004,17 +1014,20 @@ class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDe
             children: [
               Text('Esta por cambiar el estado del plano ${plano.codPlano}'),
               const SizedBox(height: 10,),
-              CustomDropdownFormMenu(
-                hint: 'Estado',
-                items: estadosPlano.map((e) {
-                  return DropdownMenuItem(
-                    value: e,
-                    child: Text(e),
-                  );
-                }).toList(),
-                onChanged: (value){
-                  estadoPlanoSeleccionado = value;
-                }
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.3,
+                child: CustomDropdownFormMenu(
+                  hint: 'Estado',
+                  items: estadosPlano.map((e) {
+                    return DropdownMenuItem(
+                      value: e,
+                      child: Text(e),
+                    );
+                  }).toList(),
+                  onChanged: (value){
+                    estadoPlanoSeleccionado = value;
+                  }
+                ),
               ),
             ],
           ),

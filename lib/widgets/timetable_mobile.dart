@@ -81,16 +81,21 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
       tecnicos.insert(
           0,
           Tecnico(
-              cargoId: 0,
-              tecnicoId: 0,
-              codTecnico: '0',
-              nombre: 'Todos',
-              fechaNacimiento: null,
-              documento: '',
-              fechaIngreso: null,
-              fechaVtoCarneSalud: null,
-              deshabilitado: false,
-              cargo: null));
+          cargoId: 0,
+          tecnicoId: 0,
+          codTecnico: '0',
+          nombre: 'Todos',
+          fechaNacimiento: null,
+          documento: '',
+          fechaIngreso: null,
+          fechaVtoCarneSalud: null,
+          deshabilitado: false,
+          firmaPath: '' ,
+          firmaMd5: '' ,
+          avatarPath: '' ,
+          avatarMd5: '' ,
+          cargo: null
+        ));
     });
   }
 

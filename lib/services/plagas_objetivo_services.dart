@@ -104,9 +104,10 @@ class PlagaObjetivoServices {
     }
     if (codPlagaObjetivo != '') {
       yaTieneFiltro ? link += '&' : link += '?';
-      link += 'codPlaga=$codPlagaObjetivo';
+      link += 'codPlagaObjetivo=$codPlagaObjetivo';
       yaTieneFiltro = true;
     }
+    print(link);
 
     try {
       var headers = {'Authorization': token};

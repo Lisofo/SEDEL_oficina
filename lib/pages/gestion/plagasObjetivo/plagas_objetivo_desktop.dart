@@ -115,8 +115,7 @@ class _PlagasObjetivoDesktopState extends State<PlagasObjetivoDesktop> {
                                           left: Radius.circular(50),
                                           right: Radius.circular(50))))),
                           onPressed: () {
-                            Provider.of<OrdenProvider>(context, listen: false)
-                                .clearSelectedPlagaObjetivo();
+                            Provider.of<OrdenProvider>(context, listen: false).clearSelectedPlagaObjetivo();
                             router.push('/editPlagasObjetivo');
                           },
                           child: Padding(
@@ -124,11 +123,13 @@ class _PlagasObjetivoDesktopState extends State<PlagasObjetivoDesktop> {
                             child: Text(
                               'Agregar Plaga',
                               style: TextStyle(
-                                  color: colors.primary,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
+                                color: colors.primary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20
+                              ),
                             ),
-                          )),
+                          )
+                      ),
                     ),
                   ],
                 ),
@@ -146,7 +147,7 @@ class _PlagasObjetivoDesktopState extends State<PlagasObjetivoDesktop> {
                         leading: CircleAvatar(
                           backgroundColor: colors.primary,
                           child: Text(
-                            plagasObjetivo[index].plagaObjetivoId.toString(),
+                            plagasObjetivo[index].codPlagaObjetivo,
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),
@@ -170,11 +171,12 @@ class _PlagasObjetivoDesktopState extends State<PlagasObjetivoDesktop> {
 
   Future<void> buscar(BuildContext context, String token) async {
     List<PlagaObjetivo> results =
-        await _plagaObjetivoServices.getPlagasObjetivo(
-            context,
-            _descripcionController.text,
-            _codPlagaObjetivoController.text,
-            token);
+      await _plagaObjetivoServices.getPlagasObjetivo(
+      context,
+      _descripcionController.text,
+      _codPlagaObjetivoController.text,
+      token
+    );
     setState(() {
       plagasObjetivo = results;
     });

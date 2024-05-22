@@ -144,8 +144,7 @@ class _TecnicosPageDesktopState extends State<TecnicosPageDesktop> {
                                           left: Radius.circular(50),
                                           right: Radius.circular(50))))),
                           onPressed: () {
-                            Provider.of<OrdenProvider>(context, listen: false)
-                                .clearSelectedTecnico();
+                            Provider.of<OrdenProvider>(context, listen: false).clearSelectedTecnico();
                             router.push('/editTecnicos');
                           },
                           child: Padding(
