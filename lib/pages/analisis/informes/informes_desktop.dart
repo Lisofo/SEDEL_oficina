@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/informes.dart';
@@ -41,6 +42,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
   List<ParametrosValues> parametrosValues = [];
   final Map<String, TextEditingController> _controllers = {};
   late String nombreInforme = '';
+  late MaskTextInputFormatter maskFormatter;
 
   @override
   void initState() {
@@ -84,16 +86,15 @@ class _InformesDesktopState extends State<InformesDesktop> {
                 if(item.data.objetoArbol == 'informe'){
                   parametros = await InformesServices().getParametros(context, token, item.data.informeId);
                   // print(parametros[0].parametroId);
+                  nombreInforme = item.key;
                 }
                 for (var param in parametros) {
                   if (param.control == 'T') {
                     _controllers[param.parametro] = TextEditingController();
                   }
                 }
-                 print(_controllers);
                 setState(() {
                   selectedNodeData = item.data; // Actualizar los datos del nodo seleccionado
-                  nombreInforme = item.key;
                 });
               },
               onTreeReady: (controller) {
@@ -212,9 +213,13 @@ class _InformesDesktopState extends State<InformesDesktop> {
     if (parametro.control == 'T') {
       _controllers[parametro.parametro] = TextEditingController();
     }
-    if(parametro.sql != ''){
-      parametrosValues = await InformesServices().getParametrosValues(context, token, parametro.informeId, parametro.parametroId,'','');
+    if (parametro.sql != '') {
+      parametrosValues = await InformesServices().getParametrosValues(context, token, parametro.informeId, parametro.parametroId, '', '');
     }
+    if (parametro.control == 'T' && parametro.tipo == 'N') {
+      maskFormatter = MaskTextInputFormatter(mask: '########', filter: { "#": RegExp(r'[0-9]') });
+    }
+
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -223,26 +228,28 @@ class _InformesDesktopState extends State<InformesDesktop> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if(parametro.control == 'C')...[
+              if (parametro.control == 'C') ...[
                 SizedBox(
                   width: 370,
                   child: CustomDropdownFormMenu(
                     items: parametrosValues.map((e) {
-                     return DropdownMenuItem(
-                      value: e,
-                      child: Text(e.descripcion)); 
+                      return DropdownMenuItem(
+                        value: e,
+                        child: Text(e.descripcion),
+                      );
                     }).toList(),
-                    onChanged: (value){
+                    onChanged: (value) {
                       parametro.valor = (value as ParametrosValues).descripcion;
-                    }
+                    },
                   ),
                 )
-              ] else if (parametro.control == 'T')...[
+              ] else if (parametro.control == 'T') ...[
                 SizedBox(
                   width: 370,
                   child: CustomTextFormField(
                     controller: _controllers[parametro.parametro],
                     hint: parametro.parametro,
+                    mascara: parametro.tipo == 'N' ? [maskFormatter] : [],
                     maxLines: 1,
                   ),
                 )
@@ -251,15 +258,15 @@ class _InformesDesktopState extends State<InformesDesktop> {
           ),
           actions: <Widget>[
             TextButton(
-              onPressed: (){
+              onPressed: () {
                 router.pop();
-              }, 
-              child: const Text('Cancelar')
+              },
+              child: const Text('Cancelar'),
             ),
             TextButton(
               child: const Text('Aceptar'),
               onPressed: () {
-                if(_controllers[parametro.parametro]?.text != '' && parametro.control == 'T'){
+                if (_controllers[parametro.parametro]?.text != '' && parametro.control == 'T') {
                   parametro.valor = _controllers[parametro.parametro]?.text;
                 }
                 router.pop();
