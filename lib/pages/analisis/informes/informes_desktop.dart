@@ -40,6 +40,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
   List<ParametrosValues> historial = [];
   List<ParametrosValues> parametrosValues = [];
   final Map<String, TextEditingController> _controllers = {};
+  late String nombreInforme = '';
 
   @override
   void initState() {
@@ -92,6 +93,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
                  print(_controllers);
                 setState(() {
                   selectedNodeData = item.data; // Actualizar los datos del nodo seleccionado
+                  nombreInforme = item.key;
                 });
               },
               onTreeReady: (controller) {
@@ -115,7 +117,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
             child: Column(
               children: [
                 const SizedBox(height: 10,),
-                const Text('Detalles del nodo seleccionado:'),
+                Text('Parametros del informe: $nombreInforme'),
                 Divider(
                   color: colors.primary,
                   endIndent: 20,
