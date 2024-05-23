@@ -161,11 +161,23 @@ class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDe
                                 Text('Estado: ${plano.estado}')
                               ],
                             ),
-                            trailing: IconButton(
-                            onPressed: () {
-                              nuevoPlano(plano);
-                            }, 
-                            icon: const Icon(Icons.edit)),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    nuevoPlano(plano);
+                                  }, 
+                                  icon: const Icon(Icons.edit)
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    borrarPlano(plano);
+                                  }, 
+                                  icon: const Icon(Icons.delete)
+                                ),
+                              ],
+                      ),
                             onTap: () async {
                               mostrarLista = true;
                               planoSeleccionado = plano;
@@ -608,6 +620,43 @@ class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDe
     await PlanosServices().putPlano(context, cliente, planoAEditar, token);
     planos = await PlanosServices().getClientPlano(context, cliente, token);
     setState(() {});
+  }
+
+  Future<void> actualizarPlanos(List<Plano> planos) async {
+    planos = await PlanosServices().getClientPlano(context, cliente, token);
+    setState(() {
+      this.planos = planos;
+    });
+  }
+
+  borrarPlano(Plano plano) async{
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Borrar Plano'),
+          content: SizedBox(
+            child: Text('Esta por borrar el Plano ${plano.codPlano}. Esta seguro de borrarlo?')
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                router.pop(context);
+              },
+            ),
+            TextButton(
+              child: const Text('Confirmar'),
+              onPressed: () async {
+                await PlanosServices().deletePlano(context, cliente, plano, token);
+                await PlanosServices.showDialogs(context, 'Plano borrado correctamente', true, true);
+                await actualizarPlanos(planos);
+              },
+            ),
+          ],
+        );
+      }
+    );
   }
 
   traerPuntosDeOtroPlano() async {
