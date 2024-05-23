@@ -83,15 +83,15 @@ class _InformesMobileState extends State<InformesMobile> {
                 if(item.data.objetoArbol == 'informe'){
                   parametros = await InformesServices().getParametros(context, token, item.data.informeId);
                   // print(parametros[0].parametroId);
+                  nombreInforme = item.key;
                 }
                 setState(() {
                   selectedNodeData = item.data; // Actualizar los datos del nodo seleccionado
                 });
                 if(item.data.objetoArbol == 'informe' && item.childrenAsList.isEmpty){
-                  nombreInforme = item.key;
                   router.pop();
-
                 }
+
 
               },
               onTreeReady: (controller) {
@@ -100,11 +100,16 @@ class _InformesMobileState extends State<InformesMobile> {
               },
               builder: (context, node) => Card(
                 color: colors.tertiary,
-                child: ListTile(
+                child: 
+                node.data.objetoArbol == 'informe' ?
+                ListTile(
                   title: Text(node.key),
-                  
-                  // subtitle: Text('Level ${node.level}'),
-                ),
+                  leading: Icon(Icons.file_copy_outlined, color: colors.primary,),
+                ) :
+                ListTile(
+                  title: Text(node.key),
+                )
+                
               ),
             ),
           ),

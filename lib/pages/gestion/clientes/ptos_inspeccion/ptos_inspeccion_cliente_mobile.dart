@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, avoid_function_literals_in_foreach_calls, avoid_print, avoid_init_to_null
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/config.dart';

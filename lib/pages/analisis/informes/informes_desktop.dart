@@ -107,10 +107,16 @@ class _InformesDesktopState extends State<InformesDesktop> {
               },
               builder: (context, node) => Card(
                 color: colors.tertiary,
-                child: ListTile(
+                child: 
+                node.data.objetoArbol == 'informe' ?
+                ListTile(
                   title: Text(node.key),
-                  // subtitle: Text('Level ${node.level}'),
-                ),
+                  leading: Icon(Icons.file_copy_outlined, color: colors.primary,),
+                ) :
+                ListTile(
+                  title: Text(node.key),
+                )
+                
               ),
             ),
           ),

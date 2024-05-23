@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sedel_oficina_maqueta/pages/PyR/ordenesPlanificacion/edit%20Orden/edit_orden_desktop.dart';
 import 'package:sedel_oficina_maqueta/pages/PyR/ordenesPlanificacion/edit%20Orden/edit_orden_mobile.dart';
-import 'package:sedel_oficina_maqueta/pages/pages.dart';
 
 
 class EditOrden extends StatefulWidget {

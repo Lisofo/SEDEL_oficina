@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sedel_oficina_maqueta/pages/gestion/servicios/editServicios/edit_servicios_desktop.dart';
 import 'package:sedel_oficina_maqueta/pages/gestion/servicios/editServicios/edit_servicios_mobile.dart';
-import 'package:sedel_oficina_maqueta/pages/pages.dart';
 
 class EditServiciosPage extends StatefulWidget {
   const EditServiciosPage({super.key});
