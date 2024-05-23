@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sedel_oficina_maqueta/pages/gestion/tareas/edit%20Tareas/edit_tareas_desktop.dart';
 import 'package:sedel_oficina_maqueta/pages/gestion/tareas/edit%20Tareas/edit_tareas_mobile.dart';
-import 'package:sedel_oficina_maqueta/pages/pages.dart';
 
 
 class EditTareas extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sedel_oficina_maqueta/pages/gestion/plagasObjetivo/plagas_objetivo_desktop.dart';
 import 'package:sedel_oficina_maqueta/pages/gestion/plagasObjetivo/plagas_objetivo_mobile.dart';
-import 'package:sedel_oficina_maqueta/pages/pages.dart';
 
 class PlagasObjetivoPage extends StatefulWidget {
   const PlagasObjetivoPage({super.key});

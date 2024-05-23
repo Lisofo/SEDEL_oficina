@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sedel_oficina_maqueta/pages/gestion/plagas/editPlagas/edit_plagas_desktop.dart';
 import 'package:sedel_oficina_maqueta/pages/gestion/plagas/editPlagas/edit_plagas_mobile.dart';
-
-import 'package:sedel_oficina_maqueta/pages/pages.dart';
 
 class EditPlagasPage extends StatefulWidget {
   const EditPlagasPage({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sedel_oficina_maqueta/pages/gestion/controles/controles_desktop.dart';
 import 'package:sedel_oficina_maqueta/pages/gestion/controles/controles_mobile.dart';
-import 'package:sedel_oficina_maqueta/pages/pages.dart';
 
 
 class ControlesPage extends StatefulWidget {

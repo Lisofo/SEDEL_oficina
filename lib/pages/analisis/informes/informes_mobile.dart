@@ -87,11 +87,13 @@ class _InformesMobileState extends State<InformesMobile> {
                 setState(() {
                   selectedNodeData = item.data; // Actualizar los datos del nodo seleccionado
                 });
-                if(item.data.objetoArbol == 'informe' && item.childrenAsList.isEmpty){
+                if(item.data.objetoArbol == 'informe'){
                   nombreInforme = item.key;
-                  router.pop();
-
                 }
+                if(item.data.objetoArbol == 'informe' && item.childrenAsList.isEmpty){
+                  router.pop();
+                }
+
 
               },
               onTreeReady: (controller) {
@@ -100,11 +102,16 @@ class _InformesMobileState extends State<InformesMobile> {
               },
               builder: (context, node) => Card(
                 color: colors.tertiary,
-                child: ListTile(
+                child: 
+                node.data.objetoArbol == 'informe' ?
+                ListTile(
                   title: Text(node.key),
-                  
-                  // subtitle: Text('Level ${node.level}'),
-                ),
+                  leading: Icon(Icons.file_copy_outlined, color: colors.primary,),
+                ) :
+                ListTile(
+                  title: Text(node.key),
+                )
+                
               ),
             ),
           ),

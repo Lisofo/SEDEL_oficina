@@ -36,7 +36,7 @@ class _MenuDesktopState extends State<MenuDesktop> {
           actions: [
             IconButton.filledTonal(
               style: ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll(colors.primary)
+                backgroundColor: WidgetStatePropertyAll(colors.primary)
               ),
                 onPressed: () {
                   logout();

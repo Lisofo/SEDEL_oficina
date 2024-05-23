@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sedel_oficina_maqueta/pages/gestion/tecnicos/edit%20Tecnicos/edit_tecnicos_desktop.dart';
 import 'package:sedel_oficina_maqueta/pages/gestion/tecnicos/edit%20Tecnicos/edit_tecnicos_mobile.dart';
-import 'package:sedel_oficina_maqueta/pages/pages.dart';
 
 
 class EditTecnicos extends StatefulWidget {

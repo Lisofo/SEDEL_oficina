@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sedel_oficina_maqueta/pages/pages.dart';
+import 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/perfiles/establecer_perfiles_desktop.dart';
 import 'package:sedel_oficina_maqueta/pages/sistema/usuarioPage/perfiles/establecer_perfiles_mobile.dart';
 
 
