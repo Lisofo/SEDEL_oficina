@@ -83,13 +83,11 @@ class _InformesMobileState extends State<InformesMobile> {
                 if(item.data.objetoArbol == 'informe'){
                   parametros = await InformesServices().getParametros(context, token, item.data.informeId);
                   // print(parametros[0].parametroId);
+                  nombreInforme = item.key;
                 }
                 setState(() {
                   selectedNodeData = item.data; // Actualizar los datos del nodo seleccionado
                 });
-                if(item.data.objetoArbol == 'informe'){
-                  nombreInforme = item.key;
-                }
                 if(item.data.objetoArbol == 'informe' && item.childrenAsList.isEmpty){
                   router.pop();
                 }
