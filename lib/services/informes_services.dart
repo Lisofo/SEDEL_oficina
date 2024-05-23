@@ -184,4 +184,59 @@ class InformesServices {
     }
   }
 
+  Future postGenerarInforme( BuildContext context, Informe informe, String token) async {
+    String link = apiLink;
+    var headers = {'Authorization': token};
+    
+    var data = {
+      "idInforme": 1,
+      "almacenId": 1,
+      "tipoImpresion": "PDF",
+      "destino": 0,
+      "destFileName": null,
+      "destImpresora": null,
+      "parametros": []
+    };
+
+    try {
+
+      final resp = await _dio.request(link,
+        data: data,
+        options: Options(
+          method: 'POST', 
+          headers: headers
+        )
+      );
+
+      
+
+      if (resp.statusCode == 201) {
+        showDialogs(context, 'Informe generado correctamente', false, false);
+      }
+
+      return;
+    } catch (e) {
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+              return "Error: ${error['message']}";
+            }).toList();
+            showErrorDialog(context, errorMessages.join('\n'));
+          }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: ${e.message}');
+        }
+      }
+    }
+  }
+
 }

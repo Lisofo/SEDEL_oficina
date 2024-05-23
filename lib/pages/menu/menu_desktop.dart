@@ -38,11 +38,11 @@ class _MenuDesktopState extends State<MenuDesktop> {
               style: ButtonStyle(
                 backgroundColor: WidgetStatePropertyAll(colors.primary)
               ),
-                onPressed: () {
-                  logout();
-                },
-                icon: const Icon(Icons.logout,),
-                tooltip: 'Logout',
+              onPressed: () {
+                logout();
+              },
+              icon: const Icon(Icons.logout,),
+              tooltip: 'Logout',
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(8, 8, 15, 8),
