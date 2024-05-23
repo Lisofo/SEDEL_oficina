@@ -143,7 +143,7 @@ class _InformesMobileState extends State<InformesMobile> {
                                     } else if(parametro.control == 'L'){
                                       final cliente = await showSearch(
                                         context: context, 
-                                        delegate: ParametroClientSearchDelegate('Buscar cliente', historial, parametro.informeId, parametro.parametroId)
+                                        delegate: ParametroClientSearchDelegate('Buscar cliente', historial, parametro.informeId, parametro.parametroId, parametro.dependeDe, parametros)
                                       );
                                       if(cliente != null) {
                                         setState(() {
@@ -231,7 +231,7 @@ class _InformesMobileState extends State<InformesMobile> {
       _controllers[parametro.parametro] = TextEditingController();
     }
     if(parametro.sql != ''){
-      parametrosValues = await InformesServices().getParametrosValues(context, token, parametro.informeId, parametro.parametroId,'','');
+      parametrosValues = await InformesServices().getParametrosValues(context, token, parametro.informeId, parametro.parametroId,'','', parametro.dependeDe.toString(), parametros);
     }
     return showDialog<void>(
       context: context,

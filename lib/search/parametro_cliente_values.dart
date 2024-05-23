@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/models/informes_values.dart';
+import 'package:sedel_oficina_maqueta/models/parametro.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/informes_services.dart';
 
@@ -13,7 +14,9 @@ class ParametroClientSearchDelegate extends SearchDelegate {
   final List<ParametrosValues> historial;
   final int informeId;
   final int parametroId;
-  ParametroClientSearchDelegate(this.searchFieldLabel, this.historial, this.informeId, this.parametroId);
+  final String? dependeDe;
+  List<Parametro> parametros;
+  ParametroClientSearchDelegate(this.searchFieldLabel, this.historial, this.informeId, this.parametroId, this.dependeDe, this.parametros);
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -47,6 +50,7 @@ class ParametroClientSearchDelegate extends SearchDelegate {
 
     String id = '';
     String descripcion = '';
+    
 
     if (searchParams.length >= 2) {
       id = searchParams[0];
@@ -62,8 +66,7 @@ class ParametroClientSearchDelegate extends SearchDelegate {
     }
 
     return FutureBuilder(
-      // Especifica explícitamente el tipo de dato para el FutureBuilder
-      future: clientServices.getParametrosValues(context, token, informeId, parametroId, id, descripcion),
+      future: clientServices.getParametrosValues(context, token, informeId, parametroId, id, descripcion, dependeDe.toString(), parametros),
       builder: (_, AsyncSnapshot snapshot) {
         if (snapshot.hasError) {
           return const ListTile(

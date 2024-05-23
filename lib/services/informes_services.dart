@@ -135,19 +135,36 @@ class InformesServices {
     }
   }
 
-  Future getParametrosValues(BuildContext context, String token, int informeId, int parametroId, String id, String descripcion) async {
+  Future<List<ParametrosValues>> getParametrosValues(
+    BuildContext context, String token, int informeId, int parametroId, String id, String descripcion, String dependeDe, List<Parametro> parametros) async {
+
+    List<String> depende = dependeDe.split(',');
     String link = '$apiLink$informeId/parametros/$parametroId/values';
-    bool yaTieneFiltro = false;
-    if (id != '') {
-      link += '&id=$id';
+    
+    // Construir parámetros a partir de dependeDe y los valores de la lista parametros
+    if (depende.isNotEmpty && depende[0].isNotEmpty) {
+      String param = depende.asMap().entries.map((entry) {
+        int index = entry.key;
+        String valor = entry.value;
+        return '$valor=${parametros[index].valor}';
+      }).join('&');
+      link += '?$param';
+    }
+  
+    // Agregar id a la URL si no está vacío
+    bool yaTieneFiltro = link.contains('?');
+    if (id.isNotEmpty) {
+      link += yaTieneFiltro ? '&id=$id' : '?id=$id';
       yaTieneFiltro = true;
     }
-    if (descripcion != '') {
-      yaTieneFiltro ? link += '&' : link += '?';
-      link += 'descripcion=$descripcion';
-      yaTieneFiltro = true;
+  
+    // Agregar descripcion a la URL si no está vacía
+    if (descripcion.isNotEmpty) {
+      link += yaTieneFiltro ? '&descripcion=$descripcion' : '?descripcion=$descripcion';
     }
-   
+  
+    print(link);
+  
     try {
       var headers = {'Authorization': token};
       var resp = await _dio.request(
@@ -158,22 +175,22 @@ class InformesServices {
         ),
       );
       final List<dynamic> parametrosValuesList = resp.data;
-
+  
       return parametrosValuesList.map((obj) => ParametrosValues.fromJson(obj)).toList();
     } catch (e) {
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
-            if(e.response!.statusCode == 403){
+            if (e.response!.statusCode == 403) {
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            } else {
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
@@ -181,21 +198,30 @@ class InformesServices {
           showErrorDialog(context, 'Error: ${e.message}');
         }
       }
+      return [];
     }
   }
 
-  Future postGenerarInforme( BuildContext context, Informe informe, String token) async {
+  Future postGenerarInforme( BuildContext context, InformeHijo informe, List<Parametro> parametros, String tipoImpresion, String token) async {
     String link = apiLink;
     var headers = {'Authorization': token};
-    
+    List<Map<String, String>> param = [];
+    for(var i = 1; i< parametros.length; i++){
+      param.add({
+        i.toString(): parametros[i].valor.toString()
+      });
+      print(param);
+    }
     var data = {
-      "idInforme": 1,
-      "almacenId": 1,
-      "tipoImpresion": "PDF",
+      "idInforme": informe.informeId,
+      "almacenId": informe.almacenId,
+      "tipoImpresion": tipoImpresion,
       "destino": 0,
       "destFileName": null,
       "destImpresora": null,
-      "parametros": []
+      "parametros": [
+
+      ]
     };
 
     try {

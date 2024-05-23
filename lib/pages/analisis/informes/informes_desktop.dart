@@ -43,6 +43,8 @@ class _InformesDesktopState extends State<InformesDesktop> {
   final Map<String, TextEditingController> _controllers = {};
   late String nombreInforme = '';
   late MaskTextInputFormatter maskFormatter;
+  late dynamic selectedInforme = InformeHijo.empty();
+  int buttonIndex = 0;
 
   @override
   void initState() {
@@ -87,6 +89,8 @@ class _InformesDesktopState extends State<InformesDesktop> {
                   parametros = await InformesServices().getParametros(context, token, item.data.informeId);
                   // print(parametros[0].parametroId);
                   nombreInforme = item.key;
+                  selectedInforme = item.data;
+                  print(selectedInforme.informe);
                 }
                 for (var param in parametros) {
                   if (param.control == 'T') {
@@ -144,7 +148,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
                                     } else if(parametro.control == 'L'){
                                       final cliente = await showSearch(
                                         context: context, 
-                                        delegate: ParametroClientSearchDelegate('Buscar cliente', historial, parametro.informeId, parametro.parametroId)
+                                        delegate: ParametroClientSearchDelegate('Buscar cliente', historial, parametro.informeId, parametro.parametroId, parametro.dependeDe, parametros)
                                       );
                                       if(cliente != null) {
                                         setState(() {
@@ -187,6 +191,17 @@ class _InformesDesktopState extends State<InformesDesktop> {
                         showUnselectedLabels: true,
                         selectedItemColor: colors.primary,
                         unselectedItemColor: colors.primary,
+                        onTap: (index) async {
+                          buttonIndex = index;
+                          switch (buttonIndex){
+                            case 0: 
+                              
+                            break;
+                            case 1:
+                              await postInforme(selectedInforme);
+                            break;
+                          }
+                        },
                         items: const [
                           BottomNavigationBarItem(
                             icon: Icon(Icons.save_as),
@@ -214,7 +229,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
       _controllers[parametro.parametro] = TextEditingController();
     }
     if (parametro.sql != '') {
-      parametrosValues = await InformesServices().getParametrosValues(context, token, parametro.informeId, parametro.parametroId, '', '');
+      parametrosValues = await InformesServices().getParametrosValues(context, token, parametro.informeId, parametro.parametroId, '', '', parametro.dependeDe.toString(), parametros);
     }
     if (parametro.control == 'T' && parametro.tipo == 'N') {
       maskFormatter = MaskTextInputFormatter(mask: '########', filter: { "#": RegExp(r'[0-9]') });
@@ -291,11 +306,11 @@ class _InformesDesktopState extends State<InformesDesktop> {
       setState(() {
         selectedDate = picked;
         if (tipo == 'D') {
-          parametro.valor = DateFormat('d/M/y', 'es').format(picked);
+          parametro.valor = DateFormat('y/M/d', 'es').format(picked);
         } else if (tipo == 'Dd') {
-          parametro.valor = DateFormat('d/M/y', 'es').format(picked);
+          parametro.valor = DateFormat('y/M/d', 'es').format(picked);
         } else if (tipo == 'Dh') {
-          parametro.valor = DateFormat('d/M/y', 'es').format(picked);
+          parametro.valor = DateFormat('y/M/d', 'es').format(picked);
         }
       });
     }
@@ -343,4 +358,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
     return nodes;
   }
 
+  postInforme(dynamic informe) async{
+    await InformesServices().postGenerarInforme(context, informe, parametros, 'PDF', token);
+  }
 }
