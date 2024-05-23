@@ -34,6 +34,16 @@ class _MenuDesktopState extends State<MenuDesktop> {
           ),
           iconTheme: IconThemeData(color: colors.onPrimary),
           actions: [
+            IconButton.filledTonal(
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(colors.primary)
+              ),
+                onPressed: () {
+                  logout();
+                },
+                icon: const Icon(Icons.logout,),
+                tooltip: 'Logout',
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(8, 8, 15, 8),
               child: Text(name,style: const TextStyle(color: Colors.white, fontSize: 24)),
@@ -46,18 +56,6 @@ class _MenuDesktopState extends State<MenuDesktop> {
         ),
         backgroundColor: Colors.white,
         body: Center(child: Image.asset('images/logo.png')),
-        bottomNavigationBar: BottomAppBar(
-          color: Colors.white,
-            elevation: 0,
-            child: IconButton.filledTonal(
-              style: ButtonStyle(
-                backgroundColor: WidgetStatePropertyAll(colors.primary)
-              ),
-                onPressed: () {
-                  logout();
-                },
-                icon: const Icon(Icons.logout))
-        ),
       ),
     );
   }
