@@ -93,6 +93,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
                   nombreInforme = item.key;
                   selectedInforme = item.data;
                   print(selectedInforme.informe);
+                  tipos = selectedNodeData.tiposImpresion;
                 }
                 for (var param in parametros) {
                   if (param.control == 'T') {
@@ -100,9 +101,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
                   }
                 }
                 setState(() {
-                  selectedNodeData = item.data; // Actualizar los datos del nodo seleccionado
-                  tipos = selectedNodeData.tiposImpresion;
-                  // print(tipos);
+                  selectedNodeData = item.data;
                 });
               },
               onTreeReady: (controller) {
@@ -161,10 +160,10 @@ class _InformesDesktopState extends State<InformesDesktop> {
                                         delegate: ParametroClientSearchDelegate('Buscar cliente', historial, parametro.informeId, parametro.parametroId, parametro.dependeDe, parametros)
                                       );
                                       if(cliente != null) {
-                                        setState(() {
-                                          parametro.valor = cliente.clienteId;
-                                          parametro.valorAMostrar = cliente.descripcion;
-                                        });
+                                        parametro.valor = cliente.id.toString();
+                                        parametro.valorAMostrar = cliente.descripcion;
+                                        setState(() {});
+                                        
                                       } else{
                                         parametro.valor = '';
                                         parametro.valorAMostrar = '';
