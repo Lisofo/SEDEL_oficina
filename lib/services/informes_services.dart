@@ -202,31 +202,30 @@ class InformesServices {
     }
   }
 
-  Future postGenerarInforme( BuildContext context, InformeHijo informe, List<Parametro> parametros, String tipoImpresion, String token) async {
-    String link = apiLink;
+  Future postGenerarInforme( BuildContext context, dynamic informe, List<Parametro> parametros, String tipoImpresion, String token) async {
+    String link = '${apiUrl}api/v1/rpts/';
     var headers = {'Authorization': token};
     List<Map<String, String>> param = [];
-    for(var i = 1; i< parametros.length; i++){
+    for(var i = 0; i< parametros.length; i++){
       param.add({
-        i.toString(): parametros[i].valor.toString()
+        'p${i + 1}': parametros[i].valor.toString()
       });
       print(param);
     }
     var data = {
-      "idInforme": informe.informeId,
+      "informeId": informe.informeId,
       "almacenId": informe.almacenId,
       "tipoImpresion": tipoImpresion,
       "destino": 0,
       "destFileName": null,
       "destImpresora": null,
-      "parametros": [
-
-      ]
+      "parametros": param
     };
-
+    print(data);
     try {
 
-      final resp = await _dio.request(link,
+      final resp = await _dio.request(
+        link,
         data: data,
         options: Options(
           method: 'POST', 
@@ -234,10 +233,8 @@ class InformesServices {
         )
       );
 
-      
-
-      if (resp.statusCode == 201) {
-        showDialogs(context, 'Informe generado correctamente', false, false);
+      if (resp.statusCode == 200) {
+        showDialogs(context, 'Informe generado correctamente', true, false);
       }
 
       return;

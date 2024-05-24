@@ -18,6 +18,7 @@ class Parametro {
   late String comparador;
   late String? sql;
   late String? valor;
+  late String? valorAMostrar;
   late String? dependeDe;
 
     Parametro({
@@ -31,6 +32,7 @@ class Parametro {
       required this.sql,
       required this.valor,
       required this.dependeDe,
+      required this.valorAMostrar
     });
 
     factory Parametro.fromJson(Map<String, dynamic> json) => Parametro(
@@ -43,6 +45,7 @@ class Parametro {
       comparador: json["comparador"] as String? ?? '',
       sql: json["sql"] as String? ?? '',
       valor: '',
+      valorAMostrar: '',
       dependeDe: json['dependeDe'] as String? ?? '',
     );
 
@@ -68,6 +71,7 @@ class Parametro {
     comparador = '';
     sql = '';
     valor = '';
+    valorAMostrar = '';
     dependeDe = '';
   }
 }

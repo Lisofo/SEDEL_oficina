@@ -45,6 +45,8 @@ class _InformesDesktopState extends State<InformesDesktop> {
   late MaskTextInputFormatter maskFormatter;
   late dynamic selectedInforme = InformeHijo.empty();
   int buttonIndex = 0;
+  late String tipo = '';
+  List<TiposImpresion> tipos = [];
 
   @override
   void initState() {
@@ -99,6 +101,8 @@ class _InformesDesktopState extends State<InformesDesktop> {
                 }
                 setState(() {
                   selectedNodeData = item.data; // Actualizar los datos del nodo seleccionado
+                  tipos = selectedNodeData.tiposImpresion;
+                  // print(tipos);
                 });
               },
               onTreeReady: (controller) {
@@ -158,14 +162,17 @@ class _InformesDesktopState extends State<InformesDesktop> {
                                       );
                                       if(cliente != null) {
                                         setState(() {
-                                          parametro.valor = cliente.descripcion;
+                                          parametro.valor = cliente.clienteId;
+                                          parametro.valorAMostrar = cliente.descripcion;
                                         });
                                       } else{
                                         parametro.valor = '';
+                                        parametro.valorAMostrar = '';
                                       }
                                     } else {
                                       await _showPopup(context, parametro);
                                       print(parametro.valor);
+                                      print(parametro.valorAMostrar);
                                     }
                                   },
                                   child: Text(parametro.parametro),
@@ -184,7 +191,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
                                 // ] else if (parametro.parametro == 'Fecha Hasta')...[
                                 //   Text(campoFechaHasta)
                                 // ]
-                                Text(parametro.valor.toString())
+                                Text(parametro.valorAMostrar.toString())
                               ],
                             );
                           }
@@ -204,7 +211,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
                               
                             break;
                             case 1:
-                              await postInforme(selectedInforme);
+                              generarInformePopup(context, selectedInforme);
                             break;
                           }
                         },
@@ -227,6 +234,51 @@ class _InformesDesktopState extends State<InformesDesktop> {
           ),
         ],
       ),
+    );
+  }
+
+  void generarInformePopup(BuildContext context, dynamic informe) {
+    print(selectedNodeData);
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Seleccione un forma de impresion'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: 370,
+                child: CustomDropdownFormMenu(
+                  items: tipos.map((e) {
+                    return DropdownMenuItem(
+                      value: e,
+                      child: Text(e.descripcion),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    tipo = (value as TiposImpresion).tipo;
+                  },
+                ),
+              )
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                router.pop();
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              child: const Text('Generar'),
+              onPressed: () async {
+                await postInforme(informe);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -260,7 +312,8 @@ class _InformesDesktopState extends State<InformesDesktop> {
                       );
                     }).toList(),
                     onChanged: (value) {
-                      parametro.valor = (value as ParametrosValues).descripcion;
+                      parametro.valor = (value as ParametrosValues).id.toString();
+                      parametro.valorAMostrar = (value).descripcion;
                     },
                   ),
                 )
@@ -289,6 +342,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
               onPressed: () {
                 if (_controllers[parametro.parametro]?.text != '' && parametro.control == 'T') {
                   parametro.valor = _controllers[parametro.parametro]?.text;
+                  parametro.valorAMostrar = _controllers[parametro.parametro]?.text;
                 }
                 router.pop();
                 setState(() {});
@@ -313,10 +367,13 @@ class _InformesDesktopState extends State<InformesDesktop> {
         selectedDate = picked;
         if (tipo == 'D') {
           parametro.valor = DateFormat('y/M/d', 'es').format(picked);
+          parametro.valorAMostrar = DateFormat('y/M/d', 'es').format(picked);
         } else if (tipo == 'Dd') {
           parametro.valor = DateFormat('y/M/d', 'es').format(picked);
+          parametro.valorAMostrar = DateFormat('y/M/d', 'es').format(picked);
         } else if (tipo == 'Dh') {
           parametro.valor = DateFormat('y/M/d', 'es').format(picked);
+          parametro.valorAMostrar = DateFormat('y/M/d', 'es').format(picked);
         }
       });
     }
@@ -365,6 +422,6 @@ class _InformesDesktopState extends State<InformesDesktop> {
   }
 
   postInforme(dynamic informe) async{
-    await InformesServices().postGenerarInforme(context, informe, parametros, 'PDF', token);
+    await InformesServices().postGenerarInforme(context, informe, parametros, tipo, token);
   }
 }
