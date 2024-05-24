@@ -404,7 +404,8 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                         items: tipoOrdenes.map((e) {
                                           return DropdownMenuItem(
                                             value: e,
-                                            child: Text(e.descripcion));
+                                            child: Text(e.descripcion)
+                                          );
                                         }).toList(),
                                         onChanged: (value){
                                           selectedTipoOrden = value;
@@ -423,7 +424,8 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                         ),
                                         Text(
                                           orden.ordenTrabajoId == 0 ? '' : orden.tecnico.nombre,
-                                          style: const TextStyle(fontSize: 16))
+                                          style: const TextStyle(fontSize: 16)
+                                        )
                                       ],
                                     ),
                                     if(orden.ordenTrabajoId == 0)
@@ -432,7 +434,10 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                       decoration: BoxDecoration(border: Border.all(), borderRadius: BorderRadius.circular(5)),
                                       child: DropdownSearch(
                                         dropdownDecoratorProps: const DropDownDecoratorProps(
-                                          dropdownSearchDecoration: InputDecoration(hintText: 'Seleccione un tecnico')
+                                          dropdownSearchDecoration: InputDecoration(
+                                            isDense: true,
+                                            hintText: 'Seleccione un tecnico'
+                                          )
                                         ),
                                         selectedItem: selectedCliente.tecnico,
                                         items: tecnicos,
@@ -466,7 +471,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                         },
                                       ),
                                     ),
-                                    if(orden.ordenTrabajoId != 0 && (orden.estado == 'PENDIENTE' || orden.estado == 'EN PROCESO'))...[
+                                    if(/*orden.ordenTrabajoId != 0*/serviciosSeleccionados.isNotEmpty && (orden.estado == 'PENDIENTE' || orden.estado == 'EN PROCESO'))...[
                                       SizedBox(
                                       height: 250,
                                       child: ListView.builder(
@@ -485,7 +490,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                           );
                                         }),
                                       )
-                                    ]else if (orden.ordenTrabajoId != 0 && orden.estado == 'PENDIENTE')...[
+                                    ]else if (orden.ordenTrabajoId != 0 && (orden.estado == 'FINALIZADA' || orden.estado == 'REVISADA'))...[
                                       SizedBox(
                                       height: 250,
                                       child: ListView.builder(
@@ -498,7 +503,6 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                         }),
                                       )
                                     ]
-                                    
                                   ],
                                 ),
                               ),
@@ -855,7 +859,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                     await OrdenServices().cambiarTecnicoDeLaOrden(
                         context, orden, selectedTecnico!.tecnicoId, token);
                     await OrdenServices.showDialogs(
-                        context, 'Tecnico cambiado correctamente', true, true);
+                        context, 'Tecnico cambiado correctamente', true, false);
                     setState(() {
                       orden.tecnico = selectedTecnico!;
                     });
