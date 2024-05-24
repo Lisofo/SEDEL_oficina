@@ -154,9 +154,6 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
                           ),
                         ],
                       ),
-                      
-                      
-                      const SizedBox(height: 10,),
                       RichText(
                         text: TextSpan(
                           style: const TextStyle(color: Colors.black),
@@ -173,14 +170,14 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
                       )
                     ],
                   ),
-                  const SizedBox(height: 5,),
+                  const SizedBox(height: 3,),
                   Divider(
                     thickness: 0.5,
                     color: colors.primary,
                     endIndent: 20,
                     indent: 20,
                   ),
-                  const SizedBox(height: 5,),
+                  const SizedBox(height: 3,),
                   Column(
                     children: [
                       const Text('Tecnico: '),
@@ -208,17 +205,19 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 5,),
+                  const SizedBox(height: 3,),
                   Divider(
                     thickness: 0.5,
                     color: colors.primary,
                     endIndent: 20,
                     indent: 20,
                   ),
-                  const SizedBox(height: 5,),
-                  Column(
+                  const SizedBox(height: 3,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text('Estado: '),
+                      const SizedBox(width: 10,),
                       DropdownButton(
                         hint: const Text('Estado'),
                         value: selectedEstado,
@@ -236,14 +235,14 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 5,),
+                  const SizedBox(height: 3,),
                   Divider(
                     thickness: 0.5,
                     color: colors.primary,
                     endIndent: 20,
                     indent: 20,
                   ),
-                  const SizedBox(height: 5,),
+                  const SizedBox(height: 3,),
                   const Column(
                     children: [
                       Text('Cliente: '),
@@ -253,14 +252,14 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 5,),
+                  const SizedBox(height: 3,),
                   Divider(
                     thickness: 0.5,
                     color: colors.primary,
                     endIndent: 20,
                     indent: 20,
                   ),
-                  const SizedBox(height: 5,),
+                  const SizedBox(height: 3,),
                   // Row(
                   //   children: [
                   //     Text('Servicios: '),
@@ -342,7 +341,7 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
                       )
                     ],
                   ),
-                  const SizedBox(height: 5,),
+                  const SizedBox(height: 3,),
                   Divider(
                     thickness: 0.5,
                     color: colors.primary,
@@ -354,7 +353,7 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
                     children: [
                       const Text('Nro. Orden:'),
                       const SizedBox(
-                        height: 5,
+                        height: 3,
                       ),
                       SizedBox(
                           width: 200,
