@@ -39,6 +39,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
   late Tecnico? selectedTecnico = null;
   late Tecnico? selectedTecnicoInicial = Tecnico.empty();
   late bool editarOrden = true;
+  late bool editarOrdenFechas = true;
   late String dateTime;
   DateTime selectedDateOrden = DateTime.now();
   DateTime selectedDateDesde = DateTime.now();
@@ -84,6 +85,9 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
     selectedDateDesde = DateTime(selectedDateDesde.year, selectedDateDesde.month, selectedDateDesde.day, selectedDateDesde.hour, selectedDateDesde.minute, 0);
     selectedDateHasta = DateTime(selectedDateHasta.year, selectedDateHasta.month, selectedDateHasta.day, selectedDateHasta.hour, selectedDateHasta.minute, 0);
     selectedDateOrden = orden.fechaOrdenTrabajo;
+    if(orden.ordenTrabajoId != 0){
+      editarOrdenFechas = false;
+    }
     setState(() {});
   }
 
@@ -189,7 +193,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                         ],
                                       ),
                                     ],
-                                    const Text('Nombre del cliente: ',
+                                    const Text('*  Nombre del cliente: ',
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600
@@ -275,7 +279,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                             ),
                                             children: <TextSpan>[
                                               const TextSpan(
-                                                  text: 'Fecha de la orden: ',
+                                                  text: '*  Fecha de la orden: ',
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.w600)),
@@ -284,7 +288,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                             ],
                                           ),
                                         ),
-                                        if (editarOrden)...[
+                                        if (editarOrdenFechas)...[
                                           TextButton.icon(
                                             onPressed: () {
                                               _selectDateOrden(context);
@@ -306,7 +310,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                             ),
                                             children: <TextSpan>[
                                               const TextSpan(
-                                                  text: 'Fecha desde: ',
+                                                  text: '*  Fecha desde: ',
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.w600)),
@@ -315,7 +319,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                             ],
                                           ),
                                         ),
-                                        if (editarOrden)
+                                        if (editarOrdenFechas)
                                           TextButton.icon(
                                               onPressed: () {
                                                 _selectFechaDesde(context);
@@ -338,7 +342,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                             ),
                                             children: <TextSpan>[
                                               const TextSpan(
-                                                  text: 'Fecha hasta: ',
+                                                  text: '*  Fecha hasta: ',
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.w600)),
@@ -347,7 +351,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                             ],
                                           ),
                                         ),
-                                        if (editarOrden)
+                                        if (editarOrdenFechas)
                                           TextButton.icon(
                                               onPressed: () {
                                                 _selectFechaHasta(context);
@@ -381,7 +385,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                     Row(
                                       children: [
                                         const Text(
-                                          'Tipo de Orden: ',
+                                          '*  Tipo de Orden: ',
                                           style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600),
@@ -411,15 +415,15 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                     Row(
                                       children: [
                                         const Text(
-                                          'Tecnico: ',
+                                          '* Tecnico: ',
                                           style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600
+                                          ),
                                         ),
                                         Text(
                                           orden.ordenTrabajoId == 0 ? '' : orden.tecnico.nombre,
-                                          style:
-                                                const TextStyle(fontSize: 16))
+                                          style: const TextStyle(fontSize: 16))
                                       ],
                                     ),
                                     if(orden.ordenTrabajoId == 0)
@@ -444,12 +448,12 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                     ),
                                     const SizedBox(height: 10),
                                     const Text(
-                                      'Servicios: ',
+                                      '*  Servicios: ',
                                       style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600),
                                     ),
-                                    if(orden.ordenTrabajoId == 0)
+                                    if(/*orden.ordenTrabajoId == 0 &&*/ (orden.estado == 'PENDIENTE' || orden.estado == 'EN PROCESO'))
                                     SizedBox(
                                       width: 400,
                                       child: DropdownSearch<Servicio>(
@@ -462,7 +466,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                         },
                                       ),
                                     ),
-                                    if(orden.ordenTrabajoId == 0 && orden.estado == 'PENDIENTE')...[
+                                    if(orden.ordenTrabajoId != 0 && (orden.estado == 'PENDIENTE' || orden.estado == 'EN PROCESO'))...[
                                       SizedBox(
                                       height: 250,
                                       child: ListView.builder(
@@ -540,16 +544,15 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                           children: [
                             const Text(
                               'Instrucciones: ',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w600),
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                             ),
                             Container(
                               width: MediaQuery.of(context).size.width * 0.2,
                               decoration: BoxDecoration(
                                   border: Border.all(
-                                      color: const Color.fromARGB(
-                                          255, 52, 120, 62),
-                                      width: 2),
+                                    color: const Color.fromARGB(255, 52, 120, 62),
+                                    width: 2
+                                  ),
                                   borderRadius: BorderRadius.circular(5)),
                               child: TextFormField(
                                 enabled: editarOrden,
@@ -562,26 +565,27 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                               ),
                             ),
                             const Text(
-                              'Comentario:',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w600),
+                              '*  Comentario:',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                             ),
                             Container(
                               width: MediaQuery.of(context).size.width * 0.2,
                               decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: const Color.fromARGB(
-                                          255, 52, 120, 62),
-                                      width: 2),
-                                  borderRadius: BorderRadius.circular(5)),
+                                border: Border.all(
+                                  color: const Color.fromARGB(255, 52, 120, 62),
+                                  width: 2
+                                ),
+                                borderRadius: BorderRadius.circular(5)
+                              ),
                               child: TextFormField(
                                 enabled: editarOrden,
                                 maxLines: 10,
                                 controller: _comentarioController,
                                 decoration: const InputDecoration(
-                                    border: InputBorder.none,
-                                    fillColor: Colors.white,
-                                    filled: true),
+                                  border: InputBorder.none,
+                                  fillColor: Colors.white,
+                                  filled: true
+                                ),
                               ),
                             ),
                           ],
@@ -603,7 +607,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
               buttonIndex = index;
               switch (buttonIndex){
                 case 0: 
-                if(orden.estado == 'PENDIENTE'){
+                if(orden.estado == 'PENDIENTE' || orden.estado == 'EN PROCESO'){
                   datosAGuardar(context);
                 }else{
                   null;
@@ -617,8 +621,11 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                 break;
                 case 2:
                 if(orden.estado == 'DESCARTADA'){
-                }else{
+                  null;
+                }else if(orden.estado == 'PENDIENTE'){
                   cambiarTecnico();
+                }else{
+                  null;
                 }
                 break;
                 case 3:
@@ -730,13 +737,13 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
   orden.fechaHasta = selectedDateHasta;
   orden.instrucciones = _instruccionesController.text;
   orden.comentarios = _comentarioController.text;
-
+  List<ServicioOrdenes> serviciosOrdenes = convertirServicios();
+  orden.servicio = serviciosOrdenes;
+  
   if (orden.ordenTrabajoId == 0) {
     orden.cliente = selectedCliente;
     orden.tipoOrden = selectedTipoOrden;
-    orden.tecnico = selectedTecnico!;
-    List<ServicioOrdenes> serviciosOrdenes = convertirServicios();
-    orden.servicio = serviciosOrdenes;
+    orden.tecnico = selectedTecnico!;    
 
     await OrdenServices().postOrden(context, orden, token);
   }else{

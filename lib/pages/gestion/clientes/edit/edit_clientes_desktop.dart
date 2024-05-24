@@ -196,7 +196,7 @@ class _BodyState extends State<Body> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('Codigo '),
+                            const Text('*  Codigo '),
                             SizedBox(
                                 width: 300,
                                 child: CustomTextFormField(
@@ -211,7 +211,7 @@ class _BodyState extends State<Body> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('Nombre '),
+                            const Text('*  Nombre '),
                             SizedBox(
                                 width: 300,
                                 child: CustomTextFormField(
@@ -233,7 +233,7 @@ class _BodyState extends State<Body> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('Nombre Fantasia  '),
+                            const Text('*  Nombre Fantasia  '),
                             SizedBox(
                               width: 300,
                               child: CustomTextFormField(
@@ -261,7 +261,7 @@ class _BodyState extends State<Body> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('Direccion  '),
+                            const Text('*  Direccion  '),
                             SizedBox(
                               width: 300,
                               child: CustomTextFormField(
@@ -320,7 +320,7 @@ class _BodyState extends State<Body> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('Localidad  '),
+                            const Text('*  Localidad  '),
                             SizedBox(
                                 width: 300,
                                 child: CustomTextFormField(
@@ -335,7 +335,7 @@ class _BodyState extends State<Body> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('Departamento  '),
+                            const Text('*  Departamento  '),
                             SizedBox(
                               width: 300,
                               child: CustomDropdownFormMenu(
@@ -407,22 +407,24 @@ class _BodyState extends State<Body> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('Estado  '),
+                            const Text('*  Estado  '),
                             SizedBox(
-                                width: 300,
-                                child: CustomDropdownFormMenu(
-                                  value: estadoInicialSeleccionado,
-                                  hint: 'Seleccione un estado',
-                                  items: estados.map((e) {
-                                    return DropdownMenuItem(
-                                        value: e, child: Text(e.descripcion));
-                                  }).toList(),
-                                  onChanged: (newValue) {
-                                    estadoSeleccionado = newValue;
-                                    cliente.estado =
-                                        (newValue as EstadoCliente).codEstado;
-                                  },
-                                )),
+                              width: 300,
+                              child: CustomDropdownFormMenu(
+                                value: estadoInicialSeleccionado,
+                                hint: 'Seleccione un estado',
+                                items: estados.map((e) {
+                                  return DropdownMenuItem(
+                                    value: e, 
+                                    child: Text(e.descripcion));
+                                }).toList(),
+                                onChanged: (newValue) {
+                                  estadoSeleccionado = newValue;
+                                  cliente.estado =
+                                      (newValue as EstadoCliente).codEstado;
+                                },
+                              )
+                            ),
                           ],
                         ),
                         const SizedBox(
@@ -431,7 +433,7 @@ class _BodyState extends State<Body> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('Tipo de cliente '),
+                            const Text('*  Tipo de cliente '),
                             SizedBox(
                                 width: 300,
                                 child: CustomDropdownFormMenu(
@@ -469,7 +471,7 @@ class _BodyState extends State<Body> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  const Text('Tecnico  '),
+                                  const Text('*  Tecnico  '),
                                   SizedBox(
                                     width: 300,
                                     child: CustomDropdownFormMenu(
