@@ -196,7 +196,7 @@ class _BodyState extends State<Body> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('Codigo '),
+                            const Text('*  Codigo '),
                             SizedBox(
                                 width: 300,
                                 child: CustomTextFormField(
@@ -211,7 +211,7 @@ class _BodyState extends State<Body> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('Nombre '),
+                            const Text('*  Nombre '),
                             SizedBox(
                                 width: 300,
                                 child: CustomTextFormField(
@@ -233,7 +233,7 @@ class _BodyState extends State<Body> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('Nombre Fantasia  '),
+                            const Text('*  Nombre Fantasia  '),
                             SizedBox(
                               width: 300,
                               child: CustomTextFormField(
@@ -261,7 +261,7 @@ class _BodyState extends State<Body> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('Direccion  '),
+                            const Text('*  Direccion  '),
                             SizedBox(
                               width: 300,
                               child: CustomTextFormField(
@@ -320,7 +320,7 @@ class _BodyState extends State<Body> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('Localidad  '),
+                            const Text('*  Localidad  '),
                             SizedBox(
                                 width: 300,
                                 child: CustomTextFormField(
@@ -335,7 +335,7 @@ class _BodyState extends State<Body> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('Departamento  '),
+                            const Text('*  Departamento  '),
                             SizedBox(
                               width: 300,
                               child: CustomDropdownFormMenu(
@@ -407,22 +407,24 @@ class _BodyState extends State<Body> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('Estado  '),
+                            const Text('*  Estado  '),
                             SizedBox(
-                                width: 300,
-                                child: CustomDropdownFormMenu(
-                                  value: estadoInicialSeleccionado,
-                                  hint: 'Seleccione un estado',
-                                  items: estados.map((e) {
-                                    return DropdownMenuItem(
-                                        value: e, child: Text(e.descripcion));
-                                  }).toList(),
-                                  onChanged: (newValue) {
-                                    estadoSeleccionado = newValue;
-                                    cliente.estado =
-                                        (newValue as EstadoCliente).codEstado;
-                                  },
-                                )),
+                              width: 300,
+                              child: CustomDropdownFormMenu(
+                                value: estadoInicialSeleccionado,
+                                hint: 'Seleccione un estado',
+                                items: estados.map((e) {
+                                  return DropdownMenuItem(
+                                    value: e, 
+                                    child: Text(e.descripcion));
+                                }).toList(),
+                                onChanged: (newValue) {
+                                  estadoSeleccionado = newValue;
+                                  cliente.estado =
+                                      (newValue as EstadoCliente).codEstado;
+                                },
+                              )
+                            ),
                           ],
                         ),
                         const SizedBox(
@@ -431,7 +433,7 @@ class _BodyState extends State<Body> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('Tipo de cliente '),
+                            const Text('*  Tipo de cliente '),
                             SizedBox(
                                 width: 300,
                                 child: CustomDropdownFormMenu(
@@ -469,7 +471,7 @@ class _BodyState extends State<Body> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  const Text('Tecnico  '),
+                                  const Text('*  Tecnico  '),
                                   SizedBox(
                                     width: 300,
                                     child: CustomDropdownFormMenu(
@@ -529,24 +531,14 @@ class _BodyState extends State<Body> {
                                         children: [
                                           Column(
                                             children: [
-                                              Text(DateFormat(
-                                                      'E, d , MMM, yyyy', 'es')
-                                                  .format(servicio.desde!)),
-                                              Text(servicio.hasta == null
-                                                  ? ''
-                                                  : DateFormat(
-                                                          'E, d , MMM, yyyy',
-                                                          'es')
-                                                      .format(servicio.hasta!)),
+                                              Text(DateFormat('E, d , MMM, yyyy', 'es').format(servicio.desde!)),
+                                              Text(servicio.hasta == null ? '' : DateFormat('E, d , MMM, yyyy', 'es').format(servicio.hasta!)),
                                             ],
                                           ),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
+                                          const SizedBox(width: 5,),
                                           IconButton(
                                             onPressed: () {
-                                              popUpBorrar(context, cliente,
-                                                  servicio, token, i);
+                                              popUpBorrar(context, cliente, servicio, token, i);
                                             },
                                             icon: const Icon(
                                               Icons.delete,
@@ -560,13 +552,12 @@ class _BodyState extends State<Body> {
                                             onPressed: () async {
                                               await showDialog(
                                                 context: context,
-                                                builder:
-                                                    (BuildContext context) {
+                                                builder: (BuildContext context) {
                                                   return AddClientServicesDialog(
-                                                      servicioClienteSeleccionado:
-                                                          serviciosCliente[i],
-                                                      cliente: cliente,
-                                                      token: token);
+                                                    servicioClienteSeleccionado: serviciosCliente[i],
+                                                    cliente: cliente,
+                                                    token: token
+                                                  );
                                                 },
                                               );
                                               loadDatos();
@@ -587,9 +578,7 @@ class _BodyState extends State<Body> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    const SizedBox(height: 10,),
                     SizedBox(
                       width: 500,
                       height: 300,
@@ -603,22 +592,17 @@ class _BodyState extends State<Body> {
                     )
                   ],
                 ),
-                const SizedBox(
-                  width: 30,
-                ),
+                const SizedBox(width: 30,),
                 Card(
                   child: Column(
                     children: [
                       const Center(
                         child: Text(
                           'Usuarios asociados',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
+                      const SizedBox(height: 20,),
                       SizedBox(
                         height: 400,
                         width: 300,
@@ -627,8 +611,7 @@ class _BodyState extends State<Body> {
                           itemBuilder: (context, index) {
                             return ListTile(
                               leading: CircleAvatar(
-                                backgroundColor:
-                                   colors.primary,
+                                backgroundColor: colors.primary,
                                 child: Text(
                                   usuariosXClientes[index].usuarioId.toString(),
                                   style: const TextStyle(color: Colors.white),
@@ -694,15 +677,13 @@ class _BodyState extends State<Body> {
             if (tieneId) ...[
               CustomButton(
                 onPressed: () async {
-                    await borrarClientDialog(context, cliente, token);
+                  await borrarClientDialog(context, cliente, token);
                 },
                 text:'Eliminar',
                 tamano: 20,
               ),
             ],
-            const SizedBox(
-              width: 30,
-            ),
+            const SizedBox(width: 30,),
             if(tieneId)
             CustomButton(
               onPressed: () {

@@ -246,27 +246,33 @@ void _showCreateCopyDialog(BuildContext context) {
             children: [
               const Text('Está por generar la copia de una revisión, seleccione el origen de la copia'),
               const SizedBox(height: 10,),
-              CustomDropdownFormMenu(
-                hint: 'Seleccione una revisión',
-                // value: selectedRevision,
-                onChanged: (newValue) {
-                  setState(() {
-                    selectedRevision = newValue;
-                  });
-                },
-                items: revisiones.map((RevisionOrden revision) {
-                  return DropdownMenuItem(
-                    value: revision,
-                    child: Text('Revisión ${revision.ordinal}'),
-                  );
-                }).toList(),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.3,
+                child: CustomDropdownFormMenu(
+                  hint: 'Seleccione una revisión',
+                  // value: selectedRevision,
+                  onChanged: (newValue) {
+                    setState(() {
+                      selectedRevision = newValue;
+                    });
+                  },
+                  items: revisiones.map((RevisionOrden revision) {
+                    return DropdownMenuItem(
+                      value: revision,
+                      child: Text('Revisión ${revision.ordinal}'),
+                    );
+                  }).toList(),
+                ),
               ),
               const SizedBox(height: 10,),
-              CustomTextFormField(
-                controller: comentarioController,
-                hint: 'Escriba un comentario a ser necesario',
-                label: 'Comentario',
-                maxLines: 1,
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.3,
+                child: CustomTextFormField(
+                  controller: comentarioController,
+                  hint: 'Escriba un comentario a ser necesario',
+                  label: 'Comentario',
+                  maxLines: 1,
+                ),
               ),
               const SizedBox(height: 10),
               Row(

@@ -293,13 +293,9 @@ class OrdenServices {
     try {
       var headers = {'Authorization': token};
       var data = {
-        "fechaOrdenTrabajo": orden.fechaOrdenTrabajo.toIso8601String(),
-        "fechaDesde": orden.fechaDesde.toIso8601String(),
-        "fechaHasta": orden.fechaHasta.toIso8601String(),
         "instrucciones": orden.instrucciones,
         "comentarios": orden.comentarios,
-        "tecnicoId": orden.tecnico.tecnicoId
-        // "servicios": [orden.servicio]
+        "servicios": orden.servicio.map((e) => e.servicioId).toList(),
       };
       var resp = await _dio.request(link,
           options: Options(
@@ -311,8 +307,7 @@ class OrdenServices {
       if (resp.statusCode == 200) {
         showDialogs(context, 'Orden modificada correctamente', false, false);
       } else {
-        _mostrarError(
-            context, 'Hubo un error al momento de modificar la orden');
+        _mostrarError(context, 'Hubo un error al momento de modificar la orden');
       }
 
       return;

@@ -39,6 +39,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
   late Tecnico? selectedTecnico = null;
   late Tecnico? selectedTecnicoInicial = Tecnico.empty();
   late bool editarOrden = true;
+  late bool editarOrdenFechas = true;
   late String dateTime;
   DateTime selectedDateOrden = DateTime.now();
   DateTime selectedDateDesde = DateTime.now();
@@ -84,6 +85,9 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
     selectedDateDesde = DateTime(selectedDateDesde.year, selectedDateDesde.month, selectedDateDesde.day, selectedDateDesde.hour, selectedDateDesde.minute, 0);
     selectedDateHasta = DateTime(selectedDateHasta.year, selectedDateHasta.month, selectedDateHasta.day, selectedDateHasta.hour, selectedDateHasta.minute, 0);
     selectedDateOrden = orden.fechaOrdenTrabajo;
+    if(orden.ordenTrabajoId != 0){
+      editarOrdenFechas = false;
+    }
     setState(() {});
   }
 
@@ -140,53 +144,365 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: 650,
-                          child: Card(
-                            elevation: 4,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if(orden.ordenTrabajoId == 0)...[
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: 650,
+                            child: Card(
+                              elevation: 4,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if(orden.ordenTrabajoId == 0)...[
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          IconButton(
+                                            onPressed: () async {
+                                              final cliente = await showSearch(
+                                                context: context,
+                                                delegate: ClientSearchDelegate('Buscar Cliente', historial, '')
+                                              );
+                                              if (cliente != null) {
+                                                setState(() {
+                                                  selectedCliente = cliente;
+                                                  selectedTecnico = selectedCliente.tecnico;
+                                                  final int clienteExiste = historial.indexWhere((element) => element.nombre == cliente.nombre);
+                                                  if (clienteExiste == -1) {
+                                                    historial.insert(0, cliente);
+                                                  }
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  selectedCliente = Cliente.empty();
+                                                });
+                                              }
+                                            },
+                                            icon: const Icon(Icons.edit)
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                    const Text('*  Nombre del cliente: ',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600
+                                      ),
+                                    ),
+                                    Text(
+                                      orden.ordenTrabajoId == 0 ? selectedCliente.nombre : orden.cliente.nombre,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    const Text(
+                                      'Codigo del cliente: ',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    Text(
+                                      orden.ordenTrabajoId == 0 ? selectedCliente.codCliente : orden.cliente.codCliente,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    const Text(
+                                      'Direccion del cliente: ',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    Text(
+                                      orden.ordenTrabajoId == 0 ? selectedCliente.direccion : orden.cliente.direccion,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    const Text(
+                                      'Telefono del cliente: ',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    Text(
+                                      orden.ordenTrabajoId == 0 ? selectedCliente.telefono1 : orden.cliente.telefono1,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 650,
+                            child: Card(
+                              elevation: 4,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Nro. Orden: ',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    Text(
+                                      'Orden ${orden.ordenTrabajoId}',
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        IconButton(
-                                          onPressed: () async {
-                                            final cliente = await showSearch(
-                                              context: context,
-                                              delegate: ClientSearchDelegate('Buscar Cliente', historial, '')
-                                            );
-                                            if (cliente != null) {
-                                              setState(() {
-                                                selectedCliente = cliente;
-                                                selectedTecnico = selectedCliente.tecnico;
-                                                final int clienteExiste = historial.indexWhere((element) => element.nombre == cliente.nombre);
-                                                if (clienteExiste == -1) {
-                                                  historial.insert(0, cliente);
-                                                }
-                                              });
-                                            } else {
-                                              setState(() {
-                                                selectedCliente = Cliente.empty();
-                                              });
-                                            }
-                                          },
-                                          icon: const Icon(Icons.edit)
+                                        RichText(
+                                          text: TextSpan(
+                                            style: const TextStyle(
+                                              fontSize: 16.0,
+                                              color: Colors.black,
+                                            ),
+                                            children: <TextSpan>[
+                                              const TextSpan(
+                                                  text: '*  Fecha de la orden: ',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600)),
+                                              TextSpan(
+                                                text: DateFormat('E, d , MMM, yyyy', 'es').format(selectedDateOrden)),
+                                            ],
+                                          ),
+                                        ),
+                                        if (editarOrdenFechas)...[
+                                          TextButton.icon(
+                                            onPressed: () {
+                                              _selectDateOrden(context);
+                                            },
+                                            icon: const Icon(Icons.calendar_today),
+                                            label: const Text('Editar fecha de la orden')
+                                          )
+                                        ]
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                            style: const TextStyle(
+                                              fontSize: 16.0,
+                                              color: Colors.black,
+                                            ),
+                                            children: <TextSpan>[
+                                              const TextSpan(
+                                                  text: '*  Fecha desde: ',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600)),
+                                              TextSpan(
+                                                  text: DateFormat('E d , MMM, yyyy, HH:mm','es').format(selectedDateDesde)),
+                                            ],
+                                          ),
+                                        ),
+                                        if (editarOrdenFechas)
+                                          TextButton.icon(
+                                              onPressed: () {
+                                                _selectFechaDesde(context);
+                                              },
+                                              icon: const Icon(
+                                                  Icons.calendar_today),
+                                              label: const Text('Editar fecha desde de la orden'))
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                            style: const TextStyle(
+                                              fontSize: 16.0,
+                                              color: Colors.black,
+                                            ),
+                                            children: <TextSpan>[
+                                              const TextSpan(
+                                                  text: '*  Fecha hasta: ',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600)),
+                                              TextSpan(
+                                                  text: DateFormat('E d , MMM, yyyy, HH:mm', 'es').format(selectedDateHasta)),
+                                            ],
+                                          ),
+                                        ),
+                                        if (editarOrdenFechas)
+                                          TextButton.icon(
+                                              onPressed: () {
+                                                _selectFechaHasta(context);
+                                              },
+                                              icon: const Icon(
+                                                  Icons.calendar_today),
+                                              label: const Text(
+                                                  'Editar fecha hasta de la orden'))
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text(
+                                          'Estado: ',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        Text(
+                                          orden.estado,
+                                          style: const TextStyle(fontSize: 16),
                                         )
                                       ],
                                     ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text(
+                                          '*  Tipo de Orden: ',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        Text(orden.tipoOrden.descripcion,
+                                            style:
+                                                const TextStyle(fontSize: 16))
+                                      ],
+                                    ),
+                                    if(orden.ordenTrabajoId == 0)
+                                    SizedBox(
+                                      width: 250,
+                                      child: CustomDropdownFormMenu(
+                                        value: tipoOrdenInicial,
+                                        hint: 'Seleccione tipo de orden',
+                                        items: tipoOrdenes.map((e) {
+                                          return DropdownMenuItem(
+                                            value: e,
+                                            child: Text(e.descripcion)
+                                          );
+                                        }).toList(),
+                                        onChanged: (value){
+                                          selectedTipoOrden = value;
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10,),
+                                    Row(
+                                      children: [
+                                        const Text(
+                                          '* Tecnico: ',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600
+                                          ),
+                                        ),
+                                        Text(
+                                          orden.ordenTrabajoId == 0 ? '' : orden.tecnico.nombre,
+                                          style: const TextStyle(fontSize: 16)
+                                        )
+                                      ],
+                                    ),
+                                    if(orden.ordenTrabajoId == 0)
+                                    Container(
+                                      width: 220,
+                                      decoration: BoxDecoration(border: Border.all(), borderRadius: BorderRadius.circular(5)),
+                                      child: DropdownSearch(
+                                        dropdownDecoratorProps: const DropDownDecoratorProps(
+                                          dropdownSearchDecoration: InputDecoration(
+                                            isDense: true,
+                                            hintText: 'Seleccione un tecnico'
+                                          )
+                                        ),
+                                        selectedItem: selectedCliente.tecnico,
+                                        items: tecnicos,
+                                        popupProps: const PopupProps.menu(
+                                            showSearchBox: true, searchDelay: Duration.zero),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            selectedTecnico = value;
+                                            tecnicoFiltro = value!.tecnicoId;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    const Text(
+                                      '*  Servicios: ',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    if(/*orden.ordenTrabajoId == 0 &&*/ (orden.estado == 'PENDIENTE' || orden.estado == 'EN PROCESO'))
+                                    SizedBox(
+                                      width: 400,
+                                      child: DropdownSearch<Servicio>(
+                                        items: servicios,
+                                        popupProps: const PopupProps.menu(
+                                          showSearchBox: true, searchDelay: Duration.zero),
+                                        onChanged: (value) {
+                                          serviciosSeleccionados.insert(0, value!);
+                                          setState(() {});
+                                        },
+                                      ),
+                                    ),
+                                    if(/*orden.ordenTrabajoId != 0*/serviciosSeleccionados.isNotEmpty && (orden.estado == 'PENDIENTE' || orden.estado == 'EN PROCESO'))...[
+                                      SizedBox(
+                                      height: 250,
+                                      child: ListView.builder(
+                                        itemCount: serviciosSeleccionados.length,
+                                        itemBuilder: (context, i){
+                                          final servicio = serviciosSeleccionados[i];
+                                          return ListTile(
+                                            title: Text(servicio.descripcion),
+                                            trailing: IconButton(
+                                              onPressed: (){
+                                                serviciosSeleccionados.removeAt(i);
+                                                setState(() {});
+                                              }, 
+                                              icon: const Icon(Icons.delete, color: Colors.red,)
+                                            ),
+                                          );
+                                        }),
+                                      )
+                                    ]else if (orden.ordenTrabajoId != 0 && (orden.estado == 'FINALIZADA' || orden.estado == 'REVISADA'))...[
+                                      SizedBox(
+                                      height: 250,
+                                      child: ListView.builder(
+                                        itemCount: orden.servicio.length,
+                                        itemBuilder: (context, i){
+                                          final servicio = orden.servicio[i];
+                                          return ListTile(
+                                            title: Text(servicio.descripcion),
+                                          );
+                                        }),
+                                      )
+                                    ]
                                   ],
                                   const Text('Nombre del cliente: ',
                                     style: TextStyle(
@@ -242,262 +558,59 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                             ),
                           ),
                         ),
-                        SizedBox(
-                          width: 650,
-                          child: Card(
-                            elevation: 4,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Nro. Orden: ',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
+                      ),
+                      const SizedBox(width: 30),
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Instrucciones: ',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.2,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: const Color.fromARGB(255, 52, 120, 62),
+                                    width: 2
                                   ),
-                                  Text(
-                                    'Orden ${orden.ordenTrabajoId}',
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
-                                    children: [
-                                      RichText(
-                                        text: TextSpan(
-                                          style: const TextStyle(
-                                            fontSize: 16.0,
-                                            color: Colors.black,
-                                          ),
-                                          children: <TextSpan>[
-                                            const TextSpan(
-                                                text: 'Fecha de la orden: ',
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.w600)),
-                                            TextSpan(
-                                              text: DateFormat('E, d , MMM, yyyy', 'es').format(selectedDateOrden)),
-                                          ],
-                                        ),
-                                      ),
-                                      if (editarOrden)...[
-                                        TextButton.icon(
-                                          onPressed: () {
-                                            _selectDateOrden(context);
-                                          },
-                                          icon: const Icon(Icons.calendar_today),
-                                          label: const Text('Editar fecha de la orden')
-                                        )
-                                      ]
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Row(
-                                    children: [
-                                      RichText(
-                                        text: TextSpan(
-                                          style: const TextStyle(
-                                            fontSize: 16.0,
-                                            color: Colors.black,
-                                          ),
-                                          children: <TextSpan>[
-                                            const TextSpan(
-                                                text: 'Fecha desde: ',
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.w600)),
-                                            TextSpan(
-                                                text: DateFormat('E d , MMM, yyyy, HH:mm','es').format(selectedDateDesde)),
-                                          ],
-                                        ),
-                                      ),
-                                      if (editarOrden)
-                                        TextButton.icon(
-                                            onPressed: () {
-                                              _selectFechaDesde(context);
-                                            },
-                                            icon: const Icon(
-                                                Icons.calendar_today),
-                                            label: const Text('Editar fecha desde de la orden'))
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
-                                    children: [
-                                      RichText(
-                                        text: TextSpan(
-                                          style: const TextStyle(
-                                            fontSize: 16.0,
-                                            color: Colors.black,
-                                          ),
-                                          children: <TextSpan>[
-                                            const TextSpan(
-                                                text: 'Fecha hasta: ',
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.w600)),
-                                            TextSpan(
-                                                text: DateFormat('E d , MMM, yyyy, HH:mm', 'es').format(selectedDateHasta)),
-                                          ],
-                                        ),
-                                      ),
-                                      if (editarOrden)
-                                        TextButton.icon(
-                                            onPressed: () {
-                                              _selectFechaHasta(context);
-                                            },
-                                            icon: const Icon(
-                                                Icons.calendar_today),
-                                            label: const Text(
-                                                'Editar fecha hasta de la orden'))
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Text(
-                                        'Estado: ',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      Text(
-                                        orden.estado,
-                                        style: const TextStyle(fontSize: 16),
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Text(
-                                        'Tipo de Orden: ',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      Text(orden.tipoOrden.descripcion,
-                                          style:
-                                              const TextStyle(fontSize: 16))
-                                    ],
-                                  ),
-                                  if(orden.ordenTrabajoId == 0)
-                                  SizedBox(
-                                    width: 250,
-                                    child: CustomDropdownFormMenu(
-                                      value: tipoOrdenInicial,
-                                      hint: 'Seleccione tipo de orden',
-                                      items: tipoOrdenes.map((e) {
-                                        return DropdownMenuItem(
-                                          value: e,
-                                          child: Text(e.descripcion));
-                                      }).toList(),
-                                      onChanged: (value){
-                                        selectedTipoOrden = value;
-                                      },
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10,),
-                                  Row(
-                                    children: [
-                                      const Text(
-                                        'Tecnico: ',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      Text(
-                                        orden.ordenTrabajoId == 0 ? '' : orden.tecnico.nombre,
-                                        style:
-                                              const TextStyle(fontSize: 16))
-                                    ],
-                                  ),
-                                  if(orden.ordenTrabajoId == 0)
-                                  Container(
-                                    width: 220,
-                                    decoration: BoxDecoration(border: Border.all(), borderRadius: BorderRadius.circular(5)),
-                                    child: DropdownSearch(
-                                      dropdownDecoratorProps: const DropDownDecoratorProps(
-                                        dropdownSearchDecoration: InputDecoration(hintText: 'Seleccione un tecnico')
-                                      ),
-                                      selectedItem: selectedCliente.tecnico,
-                                      items: tecnicos,
-                                      popupProps: const PopupProps.menu(
-                                          showSearchBox: true, searchDelay: Duration.zero),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedTecnico = value;
-                                          tecnicoFiltro = value!.tecnicoId;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  const Text(
-                                    'Servicios: ',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  if(orden.ordenTrabajoId == 0)
-                                  SizedBox(
-                                    width: 400,
-                                    child: DropdownSearch<Servicio>(
-                                      items: servicios,
-                                      popupProps: const PopupProps.menu(
-                                        showSearchBox: true, searchDelay: Duration.zero),
-                                      onChanged: (value) {
-                                        serviciosSeleccionados.insert(0, value!);
-                                        setState(() {});
-                                      },
-                                    ),
-                                  ),
-                                  if(orden.ordenTrabajoId == 0 && orden.estado == 'PENDIENTE')...[
-                                    SizedBox(
-                                    height: 250,
-                                    child: ListView.builder(
-                                      itemCount: serviciosSeleccionados.length,
-                                      itemBuilder: (context, i){
-                                        final servicio = serviciosSeleccionados[i];
-                                        return ListTile(
-                                          title: Text(servicio.descripcion),
-                                          trailing: IconButton(
-                                            onPressed: (){
-                                              serviciosSeleccionados.removeAt(i);
-                                              setState(() {});
-                                            }, 
-                                            icon: const Icon(Icons.delete, color: Colors.red,)
-                                          ),
-                                        );
-                                      }),
-                                    )
-                                  ]else if (orden.ordenTrabajoId != 0 && orden.estado == 'PENDIENTE')...[
-                                    SizedBox(
-                                    height: 250,
-                                    child: ListView.builder(
-                                      itemCount: orden.servicio.length,
-                                      itemBuilder: (context, i){
-                                        final servicio = orden.servicio[i];
-                                        return ListTile(
-                                          title: Text(servicio.descripcion),
-                                        );
-                                      }),
-                                    )
-                                  ]
-                                  
-                                ],
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: TextFormField(
+                                enabled: editarOrden,
+                                maxLines: 10,
+                                controller: _instruccionesController,
+                                decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    fillColor: Colors.white,
+                                    filled: true),
                               ),
                             ),
-                          ),
+                            const Text(
+                              '*  Comentario:',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.2,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: const Color.fromARGB(255, 52, 120, 62),
+                                  width: 2
+                                ),
+                                borderRadius: BorderRadius.circular(5)
+                              ),
+                              child: TextFormField(
+                                enabled: editarOrden,
+                                maxLines: 10,
+                                controller: _comentarioController,
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  fillColor: Colors.white,
+                                  filled: true
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -595,7 +708,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
               buttonIndex = index;
               switch (buttonIndex){
                 case 0: 
-                if(orden.estado == 'PENDIENTE'){
+                if(orden.estado == 'PENDIENTE' || orden.estado == 'EN PROCESO'){
                   datosAGuardar(context);
                 }else{
                   null;
@@ -609,8 +722,11 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                 break;
                 case 2:
                 if(orden.estado == 'DESCARTADA'){
-                }else{
+                  null;
+                }else if(orden.estado == 'PENDIENTE'){
                   cambiarTecnico();
+                }else{
+                  null;
                 }
                 break;
                 case 3:
@@ -722,13 +838,13 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
   orden.fechaHasta = selectedDateHasta;
   orden.instrucciones = _instruccionesController.text;
   orden.comentarios = _comentarioController.text;
-
+  List<ServicioOrdenes> serviciosOrdenes = convertirServicios();
+  orden.servicio = serviciosOrdenes;
+  
   if (orden.ordenTrabajoId == 0) {
     orden.cliente = selectedCliente;
     orden.tipoOrden = selectedTipoOrden;
-    orden.tecnico = selectedTecnico!;
-    List<ServicioOrdenes> serviciosOrdenes = convertirServicios();
-    orden.servicio = serviciosOrdenes;
+    orden.tecnico = selectedTecnico!;    
 
     await OrdenServices().postOrden(context, orden, token);
   }else{
@@ -840,7 +956,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                     await OrdenServices().cambiarTecnicoDeLaOrden(
                         context, orden, selectedTecnico!.tecnicoId, token);
                     await OrdenServices.showDialogs(
-                        context, 'Tecnico cambiado correctamente', true, true);
+                        context, 'Tecnico cambiado correctamente', true, false);
                     setState(() {
                       orden.tecnico = selectedTecnico!;
                     });

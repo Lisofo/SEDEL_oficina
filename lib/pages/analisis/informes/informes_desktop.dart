@@ -289,7 +289,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
       parametrosValues = await InformesServices().getParametrosValues(context, token, parametro.informeId, parametro.parametroId, '', '', parametro.dependeDe.toString(), parametros);
     }
     if (parametro.control == 'T' && parametro.tipo == 'N') {
-      maskFormatter = MaskTextInputFormatter(mask: '########', filter: { "#": RegExp(r'[0-9]') });
+      maskFormatter = MaskTextInputFormatter(mask: '###############', filter: { "#": RegExp(r'[0-9]') });
     }
 
     return showDialog<void>(
