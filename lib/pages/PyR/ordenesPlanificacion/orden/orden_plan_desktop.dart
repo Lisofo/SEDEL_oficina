@@ -52,6 +52,7 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
   // late Cliente _clienteSeleccionado = context.read<OrdenProvider>().cliente;
   late String token = '';
   final TextEditingController _nroOrdenController = TextEditingController();
+  int buttonIndex = 0;
 
   void filtro() {
     ordenesFiltradas = ordenes
@@ -124,280 +125,281 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
             flex: 2,
             child: Card(
               elevation: 40,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Text('Seleccione periodo: '),
-                        TextButton(
-                          onPressed: () async {
-                            final pickedDate = await showDateRangePicker(
-                              context: context,
-                              firstDate: DateTime(2023),
-                              lastDate: DateTime(2025)
-                            );
-                            if (pickedDate != null && pickedDate != selectedDate) {
-                              setState(() {
-                                selectedDate = pickedDate;
-                                print(selectedDate);
-                              });
-                            }
-                            // print(pickedDate.start);
-                            // print(pickedDate.end);
-                          },
-                          child: const Text(
-                            'Período',
-                            style: TextStyle(color: Colors.black),
-                          )
-                        ),
-                        RichText(
-                          text: TextSpan(
-                            style: const TextStyle(color: Colors.black),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: DateFormat('dd/MM/yyyy', 'es').format(selectedDate.start)
-                              ),
-                              const TextSpan(text: ' - '),
-                              TextSpan(
-                                text: DateFormat('dd/MM/yyyy', 'es').format(selectedDate.end)
-                              ),
-                            ]
-                          )
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        const Text('Tecnico: '),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        SizedBox(
-                          width: 220,
-                          child: DropdownSearch(
-                            dropdownDecoratorProps:
-                                const DropDownDecoratorProps(
-                                    dropdownSearchDecoration: InputDecoration(
-                                        hintText: 'Seleccione un tecnico')),
-                            items: tecnicos,
-                            popupProps: const PopupProps.menu(
-                                showSearchBox: true,
-                                searchDelay: Duration.zero),
-                            onChanged: (value) {
-                              setState(() {
-                                selectedTecnico = value;
-                                tecnicoFiltro = value!.tecnicoId;
-                              });
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text('Seleccione periodo: '),
+                          const SizedBox(width: 10,),
+                          IconButton(
+                            color: colors.secondary,
+                            onPressed: () async{
+                              final pickedDate = await showDateRangePicker(
+                                context: context,
+                                firstDate: DateTime(2023),
+                                lastDate: DateTime(2025)
+                              );
+                              if (pickedDate != null && pickedDate != selectedDate) {
+                                setState(() {
+                                  selectedDate = pickedDate;
+                                  print(selectedDate);
+                                });
+                              }
                             },
+                            icon: const Icon(Icons.calendar_month)
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        const Text('Estado: '),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        DropdownButton(
-                          hint: const Text('Estado'),
-                          value: selectedEstado,
+                        ],
+                      ),
+                      
+                      
+                      const SizedBox(height: 10,),
+                      RichText(
+                        text: TextSpan(
+                          style: const TextStyle(color: Colors.black),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: DateFormat('dd/MM/yyyy', 'es').format(selectedDate.start)
+                            ),
+                            const TextSpan(text: ' - '),
+                            TextSpan(
+                              text: DateFormat('dd/MM/yyyy', 'es').format(selectedDate.end)
+                            ),
+                          ]
+                        )
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 5,),
+                  Divider(
+                    thickness: 0.5,
+                    color: colors.primary,
+                    endIndent: 20,
+                    indent: 20,
+                  ),
+                  const SizedBox(height: 5,),
+                  Column(
+                    children: [
+                      const Text('Tecnico: '),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      SizedBox(
+                        width: 220,
+                        child: DropdownSearch(
+                          dropdownDecoratorProps:
+                              const DropDownDecoratorProps(
+                                  dropdownSearchDecoration: InputDecoration(
+                                      hintText: 'Seleccione un tecnico')),
+                          items: tecnicos,
+                          popupProps: const PopupProps.menu(
+                              showSearchBox: true,
+                              searchDelay: Duration.zero),
                           onChanged: (value) {
                             setState(() {
-                              selectedEstado = value;
+                              selectedTecnico = value;
+                              tecnicoFiltro = value!.tecnicoId;
                             });
                           },
-                          items: estados.map((e) {
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5,),
+                  Divider(
+                    thickness: 0.5,
+                    color: colors.primary,
+                    endIndent: 20,
+                    indent: 20,
+                  ),
+                  const SizedBox(height: 5,),
+                  Column(
+                    children: [
+                      const Text('Estado: '),
+                      DropdownButton(
+                        hint: const Text('Estado'),
+                        value: selectedEstado,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedEstado = value;
+                          });
+                        },
+                        items: estados.map((e) {
+                          return DropdownMenuItem(
+                            value: e,
+                            child: Text(e),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5,),
+                  Divider(
+                    thickness: 0.5,
+                    color: colors.primary,
+                    endIndent: 20,
+                    indent: 20,
+                  ),
+                  const SizedBox(height: 5,),
+                  const Column(
+                    children: [
+                      Text('Cliente: '),
+                      ButtonDelegate(
+                        colorSeleccionado: Colors.black,
+                        nombreProvider: 'Ordenes',
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5,),
+                  Divider(
+                    thickness: 0.5,
+                    color: colors.primary,
+                    endIndent: 20,
+                    indent: 20,
+                  ),
+                  const SizedBox(height: 5,),
+                  // Row(
+                  //   children: [
+                  //     Text('Servicios: '),
+                  //     SizedBox(
+                  //       width: 10,
+                  //     ),
+                  //     DropdownButton(
+                  //       hint: Text('Servicios'),
+                  //       itemHeight: null,
+                  //       value: selectedServicio,
+                  //       onChanged: (value) {
+                  //         setState(() {
+                  //           selectedServicio = value;
+                  //         });
+                  //       },
+                  //       items: servicios.map((e) {
+                  //         return DropdownMenuItem(
+                  //           child: SizedBox(
+                  //             width: 300,
+                  //             child: Text(
+                  //               e,
+                  //               overflow: TextOverflow.fade,
+                  //             ),
+                  //           ),
+                  //           value: e,
+                  //         );
+                  //       }).toList(),
+                  //     ),
+                  //   ],
+                  // ),
+                  // SizedBox(
+                  //   height: 10,
+                  // ),
+                  // Row(
+                  //   children: [
+                  //     Text('Materiales: '),
+                  //     SizedBox(
+                  //       width: 10,
+                  //     ),
+                  //     DropdownButton(
+                  //       hint: Text('Materiales'),
+                  //       value: selectedMaterial,
+                  //       onChanged: (value) {
+                  //         setState(() {
+                  //           selectedMaterial = value;
+                  //         });
+                  //       },
+                  //       items: materiales.map((e) {
+                  //         return DropdownMenuItem(
+                  //           child: SizedBox(width: 300, child: Text(e)),
+                  //           value: e,
+                  //         );
+                  //       }).toList(),
+                  //     ),
+                  //   ],
+                  // ),
+                  // SizedBox(
+                  //   height: 10,
+                  // ),
+                  Column(
+                    children: [
+                      const Text('Tipo de orden: '),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      SizedBox(
+                        width: 220,
+                        child: CustomDropdownFormMenu(
+                          isDense: true,
+                          items: tipoOrden.map((e) {
                             return DropdownMenuItem(
                               value: e,
-                              child: Text(e),
-                            );
+                              child: Text(e.descripcion));
                           }).toList(),
+                          onChanged: (value){
+                            selectedTipo = value;
+                          }
                         ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Row(
-                      children: [
-                        Text('Cliente: '),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        ButtonDelegate(
-                          colorSeleccionado: Colors.black,
-                          nombreProvider: 'Ordenes',
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    // Row(
-                    //   children: [
-                    //     Text('Servicios: '),
-                    //     SizedBox(
-                    //       width: 10,
-                    //     ),
-                    //     DropdownButton(
-                    //       hint: Text('Servicios'),
-                    //       itemHeight: null,
-                    //       value: selectedServicio,
-                    //       onChanged: (value) {
-                    //         setState(() {
-                    //           selectedServicio = value;
-                    //         });
-                    //       },
-                    //       items: servicios.map((e) {
-                    //         return DropdownMenuItem(
-                    //           child: SizedBox(
-                    //             width: 300,
-                    //             child: Text(
-                    //               e,
-                    //               overflow: TextOverflow.fade,
-                    //             ),
-                    //           ),
-                    //           value: e,
-                    //         );
-                    //       }).toList(),
-                    //     ),
-                    //   ],
-                    // ),
-                    // SizedBox(
-                    //   height: 10,
-                    // ),
-                    // Row(
-                    //   children: [
-                    //     Text('Materiales: '),
-                    //     SizedBox(
-                    //       width: 10,
-                    //     ),
-                    //     DropdownButton(
-                    //       hint: Text('Materiales'),
-                    //       value: selectedMaterial,
-                    //       onChanged: (value) {
-                    //         setState(() {
-                    //           selectedMaterial = value;
-                    //         });
-                    //       },
-                    //       items: materiales.map((e) {
-                    //         return DropdownMenuItem(
-                    //           child: SizedBox(width: 300, child: Text(e)),
-                    //           value: e,
-                    //         );
-                    //       }).toList(),
-                    //     ),
-                    //   ],
-                    // ),
-                    // SizedBox(
-                    //   height: 10,
-                    // ),
-                    Row(
-                      children: [
-                        const Text('Tipo de orden: '),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        SizedBox(
-                          width: 220,
-                          child: CustomDropdownFormMenu(
-                            items: tipoOrden.map((e) {
-                              return DropdownMenuItem(
-                                value: e,
-                                child: Text(e.descripcion));
-                            }).toList(),
-                            onChanged: (value){
-                              selectedTipo = value;
-                            }
-                          ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        const Text('Nro. Orden:'),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        SizedBox(
-                            width: 200,
-                            child: CustomTextFormField(
-                              controller: _nroOrdenController,
-                              maxLines: 1,
-                            ))
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Center(
-                      child: ElevatedButton(
-                          style: const ButtonStyle(
-                              backgroundColor:
-                                  WidgetStatePropertyAll(Colors.white),
-                              elevation: WidgetStatePropertyAll(10),
-                              shape: WidgetStatePropertyAll(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.horizontal(
-                                          left: Radius.circular(50),
-                                          right: Radius.circular(50))))),
-                          onPressed: () async {
-                            await buscar(token);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.5),
-                            child: Text(
-                              'Buscar',
-                              style: TextStyle(
-                                color: colors.primary,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          )),
-                    ),
-                    const Spacer(),
-                    Center(
-                      child: ElevatedButton(
-                          style: const ButtonStyle(
-                              backgroundColor:
-                                  WidgetStatePropertyAll(Colors.white),
-                              elevation: WidgetStatePropertyAll(10),
-                              shape: WidgetStatePropertyAll(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.horizontal(
-                                          left: Radius.circular(50),
-                                          right: Radius.circular(50))))),
-                          onPressed: () {
-                            Provider.of<OrdenProvider>(context,listen: false)
-                              .clearSelectedOrden();
-                            router.push('/editOrden');
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.5),
-                            child: Text(
-                              'Crear Orden',
-                              style: TextStyle(
-                                color: colors.primary,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          )),
-                    ),
-                  ],
-                ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 5,),
+                  Divider(
+                    thickness: 0.5,
+                    color: colors.primary,
+                    endIndent: 20,
+                    indent: 20,
+                  ),
+                  const SizedBox(height: 10,),
+                  Column(
+                    children: [
+                      const Text('Nro. Orden:'),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      SizedBox(
+                          width: 200,
+                          child: CustomTextFormField(
+                            controller: _nroOrdenController,
+                            maxLines: 1,
+                          ))
+                    ],
+                  ),
+                  
+              
+                  const Spacer(),
+              
+                  BottomNavigationBar(
+                    currentIndex: buttonIndex,
+                    onTap: (index) async{   
+                      buttonIndex = index;
+                      switch (buttonIndex){
+                        case 0: 
+                          Provider.of<OrdenProvider>(context,listen: false).clearSelectedOrden();
+                          router.push('/editOrden');
+                          setState(() {});
+                        case 1:
+                          await buscar(token);
+                          updateFilteredItems(ordenesFiltradas);
+                          setState(() {});
+                        break;
+                        
+                      }  
+                    },
+                    showUnselectedLabels: true,
+                    selectedItemColor: colors.primary,
+                    unselectedItemColor: colors.primary,
+                    items: const [
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.add_comment_outlined),
+                        label: 'Crear Orden',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.search),
+                        label: 'Buscar'
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
@@ -507,6 +509,16 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
       ),
     );
   }
+
+
+  void updateFilteredItems(List<Orden> filteredOrdenes) {
+    setState(() {
+      ordenesFiltradas = filteredOrdenes; // Actualiza la lista con los elementos filtrados
+    });
+  }
+
+
+
 
   Future<void> buscar(String token) async {
     late Cliente clienteSeleccionado = context.read<OrdenProvider>().clienteOrdenes;

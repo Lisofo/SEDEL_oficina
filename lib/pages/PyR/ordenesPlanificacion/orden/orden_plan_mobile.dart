@@ -387,9 +387,7 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
                         ))
                   ],
                 ),
-                const SizedBox(height: 10,),
-                const Divider(),
-                const SizedBox(height: 30,),
+                const Spacer(),
                 BottomNavigationBar(
                   currentIndex: buttonIndex,
                   onTap: (index) async{   

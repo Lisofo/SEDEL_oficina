@@ -233,7 +233,8 @@ class _EditMarcasMobileState extends State<EditMarcasMobile> {
                     onPressed: () =>
                         _selectDateDesde(context),
                     icon: const Icon(
-                        Icons.calendar_month)),
+                        Icons.calendar_month)
+                ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: CustomTextFormField(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/informes.dart';
@@ -40,7 +41,11 @@ class _InformesMobileState extends State<InformesMobile> {
   List<ParametrosValues> parametrosValues = [];
   final Map<String, TextEditingController> _controllers = {};
   late String nombreInforme = '';
-
+  int buttonIndex = 0;
+  late dynamic selectedInforme = InformeHijo.empty();
+  late String tipo = '';
+  List<TiposImpresion> tipos = [];
+  late MaskTextInputFormatter maskFormatter;
   @override
   void initState() {
     super.initState();
@@ -84,7 +89,17 @@ class _InformesMobileState extends State<InformesMobile> {
                   parametros = await InformesServices().getParametros(context, token, item.data.informeId);
                   // print(parametros[0].parametroId);
                   nombreInforme = item.key;
+                  selectedInforme = item.data;
+                  print(selectedInforme.informe);
+                  tipos = selectedNodeData.tiposImpresion;
                 }
+
+                for (var param in parametros) {
+                  if (param.control == 'T') {
+                    _controllers[param.parametro] = TextEditingController();
+                  }
+                }
+
                 setState(() {
                   selectedNodeData = item.data; // Actualizar los datos del nodo seleccionado
                 });
@@ -143,7 +158,7 @@ class _InformesMobileState extends State<InformesMobile> {
                                 TextButton(
                                   onPressed: () async {
                                     if (parametro.control == 'D') {
-                                      await _selectDate(context, parametro.parametro, parametro.control, parametro);
+                                      await _selectDate(context, parametro.parametro, parametro.tipo, parametro);
                                       print(parametro.parametro);
                                     } else if(parametro.control == 'L'){
                                       final cliente = await showSearch(
@@ -151,17 +166,19 @@ class _InformesMobileState extends State<InformesMobile> {
                                         delegate: ParametroClientSearchDelegate('Buscar cliente', historial, parametro.informeId, parametro.parametroId, parametro.dependeDe, parametros)
                                       );
                                       if(cliente != null) {
-                                        setState(() {
-                                          campoCliente = cliente;
-                                        });
+                                        parametro.valor = cliente.id.toString();
+                                        parametro.valorAMostrar = cliente.descripcion;
+                                        setState(() {});
                                       } else{
-                                        campoCliente = ParametrosValues.empty();
+                                        parametro.valor = '';
+                                        parametro.valorAMostrar = '';
                                       }
                                     } else {
                                       await _showPopup(context, parametro);
                                       print(parametro.parametro);
                                     }
                                   },
+                                  
                                   child: SizedBox(
                                     width: MediaQuery.of(context).size.width * 0.4,
                                     child: Text(parametro.parametro, textAlign: TextAlign.center),
@@ -196,7 +213,8 @@ class _InformesMobileState extends State<InformesMobile> {
                                 // ]
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width * 0.4,
-                                  child: Text(parametro.valor.toString(), textAlign: TextAlign.center))
+                                  child: Text(parametro.valorAMostrar.toString(), textAlign: TextAlign.center)
+                                )
                               ],
                             );
                           }
@@ -209,6 +227,18 @@ class _InformesMobileState extends State<InformesMobile> {
                         showUnselectedLabels: true,
                         selectedItemColor: colors.primary,
                         unselectedItemColor: colors.primary,
+                        onTap: (index) async{
+                          buttonIndex = index;
+                          switch (buttonIndex){
+                            case 0:
+
+                            break;
+                            case 1:
+                              generarInformePopup(context, selectedInforme);
+                            break;
+
+                          }
+                        },
                         items: const [
                           BottomNavigationBarItem(
                             icon: Icon(Icons.save_as),
@@ -231,12 +261,60 @@ class _InformesMobileState extends State<InformesMobile> {
     );
   }
 
+  void generarInformePopup(BuildContext context, dynamic informe) {
+    print(selectedNodeData);
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Seleccione un forma de impresion'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: 370,
+                child: CustomDropdownFormMenu(
+                  items: tipos.map((e) {
+                    return DropdownMenuItem(
+                      value: e,
+                      child: Text(e.descripcion),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    tipo = (value as TiposImpresion).tipo;
+                  },
+                ),
+              )
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                router.pop();
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              child: const Text('Generar'),
+              onPressed: () async {
+                await postInforme(informe);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _showPopup(BuildContext context, Parametro parametro,) async {
     if (parametro.control == 'T') {
       _controllers[parametro.parametro] = TextEditingController();
     }
     if(parametro.sql != ''){
       parametrosValues = await InformesServices().getParametrosValues(context, token, parametro.informeId, parametro.parametroId,'','', parametro.dependeDe.toString(), parametros);
+    }
+    if (parametro.control == 'T' && parametro.tipo == 'N') {
+      maskFormatter = MaskTextInputFormatter(mask: '########', filter: { "#": RegExp(r'[0-9]') });
     }
     return showDialog<void>(
       context: context,
@@ -256,7 +334,8 @@ class _InformesMobileState extends State<InformesMobile> {
                       child: Text(e.descripcion)); 
                     }).toList(),
                     onChanged: (value){
-                      parametro.valor = (value as ParametrosValues).descripcion;
+                      parametro.valor = (value as ParametrosValues).id.toString();
+                      parametro.valorAMostrar = (value).descripcion;
                     }
                   ),
                 )
@@ -266,6 +345,7 @@ class _InformesMobileState extends State<InformesMobile> {
                   child: CustomTextFormField(
                     controller: _controllers[parametro.parametro],
                     hint: parametro.parametro,
+                    mascara: parametro.tipo == 'N' ? [maskFormatter] : [],
                     maxLines: 1,
                   ),
                 )
@@ -284,6 +364,7 @@ class _InformesMobileState extends State<InformesMobile> {
               onPressed: () {
                 if(_controllers[parametro.parametro]?.text != '' && parametro.control == 'T'){
                   parametro.valor = _controllers[parametro.parametro]?.text;
+                  parametro.valorAMostrar = _controllers[parametro.parametro]?.text;
                 }
                 router.pop();
                 setState(() {});
@@ -308,10 +389,13 @@ class _InformesMobileState extends State<InformesMobile> {
         selectedDate = picked;
         if (tipo == 'D') {
           parametro.valor = DateFormat('d/M/y', 'es').format(picked);
+          parametro.valorAMostrar = DateFormat('y/M/d', 'es').format(picked);
         } else if (tipo == 'Dd') {
           parametro.valor = DateFormat('d/M/y', 'es').format(picked);
+          parametro.valorAMostrar = DateFormat('y/M/d', 'es').format(picked);
         } else if (tipo == 'Dh') {
           parametro.valor = DateFormat('d/M/y', 'es').format(picked);
+          parametro.valorAMostrar = DateFormat('y/M/d', 'es').format(picked);
         }
       });
     }
@@ -357,6 +441,10 @@ class _InformesMobileState extends State<InformesMobile> {
       nodes.add(node);
     }
     return nodes;
+  }
+
+  postInforme(dynamic informe) async{
+    await InformesServices().postGenerarInforme(context, informe, parametros, tipo, token);
   }
 
 }
