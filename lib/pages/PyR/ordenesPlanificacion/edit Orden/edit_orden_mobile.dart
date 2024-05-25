@@ -84,7 +84,7 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
     selectedDateDesde = DateTime(selectedDateDesde.year, selectedDateDesde.month, selectedDateDesde.day, selectedDateDesde.hour, selectedDateDesde.minute, 0);
     selectedDateHasta = DateTime(selectedDateHasta.year, selectedDateHasta.month, selectedDateHasta.day, selectedDateHasta.hour, selectedDateHasta.minute, 0);
     selectedDateOrden = orden.fechaOrdenTrabajo;
-    if(orden.ordenTrabajoId != 0){
+    if(orden.ordenTrabajoId != 0 && orden.estado != 'PENDIENTE'){
       editarOrdenFechas = false;
     }
     setState(() {});
@@ -109,6 +109,10 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
       _notasClienteController.text = orden.cliente.notas;
       selectedDateDesde = orden.fechaDesde;
       selectedDateHasta = orden.fechaHasta;
+      if(serviciosSeleccionados.isEmpty){
+        List<Servicio> prueba = convertirServiciosOrden();
+        serviciosSeleccionados = prueba;
+      }
     }
     return SafeArea(
       child: Scaffold(
@@ -774,6 +778,18 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
      );
    }).toList();
    return serviciosOrdenes;
+ }
+
+  List<Servicio> convertirServiciosOrden() {
+   List<Servicio> ordenesServicios = orden.servicio.map((servicio) {
+     return Servicio(
+      servicioId: servicio.servicioId,
+      codServicio: servicio.codServicio,
+      descripcion: servicio.descripcion,
+      tipoServicio: TipoServicio.empty(),
+     );
+   }).toList();
+   return ordenesServicios;
  }
 
 
