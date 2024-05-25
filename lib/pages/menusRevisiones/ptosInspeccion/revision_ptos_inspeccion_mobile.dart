@@ -49,6 +49,7 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
   late int revisionId = 0;
   int buttonIndex = 0;
+  String _searchTerm = '';
 
   List<ZonaPI> zonas = [
     ZonaPI(zona: 'Interior', codZona: 'I'),
@@ -119,15 +120,15 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
               ),
               items: tiposDePuntos.map((e) {
                 return DropdownMenuItem(
-                  value: e,
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      e.descripcion,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                );
+                      value: e,
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Text(
+                          nombreYCantidad(e),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    );
               }).toList(),
               isDense: true,
               isExpanded: true,
@@ -192,6 +193,41 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
                       });
                     }),
                 const Spacer(),
+                IconButton(
+                onPressed: () async {
+                  widget.ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token, );
+                  await showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text("Buscar Puntos de Inspección"),
+                      content: CustomTextFormField(
+                        onChanged: (value) {
+                          setState(() {
+                            _searchTerm = value;
+                          });
+                        },
+                        hint: "Ingrese el término de búsqueda",
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text("Cancelar"),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Provider.of<OrdenProvider>(context, listen: false).filtrarPuntosInspeccion1(_searchTerm);
+                            Navigator.pop(context);
+                          },
+                          child: const Text("Buscar"),
+                        ),
+                      ],
+                    ),
+                  );
+                }, 
+                icon: const Icon(Icons.search)
+              ),
                 Checkbox(
                   activeColor: colors.primary,
                   value: selectAll,
@@ -225,6 +261,13 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
         ]),
       ),
     );
+  }
+
+  String nombreYCantidad(TipoPtosInspeccion e) { 
+    String retorno = '';
+    String cantidad = widget.ptosInspeccion.where((pto) => pto.tipoPuntoInspeccionId == e.tipoPuntoInspeccionId).toList().length.toString();
+     retorno = '${e.descripcion} ($cantidad)';
+    return retorno;
   }
 
   listaDePuntos() {
