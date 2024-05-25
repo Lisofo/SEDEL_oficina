@@ -119,43 +119,46 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
         drawer: const Drawer(
           child: BotonesDrawer(),
         ),
-        body: Container(
-          color: Colors.green,
-          height: MediaQuery.of(context).size.height * 0.9,
-          width: MediaQuery.of(context).size.width,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: colores[orden.estado],
-                    borderRadius: BorderRadius.circular(5)
-                  ),
-                  height: 30,
-                  child: const Center(
-                    child: Text(
-                      'Detalles',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18),
-                      textAlign: TextAlign.center,
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.9,
+            width: MediaQuery.of(context).size.width,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: colores[orden.estado],
+                      borderRadius: BorderRadius.circular(5)
+                    ),
+                    height: 30,
+                    child: const Center(
+                      child: Text(
+                        'Detalles',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
-                ),
                   const SizedBox(
                     height: 20,
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const SizedBox(width: 30,),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(
                             width: 650,
                             child: Card(
+                              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
                               elevation: 4,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -187,7 +190,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                                 });
                                               }
                                             },
-                                            icon: const Icon(Icons.edit)
+                                            icon: Icon(Icons.edit,color: colors.secondary,)
                                           )
                                         ],
                                       ),
@@ -249,6 +252,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                           SizedBox(
                             width: 650,
                             child: Card(
+                              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
                               elevation: 4,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -269,7 +273,6 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                       height: 10,
                                     ),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         RichText(
                                           text: TextSpan(
@@ -289,12 +292,11 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                           ),
                                         ),
                                         if (editarOrdenFechas)...[
-                                          TextButton.icon(
+                                          IconButton(
                                             onPressed: () {
                                               _selectDateOrden(context);
                                             },
-                                            icon: const Icon(Icons.calendar_today),
-                                            label: const Text('Editar fecha de la orden')
+                                            icon: Icon(Icons.edit, color: colors.secondary,),
                                           )
                                         ]
                                       ],
@@ -320,13 +322,12 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                           ),
                                         ),
                                         if (editarOrdenFechas)
-                                          TextButton.icon(
-                                              onPressed: () {
-                                                _selectFechaDesde(context);
-                                              },
-                                              icon: const Icon(
-                                                  Icons.calendar_today),
-                                              label: const Text('Editar fecha desde de la orden'))
+                                          IconButton(
+                                            onPressed: () {
+                                              _selectFechaDesde(context);
+                                            },
+                                            icon: Icon(Icons.edit, color: colors.secondary,),
+                                          )
                                       ],
                                     ),
                                     const SizedBox(
@@ -352,14 +353,12 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                           ),
                                         ),
                                         if (editarOrdenFechas)
-                                          TextButton.icon(
-                                              onPressed: () {
-                                                _selectFechaHasta(context);
-                                              },
-                                              icon: const Icon(
-                                                  Icons.calendar_today),
-                                              label: const Text(
-                                                  'Editar fecha hasta de la orden'))
+                                          IconButton(
+                                            onPressed: () {
+                                              _selectFechaHasta(context);
+                                            },
+                                            icon: Icon(Icons.edit, color: colors.secondary,),
+                                          )
                                       ],
                                     ),
                                     const SizedBox(
@@ -399,6 +398,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                     SizedBox(
                                       width: 250,
                                       child: CustomDropdownFormMenu(
+                                        isDense: true,
                                         value: tipoOrdenInicial,
                                         hint: 'Seleccione tipo de orden',
                                         items: tipoOrdenes.map((e) {
@@ -504,198 +504,94 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                       )
                                     ]
                                   ],
-                                  const Text('Nombre del cliente: ',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600
-                                    ),
-                                  ),
-                                  Text(
-                                    orden.ordenTrabajoId == 0 ? selectedCliente.nombre : orden.cliente.nombre,
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  const Text(
-                                    'Codigo del cliente: ',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  Text(
-                                    orden.ordenTrabajoId == 0 ? selectedCliente.codCliente : orden.cliente.codCliente,
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  const Text(
-                                    'Direccion del cliente: ',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  Text(
-                                    orden.ordenTrabajoId == 0 ? selectedCliente.direccion : orden.cliente.direccion,
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  const Text(
-                                    'Telefono del cliente: ',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  Text(
-                                    orden.ordenTrabajoId == 0 ? selectedCliente.telefono1 : orden.cliente.telefono1,
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
-                      const SizedBox(width: 30),
-                      Flexible(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Instrucciones: ',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.2,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: const Color.fromARGB(255, 52, 120, 62),
-                                    width: 2
-                                  ),
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: TextFormField(
-                                enabled: editarOrden,
-                                maxLines: 10,
-                                controller: _instruccionesController,
-                                decoration: const InputDecoration(
-                                    border: InputBorder.none,
-                                    fillColor: Colors.white,
-                                    filled: true),
-                              ),
-                            ),
-                            const Text(
-                              '*  Comentario:',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.2,
-                              decoration: BoxDecoration(
+                      const SizedBox(width: 40,),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Notas del cliente: ',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.45,
+                            decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: const Color.fromARGB(255, 52, 120, 62),
-                                  width: 2
-                                ),
-                                borderRadius: BorderRadius.circular(5)
-                              ),
-                              child: TextFormField(
-                                enabled: editarOrden,
-                                maxLines: 10,
-                                controller: _comentarioController,
-                                decoration: const InputDecoration(
+                                    color: colors.primary,
+                                    width: 2),
+                                borderRadius: BorderRadius.circular(5)),
+                            child: TextFormField(
+                              enabled: false,
+                              maxLines: 8,
+                              minLines: 2,
+                              controller: _notasClienteController,
+                              decoration: const InputDecoration(
                                   border: InputBorder.none,
                                   fillColor: Colors.white,
-                                  filled: true
-                                ),
-                              ),
+                                  filled: true),
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 40,),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Notas del cliente: ',
+                          ),
+                          const SizedBox(height: 10),
+                          const Text(
+                          'Instrucciones: ',
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w600),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.45,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: const Color.fromARGB(
-                                      255, 52, 120, 62),
-                                  width: 2),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: TextFormField(
-                            enabled: false,
-                            maxLines: 8,
-                            controller: _notasClienteController,
-                            decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                fillColor: Colors.white,
-                                filled: true),
                           ),
-                        ),
-                        const SizedBox(height: 10),
-                        const Text(
-                        'Instrucciones: ',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.45,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: const Color.fromARGB(
-                                      255, 52, 120, 62),
-                                  width: 2),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: TextFormField(
-                            enabled: editarOrden,
-                            maxLines: 8,
-                            controller: _instruccionesController,
-                            decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                fillColor: Colors.white,
-                                filled: true),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.45,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: colors.primary,
+                                    width: 2),
+                                borderRadius: BorderRadius.circular(5)),
+                            child: TextFormField(
+                              enabled: editarOrden,
+                              maxLines: 8,
+                              minLines: 2,
+                              controller: _instruccionesController,
+                              decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  fillColor: Colors.white,
+                                  filled: true),
+                            ),
                           ),
-                        ),
-                        const Text(
-                          'Comentario:',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(height: 10,),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.45,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: const Color.fromARGB(
-                                      255, 52, 120, 62),
-                                  width: 2),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: TextFormField(
-                            enabled: editarOrden,
-                            maxLines: 8,
-                            controller: _comentarioController,
-                            decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                fillColor: Colors.white,
-                                filled: true),
+                          const SizedBox(height: 10,),
+                          const Text(
+                            '*  Comentario:',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
                           ),
-                        ),
-                      ],
-                    ),
-                    
-                    
-                  ],
-                ),
-              ],
+                          
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.45,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: colors.primary,
+                                    width: 2),
+                                borderRadius: BorderRadius.circular(5)),
+                            child: TextFormField(
+                              enabled: editarOrden,
+                              maxLines: 8,
+                              minLines: 2,
+                              controller: _comentarioController,
+                              decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  fillColor: Colors.white,
+                                  filled: true),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -957,6 +853,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                         context, orden, selectedTecnico!.tecnicoId, token);
                     await OrdenServices.showDialogs(
                         context, 'Tecnico cambiado correctamente', true, false);
+                        
                     setState(() {
                       orden.tecnico = selectedTecnico!;
                     });
