@@ -144,14 +144,15 @@ class _RevisionPtosInspeccionDesktopState extends State<RevisionPtosInspeccionDe
                   },
                 ),
         ),
-        
         SizedBox(
-            height: 469,
-            width: Constantes().ancho,
-            child: RefreshIndicator(
-                key: _refreshIndicatorKey,
-                onRefresh: refreshData,
-                child: listaDePuntos())),
+          height: 380,
+          width: Constantes().ancho,
+          child: RefreshIndicator(
+            key: _refreshIndicatorKey,
+            onRefresh: refreshData,
+            child: listaDePuntos()
+          )
+        ),
         SizedBox(
           width: Constantes().ancho,
           child: Row(

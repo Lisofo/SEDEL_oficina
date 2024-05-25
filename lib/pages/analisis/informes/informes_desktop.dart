@@ -106,16 +106,6 @@ class _InformesDesktopState extends State<InformesDesktop> {
       drawer: const Drawer(
         child: BotonesDrawer(),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          rptGenId = context.read<OrdenProvider>().rptGenId;
-          reporte = await InformesServices().getReporte(context, rptGenId, token);
-          if(reporte.generado == 'S'){
-            await abrirUrl(reporte.archivoUrl, token);
-          }
-        },
-        label: const Text('Abrir informe'),
-      ),
       body: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -137,7 +127,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
                   nombreInforme = item.key;
                   selectedInforme = item.data;
                   // print(selectedInforme.informe);
-                  tipos = selectedNodeData.tiposImpresion;
+                  tipos = selectedInforme.tiposImpresion;
                   print('nodo seleccionado: $selectedNodeData');
                   print('lista: $tipos');
                 }
@@ -242,7 +232,11 @@ class _InformesDesktopState extends State<InformesDesktop> {
                           buttonIndex = index;
                           switch (buttonIndex){
                             case 0: 
-                              
+                              rptGenId = context.read<OrdenProvider>().rptGenId;
+                              reporte = await InformesServices().getReporte(context, rptGenId, token);
+                              if(reporte.generado == 'S'){
+                                await abrirUrl(reporte.archivoUrl, token);
+                              } 
                             break;
                             case 1:
                               generarInformePopup(context, selectedInforme);
@@ -251,8 +245,8 @@ class _InformesDesktopState extends State<InformesDesktop> {
                         },
                         items: const [
                           BottomNavigationBarItem(
-                            icon: Icon(Icons.save_as),
-                            label: 'Guardar',
+                            icon: Icon(Icons.open_in_browser),
+                            label: 'Abrir informe',
                           ),
                           BottomNavigationBarItem(
                             icon: Icon(Icons.save),

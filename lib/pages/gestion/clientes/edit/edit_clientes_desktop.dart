@@ -198,11 +198,13 @@ class _BodyState extends State<Body> {
                           children: [
                             const Text('*  Codigo '),
                             SizedBox(
-                                width: 300,
-                                child: CustomTextFormField(
-                                    controller: _codController,
-                                    label: 'Codigo',
-                                    maxLines: 1)),
+                              width: 300,
+                              child: CustomTextFormField(
+                                controller: _codController,
+                                label: 'Codigo',
+                                maxLines: 1
+                              )
+                            ),
                           ],
                         ),
                         const SizedBox(
@@ -771,6 +773,9 @@ class _BodyState extends State<Body> {
     selectedDepartamento = cliente.departamento;
     tipoClienteSeleccionado = cliente.tipoCliente;
     selectedTecnico = cliente.tecnico;
+    if(cliente.tecnico.cargo == null){
+      selectedTecnico.cargo = Cargo.empty();
+    }
     estadoSeleccionado = cliente.estado != ''
         ? estados.firstWhere((estado) => estado.codEstado == cliente.estado)
         : EstadoCliente(codEstado: '', descripcion: '');
