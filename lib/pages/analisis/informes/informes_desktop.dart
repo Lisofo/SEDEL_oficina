@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -6,6 +7,7 @@ import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/informes.dart';
 import 'package:sedel_oficina_maqueta/models/informes_values.dart';
 import 'package:sedel_oficina_maqueta/models/parametro.dart';
+import 'package:sedel_oficina_maqueta/models/reporte.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/search/parametro_cliente_values.dart';
 import 'package:sedel_oficina_maqueta/services/informes_services.dart';
@@ -14,6 +16,7 @@ import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 import 'package:animated_tree_view/animated_tree_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class InformesDesktop extends StatefulWidget {
   const InformesDesktop({super.key});
@@ -47,6 +50,8 @@ class _InformesDesktopState extends State<InformesDesktop> {
   int buttonIndex = 0;
   late String tipo = '';
   List<TiposImpresion> tipos = [];
+  late int rptGenId = 0;
+  late Reporte reporte = Reporte.empty();
 
   @override
   void initState() {
@@ -64,6 +69,35 @@ class _InformesDesktopState extends State<InformesDesktop> {
    
   }
 
+  abrirUrl(String url, String token) async {
+    Dio dio = Dio();
+    String link = url += '?authorization=$token';
+    print(link);
+    try {
+      // Realizar la solicitud HTTP con el encabezado de autorización
+      Response response = await dio.get(
+        link,
+        options: Options(
+          headers: {
+            'Authorization': 'headers $token',
+          },
+        ),
+      );
+      // Verificar si la solicitud fue exitosa (código de estado 200)
+      if (response.statusCode == 200) {
+        // Si la respuesta fue exitosa, abrir la URL en el navegador
+        Uri uri = Uri.parse(url);
+        await launchUrl(uri);
+      } else {
+        // Si la solicitud no fue exitosa, mostrar un mensaje de error
+        print('Error al cargar la URL: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Manejar errores de solicitud
+      print('Error al realizar la solicitud: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -71,6 +105,16 @@ class _InformesDesktopState extends State<InformesDesktop> {
       appBar: AppBarDesktop(titulo: 'Informes'),
       drawer: const Drawer(
         child: BotonesDrawer(),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async {
+          rptGenId = context.read<OrdenProvider>().rptGenId;
+          reporte = await InformesServices().getReporte(context, rptGenId, token);
+          if(reporte.generado == 'S'){
+            await abrirUrl(reporte.archivoUrl, token);
+          }
+        },
+        label: const Text('Abrir informe'),
       ),
       body: Row(
         mainAxisSize: MainAxisSize.min,
@@ -92,8 +136,10 @@ class _InformesDesktopState extends State<InformesDesktop> {
                   // print(parametros[0].parametroId);
                   nombreInforme = item.key;
                   selectedInforme = item.data;
-                  print(selectedInforme.informe);
+                  // print(selectedInforme.informe);
                   tipos = selectedNodeData.tiposImpresion;
+                  print('nodo seleccionado: $selectedNodeData');
+                  print('lista: $tipos');
                 }
                 for (var param in parametros) {
                   if (param.control == 'T') {
@@ -179,17 +225,6 @@ class _InformesDesktopState extends State<InformesDesktop> {
                                 const SizedBox(width: 30,),
                                 Text(parametro.comparador),
                                 const SizedBox(width: 30,),
-                                // if(parametro.parametro == 'Orden de Trabajo')...[
-                                //   Text(campoOrdenTrabajo)
-                                // ] else if (parametro.parametro == 'Id de Revision')...[
-                                //   Text(campoIdRevision)
-                                // ] else if(parametro.parametro == 'Cliente')...[
-                                //   Text(campoCliente.descripcion)
-                                // ] else if(parametro.parametro == 'Plaga Objetivo')...[
-                                //   Text(campoPlagaObjetivo.descripcion)
-                                // ] else if (parametro.parametro == 'Fecha Hasta')...[
-                                //   Text(campoFechaHasta)
-                                // ]
                                 Text(parametro.valorAMostrar.toString())
                               ],
                             );

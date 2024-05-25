@@ -2,10 +2,13 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/config.dart';
 import 'package:sedel_oficina_maqueta/models/informes.dart';
 import 'package:sedel_oficina_maqueta/models/informes_values.dart';
 import 'package:sedel_oficina_maqueta/models/parametro.dart';
+import 'package:sedel_oficina_maqueta/models/reporte.dart';
+import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 
 class InformesServices {
   final _dio = Dio();
@@ -73,6 +76,46 @@ class InformesServices {
       final List<dynamic> informesList = resp.data;
 
       return informesList.map((obj) => Informe.fromJson(obj)).toList();
+    } catch (e) {
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+              return "Error: ${error['message']}";
+            }).toList();
+            showErrorDialog(context, errorMessages.join('\n'));
+          }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: ${e.message}');
+        }
+      }
+    }
+  }
+
+  Future getReporte(BuildContext context, int reporteId, String token) async {
+    String link = '${apiUrl}api/v1/rpts/$reporteId';
+    try {
+      var headers = {'Authorization': token};
+      var resp = await _dio.request(
+        link,
+        options: Options(
+          method: 'GET',
+          headers: headers,
+        ),
+      );
+
+      final Reporte reporte = Reporte.fromJson(resp.data);
+
+      return reporte;
+
     } catch (e) {
       if (e is DioException) {
         if (e.response != null) {
@@ -234,6 +277,9 @@ class InformesServices {
       );
 
       if (resp.statusCode == 200) {
+        print(resp.data["rptGenId"]);
+        Provider.of<OrdenProvider>(context, listen: false).setRptId(resp.data["rptGenId"]);
+        print(resp.data["rptGenId"]);
         showDialogs(context, 'Informe generado correctamente', true, false);
       }
 

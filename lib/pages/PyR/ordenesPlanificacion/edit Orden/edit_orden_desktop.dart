@@ -612,6 +612,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                 break;
                 case 1:
                 if(orden.estado == 'DESCARTADA'){
+                  null;
                 }else{
                   cambiarEstado();
                 }

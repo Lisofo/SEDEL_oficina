@@ -193,8 +193,7 @@ class OrdenServices {
     }
   }
 
-  Future patchOrden(BuildContext context, Orden orden, String estado,
-      int ubicacionId, String token) async {
+  Future patchOrden(BuildContext context, Orden orden, String estado, int ubicacionId, String token) async {
     String link = apiLink;
     link += orden.ordenTrabajoId.toString();
 

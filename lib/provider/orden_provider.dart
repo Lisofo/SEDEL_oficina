@@ -50,6 +50,7 @@ class OrdenProvider with ChangeNotifier {
   Control _control = Control.empty();
   Marca _marca = Marca.empty();
   int _revisionId = 0;
+  int _rptGenId = 0;
 
 
   // Getters
@@ -98,6 +99,7 @@ class OrdenProvider with ChangeNotifier {
   Control get control => _control;
   Marca get marca => _marca;
   int get revisionId => _revisionId;
+  int get rptGenId => _rptGenId;
 
   // Setters
   void setPendiente(bool pendi) {
@@ -333,6 +335,11 @@ class OrdenProvider with ChangeNotifier {
 
   void setRevisionId(int revision){
     _revisionId = revision;
+    notifyListeners();
+  }
+
+  void setRptId(int rptGenId){
+    _rptGenId = rptGenId;
     notifyListeners();
   }
 
