@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
@@ -6,6 +8,7 @@ import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/informes.dart';
 import 'package:sedel_oficina_maqueta/models/informes_values.dart';
 import 'package:sedel_oficina_maqueta/models/parametro.dart';
+import 'package:sedel_oficina_maqueta/models/reporte.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/search/parametro_cliente_values.dart';
 import 'package:sedel_oficina_maqueta/services/informes_services.dart';
@@ -13,6 +16,7 @@ import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:animated_tree_view/animated_tree_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class InformesMobile extends StatefulWidget {
   const InformesMobile({super.key});
@@ -46,6 +50,9 @@ class _InformesMobileState extends State<InformesMobile> {
   late String tipo = '';
   List<TiposImpresion> tipos = [];
   late MaskTextInputFormatter maskFormatter;
+  late int rptGenId = 0;
+  late Reporte reporte = Reporte.empty();
+
   @override
   void initState() {
     super.initState();
@@ -58,6 +65,35 @@ class _InformesMobileState extends State<InformesMobile> {
     setState(() {
       sampleTree = convertInformesToTreeNode(informes);
     });
+  }
+
+  abrirUrl(String url, String token) async {
+    Dio dio = Dio(); 
+    String link = url += '?authorization=$token';
+    print(link);
+    try {
+      // Realizar la solicitud HTTP con el encabezado de autorización
+      Response response = await dio.get(
+        link,
+        options: Options(
+          headers: {
+            'Authorization': 'headers $token',
+          },
+        ),
+      );
+      // Verificar si la solicitud fue exitosa (código de estado 200)
+      if (response.statusCode == 200) {
+        // Si la respuesta fue exitosa, abrir la URL en el navegador
+        Uri uri = Uri.parse(url);
+        await launchUrl(uri);
+      } else {
+        // Si la solicitud no fue exitosa, mostrar un mensaje de error
+        print('Error al cargar la URL: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Manejar errores de solicitud
+      print('Error al realizar la solicitud: $e');
+    }
   }
 
   @override
@@ -84,30 +120,24 @@ class _InformesMobileState extends State<InformesMobile> {
               ),
               indentation: const Indentation(style: IndentStyle.squareJoint),
               onItemTap: (item) async {
-
                 if(item.data.objetoArbol == 'informe'){
                   parametros = await InformesServices().getParametros(context, token, item.data.informeId);
                   // print(parametros[0].parametroId);
                   nombreInforme = item.key;
                   selectedInforme = item.data;
-                  print(selectedInforme.informe);
-                  tipos = selectedNodeData.tiposImpresion;
+                  // print(selectedInforme.informe);
+                  tipos = selectedInforme.tiposImpresion;
+                  print('nodo seleccionado: $selectedNodeData');
+                  print('lista: $tipos');
                 }
-
                 for (var param in parametros) {
                   if (param.control == 'T') {
                     _controllers[param.parametro] = TextEditingController();
                   }
                 }
-
                 setState(() {
-                  selectedNodeData = item.data; // Actualizar los datos del nodo seleccionado
+                  selectedNodeData = item.data;
                 });
-                if(item.data.objetoArbol == 'informe' && item.childrenAsList.isEmpty){
-                  router.pop();
-                }
-
-
               },
               onTreeReady: (controller) {
                 _controller = controller;
@@ -169,13 +199,15 @@ class _InformesMobileState extends State<InformesMobile> {
                                         parametro.valor = cliente.id.toString();
                                         parametro.valorAMostrar = cliente.descripcion;
                                         setState(() {});
+                                        
                                       } else{
                                         parametro.valor = '';
                                         parametro.valorAMostrar = '';
                                       }
                                     } else {
                                       await _showPopup(context, parametro);
-                                      print(parametro.parametro);
+                                      print(parametro.valor);
+                                      print(parametro.valorAMostrar);
                                     }
                                   },
                                   
@@ -185,32 +217,6 @@ class _InformesMobileState extends State<InformesMobile> {
                                   ),
                                 ),
                                 Text(parametro.comparador,),
-                                // if(parametro.parametro == 'Orden de Trabajo')...[
-                                //   SizedBox(
-                                //     width: MediaQuery.of(context).size.width * 0.4,
-                                //     child: Text(campoOrdenTrabajo,textAlign: TextAlign.center)
-                                //   )
-                                // ] else if (parametro.parametro == 'Id de Revision')...[
-                                //   SizedBox(
-                                //     width: MediaQuery.of(context).size.width * 0.4,
-                                //     child: Text(campoIdRevision,textAlign: TextAlign.center)
-                                //   )
-                                // ] else if(parametro.parametro == 'Cliente')...[
-                                //   SizedBox(
-                                //     width: MediaQuery.of(context).size.width * 0.4,
-                                //     child: Text(campoCliente.descripcion,textAlign: TextAlign.center)
-                                //   )
-                                // ] else if(parametro.parametro == 'Plaga Objetivo')...[
-                                //   SizedBox(
-                                //     width: MediaQuery.of(context).size.width * 0.4,
-                                //     child: Text(campoPlagaObjetivo.descripcion,textAlign: TextAlign.center,)
-                                //   )
-                                // ] else if (parametro.parametro == 'Fecha Hasta')...[
-                                //   SizedBox(
-                                //     width: MediaQuery.of(context).size.width * 0.4,
-                                //     child: Text(campoFechaHasta,textAlign: TextAlign.center)
-                                //   )
-                                // ]
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width * 0.4,
                                   child: Text(parametro.valorAMostrar.toString(), textAlign: TextAlign.center)
@@ -227,22 +233,25 @@ class _InformesMobileState extends State<InformesMobile> {
                         showUnselectedLabels: true,
                         selectedItemColor: colors.primary,
                         unselectedItemColor: colors.primary,
-                        onTap: (index) async{
+                        onTap: (index) async {
                           buttonIndex = index;
                           switch (buttonIndex){
-                            case 0:
-
+                            case 0: 
+                              rptGenId = context.read<OrdenProvider>().rptGenId;
+                              reporte = await InformesServices().getReporte(context, rptGenId, token);
+                              if(reporte.generado == 'S'){
+                                await abrirUrl(reporte.archivoUrl, token);
+                              } 
                             break;
                             case 1:
                               generarInformePopup(context, selectedInforme);
                             break;
-
                           }
                         },
                         items: const [
                           BottomNavigationBarItem(
-                            icon: Icon(Icons.save_as),
-                            label: 'Guardar',
+                            icon: Icon(Icons.open_in_browser),
+                            label: 'Abrir informe',
                           ),
                           BottomNavigationBarItem(
                             icon: Icon(Icons.save),
@@ -310,12 +319,13 @@ class _InformesMobileState extends State<InformesMobile> {
     if (parametro.control == 'T') {
       _controllers[parametro.parametro] = TextEditingController();
     }
-    if(parametro.sql != ''){
-      parametrosValues = await InformesServices().getParametrosValues(context, token, parametro.informeId, parametro.parametroId,'','', parametro.dependeDe.toString(), parametros);
+    if (parametro.sql != '') {
+      parametrosValues = await InformesServices().getParametrosValues(context, token, parametro.informeId, parametro.parametroId, '', '', parametro.dependeDe.toString(), parametros);
     }
     if (parametro.control == 'T' && parametro.tipo == 'N') {
-      maskFormatter = MaskTextInputFormatter(mask: '########', filter: { "#": RegExp(r'[0-9]') });
+      maskFormatter = MaskTextInputFormatter(mask: '###############', filter: { "#": RegExp(r'[0-9]') });
     }
+
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -324,22 +334,23 @@ class _InformesMobileState extends State<InformesMobile> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if(parametro.control == 'C')...[
+              if (parametro.control == 'C') ...[
                 SizedBox(
                   width: 370,
                   child: CustomDropdownFormMenu(
                     items: parametrosValues.map((e) {
-                     return DropdownMenuItem(
-                      value: e,
-                      child: Text(e.descripcion)); 
+                      return DropdownMenuItem(
+                        value: e,
+                        child: Text(e.descripcion),
+                      );
                     }).toList(),
-                    onChanged: (value){
+                    onChanged: (value) {
                       parametro.valor = (value as ParametrosValues).id.toString();
                       parametro.valorAMostrar = (value).descripcion;
-                    }
+                    },
                   ),
                 )
-              ] else if (parametro.control == 'T')...[
+              ] else if (parametro.control == 'T') ...[
                 SizedBox(
                   width: 370,
                   child: CustomTextFormField(
@@ -354,15 +365,15 @@ class _InformesMobileState extends State<InformesMobile> {
           ),
           actions: <Widget>[
             TextButton(
-              onPressed: (){
+              onPressed: () {
                 router.pop();
-              }, 
-              child: const Text('Cancelar')
+              },
+              child: const Text('Cancelar'),
             ),
             TextButton(
               child: const Text('Aceptar'),
               onPressed: () {
-                if(_controllers[parametro.parametro]?.text != '' && parametro.control == 'T'){
+                if (_controllers[parametro.parametro]?.text != '' && parametro.control == 'T') {
                   parametro.valor = _controllers[parametro.parametro]?.text;
                   parametro.valorAMostrar = _controllers[parametro.parametro]?.text;
                 }

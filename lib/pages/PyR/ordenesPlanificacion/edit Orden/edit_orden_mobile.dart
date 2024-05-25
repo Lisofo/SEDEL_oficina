@@ -38,6 +38,7 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
   late Tecnico? selectedTecnico = null;
   late Tecnico? selectedTecnicoInicial = Tecnico.empty();
   late bool editarOrden = true;
+  late bool editarOrdenFechas = true;
   late String dateTime;
   DateTime selectedDateOrden = DateTime.now();
   DateTime selectedDateDesde = DateTime.now();
@@ -83,6 +84,9 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
     selectedDateDesde = DateTime(selectedDateDesde.year, selectedDateDesde.month, selectedDateDesde.day, selectedDateDesde.hour, selectedDateDesde.minute, 0);
     selectedDateHasta = DateTime(selectedDateHasta.year, selectedDateHasta.month, selectedDateHasta.day, selectedDateHasta.hour, selectedDateHasta.minute, 0);
     selectedDateOrden = orden.fechaOrdenTrabajo;
+    if(orden.ordenTrabajoId != 0){
+      editarOrdenFechas = false;
+    }
     setState(() {});
   }
 
@@ -184,7 +188,7 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
                                       ],
                                     ],
                                   ),
-                                const Text('Nombre del cliente: ',
+                                const Text('*  Nombre del cliente: ',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600
@@ -272,7 +276,7 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
                                         ),
                                         children: <TextSpan>[
                                           const TextSpan(
-                                              text: 'Fecha de la orden: ',
+                                              text: '*  Fecha de la orden: ',
                                               style: TextStyle(
                                                   fontWeight:
                                                       FontWeight.w600)),
@@ -281,15 +285,14 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
                                         ],
                                       ),
                                     ),
-                                    if (editarOrden)
-                                      TextButton.icon(
-                                          onPressed: () {
-                                            _selectDateOrden(context);
-                                          },
-                                          icon: const Icon(
-                                              Icons.calendar_today),
-                                          label: const Text(
-                                              'Editar fecha de la orden'))
+                                    if (editarOrdenFechas)...[
+                                      IconButton(
+                                        onPressed: () {
+                                          _selectDateOrden(context);
+                                        },
+                                        icon: Icon(Icons.edit, color: colors.secondary,),
+                                      )
+                                    ]
                                   ],
                                 ),
                                 const SizedBox(height: 10),
@@ -304,7 +307,7 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
                                         ),
                                         children: <TextSpan>[
                                           const TextSpan(
-                                              text: 'Fecha desde: ',
+                                              text: '*  Fecha desde: ',
                                               style: TextStyle(
                                                   fontWeight:
                                                       FontWeight.w600)),
@@ -313,14 +316,13 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
                                         ],
                                       ),
                                     ),
-                                    if (editarOrden)
-                                      TextButton.icon(
-                                          onPressed: () {
-                                            _selectFechaDesde(context);
-                                          },
-                                          icon: const Icon(
-                                              Icons.calendar_today),
-                                          label: const Text('Editar fecha desde de la orden'))
+                                    if (editarOrdenFechas)
+                                      IconButton(
+                                        onPressed: () {
+                                           _selectFechaDesde(context);
+                                        },
+                                        icon: Icon(Icons.edit, color: colors.secondary,),
+                                      )
                                   ],
                                 ),
                                 const SizedBox(
@@ -337,7 +339,7 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
                                         ),
                                         children: <TextSpan>[
                                           const TextSpan(
-                                              text: 'Fecha hasta: ',
+                                              text: '*  Fecha hasta: ',
                                               style: TextStyle(
                                                   fontWeight:
                                                       FontWeight.w600)),
@@ -346,15 +348,13 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
                                         ],
                                       ),
                                     ),
-                                    if (editarOrden)
-                                      TextButton.icon(
-                                          onPressed: () {
-                                            _selectFechaHasta(context);
-                                          },
-                                          icon: const Icon(
-                                              Icons.calendar_today),
-                                          label: const Text(
-                                              'Editar fecha hasta de la orden'))
+                                    if (editarOrdenFechas)
+                                      IconButton(
+                                        onPressed: () {
+                                          _selectFechaHasta(context);
+                                        },
+                                        icon: Icon(Icons.edit, color: colors.secondary,),
+                                      )
                                   ],
                                 ),
                                 const SizedBox(
@@ -380,7 +380,7 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
                                 Row(
                                   children: [
                                     const Text(
-                                      'Tipo de Orden: ',
+                                      '*  Tipo de Orden: ',
                                       style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600),
@@ -443,7 +443,7 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
                                 ),
                                 const SizedBox(height: 10),
                                 const Text(
-                                  'Servicios: ',
+                                  '*  Servicios: ',
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600),
@@ -461,7 +461,7 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
                                     },
                                   ),
                                 ),
-                                if(orden.ordenTrabajoId == 0 && orden.estado == 'PENDIENTE')...[
+                                if(/*orden.ordenTrabajoId != 0*/serviciosSeleccionados.isNotEmpty && (orden.estado == 'PENDIENTE' || orden.estado == 'EN PROCESO'))...[
                                   SizedBox(
                                   height: 250,
                                   child: ListView.builder(
@@ -480,7 +480,7 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
                                       );
                                     }),
                                   )
-                                ]else if (orden.ordenTrabajoId != 0 && orden.estado == 'PENDIENTE')...[
+                                ]else if (orden.ordenTrabajoId != 0 && (orden.estado == 'FINALIZADA' || orden.estado == 'REVISADA'))...[
                                   SizedBox(
                                   height: 250,
                                   child: ListView.builder(
@@ -574,7 +574,7 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
                             const SizedBox(height: 10,),
                             const Center(
                               child: Text(
-                                'Comentario:',
+                                '*  Comentario:',
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.w600),
                               ),
@@ -608,13 +608,15 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(
+
           currentIndex: buttonIndex,
           onTap: (index) {
             setState(() {
               buttonIndex = index;
+              //todo aCA
               switch (buttonIndex){
                 case 0: 
-                if(orden.estado == 'PENDIENTE'){
+                if(orden.estado == 'PENDIENTE' || orden.estado == 'EN PROCESO'){
                   datosAGuardar(context);
                 }else{
                   null;
@@ -622,14 +624,18 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
                 break;
                 case 1:
                 if(orden.estado == 'DESCARTADA'){
+                  null;
                 }else{
                   cambiarEstado();
                 }
                 break;
                 case 2:
                 if(orden.estado == 'DESCARTADA'){
-                }else{
+                  null;
+                }else if(orden.estado == 'PENDIENTE'){
                   cambiarTecnico();
+                }else{
+                  null;
                 }
                 break;
                 case 3:
@@ -744,13 +750,13 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
   orden.fechaHasta = selectedDateHasta;
   orden.instrucciones = _instruccionesController.text;
   orden.comentarios = _comentarioController.text;
-
+  List<ServicioOrdenes> serviciosOrdenes = convertirServicios();
+  orden.servicio = serviciosOrdenes;
+  
   if (orden.ordenTrabajoId == 0) {
     orden.cliente = selectedCliente;
     orden.tipoOrden = selectedTipoOrden;
-    orden.tecnico = selectedTecnico!;
-    List<ServicioOrdenes> serviciosOrdenes = convertirServicios();
-    orden.servicio = serviciosOrdenes;
+    orden.tecnico = selectedTecnico!;    
 
     await OrdenServices().postOrden(context, orden, token);
   }else{

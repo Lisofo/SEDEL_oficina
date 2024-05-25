@@ -774,6 +774,9 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
     selectedDepartamento = cliente.departamento;
     tipoClienteSeleccionado = cliente.tipoCliente;
     selectedTecnico = cliente.tecnico;
+    if(cliente.tecnico.cargo == null){
+      selectedTecnico.cargo = Cargo.empty();
+    }
     estadoSeleccionado = cliente.estado != ''
         ? estados.firstWhere((estado) => estado.codEstado == cliente.estado)
         : EstadoCliente(codEstado: '', descripcion: '');
