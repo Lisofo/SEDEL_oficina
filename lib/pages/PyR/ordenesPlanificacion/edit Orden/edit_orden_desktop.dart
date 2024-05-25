@@ -85,7 +85,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
     selectedDateDesde = DateTime(selectedDateDesde.year, selectedDateDesde.month, selectedDateDesde.day, selectedDateDesde.hour, selectedDateDesde.minute, 0);
     selectedDateHasta = DateTime(selectedDateHasta.year, selectedDateHasta.month, selectedDateHasta.day, selectedDateHasta.hour, selectedDateHasta.minute, 0);
     selectedDateOrden = orden.fechaOrdenTrabajo;
-    if(orden.ordenTrabajoId != 0){
+    if(orden.ordenTrabajoId != 0 && orden.estado != 'PENDIENTE'){
       editarOrdenFechas = false;
     }
     setState(() {});
@@ -109,6 +109,10 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
       _notasClienteController.text = orden.cliente.notas;
       selectedDateDesde = orden.fechaDesde;
       selectedDateHasta = orden.fechaHasta;
+      if(serviciosSeleccionados.isEmpty){
+        List<Servicio> prueba = convertirServiciosOrden();
+        serviciosSeleccionados = prueba;
+      }
     }
     return SafeArea(
       child: Scaffold(
@@ -466,7 +470,9 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                         popupProps: const PopupProps.menu(
                                           showSearchBox: true, searchDelay: Duration.zero),
                                         onChanged: (value) {
+                                          print(value);
                                           serviciosSeleccionados.insert(0, value!);
+                                          print(serviciosSeleccionados);
                                           setState(() {});
                                         },
                                       ),
@@ -753,12 +759,24 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
  List<ServicioOrdenes> convertirServicios() {
    List<ServicioOrdenes> serviciosOrdenes = serviciosSeleccionados.map((servicio) {
      return ServicioOrdenes(
-       servicioId: servicio.servicioId,
-       codServicio: servicio.codServicio,
-       descripcion: servicio.descripcion,
+      servicioId: servicio.servicioId,
+      codServicio: servicio.codServicio,
+      descripcion: servicio.descripcion,
      );
    }).toList();
    return serviciosOrdenes;
+ }
+
+ List<Servicio> convertirServiciosOrden() {
+   List<Servicio> ordenesServicios = orden.servicio.map((servicio) {
+     return Servicio(
+      servicioId: servicio.servicioId,
+      codServicio: servicio.codServicio,
+      descripcion: servicio.descripcion,
+      tipoServicio: TipoServicio.empty(),
+     );
+   }).toList();
+   return ordenesServicios;
  }
 
 

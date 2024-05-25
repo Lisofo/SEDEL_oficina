@@ -291,11 +291,7 @@ class OrdenServices {
 
     try {
       var headers = {'Authorization': token};
-      var data = {
-        "instrucciones": orden.instrucciones,
-        "comentarios": orden.comentarios,
-        "servicios": orden.servicio.map((e) => e.servicioId).toList(),
-      };
+      var data = orden.toMap();
       var resp = await _dio.request(link,
           options: Options(
             method: 'PUT',
