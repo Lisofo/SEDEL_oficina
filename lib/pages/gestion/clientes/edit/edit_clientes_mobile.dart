@@ -158,7 +158,6 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBarMobile(titulo: 'Clientes'),
-        //ToDo poner drawer
         body: PageView(
           controller: _pageController,
           onPageChanged: (index) {
@@ -233,327 +232,437 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 4),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: colors.primary,
-                    borderRadius: BorderRadius.circular(5)),
-                  height: 30,
-                  child: const Center(
-                    child: Text(
-                      'Datos del cliente',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 10,),
+            Container(
+              decoration: BoxDecoration(
+                color: colors.primary,
+                borderRadius: BorderRadius.circular(5)),
+              height: 30,
+              child: const Center(
+                child: Text(
+                  'Datos del cliente',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18),
+                  textAlign: TextAlign.center,
                 ),
               ),
-              const SizedBox(height: 10,),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Codigo '),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.75,
-                    child: CustomTextFormField(
-                      controller: _codController,
-                      label: 'Codigo',
-                      maxLines: 1
-                    )
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20,),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Nombre '),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.65,
-                    child: CustomTextFormField(
-                      controller: _nombreController,
-                      label: 'Nombre',
-                      maxLines: 1,
-                    )
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20,
-                child: TextButton(
-                  onPressed: () {
-                    MapsLauncher.launchQuery(_nombreController.text);
-                  },
-                  child: const Text('Buscar por nombre'),
-                ),
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Nombre Fantasia  '),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.60,
-                    child: CustomTextFormField(
-                      controller: _nombFantasiaController,
-                      label: 'Nombre Fantasia',
-                      maxLines: 1
-                    )
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const Text('Email  '),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.65,
-                    child: CustomTextFormField(
-                      controller: _emailController,
-                      label: 'Email',
-                      maxLines: 1
-                    )
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20,),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Direccion  '),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.65,
-                    child: CustomTextFormField(
-                      controller: _direccionController,
-                      label: 'Direccion',
-                      maxLines: 1
-                    )
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20,
-                child: TextButton(
-                  onPressed: () {
-                    MapsLauncher.launchQuery('${_direccionController.text}, ${_localidadController.text}');
-                  },
-                  child: const Text('Buscar por direccion'),
-                ),
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Coordenadas  '),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.65,
-                    child: CustomTextFormField(
-                      controller: _coordenadasController,
-                      hint: 'Latitud, longitud',
-                      maxLines: 1,
-                      label: 'Coordenadas'
-                    )
+            ),
+            const SizedBox(height: 10,),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Codigo '),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: CustomTextFormField(
+                    controller: _codController,
+                    label: 'Codigo',
+                    maxLines: 1
                   )
-                ],
-              ),
-              SizedBox(
-                height: 20,
-                child: TextButton(
-                  onPressed: () {
-                    buscarPorCoordenadas(_coordenadasController.text);
-                  },
-                  child: const Text('Buscar por coordenadas'),
                 ),
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Barrio  '),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.65,
-                    child: CustomTextFormField(
-                      controller: _barrioController,
-                      label: 'Barrio',
-                      maxLines: 1
-                    )
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20,),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Localidad  '),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.65,
-                    child: CustomTextFormField(
-                      controller: _localidadController,
-                      label: 'Localidad',
-                      maxLines: 1
-                    )
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20,),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Departamento  '),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.60,
-                    child: CustomDropdownFormMenu(
-                      value: departamento,
-                      hint: 'Seleccione departamento',
-                      items: departamentos.map((e) {
-                        return DropdownMenuItem(
-                          value: e,
-                          child: Text(e.nombre),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        selectedDepartamento = value;
-                        cliente.departamentoId = (value as Departamento).departamentoId;
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20,),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Telefono1  '),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.65,
-                    child: CustomTextFormField(
-                      controller: _tel1Controller,
-                      label: 'Telefono1',
-                      maxLines: 1
-                    )
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20,),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Telefono2  '),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.65,
-                    child: CustomTextFormField(
-                      controller: _tel2Controller,
-                      label: 'Telefono2',
-                      maxLines: 1
-                    )
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20,),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('RUC  '),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.65,
-                    child: CustomTextFormField(
-                      controller: _rucController,
-                      label: 'RUC',
-                      maxLines: 1
-                    )
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20,),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Estado  '),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.65,
-                    child: CustomDropdownFormMenu(
-                      value: estadoInicial,
-                      hint: 'Seleccione un estado',
-                      items: estados.map((e) {
-                        return DropdownMenuItem(
-                          value: e, child: Text(e.descripcion)
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        estadoSeleccionado = newValue;
-                        cliente.estado = (newValue as EstadoCliente).codEstado;
-                      },
-                    )
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20,),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Tipo de cliente '),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.65,
-                    child: CustomDropdownFormMenu(
-                      value: tipoInicial,
-                      hint: 'Seleccione tipo de cliente',
-                      onChanged: (newValue) {
-                        tipoClienteSeleccionado = newValue;
-                        cliente.tipoClienteId = (newValue as TipoCliente).tipoClienteId;
-                      },
-                      items: tipoClientes.map((e) {
-                        return DropdownMenuItem(
-                          value: e, child: Text(e.descripcion)
-                        );
-                      }).toList()
-                    )
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const Text('Tecnico  '),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.65,
-                    child: CustomDropdownFormMenu(
-                      value: tecnicoInicial,
-                      hint: 'Seleccione tecnico',
-                      items: tecnicos.map((e) {
-                        return DropdownMenuItem(
-                          value: e,
-                          child: Text(e.nombre),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        selectedTecnico = value;
-                        cliente.tecnicoId =
-                            (value as Tecnico).tecnicoId;
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: 300,
-                child: CustomTextFormField(
-                  minLines: 2,
-                  maxLines: 12,
-                  label: 'Notas del cliente',
-                  controller: _notasClienteController,
+              ],
+            ),
+            const SizedBox(height: 5,),
+            Divider(
+              thickness: 0.5,
+              color: colors.primary,
+              endIndent: 20,
+              indent: 20,
+            ),
+            const SizedBox(height: 5,),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Nombre '),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: CustomTextFormField(
+                    controller: _nombreController,
+                    label: 'Nombre',
+                    maxLines: 1,
+                  )
                 ),
-              )
-            ],
-          ),
+              ],
+            ),
+            const SizedBox(height: 5,),
+            Divider(
+              thickness: 0.5,
+              color: colors.primary,
+              endIndent: 20,
+              indent: 20,
+            ),
+            const SizedBox(height: 5,),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Nombre Fantasia  '),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: CustomTextFormField(
+                    controller: _nombFantasiaController,
+                    label: 'Nombre Fantasia',
+                    maxLines: 1
+                  )
+                ),
+              ],
+            ),
+            const SizedBox(height: 5,),
+            Divider(
+              thickness: 0.5,
+              color: colors.primary,
+              endIndent: 20,
+              indent: 20,
+            ),
+            const SizedBox(height: 5,),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                const Text('Email  '),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: CustomTextFormField(
+                    controller: _emailController,
+                    label: 'Email',
+                    maxLines: 1
+                  )
+                ),
+              ],
+            ),
+            const SizedBox(height: 5,),
+            Divider(
+              thickness: 0.5,
+              color: colors.primary,
+              endIndent: 20,
+              indent: 20,
+            ),
+            const SizedBox(height: 5,),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Direccion  '),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: CustomTextFormField(
+                    controller: _direccionController,
+                    label: 'Direccion',
+                    maxLines: 1
+                  )
+                ),
+              ],
+            ),
+            const SizedBox(height: 5,),
+            Divider(
+              thickness: 0.5,
+              color: colors.primary,
+              endIndent: 20,
+              indent: 20,
+            ),
+            const SizedBox(height: 5,),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Coordenadas  '),
+                
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: CustomTextFormField(
+                    controller: _coordenadasController,
+                    hint: 'Latitud, longitud',
+                    maxLines: 1,
+                    label: 'Coordenadas'
+                  )
+                ),
+                const SizedBox(height: 5,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                      MapsLauncher.launchQuery(_nombreController.text);
+                      },
+                      child: const Text('Buscar por nombre')
+                    ),
+                    TextButton(
+                      onPressed: () {
+                      MapsLauncher.launchQuery('${_direccionController.text}, ${_localidadController.text}');
+                      },
+                      child: const Text('Buscar por direccion')
+                    ),
+                    TextButton(
+                      onPressed: () {
+                      buscarPorCoordenadas(_coordenadasController.text);
+                      },
+                      child: const Text('Buscar por coordenadas')
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 5,),
+            Divider(
+              thickness: 0.5,
+              color: colors.primary,
+              endIndent: 20,
+              indent: 20,
+            ),
+            const SizedBox(height: 5,),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Barrio  '),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: CustomTextFormField(
+                    controller: _barrioController,
+                    label: 'Barrio',
+                    maxLines: 1
+                  )
+                ),
+              ],
+            ),
+            const SizedBox(height: 5,),
+            Divider(
+              thickness: 0.5,
+              color: colors.primary,
+              endIndent: 20,
+              indent: 20,
+            ),
+            const SizedBox(height: 5,),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Localidad  '),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: CustomTextFormField(
+                    controller: _localidadController,
+                    label: 'Localidad',
+                    maxLines: 1
+                  )
+                ),
+              ],
+            ),
+            const SizedBox(height: 5,),
+            Divider(
+              thickness: 0.5,
+              color: colors.primary,
+              endIndent: 20,
+              indent: 20,
+            ),
+            const SizedBox(height: 5,),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Departamento  '),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: CustomDropdownFormMenu(
+                    isDense: true,
+                    value: departamento,
+                    hint: 'Seleccione departamento',
+                    items: departamentos.map((e) {
+                      return DropdownMenuItem(
+                        value: e,
+                        child: Text(e.nombre),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      selectedDepartamento = value;
+                      cliente.departamentoId = (value as Departamento).departamentoId;
+                    },
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 5,),
+            Divider(
+              thickness: 0.5,
+              color: colors.primary,
+              endIndent: 20,
+              indent: 20,
+            ),
+            const SizedBox(height: 5,),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Telefono1  '),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: CustomTextFormField(
+                    controller: _tel1Controller,
+                    label: 'Telefono1',
+                    maxLines: 1
+                  )
+                ),
+              ],
+            ),
+            const SizedBox(height: 5,),
+            Divider(
+              thickness: 0.5,
+              color: colors.primary,
+              endIndent: 20,
+              indent: 20,
+            ),
+            const SizedBox(height: 5,),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Telefono2  '),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: CustomTextFormField(
+                    controller: _tel2Controller,
+                    label: 'Telefono2',
+                    maxLines: 1
+                  )
+                ),
+              ],
+            ),
+            const SizedBox(height: 5,),
+            Divider(
+              thickness: 0.5,
+              color: colors.primary,
+              endIndent: 20,
+              indent: 20,
+            ),
+            const SizedBox(height: 5,),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('RUC  '),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: CustomTextFormField(
+                    controller: _rucController,
+                    label: 'RUC',
+                    maxLines: 1
+                  )
+                ),
+              ],
+            ),
+            const SizedBox(height: 5,),
+            Divider(
+              thickness: 0.5,
+              color: colors.primary,
+              endIndent: 20,
+              indent: 20,
+            ),
+            const SizedBox(height: 5,),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Estado  '),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: CustomDropdownFormMenu(
+                    isDense: true,
+                    value: estadoInicial,
+                    hint: 'Seleccione un estado',
+                    items: estados.map((e) {
+                      return DropdownMenuItem(
+                        value: e, child: Text(e.descripcion)
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      estadoSeleccionado = newValue;
+                      cliente.estado = (newValue as EstadoCliente).codEstado;
+                    },
+                  )
+                ),
+              ],
+            ),
+           const SizedBox(height: 5,),
+            Divider(
+              thickness: 0.5,
+              color: colors.primary,
+              endIndent: 20,
+              indent: 20,
+            ),
+            const SizedBox(height: 5,),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Tipo de cliente '),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: CustomDropdownFormMenu(
+                    isDense: true,
+                    value: tipoInicial,
+                    hint: 'Seleccione tipo de cliente',
+                    onChanged: (newValue) {
+                      tipoClienteSeleccionado = newValue;
+                      cliente.tipoClienteId = (newValue as TipoCliente).tipoClienteId;
+                    },
+                    items: tipoClientes.map((e) {
+                      return DropdownMenuItem(
+                        value: e, child: Text(e.descripcion)
+                      );
+                    }).toList()
+                  )
+                ),
+              ],
+            ),
+            const SizedBox(height: 5,),
+            Divider(
+              thickness: 0.5,
+              color: colors.primary,
+              endIndent: 20,
+              indent: 20,
+            ),
+            const SizedBox(height: 5,),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                const Text('Tecnico  '),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: CustomDropdownFormMenu(
+                    isDense: true,
+                    value: tecnicoInicial,
+                    hint: 'Seleccione tecnico',
+                    items: tecnicos.map((e) {
+                      return DropdownMenuItem(
+                        value: e,
+                        child: Text(e.nombre),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      selectedTecnico = value;
+                      cliente.tecnicoId =
+                          (value as Tecnico).tecnicoId;
+                    },
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 5,),
+            Divider(
+              thickness: 0.5,
+              color: colors.primary,
+              endIndent: 20,
+              indent: 20,
+            ),
+            const SizedBox(height: 5,),
+            Column(
+              children: [
+                const Text('Notas del Cliente  '),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: 300,
+                  child: CustomTextFormField(
+                    minLines: 2,
+                    maxLines: 12,
+                    label: 'Notas del cliente',
+                    controller: _notasClienteController,
+                  ),
+                ),
+              ],
+            )
+          ],
         ),
       ),
     );

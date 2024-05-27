@@ -38,6 +38,7 @@ class _ClientesMobileState extends State<ClientesMobile> {
   ];
   late EstadoCliente? estadoSeleccionado = null;
   late String token = '';
+  int buttonIndex = 0;
 
   @override
   void initState() {
@@ -100,150 +101,186 @@ class _ClientesMobileState extends State<ClientesMobile> {
         titulo: 'Clientes',
       ),
       drawer: Drawer(
+        width: MediaQuery.of(context).size.width * 0.9,
         child: Container(
           decoration: BoxDecoration(
             border: Border.symmetric(horizontal: BorderSide(color: colors.primary, width: 15)),  
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Column(
-                  children: [
-                    const Text('Codigo: ', style: TextStyle(
-                      fontSize: 18,
-                    ),),
-                    SizedBox(
-                      width: 300,
-                      child: CustomTextFormField(
-                        hint: 'Buscar codigo de cliente',
-                        maxLines: 1,
-                        controller: _codController,
-                        onFieldSubmitted: (value) async {
-                          value = _codController.text;
-                          await buscar(
-                            _nombreController.text,
-                            value,
-                            estadoSeleccionado?.codEstado,
-                            tecnicoFiltro.toString(),
-                            token
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const Divider(height: 50,),
-                Column(
-                  children: [
-                    const Text('Nombre: ', style: TextStyle(
-                      fontSize: 18,
-                    ),),
-                    SizedBox(
-                      width: 300,
-                      child: CustomTextFormField(
-                        controller: _nombreController,
-                        maxLines: 1,
-                        hint: 'Buscar nombre de cliente',
-                        onFieldSubmitted: (value) async {
-                          String query = value;
-                          await buscar(
-                            query,
-                            _codController.text,
-                            estadoSeleccionado?.codEstado,
-                            tecnicoFiltro.toString(),
-                            token
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const Divider(height: 50,),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text('Estado  ', style: TextStyle(
-                      fontSize: 18,
-                    ),),
-                    SizedBox(
-                      width: 300,
-                      child: CustomDropdownFormMenu(
-                        value: estadoSeleccionado,
-                        hint: 'Seleccione un estado',
-                        items: estados.map((e) {
-                          return DropdownMenuItem(
-                            value: e,
-                            child: Text(e.descripcion)
-                          );
-                        }).toList(),
-                        onChanged: (newValue) {
-                          estadoSeleccionado = newValue;
-                        },
-                      )
-                    ),
-                  ],
-                ),
-                const Divider(height: 50,),
-                Column(
-                  children: [
-                    const Text('Tecnico: ', style: TextStyle(
-                      fontSize: 18,
-                    ),),
-                    SizedBox(
-                      width: 300,
-                      child: DropdownSearch(
-                        dropdownDecoratorProps: const DropDownDecoratorProps(
-                          baseStyle: TextStyle(color: Colors.white),
-                          dropdownSearchDecoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'Seleccione un tecnico',
-                            hintStyle: TextStyle(color: Colors.black)
-                          )
-                        ),
-                        items: tecnicos,
-                        selectedItem: selectedTecnico,
-                        popupProps: const PopupProps.menu(
-                            showSearchBox: true, searchDelay: Duration.zero),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedTecnico = value;
-                            tecnicoFiltro = value!.tecnicoId;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const Divider(height: 50,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomButton(
-                      onPressed: () async {
-                        String query = _nombreController.text;
-                          await buscar(
-                            query,
-                            _codController.text,
-                            estadoSeleccionado?.codEstado,
-                            tecnicoFiltro.toString(),
-                            token
-                          );
-                        },
-                      text:'Buscar',
-                    ),
-                    CustomButton(
-                      onPressed: () {
-                        Provider.of<OrdenProvider>(context, listen: false).clearSelectedCliente('');
-                        router.push('/editClientes');
+          child: Column(
+            children: [
+              const SizedBox(height: 5,),
+              Column(
+                children: [
+                  const Text('Codigo: ', style: TextStyle(
+                    fontSize: 18,
+                  ),),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    child: CustomTextFormField(
+                      hint: 'Buscar codigo de cliente',
+                      maxLines: 1,
+                      controller: _codController,
+                      onFieldSubmitted: (value) async {
+                        value = _codController.text;
+                        await buscar(
+                          _nombreController.text,
+                          value,
+                          estadoSeleccionado?.codEstado,
+                          tecnicoFiltro.toString(),
+                          token
+                        );
                       },
-                      text: 'Crear Cliente',
                     ),
-                  ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5,),
+              Divider(
+                thickness: 0.5,
+                color: colors.primary,
+                endIndent: 20,
+                indent: 20,
+              ),
+              const SizedBox(height: 5,),
+              Column(
+                children: [
+                  const Text('Nombre: ', style: TextStyle(
+                    fontSize: 18,
+                  ),),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    child: CustomTextFormField(
+                      controller: _nombreController,
+                      maxLines: 1,
+                      hint: 'Buscar nombre de cliente',
+                      onFieldSubmitted: (value) async {
+                        String query = value;
+                        await buscar(
+                          query,
+                          _codController.text,
+                          estadoSeleccionado?.codEstado,
+                          tecnicoFiltro.toString(),
+                          token
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5,),
+              Divider(
+                thickness: 0.5,
+                color: colors.primary,
+                endIndent: 20,
+                indent: 20,
+              ),
+              const SizedBox(height: 5,),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Estado:  ', style: TextStyle(
+                    fontSize: 18,
+                  ),),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    child: CustomDropdownFormMenu(
+                      value: estadoSeleccionado,
+                      hint: 'Seleccione un estado',
+                      items: estados.map((e) {
+                        return DropdownMenuItem(
+                          value: e,
+                          child: Text(e.descripcion)
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        estadoSeleccionado = newValue;
+                      },
+                    )
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5,),
+              Divider(
+                thickness: 0.5,
+                color: colors.primary,
+                endIndent: 20,
+                indent: 20,
+              ),
+              const SizedBox(height: 5,),
+              Column(
+                children: [
+                  const Text('Tecnico: ', style: TextStyle(
+                    fontSize: 18,
+                  ),),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    child: DropdownSearch(
+                      
+                      dropdownDecoratorProps: const DropDownDecoratorProps(
+                        baseStyle: TextStyle(color: Colors.white),
+                        dropdownSearchDecoration: InputDecoration(
+                          isDense: true,
+                          border: OutlineInputBorder(),
+                          hintText: 'Seleccione un tecnico',
+                          hintStyle: TextStyle(color: Colors.black)
+                        )
+                      ),
+                      items: tecnicos,
+                      selectedItem: selectedTecnico,
+                      popupProps: const PopupProps.menu(
+                          showSearchBox: true, searchDelay: Duration.zero),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedTecnico = value;
+                          tecnicoFiltro = value!.tecnicoId;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+
+              const Spacer(),
+
+              BottomNavigationBar(
+              currentIndex: buttonIndex,
+              onTap: (index) async {
+                buttonIndex = index;
+                switch (buttonIndex){
+                  case 0: 
+                    Provider.of<OrdenProvider>(context, listen: false).clearSelectedCliente('');
+                    router.push('/editClientes');
+                  break;
+                  case 1:
+                    String query = _nombreController.text;
+                        await buscar(
+                          query,
+                          _codController.text,
+                          estadoSeleccionado?.codEstado,
+                          tecnicoFiltro.toString(),
+                          token
+                        );
+                  break;
+                }
+              },
+              showUnselectedLabels: true,
+              selectedItemColor: colors.primary,
+              unselectedItemColor: colors.primary,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.add_comment_outlined),
+                  label: 'Crear Cliente',
                 ),
-                
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.search),
+                  label: 'Buscar',
+                ),
+        
               ],
             ),
+              
+              
+            ],
           ),
         ),
       ),
