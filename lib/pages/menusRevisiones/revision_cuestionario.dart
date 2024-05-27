@@ -91,7 +91,7 @@ class _RevisionCuestionarioMenuState extends State<RevisionCuestionarioMenu> {
               ),
             ),
             SizedBox(
-              height: 500,
+              height: 340,
               width: Constantes().ancho,
               child: ListView.separated(
               itemCount: preguntasFiltradas.length,

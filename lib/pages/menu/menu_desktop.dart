@@ -13,12 +13,18 @@ class MenuDesktop extends StatefulWidget {
 
 class _MenuDesktopState extends State<MenuDesktop> {
   late String name = '';
+  late String token = '';
 
 
   @override
   void initState() {
     super.initState();
+    cargarData();
+  }
+
+  cargarData() async {
     name = context.read<OrdenProvider>().username;
+    token = context.read<OrdenProvider>().token;
   }
 
   @override
@@ -38,7 +44,7 @@ class _MenuDesktopState extends State<MenuDesktop> {
               style: ButtonStyle(
                 backgroundColor: WidgetStatePropertyAll(colors.primary)
               ),
-              onPressed: () {
+              onPressed: () async {
                 logout();
               },
               icon: const Icon(Icons.logout,),
@@ -69,20 +75,21 @@ class _MenuDesktopState extends State<MenuDesktop> {
           content: const Text('Esta seguro de querer cerrar sesion?'),
           actions: [
             TextButton(
-                onPressed: () {
-                  router.pop();
-                },
-                child: const Text('Cancelar')),
+              onPressed: () {
+                router.pop();
+              },
+              child: const Text('Cancelar')
+            ),
             TextButton(
-                onPressed: () {
-                  Provider.of<OrdenProvider>(context, listen: false)
-                      .setToken('');
-                  router.pushReplacement('/');
-                },
-                child: const Text(
-                  'Cerrar Sesion',
-                  style: TextStyle(color: Colors.red),
-                )),
+              onPressed: () {
+                Provider.of<OrdenProvider>(context, listen: false).setToken('');
+                router.pushReplacement('/');
+              },
+              child: const Text(
+                'Cerrar Sesion',
+                style: TextStyle(color: Colors.red),
+              )
+            ),
           ],
         );
       },

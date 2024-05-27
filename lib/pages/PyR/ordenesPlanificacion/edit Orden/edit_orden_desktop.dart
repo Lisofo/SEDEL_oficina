@@ -107,8 +107,12 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
       _instruccionesController.text = orden.instrucciones;
       _comentarioController.text = orden.comentarios;
       _notasClienteController.text = orden.cliente.notas;
-      selectedDateDesde = orden.fechaDesde;
-      selectedDateHasta = orden.fechaHasta;
+      if(selectedDateDesde == DateTime.now()){
+        selectedDateDesde = orden.fechaDesde;
+      }
+      if(selectedDateHasta == DateTime.now()){
+        selectedDateHasta = orden.fechaHasta;
+      }
       if(serviciosSeleccionados.isEmpty){
         List<Servicio> prueba = convertirServiciosOrden();
         serviciosSeleccionados = prueba;
@@ -665,69 +669,6 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
             ),
           ],
         ),
-        // bottomNavigationBar: BottomAppBar(
-        //   elevation: 0,
-        //   color: Colors.grey.shade200,
-        //   child: Padding(
-        //     padding: const EdgeInsets.all(8.0),
-        //     child: Row(
-        //       mainAxisAlignment: MainAxisAlignment.end,
-        //       children: [
-        //         if(orden.ordenTrabajoId != 0)...[
-        //           CustomButton(
-        //             text: 'Cambiar tecnico',
-        //             onPressed: () {
-        //               cambiarTecnico();
-        //             },
-        //             disabled: orden.estado == 'DESCARTADA',
-        //             tamano: 20,
-        //           ),
-        //           const SizedBox(width: 30,),
-        //         ],
-        //         if(orden.ordenTrabajoId != 0)...[
-        //           CustomButton(
-        //           text: 'Cambiar estado',
-        //           onPressed: () {
-        //             cambiarEstado();
-        //           },
-        //           disabled: orden.estado == 'DESCARTADA',
-        //           tamano: 20,
-        //         ),
-        //         const SizedBox(width: 30,),
-        //         ],                
-        //         CustomButton(
-        //           text: 'Guardar',
-        //           onPressed: orden.estado == 'PENDIENTE'
-        //               ? () => datosAGuardar(context)
-        //               : null,
-        //           tamano: 20,
-        //           disabled: orden.estado != 'PENDIENTE',
-        //         ),
-        //         // SizedBox(
-        //         //   width: 30,
-        //         // ),
-        //         // CustomButton(
-        //         //   text: 'Eliminar',
-        //         //   onPressed: () {},
-        //         //   tamano: 20,
-        //         // ),
-        //         const SizedBox(width: 30),
-        //         if(orden.ordenTrabajoId != 0)
-        //         CustomButton(
-        //           text: 'Revisión',
-        //           onPressed: (orden.estado == 'EN PROCESO' ||
-        //                   orden.estado == 'FINALIZADA' ||
-        //                   orden.estado == 'REVISADA')
-        //               ? () => router.push('/revisionOrden')
-        //               : null,
-        //           disabled: orden.estado == 'PENDIENTE' ||
-        //               orden.estado == 'DESCARTADA',
-        //           tamano: 20,
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // ),
       ),
     );
   }
@@ -747,7 +688,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
   if (orden.ordenTrabajoId == 0) {
     orden.cliente = selectedCliente;
     orden.tipoOrden = selectedTipoOrden;
-    orden.tecnico = selectedTecnico!;    
+    orden.tecnico = selectedTecnico!;
 
     await OrdenServices().postOrden(context, orden, token);
   }else{

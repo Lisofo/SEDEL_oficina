@@ -326,7 +326,7 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
             ),
             if (exportedImage != null) Image.memory(exportedImage!),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.27,
+              height: MediaQuery.of(context).size.height * 0.17,
               width: Constantes().ancho,
               child: ListView.builder(
                 itemCount: widget.firmas.length,

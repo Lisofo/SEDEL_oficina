@@ -69,7 +69,7 @@ class _RevisionValidacionMenuState extends State<RevisionValidacionMenu> {
                 ),
               ),
               SizedBox(
-                height: 100,
+                height: 300,
                 width: Constantes().ancho,
                 child: ListView.builder(
                   itemCount: listaGenerica.length,
@@ -87,17 +87,17 @@ class _RevisionValidacionMenuState extends State<RevisionValidacionMenu> {
                   },
                 ),
               ),
-              BottomAppBar(
-                notchMargin: 10,
-                elevation: 0,
-                shape: const CircularNotchedRectangle(),
-                color: Colors.transparent,
-                child: CustomButton(
-                  onPressed: () {},
-                  text: 'Confirmar',
-                  tamano: 20,
-                ),
-              )
+              // BottomAppBar(
+              //   notchMargin: 10,
+              //   elevation: 0,
+              //   shape: const CircularNotchedRectangle(),
+              //   color: Colors.transparent,
+              //   child: CustomButton(
+              //     onPressed: () {},
+              //     text: 'Confirmar',
+              //     tamano: 20,
+              //   ),
+              // )
             ],
           ),
         ),

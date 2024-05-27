@@ -331,20 +331,23 @@ void _showCreateDeleteDialog(BuildContext context) {
           children: [
             const Text('Está por borrar una revisión, seleccione cual va a borrar'),
             const SizedBox(height: 10,),
-            CustomDropdownFormMenu(
-              hint: 'Seleccione una revisión',
-              value: selectedRevision,
-              onChanged: (newValue) {
-                setState(() {
-                  selectedRevision = newValue;
-                });
-              },
-              items: revisiones.map((RevisionOrden revision) {
-                return DropdownMenuItem(
-                  value: revision,
-                  child: Text('Revisión ${revision.ordinal}'),
-                );
-              }).toList(),
+            SizedBox(
+              width: 300,
+              child: CustomDropdownFormMenu(
+                hint: 'Seleccione una revisión',
+                value: selectedRevision,
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedRevision = newValue;
+                  });
+                },
+                items: revisiones.map((RevisionOrden revision) {
+                  return DropdownMenuItem(
+                    value: revision,
+                    child: Text('Revisión ${revision.ordinal}'),
+                  );
+                }).toList(),
+              ),
             ),
           ],
         ),

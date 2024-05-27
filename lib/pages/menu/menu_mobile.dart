@@ -11,11 +11,6 @@ class MenuMobile extends StatefulWidget {
   State<MenuMobile> createState() => _MenuMobileState();
 }
 
-
- 
-
-
-
 class _MenuMobileState extends State<MenuMobile> {
   late String name = '';
 
@@ -53,15 +48,17 @@ class _MenuMobileState extends State<MenuMobile> {
         body: Center(child: Image.asset('images/logo.png')),
         bottomNavigationBar: BottomAppBar(
           color: Colors.white,
-            elevation: 0,
-            child: IconButton.filledTonal(
-              style: ButtonStyle(
-                backgroundColor: WidgetStatePropertyAll(colors.primary)
-              ),
-                onPressed: () {
-                  logout();
-                },
-                icon: const Icon(Icons.logout))),
+          elevation: 0,
+          child: IconButton.filledTonal(
+            style: ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll(colors.primary)
+            ),
+            onPressed: () {
+              logout();
+            },
+            icon: const Icon(Icons.logout)
+          )
+        ),
       ),
     );
   }
