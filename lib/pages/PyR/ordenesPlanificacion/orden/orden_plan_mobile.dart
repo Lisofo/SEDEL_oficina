@@ -153,275 +153,273 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
           decoration: BoxDecoration(
             border: Border.symmetric(horizontal: BorderSide(color: colors.primary, width: 15)),  
           ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Column(
-                  children: [
-                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('Seleccione periodo: '),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextButton(
-                            style: ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(colors.secondary),
-                              shape: WidgetStatePropertyAll(ContinuousRectangleBorder(borderRadius: BorderRadius.circular(20)))
-                            ),
-                            onPressed: () async {
-                              final pickedDate = await showDateRangePicker(
-                              context: context,
-                              firstDate: DateTime(2023),
-                              lastDate: DateTime(2025)
-                              );
-                              if (pickedDate != null && pickedDate != selectedDate) {
-                                setState(() {
-                                 selectedDate = pickedDate;
-                                print(selectedDate);
-                                });
-                              }
-                            // print(pickedDate.start);
-                            // print(pickedDate.end);
-                            },
-                            child: const Text('Período',style: TextStyle(color: Colors.black),),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Column(
+                children: [
+                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Seleccione periodo: '),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextButton(
+                          style: ButtonStyle(
+                            backgroundColor: WidgetStatePropertyAll(colors.secondary),
+                            shape: WidgetStatePropertyAll(ContinuousRectangleBorder(borderRadius: BorderRadius.circular(20)))
                           ),
+                          onPressed: () async {
+                            final pickedDate = await showDateRangePicker(
+                            context: context,
+                            firstDate: DateTime(2023),
+                            lastDate: DateTime(2025)
+                            );
+                            if (pickedDate != null && pickedDate != selectedDate) {
+                              setState(() {
+                               selectedDate = pickedDate;
+                              print(selectedDate);
+                              });
+                            }
+                          // print(pickedDate.start);
+                          // print(pickedDate.end);
+                          },
+                          child: const Text('Período',style: TextStyle(color: Colors.black),),
                         ),
-                      ],
-                    ),     
-                    RichText(
-                      text: TextSpan(
-                        style: const TextStyle(color: Colors.black),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: DateFormat('dd/MM/yyyy', 'es').format(selectedDate.start)
-                          ),
-                          const TextSpan(text: ' - '),
-                          TextSpan(
-                            text: DateFormat('dd/MM/yyyy', 'es').format(selectedDate.end)
-                          ),
-                        ]
-                      )
-                    )
-                  ],
-                ),
-
-                const SizedBox(height: 10,),
-                const Divider(),
-                const SizedBox(height: 10,),
-
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Tecnico: '),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    SizedBox(
-                      width: 220,
-                      child: DropdownSearch(
-                        dropdownDecoratorProps:
-                            const DropDownDecoratorProps(
-                                dropdownSearchDecoration: InputDecoration(
-                                    hintText: 'Seleccione un tecnico')),
-                        items: tecnicos,
-                        popupProps: const PopupProps.menu(
-                            showSearchBox: true,
-                            searchDelay: Duration.zero),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedTecnico = value;
-                            tecnicoFiltro = value!.tecnicoId;
-                          });
-                        },
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10,),
-                const Divider(),
-                const SizedBox(height: 10,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Estado: '),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    DropdownButton(
-                      hint: const Text('Estado'),
-                      value: selectedEstado,
+                    ],
+                  ),     
+                  RichText(
+                    text: TextSpan(
+                      style: const TextStyle(color: Colors.black),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: DateFormat('dd/MM/yyyy', 'es').format(selectedDate.start)
+                        ),
+                        const TextSpan(text: ' - '),
+                        TextSpan(
+                          text: DateFormat('dd/MM/yyyy', 'es').format(selectedDate.end)
+                        ),
+                      ]
+                    )
+                  )
+                ],
+              ),
+          
+              const SizedBox(height: 10,),
+              const Divider(),
+              const SizedBox(height: 10,),
+          
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Tecnico: '),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  SizedBox(
+                    width: 220,
+                    child: DropdownSearch(
+                      dropdownDecoratorProps:
+                          const DropDownDecoratorProps(
+                              dropdownSearchDecoration: InputDecoration(
+                                  hintText: 'Seleccione un tecnico')),
+                      items: tecnicos,
+                      popupProps: const PopupProps.menu(
+                          showSearchBox: true,
+                          searchDelay: Duration.zero),
                       onChanged: (value) {
                         setState(() {
-                         selectedEstado = value;
+                          selectedTecnico = value;
+                          tecnicoFiltro = value!.tecnicoId;
                         });
                       },
-                      items: estados.map((e) {
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10,),
+              const Divider(),
+              const SizedBox(height: 10,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Estado: '),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  DropdownButton(
+                    hint: const Text('Estado'),
+                    value: selectedEstado,
+                    onChanged: (value) {
+                      setState(() {
+                       selectedEstado = value;
+                      });
+                    },
+                    items: estados.map((e) {
+                      return DropdownMenuItem(
+                        value: e,
+                        child: Text(e),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10,),
+              const Divider(),
+              const SizedBox(height: 10,),
+               const Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Cliente: '),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  ButtonDelegate(
+                    colorSeleccionado: Colors.black,
+                    nombreProvider: 'Ordenes',
+                  ),
+                  
+                ],
+              ),
+              const SizedBox(height: 10,),
+              const Divider(),
+              const SizedBox(height: 10,),
+              // Row(
+              //   children: [
+              //     Text('Servicios: '),
+              //     SizedBox(
+              //       width: 10,
+              //     ),
+              //     DropdownButton(
+              //       hint: Text('Servicios'),
+              //       itemHeight: null,
+              //       value: selectedServicio,
+              //       onChanged: (value) {
+              //         setState(() {
+              //           selectedServicio = value;
+              //         });
+              //       },
+              //       items: servicios.map((e) {
+              //         return DropdownMenuItem(
+              //           child: SizedBox(
+              //             width: 300,
+              //             child: Text(
+              //               e,
+              //               overflow: TextOverflow.fade,
+              //             ),
+              //           ),
+              //           value: e,
+              //         );
+              //       }).toList(),
+              //     ),
+              //   ],
+              // ),
+              // SizedBox(
+              //   height: 10,
+              // ),
+              // Row(
+              //   children: [
+              //     Text('Materiales: '),
+              //     SizedBox(
+              //       width: 10,
+              //     ),
+              //     DropdownButton(
+              //       hint: Text('Materiales'),
+              //       value: selectedMaterial,
+              //       onChanged: (value) {
+              //         setState(() {
+              //           selectedMaterial = value;
+              //         });
+              //       },
+              //       items: materiales.map((e) {
+              //         return DropdownMenuItem(
+              //           child: SizedBox(width: 300, child: Text(e)),
+              //           value: e,
+              //         );
+              //       }).toList(),
+              //     ),
+              //   ],
+              // ),
+              // SizedBox(
+              //   height: 10,
+              // ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Tipo de orden: '),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  SizedBox(
+                    width: 220,
+                    child: CustomDropdownFormMenu(
+                      items: tipoOrden.map((e) {
                         return DropdownMenuItem(
+          
                           value: e,
-                          child: Text(e),
-                        );
+                          child: Text(e.descripcion));
                       }).toList(),
+                      onChanged: (value){
+                        selectedTipo = value;
+                      }
                     ),
-                  ],
-                ),
-                const SizedBox(height: 10,),
-                const Divider(),
-                const SizedBox(height: 10,),
-                 const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Cliente: '),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    ButtonDelegate(
-                      colorSeleccionado: Colors.black,
-                      nombreProvider: 'Ordenes',
-                    ),
+                  )
+                ],
+              ),
+              const SizedBox(height: 10,),
+              const Divider(),
+              const SizedBox(height: 10,),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Nro. Orden:'),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  SizedBox(
+                      width: 200,
+                      child: CustomTextFormField(
+                        controller: nroOrdenController,
+                        maxLines: 1,
+                      ))
+                ],
+              ),
+              const Spacer(),
+              BottomNavigationBar(
+                currentIndex: buttonIndex,
+                onTap: (index) async{   
+                  buttonIndex = index;
+                  switch (buttonIndex){
+                    case 0: 
+                      Provider.of<OrdenProvider>(context,listen: false).clearSelectedOrden();
+                      router.push('/editOrden');
+                      setState(() {});
+                    case 1:
+                      await buscar(token);
+                      updateFilteredItems(ordenesFiltradas);
+                      setState(() {});
+                      router.pop();
+                    break;
                     
-                  ],
-                ),
-                const SizedBox(height: 10,),
-                const Divider(),
-                const SizedBox(height: 10,),
-                // Row(
-                //   children: [
-                //     Text('Servicios: '),
-                //     SizedBox(
-                //       width: 10,
-                //     ),
-                //     DropdownButton(
-                //       hint: Text('Servicios'),
-                //       itemHeight: null,
-                //       value: selectedServicio,
-                //       onChanged: (value) {
-                //         setState(() {
-                //           selectedServicio = value;
-                //         });
-                //       },
-                //       items: servicios.map((e) {
-                //         return DropdownMenuItem(
-                //           child: SizedBox(
-                //             width: 300,
-                //             child: Text(
-                //               e,
-                //               overflow: TextOverflow.fade,
-                //             ),
-                //           ),
-                //           value: e,
-                //         );
-                //       }).toList(),
-                //     ),
-                //   ],
-                // ),
-                // SizedBox(
-                //   height: 10,
-                // ),
-                // Row(
-                //   children: [
-                //     Text('Materiales: '),
-                //     SizedBox(
-                //       width: 10,
-                //     ),
-                //     DropdownButton(
-                //       hint: Text('Materiales'),
-                //       value: selectedMaterial,
-                //       onChanged: (value) {
-                //         setState(() {
-                //           selectedMaterial = value;
-                //         });
-                //       },
-                //       items: materiales.map((e) {
-                //         return DropdownMenuItem(
-                //           child: SizedBox(width: 300, child: Text(e)),
-                //           value: e,
-                //         );
-                //       }).toList(),
-                //     ),
-                //   ],
-                // ),
-                // SizedBox(
-                //   height: 10,
-                // ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Tipo de orden: '),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    SizedBox(
-                      width: 220,
-                      child: CustomDropdownFormMenu(
-                        items: tipoOrden.map((e) {
-                          return DropdownMenuItem(
-
-                            value: e,
-                            child: Text(e.descripcion));
-                        }).toList(),
-                        onChanged: (value){
-                          selectedTipo = value;
-                        }
-                      ),
-                    )
-                  ],
-                ),
-                const SizedBox(height: 10,),
-                const Divider(),
-                const SizedBox(height: 10,),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Nro. Orden:'),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    SizedBox(
-                        width: 200,
-                        child: CustomTextFormField(
-                          controller: nroOrdenController,
-                          maxLines: 1,
-                        ))
-                  ],
-                ),
-                const Spacer(),
-                BottomNavigationBar(
-                  currentIndex: buttonIndex,
-                  onTap: (index) async{   
-                    buttonIndex = index;
-                    switch (buttonIndex){
-                      case 0: 
-                        Provider.of<OrdenProvider>(context,listen: false).clearSelectedOrden();
-                        router.push('/editOrden');
-                        setState(() {});
-                      case 1:
-                        await buscar(token);
-                        updateFilteredItems(ordenesFiltradas);
-                        setState(() {});
-                        router.pop();
-                      break;
-                      
-                    }  
-                  },
-                  showUnselectedLabels: true,
-                  selectedItemColor: colors.primary,
-                  unselectedItemColor: colors.primary,
-                  items: const [
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.add_comment_outlined),
-                      label: 'Crear Orden',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.search),
-                      label: 'Buscar'
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  }  
+                },
+                showUnselectedLabels: true,
+                selectedItemColor: colors.primary,
+                unselectedItemColor: colors.primary,
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.add_comment_outlined),
+                    label: 'Crear Orden',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.search),
+                    label: 'Buscar'
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
