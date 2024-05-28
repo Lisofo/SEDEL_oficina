@@ -248,13 +248,13 @@ class _CustomizedTimetableDesktopState extends State<CustomizedTimetableDesktop>
             style: const TextStyle(color: Colors.white),
           ),
           const Spacer(),
-          IconButton(
-            onPressed: () async {
-             await generadorPlanificacion(context);
-            },
-            icon: const Icon(Icons.play_lesson_rounded, color: Colors.white,),
-            tooltip: 'Generar planificador',
-          ),
+          // IconButton(
+          //   onPressed: () async {
+          //    await generadorPlanificacion(context);
+          //   },
+          //   icon: const Icon(Icons.play_lesson_rounded, color: Colors.white,),
+          //   tooltip: 'Generar planificador',
+          // ),
           TextButton(
             child: const Text(
               "Hoy",
