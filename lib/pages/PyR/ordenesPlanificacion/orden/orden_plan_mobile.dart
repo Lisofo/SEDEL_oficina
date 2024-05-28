@@ -207,7 +207,12 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
               ),
           
               const SizedBox(height: 10,),
-              const Divider(),
+              Divider(
+                thickness: 0.5,
+                color: colors.primary,
+                endIndent: 20,
+                indent: 20,
+              ),
               const SizedBox(height: 10,),
           
               Column(
@@ -239,7 +244,12 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
                 ],
               ),
               const SizedBox(height: 10,),
-              const Divider(),
+              Divider(
+                thickness: 0.5,
+                color: colors.primary,
+                endIndent: 20,
+                indent: 20,
+              ),
               const SizedBox(height: 10,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -266,7 +276,12 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
                 ],
               ),
               const SizedBox(height: 10,),
-              const Divider(),
+              Divider(
+                thickness: 0.5,
+                color: colors.primary,
+                endIndent: 20,
+                indent: 20,
+              ),
               const SizedBox(height: 10,),
                const Row(
                 mainAxisSize: MainAxisSize.min,
@@ -284,7 +299,12 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
                 ],
               ),
               const SizedBox(height: 10,),
-              const Divider(),
+              Divider(
+                thickness: 0.5,
+                color: colors.primary,
+                endIndent: 20,
+                indent: 20,
+              ),
               const SizedBox(height: 10,),
               // Row(
               //   children: [
@@ -355,9 +375,10 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
                   SizedBox(
                     width: 220,
                     child: CustomDropdownFormMenu(
+                      isDense: true,
                       items: tipoOrden.map((e) {
                         return DropdownMenuItem(
-          
+                        
                           value: e,
                           child: Text(e.descripcion));
                       }).toList(),
@@ -369,7 +390,12 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
                 ],
               ),
               const SizedBox(height: 10,),
-              const Divider(),
+              Divider(
+                thickness: 0.5,
+                color: colors.primary,
+                endIndent: 20,
+                indent: 20,
+              ),
               const SizedBox(height: 10,),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -423,7 +449,8 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
           ),
         ),
       ),
-      body: Row(
+      body: Flex(
+        direction: Axis.vertical,
         children: [
           Expanded(
             child: ListView.builder(

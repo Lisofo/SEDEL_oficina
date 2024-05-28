@@ -130,6 +130,7 @@ class _InformesMobileState extends State<InformesMobile> {
                   print('nodo seleccionado: $selectedNodeData');
                   print('lista: $tipos');
                 }
+
                 for (var param in parametros) {
                   if (param.control == 'T') {
                     _controllers[param.parametro] = TextEditingController();
@@ -138,6 +139,9 @@ class _InformesMobileState extends State<InformesMobile> {
                 setState(() {
                   selectedNodeData = item.data;
                 });
+                if(item.data.objetoArbol == 'informe' && item.children.isEmpty){
+                  router.pop();
+                }
               },
               onTreeReady: (controller) {
                 _controller = controller;
