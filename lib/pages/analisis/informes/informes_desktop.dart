@@ -245,12 +245,12 @@ class _InformesDesktopState extends State<InformesDesktop> {
                         },
                         items: const [
                           BottomNavigationBarItem(
-                            icon: Icon(Icons.open_in_browser),
-                            label: 'Abrir informe',
-                          ),
-                          BottomNavigationBarItem(
                             icon: Icon(Icons.save),
                             label: 'Generar informe',
+                          ),
+                          BottomNavigationBarItem(
+                            icon: Icon(Icons.open_in_browser),
+                            label: 'Abrir informe',
                           ),
                         ],
                       ),

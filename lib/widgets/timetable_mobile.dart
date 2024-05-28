@@ -264,15 +264,14 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
           const Spacer(),
           const Divider(),
           Wrap(
-            
             children: [
-              IconButton(
-                onPressed: () async {
-                await generadorPlanificacion(context);
-                },
-                icon:  Icon(Icons.play_lesson_rounded, color: colors.primary,),
-                tooltip: 'Generar planificador',
-              ),
+              // IconButton(
+              //   onPressed: () async {
+              //   await generadorPlanificacion(context);
+              //   },
+              //   icon:  Icon(Icons.play_lesson_rounded, color: colors.primary,),
+              //   tooltip: 'Generar planificador',
+              // ),
               TextButton(
                 child:  Text(
                   "Hoy",

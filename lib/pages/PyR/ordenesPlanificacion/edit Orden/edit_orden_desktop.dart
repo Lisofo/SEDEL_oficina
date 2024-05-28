@@ -122,7 +122,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
       child: Scaffold(
         backgroundColor: Colors.grey.shade200,
         appBar: AppBarDesktop(
-          titulo: 'Detalles de la orden',
+          titulo: orden.ordenTrabajoId == 0 ? 'Detalles de la orden' : 'Detalles de la orden ${orden.ordenTrabajoId}',
         ),
         drawer: const Drawer(
           child: BotonesDrawer(),
@@ -187,6 +187,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                                 setState(() {
                                                   selectedCliente = cliente;
                                                   selectedTecnico = selectedCliente.tecnico;
+                                                  _notasClienteController.text = selectedCliente.notas;
                                                   final int clienteExiste = historial.indexWhere((element) => element.nombre == cliente.nombre);
                                                   if (clienteExiste == -1) {
                                                     historial.insert(0, cliente);
