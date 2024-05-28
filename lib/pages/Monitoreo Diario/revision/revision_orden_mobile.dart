@@ -22,6 +22,7 @@ import 'package:sedel_oficina_maqueta/pages/menusRevisiones/revision_validacion.
 import 'package:sedel_oficina_maqueta/provider/menu_provider.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/materiales_services.dart';
+import 'package:sedel_oficina_maqueta/services/orden_services.dart';
 import 'package:sedel_oficina_maqueta/services/plaga_services.dart';
 import 'package:sedel_oficina_maqueta/services/ptos_services.dart';
 import 'package:sedel_oficina_maqueta/services/revision_services.dart';
@@ -173,6 +174,9 @@ class _RevisionOrdenMobileState extends State<RevisionOrdenMobile> with SingleTi
                     case 1:
                       _showCreateCopyDialog(context);
                     break;
+                    case 2:
+                      cambiarEstado();
+                    break;
                   }
                 });
               },
@@ -187,6 +191,10 @@ class _RevisionOrdenMobileState extends State<RevisionOrdenMobile> with SingleTi
                 BottomNavigationBarItem(
                   icon: Icon(Icons.add_circle),
                   label: 'Crear Copia',
+                ),
+                 BottomNavigationBarItem(
+                  label: 'Orden revisada',
+                  icon: Icon(Icons.save)
                 ),
               ],
             ),
@@ -438,5 +446,38 @@ void _showCreateDeleteDialog(BuildContext context) {
         ..add(const Divider());
     });
     return opciones;
+  }
+
+  void cambiarEstado() {
+    late String nuevoEstado = 'REVISADA';
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Cambio de estado de la orden'),
+          content: Text(
+            'Esta por cambiar el estado de la orden ${orden.ordenTrabajoId}. Esta seguro de querer cambiar el estado de ${orden.estado} a $nuevoEstado?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cerrar')
+            ),
+            TextButton(
+              onPressed: () async {
+                await OrdenServices().patchOrden(context, orden, nuevoEstado, 0, token);
+                await OrdenServices.showDialogs(context, 'Estado cambiado correctamente', true, false);
+                setState(() {
+                  orden.estado = nuevoEstado;
+                });
+              },
+              child: const Text('Confirmar')
+            ),
+          ],
+        );
+      }
+    );
   }
 }
