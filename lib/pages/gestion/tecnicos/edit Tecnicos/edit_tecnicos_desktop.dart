@@ -155,7 +155,6 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        //ToDo arreglar esto
                         _avatarTecnico2 != '' ? 
                         Image.network('$_avatarTecnico2?authorization:$token', width: 200, height: 200) : 
                         const SizedBox(
@@ -189,114 +188,130 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        tipoDato('Codigo', _codController),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        tipoDato('Documento', _docController),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        tipoDato('Nombre', _nombreController),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          children: [
-                            IconButton.filledTonal(
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      tipoDato('Codigo', _codController),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      tipoDato('Documento', _docController),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      tipoDato('Nombre', _nombreController),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Fecha de Nacimiento'),
+                          const SizedBox(width: 10,),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            child: CustomTextFormField(
+                              label: 'Fecha de nacimiento',
+                              textAling: TextAlign.center,
+                              controller: _dateNacimientoController,
+                              onSaved: (value) {
+                                _setDate = value!;
+                              },
+                  
+                            ),
+                          ),
+                          IconButton(
                               onPressed: () => _selectFechaNacimiento(context),
-                              icon: const Icon(Icons.calendar_month)
+                              icon: Icon(
+                                Icons.edit,
+                                color: colors.secondary,
+                              )),
+                        ],
+                      ),
+                      const SizedBox(height: 20,),
+                      Row(
+                        children: [
+                          const Text('Cargo'),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            child: CustomDropdownFormMenu(
+                              isDense: true,
+                              value: cargoInicialSeleccionado,
+                              hint: 'Seleccione cargo',
+                              items: cargos.map((e) {
+                                return DropdownMenuItem(
+                                  value: e,
+                                  child: Text(e.descripcion),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                cargoSeleccionado = value;
+                              },
                             ),
-                            SizedBox(
-                              width: 300,
-                              child: CustomTextFormField(
-                                label: 'Fecha de nacimiento',
-                                textAling: TextAlign.center,
-                                controller: _dateNacimientoController,
-                                onSaved: (value) {
-                                  _setDate = value!;
-                                },
-                              ),
+                          ),
+                          const SizedBox(width: 40,),
+                        ],
+                      ),
+                      const SizedBox(height: 20,),
+                      Row(
+                        children: [
+                          const Text('Fecha de ingreso'),
+                          const SizedBox(width: 10,),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            child: CustomTextFormField(
+                              label: 'Fecha de ingreso',
+                              textAling: TextAlign.center,
+                              controller: _dateIngresoController,
+                              onSaved: (value) {
+                                _setDate = value!;
+                              },
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 20,),
-                        Row(
-                          children: [
-                            const Text('Cargo'),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            SizedBox(
-                              width: 300,
-                              child: CustomDropdownFormMenu(
-                                value: cargoInicialSeleccionado,
-                                hint: 'Seleccione cargo',
-                                items: cargos.map((e) {
-                                  return DropdownMenuItem(
-                                    value: e,
-                                    child: Text(e.descripcion),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  cargoSeleccionado = value;
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20,),
-                        Row(
-                          children: [
-                            IconButton.filledTonal(
+                          ),
+                          IconButton(
                               onPressed: () => _selectFechaIngreso(context),
-                              icon: const Icon(Icons.calendar_month)
+                              icon: Icon(
+                                Icons.edit,
+                                color: colors.secondary,
+                              )
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20,),
+                      Row(
+                        children: [
+                          const Text('Fecha vto carnet de salud'),
+                          const SizedBox(width: 10,),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            child: CustomTextFormField(
+                              label: 'Fecha Vto Carne de Salud',
+                              textAling: TextAlign.center,
+                              controller: _dateCarneSaludController,
+                              onSaved: (value) {
+                                _setDate = value!;
+                              },
                             ),
-                            SizedBox(
-                              width: 300,
-                              child: CustomTextFormField(
-                                label: 'Fecha de ingreso',
-                                textAling: TextAlign.center,
-                                controller: _dateIngresoController,
-                                onSaved: (value) {
-                                  _setDate = value!;
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20,),
-                        Row(
-                          children: [
-                            IconButton.filledTonal(
-                              onPressed: () => _selectFechaVtoCarneSalud(context),
-                              icon: const Icon(Icons.calendar_month)
-                            ),
-                            SizedBox(
-                              width: 300,
-                              child: CustomTextFormField(
-                                label: 'Fecha Vto Carne de Salud',
-                                textAling: TextAlign.center,
-                                controller: _dateCarneSaludController,
-                                onSaved: (value) {
-                                  _setDate = value!;
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20,),
-                      ],
-                    ),
+                          ),
+                          IconButton(
+                              onPressed: () =>
+                                  _selectFechaVtoCarneSalud(context),
+                              icon: Icon(
+                                Icons.edit,
+                                color: colors.secondary,
+                              )
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20,),
+                    ],
                   ),
                 ),
               )
@@ -398,17 +413,16 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
     return Row(
       children: [
         Text(tipoDato),
-        const SizedBox(
-          width: 15,
-        ),
+        const SizedBox(width: 10,),
         SizedBox(
-          width: 300,
+          width: MediaQuery.of(context).size.width * 0.2,
           child: CustomTextFormField(
             maxLines: 1,
             label: tipoDato,
             controller: controller,
           ),
-        )
+        ),
+        const SizedBox(width: 40,),
       ],
     );
   }

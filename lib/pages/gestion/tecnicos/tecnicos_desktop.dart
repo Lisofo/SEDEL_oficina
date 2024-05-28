@@ -36,18 +36,19 @@ class _TecnicosPageDesktopState extends State<TecnicosPageDesktop> {
           child: BotonesDrawer(),
         ),
         body: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        const Text('Documento: '),
+                        const Text('Documento '),
                         SizedBox(
-                          width: 300,
+                          width: MediaQuery.of(context).size.width * 0.2,
                           child: CustomTextFormField(
                             controller: _documentoController,
                             maxLines: 1,
@@ -63,13 +64,12 @@ class _TecnicosPageDesktopState extends State<TecnicosPageDesktop> {
                       height: 20,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        const Text('Codigo: '),
-                        const SizedBox(
-                          width: 30,
-                        ),
+                        const SizedBox(width: 30,),
+                        const Text('Codigo '),
                         SizedBox(
-                          width: 300,
+                          width: MediaQuery.of(context).size.width * 0.2,
                           child: CustomTextFormField(
                             controller: _codTecnicoController,
                             maxLines: 1,
@@ -85,13 +85,12 @@ class _TecnicosPageDesktopState extends State<TecnicosPageDesktop> {
                       height: 20,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        const Text('Nombre: '),
-                        const SizedBox(
-                          width: 20,
-                        ),
+                        const SizedBox(width: 25,),
+                        const Text('Nombre '),
                         SizedBox(
-                          width: 300,
+                          width: MediaQuery.of(context).size.width * 0.2,
                           child: CustomTextFormField(
                             maxLines: 1,
                             label: 'Nombre',
@@ -107,6 +106,7 @@ class _TecnicosPageDesktopState extends State<TecnicosPageDesktop> {
                       height: 20,
                     ),
                     Center(
+                      
                       child: ElevatedButton(
                           style: const ButtonStyle(
                               backgroundColor:

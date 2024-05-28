@@ -11,11 +11,13 @@ import 'package:sedel_oficina_maqueta/models/estado_cliente.dart';
 import 'package:sedel_oficina_maqueta/models/servicio.dart';
 import 'package:sedel_oficina_maqueta/models/servicios_clientes.dart';
 import 'package:sedel_oficina_maqueta/models/tecnico.dart';
+import 'package:sedel_oficina_maqueta/models/usuario.dart';
 import 'package:sedel_oficina_maqueta/models/usuarios_x_clientes.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/client_services.dart';
 import 'package:sedel_oficina_maqueta/services/servicio_services.dart';
 import 'package:sedel_oficina_maqueta/services/tecnico_services.dart';
+import 'package:sedel_oficina_maqueta/services/user_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/add_client_services_dialog.dart';
 import 'package:sedel_oficina_maqueta/widgets/appbar_mobile.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
@@ -57,6 +59,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
   int _pageIndex = 0;
   int buttonIndex = 0;
   bool tieneId = false;
+  late List<Usuario> usuariosTodos = [];
 
   late List<EstadoCliente> estados = [
     EstadoCliente(codEstado: 'A', descripcion: 'Activo'),
@@ -108,6 +111,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
     if (cliente.clienteId != 0) {
       final loadedUsuarios = await ClientServices().getUsuariosXCliente(context, cliente.clienteId.toString(), token);
       final loadedServiciosCliente = await ClientServices().getClienteServices(context, cliente.clienteId.toString(), token);
+      usuariosTodos = await UserServices().getUsers(context, '', '', '', token);
       setState(() {
         usuariosXClientes = loadedUsuarios ?? [];
         serviciosCliente = loadedServiciosCliente ?? [];
@@ -801,6 +805,11 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                   usuarios[index].login,
                   style: const TextStyle(fontSize: 13),
                 ),
+                onTap: () {
+                  final usuarioSeleccionado = usuariosTodos.where((usuario) => usuario.usuarioId == usuarios[index].usuarioId,).toList()[0];
+                  Provider.of<OrdenProvider>(context, listen: false).setUsuario(usuarioSeleccionado);
+                  router.push('/editUsuarios');
+                },
               );
             },
           ),

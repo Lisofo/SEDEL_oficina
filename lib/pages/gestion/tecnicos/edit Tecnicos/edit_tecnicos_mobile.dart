@@ -29,14 +29,19 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
     Cargo(cargoId: 3, codCargo: '3', descripcion: 'Supervisor'),
   ];
   late Cargo? cargoSeleccionado = Cargo.empty();
-  DateTime selectedDateNacimiento = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-  DateTime selectedDateIngreso = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-  DateTime selectedDateCarneSalud = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime selectedDateNacimiento =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime selectedDateIngreso =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime selectedDateCarneSalud =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   late String _setDate;
   late String dateTime;
-  final TextEditingController _dateNacimientoController = TextEditingController();
+  final TextEditingController _dateNacimientoController =
+      TextEditingController();
   final TextEditingController _dateIngresoController = TextEditingController();
-  final TextEditingController _dateCarneSaludController = TextEditingController();
+  final TextEditingController _dateCarneSaludController =
+      TextEditingController();
   final _nombreController = TextEditingController();
   final _docController = TextEditingController();
   final _codController = TextEditingController();
@@ -59,7 +64,8 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
       final files = input.files;
       if (files!.isNotEmpty) {
         final reader = html.FileReader();
-        reader.readAsArrayBuffer(files[0]); // Leer el archivo como una matriz de bytes
+        reader.readAsArrayBuffer(
+            files[0]); // Leer el archivo como una matriz de bytes
         reader.onLoadEnd.listen((e) {
           setState(() {
             // Asignar los bytes del archivo a _avatarTecnico
@@ -74,12 +80,13 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
     final html.FileUploadInputElement input = html.FileUploadInputElement();
     input.accept = 'image/*';
     input.click();
-  
+
     input.onChange.listen((e) {
       final files = input.files;
       if (files!.isNotEmpty) {
         final reader = html.FileReader();
-        reader.readAsArrayBuffer(files[0]); // Leer el archivo como una matriz de bytes
+        reader.readAsArrayBuffer(
+            files[0]); // Leer el archivo como una matriz de bytes
         reader.onLoadEnd.listen((e) {
           setState(() {
             // Asignar los bytes del archivo a _avatarTecnico
@@ -129,7 +136,8 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
 
     late Cargo cargoInicialSeleccionado = cargos[0];
     if (cargoSeleccionado!.cargoId != 0) {
-      cargoInicialSeleccionado = cargos.firstWhere((cargo) => cargo.cargoId == cargoSeleccionado!.cargoId);
+      cargoInicialSeleccionado = cargos
+          .firstWhere((cargo) => cargo.cargoId == cargoSeleccionado!.cargoId);
     }
     return SafeArea(
       child: Scaffold(
@@ -138,220 +146,320 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
         ),
         body: SingleChildScrollView(
           child: Container(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    IconButton(
-                      style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(colors.secondary)),
-                      tooltip: 'Subir foto',
-                      onPressed: () async {
-                        await _uploadPhoto1();
-                      }, 
-                      icon: const Icon(Icons.upload)
-                    ),
-                    const SizedBox(width: 20,),
-                    _avatarTecnico != null ? 
-                    Image.memory(_avatarTecnico!, width: 200, height: 200) : 
-                    const SizedBox(
-                      width: 200,
-                      height: 200,
-                      child: Placeholder(
-                        child: Text('Avatar del tecnico'),
-                      ),
-                    ),
-                    
-                  ],
-                ),
-                
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    IconButton(
-                      style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(colors.secondary)),
-                      tooltip: 'Subir firma',
-                      onPressed: () async {
-                        await _uploadPhoto2();
-                      }, 
-                      icon: const Icon(Icons.upload)
-                    ),
-                    const SizedBox(width: 1,),
-                    SizedBox(
-                      width: 200,
-                      child: Image.asset('images/Firmas_Tecnicos/ANDRES ABREU.JPG'),
-                    ),
-                    
-                  ],
-                ),
-                const SizedBox(height: 20,),
-               
-                tipoDato('Codigo', _codController),
-                const SizedBox(
-                  height: 20,
-                ),
-                tipoDato('Documento', _docController),
-                const SizedBox(
-                  height: 20,
-                ),
-                tipoDato('Nombre', _nombreController),
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    IconButton.filledTonal(
-                      onPressed: () => _selectFechaNacimiento(context),
-                      icon: const Icon(Icons.calendar_month)
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width *0.7,
-                      child: CustomTextFormField(
-                        label: 'Fecha de nacimiento',
-                        textAling: TextAlign.center,
-                        controller: _dateNacimientoController,
-                        onSaved: (value) {
-                          _setDate = value!;
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    const Text('Cargo'),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width *0.7,
-                      child: CustomDropdownFormMenu(
-                        value: cargoInicialSeleccionado,
-                        hint: 'Seleccione cargo',
-                        items: cargos.map((e) {
-                          return DropdownMenuItem(
-                            value: e,
-                            child: Text(e.descripcion),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          cargoSeleccionado = value;
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              const SizedBox(height: 20,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  IconButton.filledTonal(
-                    onPressed: () => _selectFechaIngreso(context),
-                    icon: const Icon(Icons.calendar_month)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      IconButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  WidgetStatePropertyAll(colors.secondary)),
+                          tooltip: 'Subir foto',
+                          onPressed: () async {
+                            await _uploadPhoto1();
+                          },
+                          icon: const Icon(Icons.upload)),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      _avatarTecnico != null
+                          ? Image.memory(_avatarTecnico!,
+                              width: 200, height: 200)
+                          : const SizedBox(
+                              width: 200,
+                              height: 200,
+                              child: Placeholder(
+                                child: Text('Avatar del tecnico'),
+                              ),
+                            ),
+                    ],
                   ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width *0.7,
-                    child: CustomTextFormField(
-                      label: 'Fecha de ingreso',
-                      textAling: TextAlign.center,
-                      controller: _dateIngresoController,
-                      onSaved: (value) {
-                        _setDate = value!;
-                      },
-                    ),
+                  const SizedBox(
+                    height: 5,
                   ),
-                ],
-              ),
-              const SizedBox(height: 20,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  IconButton.filledTonal(
-                    onPressed: () => _selectFechaVtoCarneSalud(context),
-                    icon: const Icon(Icons.calendar_month)
+                  Divider(
+                    thickness: 0.5,
+                    color: colors.primary,
+                    endIndent: 20,
+                    indent: 20,
                   ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width *0.7,
-                    child: CustomTextFormField(
-                      label: 'Fecha Vto Carne de Salud',
-                      textAling: TextAlign.center,
-                      controller: _dateCarneSaludController,
-                      onSaved: (value) {
-                        _setDate = value!;
-                      },
-                    ),
+                  const SizedBox(
+                    height: 5,
                   ),
-                ],
-              ),
-              const SizedBox(height: 20,),
-              ],
-            )
-          ),
-        ),
-        
-        bottomNavigationBar: tieneId?
-                BottomNavigationBar(
-                  currentIndex: buttonIndex,
-                  onTap: (index) async {
-                    buttonIndex = index;
-                    switch (buttonIndex){
-                      case 0:
-                        await postTecnico(context);
-                      break;
-                      case 1:
-                        await borrarTecnico(context, selectedTecnico, token);
-                      break;
-                        
-                    }
-                  },
-                  showUnselectedLabels: true,
-                  selectedItemColor: colors.primary,
-                  unselectedItemColor: colors.primary,
-                  items: const [
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.save),
-                      label: 'Guardar',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.delete),
-                      label: 'Borrar',
-                    ),
-            
-                  ],
-                ):
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: colors.primary)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      IconButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  WidgetStatePropertyAll(colors.secondary)),
+                          tooltip: 'Subir firma',
+                          onPressed: () async {
+                            await _uploadPhoto2();
+                          },
+                          icon: const Icon(Icons.upload)),
+                      const SizedBox(
+                        width: 1,
+                      ),
+                      SizedBox(
+                        width: 200,
+                        child: Image.asset(
+                            'images/Firmas_Tecnicos/ANDRES ABREU.JPG'),
+                      ),
+                    ],
                   ),
-                  height: MediaQuery.of(context).size.height *0.1,
-                  child: InkWell(
-                  
-                    onTap: () async{
-                     await postTecnico(context);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Row(
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Divider(
+                    thickness: 0.5,
+                    color: colors.primary,
+                    endIndent: 20,
+                    indent: 20,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  tipoDato('Codigo', _codController),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Divider(
+                    thickness: 0.5,
+                    color: colors.primary,
+                    endIndent: 20,
+                    indent: 20,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  tipoDato('Documento', _docController),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Divider(
+                    thickness: 0.5,
+                    color: colors.primary,
+                    endIndent: 20,
+                    indent: 20,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  tipoDato('Nombre', _nombreController),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Divider(
+                    thickness: 0.5,
+                    color: colors.primary,
+                    endIndent: 20,
+                    indent: 20,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.save, color: colors.primary,),
-                          Text('Guardar', style: TextStyle(color: colors.primary),)
+                          const Text('Fecha de Nacimiento'),
+                          IconButton(
+                              onPressed: () => _selectFechaNacimiento(context),
+                              icon: Icon(
+                                Icons.edit,
+                                color: colors.secondary,
+                              )),
                         ],
                       ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: CustomTextFormField(
+                          label: 'Fecha de nacimiento',
+                          textAling: TextAlign.center,
+                          controller: _dateNacimientoController,
+                          onSaved: (value) {
+                            _setDate = value!;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Divider(
+                    thickness: 0.5,
+                    color: colors.primary,
+                    endIndent: 20,
+                    indent: 20,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      const Text('Cargo'),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: CustomDropdownFormMenu(
+                          isDense: true,
+                          value: cargoInicialSeleccionado,
+                          hint: 'Seleccione cargo',
+                          items: cargos.map((e) {
+                            return DropdownMenuItem(
+                              value: e,
+                              child: Text(e.descripcion),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            cargoSeleccionado = value;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Divider(
+                    thickness: 0.5,
+                    color: colors.primary,
+                    endIndent: 20,
+                    indent: 20,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text('Fecha de ingreso'),
+                          IconButton(
+                              onPressed: () => _selectFechaIngreso(context),
+                              icon: Icon(
+                                Icons.edit,
+                                color: colors.secondary,
+                              )),
+                        ],
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: CustomTextFormField(
+                          label: 'Fecha de ingreso',
+                          textAling: TextAlign.center,
+                          controller: _dateIngresoController,
+                          onSaved: (value) {
+                            _setDate = value!;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5,),
+                  Divider(
+                    thickness: 0.5,
+                    color: colors.primary,
+                    endIndent: 20,
+                    indent: 20,
+                  ),
+                  const SizedBox(height: 5,),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text('Fecha vto carnet de salud'),
+                          IconButton(
+                              onPressed: () =>
+                                  _selectFechaVtoCarneSalud(context),
+                              icon: Icon(
+                                Icons.edit,
+                                color: colors.secondary,
+                              )),
+                        ],
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: CustomTextFormField(
+                          label: 'Fecha Vto Carne de Salud',
+                          textAling: TextAlign.center,
+                          controller: _dateCarneSaludController,
+                          onSaved: (value) {
+                            _setDate = value!;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )),
+        ),
+        bottomNavigationBar: tieneId
+            ? BottomNavigationBar(
+                currentIndex: buttonIndex,
+                onTap: (index) async {
+                  buttonIndex = index;
+                  switch (buttonIndex) {
+                    case 0:
+                      await postTecnico(context);
+                      break;
+                    case 1:
+                      await borrarTecnico(context, selectedTecnico, token);
+                      break;
+                  }
+                },
+                showUnselectedLabels: true,
+                selectedItemColor: colors.primary,
+                unselectedItemColor: colors.primary,
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.save),
+                    label: 'Guardar',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.delete),
+                    label: 'Borrar',
+                  ),
+                ],
+              )
+            : Container(
+                decoration:
+                    BoxDecoration(border: Border.all(color: colors.primary)),
+                height: MediaQuery.of(context).size.height * 0.1,
+                child: InkWell(
+                  onTap: () async {
+                    await postTecnico(context);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.save,
+                          color: colors.primary,
+                        ),
+                        Text(
+                          'Guardar',
+                          style: TextStyle(color: colors.primary),
+                        )
+                      ],
                     ),
                   ),
-                )
-              ,
-        
+                ),
+              ),
       ),
     );
   }
@@ -360,11 +468,14 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
     selectedTecnico.codTecnico = _codController.text;
     selectedTecnico.documento = _docController.text;
     selectedTecnico.nombre = _nombreController.text;
-    selectedTecnico.fechaNacimiento = DateTime(selectedDateNacimiento.year, selectedDateNacimiento.month, selectedDateNacimiento.day);
+    selectedTecnico.fechaNacimiento = DateTime(selectedDateNacimiento.year,
+        selectedDateNacimiento.month, selectedDateNacimiento.day);
     selectedTecnico.cargo = cargoSeleccionado;
     selectedTecnico.cargoId = cargoSeleccionado!.cargoId;
-    selectedTecnico.fechaIngreso = DateTime(selectedDateIngreso.year, selectedDateIngreso.month, selectedDateIngreso.day);
-    selectedTecnico.fechaVtoCarneSalud = DateTime(selectedDateCarneSalud.year, selectedDateCarneSalud.month, selectedDateCarneSalud.day);
+    selectedTecnico.fechaIngreso = DateTime(selectedDateIngreso.year,
+        selectedDateIngreso.month, selectedDateIngreso.day);
+    selectedTecnico.fechaVtoCarneSalud = DateTime(selectedDateCarneSalud.year,
+        selectedDateCarneSalud.month, selectedDateCarneSalud.day);
 
     if (selectedTecnico.tecnicoId == 0) {
       await TecnicoServices().postTecnico(context, selectedTecnico, token);
@@ -377,16 +488,13 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
     });
   }
 
-  Row tipoDato(String tipoDato, TextEditingController controller) {
-    return Row(
+  Column tipoDato(String tipoDato, TextEditingController controller) {
+    return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Text(tipoDato),
-        const SizedBox(
-          width: 15,
-        ),
         SizedBox(
-          width: MediaQuery.of(context).size.width *0.7,
+          width: MediaQuery.of(context).size.width * 0.8,
           child: CustomTextFormField(
             maxLines: 1,
             label: tipoDato,
@@ -399,12 +507,11 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
 
   Future<Null> _selectFechaNacimiento(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDateNacimiento,
-      initialDatePickerMode: DatePickerMode.day,
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2099)
-    );
+        context: context,
+        initialDate: selectedDateNacimiento,
+        initialDatePickerMode: DatePickerMode.day,
+        firstDate: DateTime(1900),
+        lastDate: DateTime(2099));
     if (picked != null) {
       setState(() {
         selectedDateNacimiento = picked;
@@ -417,16 +524,16 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
 
   Future<Null> _selectFechaIngreso(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDateIngreso,
-      initialDatePickerMode: DatePickerMode.day,
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2099)
-    );
+        context: context,
+        initialDate: selectedDateIngreso,
+        initialDatePickerMode: DatePickerMode.day,
+        firstDate: DateTime(1900),
+        lastDate: DateTime(2099));
     if (picked != null) {
       setState(() {
         selectedDateIngreso = picked;
-        _dateIngresoController.text = DateFormat.yMd().format(selectedDateNacimiento);
+        _dateIngresoController.text =
+            DateFormat.yMd().format(selectedDateNacimiento);
         setState(() {});
       });
     }
@@ -434,22 +541,23 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
 
   Future<Null> _selectFechaVtoCarneSalud(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDateCarneSalud,
-      initialDatePickerMode: DatePickerMode.day,
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2099)
-    );
+        context: context,
+        initialDate: selectedDateCarneSalud,
+        initialDatePickerMode: DatePickerMode.day,
+        firstDate: DateTime(1900),
+        lastDate: DateTime(2099));
     if (picked != null) {
       setState(() {
         selectedDateCarneSalud = picked;
-        _dateCarneSaludController.text = DateFormat.yMd().format(selectedDateNacimiento);
+        _dateCarneSaludController.text =
+            DateFormat.yMd().format(selectedDateNacimiento);
         setState(() {});
       });
     }
   }
 
-  Future<dynamic> borrarTecnico(BuildContext context, Tecnico tecnico, String token) {
+  Future<dynamic> borrarTecnico(
+      BuildContext context, Tecnico tecnico, String token) {
     return showDialog(
       context: context,
       builder: (context) {
@@ -458,17 +566,15 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
           content: const Text('Desea borrar el tecnico?'),
           actions: [
             TextButton(
-              onPressed: () async {
-                TecnicoServices().deleteTecnico(context, tecnico, token);
-              },
-              child: const Text('Borrar')
-            ),
+                onPressed: () async {
+                  TecnicoServices().deleteTecnico(context, tecnico, token);
+                },
+                child: const Text('Borrar')),
             TextButton(
-              onPressed: () {
-                router.pop();
-              },
-              child: const Text('Cancelar')
-            )
+                onPressed: () {
+                  router.pop();
+                },
+                child: const Text('Cancelar'))
           ],
         );
       },

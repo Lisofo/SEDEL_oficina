@@ -36,13 +36,13 @@ class _TecnicosPageMobileState extends State<TecnicosPageMobile> {
           width: MediaQuery.of(context).size.width *0.9,
           child: Column(
                 children: [
-                  const SizedBox(height: 20,),
-                  Row(
+                  const SizedBox(height: 10,),
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       const Text('Documento: '),
                       SizedBox(
-                        width: MediaQuery.of(context).size.width *0.6,
+                        width: MediaQuery.of(context).size.width *0.8,
                         child: CustomTextFormField(
                           controller: _documentoController,
                           maxLines: 1,
@@ -54,16 +54,21 @@ class _TecnicosPageMobileState extends State<TecnicosPageMobile> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10,),
-                  Divider(color: colors.primary,),
-                  const SizedBox(height: 10,),
-                  Row(
+                  const SizedBox(height: 5,),
+                  Divider(
+                    thickness: 0.5,
+                    color: colors.primary,
+                    endIndent: 20,
+                    indent: 20,
+                  ),
+                  const SizedBox(height: 5,),
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       const Text('Codigo: '),
                       
                       SizedBox(
-                        width: MediaQuery.of(context).size.width *0.6,
+                        width: MediaQuery.of(context).size.width *0.8,
                         child: CustomTextFormField(
                           controller: _codTecnicoController,
                           maxLines: 1,
@@ -75,16 +80,21 @@ class _TecnicosPageMobileState extends State<TecnicosPageMobile> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10,),
-                  Divider(color: colors.primary,),
-                  const SizedBox(height: 10,),
-                  Row(
+                  const SizedBox(height: 5,),
+                  Divider(
+                    thickness: 0.5,
+                    color: colors.primary,
+                    endIndent: 20,
+                    indent: 20,
+                  ),
+                  const SizedBox(height: 5,),
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       const Text('Nombre: '),
                       
                       SizedBox(
-                        width: MediaQuery.of(context).size.width *0.6,
+                        width: MediaQuery.of(context).size.width *0.8,
                         child: CustomTextFormField(
                           maxLines: 1,
                           label: 'Nombre',
@@ -96,9 +106,6 @@ class _TecnicosPageMobileState extends State<TecnicosPageMobile> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10,),
-                  Divider(color: colors.primary,),
-                  const SizedBox(height: 10,),
                   const Spacer(),
                   BottomNavigationBar(
                     currentIndex: buttonIndex,
