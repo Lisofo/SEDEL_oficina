@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/config.dart';
+import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/informes.dart';
 import 'package:sedel_oficina_maqueta/models/informes_values.dart';
 import 'package:sedel_oficina_maqueta/models/parametro.dart';
@@ -154,6 +155,51 @@ class InformesServices {
       final List<dynamic> informesList = resp.data;
 
       return informesList.map((obj) => Parametro.fromJson(obj)).toList();
+    } catch (e) {
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+              return "Error: ${error['message']}";
+            }).toList();
+            showErrorDialog(context, errorMessages.join('\n'));
+          }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: ${e.message}');
+        }
+      }
+    }
+  }
+
+  Future getExisteParametro(BuildContext context, String token, int informeId, Parametro parametro, String? valor) async {
+    String link = '$apiLink$informeId/parametros/${parametro.parametroId}/values/?descripcion=$valor';
+    bool existe = false;
+    try {
+      var headers = {'Authorization': token};
+      var resp = await _dio.request(
+        link,
+        options: Options(
+          method: 'GET',
+          headers: headers,
+        ),
+      );
+      final List<dynamic> informesList = resp.data;
+      if(resp.statusCode == 200 && informesList.isEmpty){
+        showDialogs(context, 'Este valor no es valido para el parametro', false, false);
+        return existe;
+      }else{
+        existe = true;
+        router.pop();
+        return existe;
+      }
     } catch (e) {
       if (e is DioException) {
         if (e.response != null) {

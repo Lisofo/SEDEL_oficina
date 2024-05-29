@@ -26,6 +26,9 @@ class _EstablecerClientesDesktopState extends State<EstablecerClientesDesktop> {
   late String token;
   List<Cliente> historial = [];
   late Cliente selectedCliente;
+  late String tipoAcceso = '';
+  bool filtro = false;
+  
   @override
   void initState() {
     super.initState();
@@ -57,7 +60,7 @@ class _EstablecerClientesDesktopState extends State<EstablecerClientesDesktop> {
             padding: const EdgeInsets.all(8.0),
             child: Column(children: [
               SizedBox(
-                  height: 400,
+                  height: MediaQuery.of(context).size.height * 0.7,
                   child: ListView.separated(
                     itemCount: clientes.length,
                     itemBuilder: (context, index) {
@@ -164,16 +167,40 @@ class _EstablecerClientesDesktopState extends State<EstablecerClientesDesktop> {
                         builder: (context) {
                           return AlertDialog(
                             title: const Text('Confirmacion'),
-                            content: Text(
-                                'Desea agregar al cliente ${selectedCliente.nombre}?'),
+                            content: StatefulBuilder(
+                              builder: (context, setStateBd)=> Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('Desea agregar al cliente ${selectedCliente.nombre}?'),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Text('Acceso normal'),
+                                      Switch(
+                                        activeColor: colors.primary,
+                                        value: filtro, 
+                                        onChanged: (value) {
+                                          filtro = value;
+                                          setStateBd(() {});
+                                        },
+                                      ),
+                                      const Text('Acceso restringido')
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
                             actions: [
                               TextButton(
                                   onPressed: () async {
+                                    tipoAcceso = filtro ? 'R' : 'N';
                                     await _userServices.postClientUsers(
-                                        context,
-                                        userSeleccionado.usuarioId.toString(),
-                                        selectedCliente.clienteId.toString(),
-                                        token);
+                                      context,
+                                      userSeleccionado.usuarioId.toString(),
+                                      selectedCliente.clienteId.toString(),
+                                      tipoAcceso,
+                                      token
+                                    );
                                     await getClientes(userSeleccionado, token);
                                   },
                                   child: const Text('Agregar')),

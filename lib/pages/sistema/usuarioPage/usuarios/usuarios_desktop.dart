@@ -28,7 +28,6 @@ class _UsuariosDesktopState extends State<UsuariosDesktop> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final token = context.watch<OrdenProvider>().token;
-    print('pantalla usuarios');
     return SafeArea(
       child: Scaffold(
         appBar: AppBarDesktop(

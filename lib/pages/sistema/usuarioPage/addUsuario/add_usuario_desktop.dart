@@ -231,9 +231,8 @@ class _AddUsuarioDesktopState extends State<AddUsuarioDesktop> {
     );
   }
 
-  BottomAppBar botonesSinId(
-      Usuario userSeleccionado, BuildContext context, String token) {
-        final colors = Theme.of(context).colorScheme;
+  BottomAppBar botonesSinId(Usuario userSeleccionado, BuildContext context, String token) {
+    final colors = Theme.of(context).colorScheme;
     return BottomAppBar(
         elevation: 0,
         child: Padding(
@@ -255,11 +254,9 @@ class _AddUsuarioDesktopState extends State<AddUsuarioDesktop> {
                     userSeleccionado.telefono = _telefonoController.text;
 
                     if (userSeleccionado.usuarioId != 0) {
-                      _userServices.putUsuario(
-                          context, userSeleccionado, token);
+                      _userServices.putUsuario(context, userSeleccionado, token);
                     } else {
-                      await _userServices.postUsuario(
-                          context, userSeleccionado, token);
+                      await _userServices.postUsuario(context, userSeleccionado, token);
                       setState(() {
                         botonesConId(userSeleccionado, context, token);
                       });
@@ -312,18 +309,18 @@ class _AddUsuarioDesktopState extends State<AddUsuarioDesktop> {
           content: const Text('Desea borrar el usuario?'),
           actions: [
             TextButton(
-                onPressed: () async {
-                  router.pop();
-                  await _userServices.deleteUser(
-                      context, userSeleccionado, token);
-                  router.pop(context);
-                },
-                child: const Text('Borrar')),
+              onPressed: () async {
+                await _userServices.deleteUser(context, userSeleccionado, token);
+                await UserServices.showDialogs(context, 'Usuario borrado correctamente', true, true);
+              },
+              child: const Text('Borrar')
+            ),
             TextButton(
-                onPressed: () {
-                  router.pop();
-                },
-                child: const Text('Cancelar'))
+              onPressed: () {
+                router.pop();
+              },
+              child: const Text('Cancelar')
+            )
           ],
         );
       },

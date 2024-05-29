@@ -232,14 +232,14 @@ class _InformesDesktopState extends State<InformesDesktop> {
                           buttonIndex = index;
                           switch (buttonIndex){
                             case 0: 
-                              rptGenId = context.read<OrdenProvider>().rptGenId;
+                              generarInformePopup(context, selectedInforme);
+                            break;
+                            case 1:
+                            rptGenId = context.read<OrdenProvider>().rptGenId;
                               reporte = await InformesServices().getReporte(context, rptGenId, token);
                               if(reporte.generado == 'S'){
                                 await abrirUrl(reporte.archivoUrl, token);
                               } 
-                            break;
-                            case 1:
-                              generarInformePopup(context, selectedInforme);
                             break;
                           }
                         },
@@ -367,12 +367,22 @@ class _InformesDesktopState extends State<InformesDesktop> {
             ),
             TextButton(
               child: const Text('Aceptar'),
-              onPressed: () {
+              onPressed: () async {
+                bool existe = false;
                 if (_controllers[parametro.parametro]?.text != '' && parametro.control == 'T') {
-                  parametro.valor = _controllers[parametro.parametro]?.text;
-                  parametro.valorAMostrar = _controllers[parametro.parametro]?.text;
+                  if(parametro.control == 'T' && parametro.tieneLista == 'S'){
+                    existe = await InformesServices().getExisteParametro(context, token, parametro.informeId, parametro, _controllers[parametro.parametro]?.text);
+                    if(existe){
+                      parametro.valor = _controllers[parametro.parametro]?.text;
+                      parametro.valorAMostrar = _controllers[parametro.parametro]?.text;
+                    }
+                  }else{
+                    parametro.valor = _controllers[parametro.parametro]?.text;
+                    parametro.valorAMostrar = _controllers[parametro.parametro]?.text;
+                    router.pop();
+                  }
                 }
-                router.pop();
+                
                 setState(() {});
               },
             ),

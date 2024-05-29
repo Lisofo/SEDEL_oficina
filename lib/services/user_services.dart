@@ -355,16 +355,19 @@ class UserServices {
     }
   }
 
-  Future postClientUsers(BuildContext context, String userId, String clienteId, String token) async {
+  Future postClientUsers(BuildContext context, String userId, String clienteId, String tipoAcceso, String token) async {
     String link = '$apiLink$userId/clientes';
-
+    var data = {
+      "clienteId": clienteId,
+      "tipoAcceso": tipoAcceso
+    };
     try {
       var headers = {'Authorization': token};
       final resp = await _dio.request(link,
-          data: {"clienteId": clienteId},
+          data:data,
           options: Options(method: 'POST', headers: headers));
       if (resp.statusCode == 201) {
-        showDialogs(context, 'Cambio hecho correctamente', true, false);
+        showDialogs(context, 'Cliente agregado correctamente', true, false);
       }
     } catch (e) {
       if (e is DioException) {

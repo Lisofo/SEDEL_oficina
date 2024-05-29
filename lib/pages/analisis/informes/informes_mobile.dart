@@ -241,25 +241,25 @@ class _InformesMobileState extends State<InformesMobile> {
                           buttonIndex = index;
                           switch (buttonIndex){
                             case 0: 
-                              rptGenId = context.read<OrdenProvider>().rptGenId;
+                              generarInformePopup(context, selectedInforme);
+                            break;
+                            case 1:
+                            rptGenId = context.read<OrdenProvider>().rptGenId;
                               reporte = await InformesServices().getReporte(context, rptGenId, token);
                               if(reporte.generado == 'S'){
                                 await abrirUrl(reporte.archivoUrl, token);
                               } 
                             break;
-                            case 1:
-                              generarInformePopup(context, selectedInforme);
-                            break;
                           }
                         },
                         items: const [
                           BottomNavigationBarItem(
-                            icon: Icon(Icons.open_in_browser),
-                            label: 'Abrir informe',
-                          ),
-                          BottomNavigationBarItem(
                             icon: Icon(Icons.save),
                             label: 'Generar informe',
+                          ),
+                          BottomNavigationBarItem(
+                            icon: Icon(Icons.open_in_browser),
+                            label: 'Abrir informe',
                           ),
                         ],
                       ),
