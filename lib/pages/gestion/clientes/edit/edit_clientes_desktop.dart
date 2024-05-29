@@ -614,7 +614,7 @@ class _BodyState extends State<Body> {
                         height: 400,
                         width: 300,
                         child: ListView.builder(
-                          itemCount: usuariosXClientes.length,
+                         itemCount: usuariosXClientes.length,
                           itemBuilder: (context, index) {
                             return ListTile(
                               leading: CircleAvatar(
@@ -625,9 +625,19 @@ class _BodyState extends State<Body> {
                                 ),
                               ),
                               title: Text(usuariosXClientes[index].usuario),
-                              subtitle: Text(
-                                usuariosXClientes[index].login,
-                                style: const TextStyle(fontSize: 13),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    usuariosXClientes[index].login,
+                                    style: const TextStyle(fontSize: 13),
+                                  ),
+                                  Text(
+                                    usuariosXClientes[index].tipoAcceso == 'N' ? 'Normal' : 'Restringido',
+                                    style: const TextStyle(fontSize: 13),
+                                  ),
+                                  
+                                ],
                               ),
                               onTap: (){
                                 final usuarioSeleccionado = usuariosTodos.where((usuario) => usuario.usuarioId == usuariosXClientes[index].usuarioId,).toList()[0];

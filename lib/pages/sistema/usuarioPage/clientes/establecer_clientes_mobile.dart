@@ -64,9 +64,17 @@ class _EstablecerClientesMobileState extends State<EstablecerClientesMobile> {
                         _clientes[index].cliente,
                         textAlign: TextAlign.center,
                       ),
-                      subtitle: Text(
-                        _clientes[index].codCliente,
-                        textAlign: TextAlign.center,
+                      subtitle: Column(
+                        children: [
+                          Text(
+                            _clientes[index].codCliente,
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            _clientes[index].tipoAcceso == 'N' ? 'Normal' : 'Restringido',
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
                       trailing: IconButton(
                         color: colors.primary,

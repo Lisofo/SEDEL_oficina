@@ -58,8 +58,9 @@ class _EstablecerClientesDesktopState extends State<EstablecerClientesDesktop> {
           child: Card(
               child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(children: [
-              SizedBox(
+            child: Column(
+              children: [
+                SizedBox(
                   height: MediaQuery.of(context).size.height * 0.7,
                   child: ListView.separated(
                     itemCount: clientes.length,
@@ -72,46 +73,24 @@ class _EstablecerClientesDesktopState extends State<EstablecerClientesDesktop> {
                             _clientes[index].cliente,
                             textAlign: TextAlign.center,
                           ),
-                          subtitle: Text(
-                            _clientes[index].codCliente,
-                            textAlign: TextAlign.center,
+                          subtitle: Column(
+                            children: [
+                              Text(
+                                _clientes[index].codCliente,
+                                textAlign: TextAlign.center,
+                              ),
+                              Text(
+                                _clientes[index].tipoAcceso == 'N' ? 'Normal' : 'Restringido',
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
                           ),
                           trailing: IconButton(
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      title: const Text('Confirmar accion'),
-                                      content: Text(
-                                          'Desea borrar ${_clientes[index].cliente}?'),
-                                      actions: [
-                                        TextButton(
-                                            onPressed: () async {
-                                              await _userServices
-                                                  .deleteClientUsers(
-                                                      context,
-                                                      userSeleccionado.usuarioId
-                                                          .toString(),
-                                                      _clientes[index]
-                                                          .clienteId
-                                                          .toString(),
-                                                      token);
-                                              await getClientes(
-                                                  userSeleccionado, token);
-                                            },
-                                            child: const Text('Borrar')),
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text('Cancelar'))
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                              icon: const Icon(Icons.delete)),
+                            onPressed: () {
+                              borrarClienteAsignado(context, _clientes, index);
+                            },
+                            icon: const Icon(Icons.delete)
+                          ),
                         ),
                       );
                     },
@@ -124,9 +103,13 @@ class _EstablecerClientesDesktopState extends State<EstablecerClientesDesktop> {
                         ),
                       );
                     },
-                  )),
-            ]),
-          ))),
+                  )
+                ),
+              ]
+            ),
+          )
+        )
+      ),
       bottomNavigationBar: BottomAppBar(
         elevation: 0,
         child: Padding(
@@ -150,8 +133,7 @@ class _EstablecerClientesDesktopState extends State<EstablecerClientesDesktop> {
                     if (cliente != null) {
                       setState(() {
                         selectedCliente = cliente;
-                        final int clienteExiste = historial.indexWhere(
-                            (element) => element.nombre == cliente.nombre);
+                        final int clienteExiste = historial.indexWhere((element) => element.nombre == cliente.nombre);
                         if (clienteExiste == -1) {
                           historial.insert(0, cliente);
                         }
@@ -232,9 +214,40 @@ class _EstablecerClientesDesktopState extends State<EstablecerClientesDesktop> {
     );
   }
 
+  Future<dynamic> borrarClienteAsignado(BuildContext context, List<ClienteUsuario> _clientes, int index) {
+    return showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('Confirmar accion'),
+                                  content: Text('Desea borrar ${_clientes[index].cliente}?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () async {
+                                        await _userServices.deleteClientUsers(
+                                          context,
+                                          userSeleccionado.usuarioId.toString(),
+                                          _clientes[index].clienteId.toString(),
+                                          token
+                                        );
+                                        await getClientes(userSeleccionado, token);
+                                      },
+                                      child: const Text('Borrar')
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Cancelar')
+                                    )
+                                  ],
+                                );
+                              },
+                            );
+  }
+
   Future<List<ClienteUsuario>> getClientes(Usuario user, String token) async {
-    clientes =
-        await _userServices.getClientUsers(context, user.usuarioId.toString(), token);
+    clientes = await _userServices.getClientUsers(context, user.usuarioId.toString(), token);
     setState(() {});
     return clientes;
   }

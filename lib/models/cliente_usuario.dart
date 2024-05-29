@@ -17,6 +17,7 @@ class ClienteUsuario {
   late String direccion;
   late String telefono1;
   late String email;
+  late String tipoAcceso;
 
   ClienteUsuario({
     required this.usuarioId,
@@ -28,6 +29,7 @@ class ClienteUsuario {
     required this.direccion,
     required this.telefono1,
     required this.email,
+    required this.tipoAcceso,
   });
 
   factory ClienteUsuario.fromJson(Map<String, dynamic> json) => ClienteUsuario(
@@ -40,6 +42,7 @@ class ClienteUsuario {
         direccion: json["direccion"] as String? ?? '',
         telefono1: json["telefono1"] as String? ?? '',
         email: json["email"] as String? ?? '',
+        tipoAcceso: json["tipoAcceso"] as String? ?? '',
       );
 
   Map<String, dynamic> toMap() => {
@@ -52,5 +55,6 @@ class ClienteUsuario {
         "direccion": direccion,
         "telefono1": telefono1,
         "email": email,
+        "tipoAcceso": tipoAcceso
       };
 }
