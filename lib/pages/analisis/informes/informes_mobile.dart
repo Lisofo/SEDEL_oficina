@@ -376,12 +376,22 @@ class _InformesMobileState extends State<InformesMobile> {
             ),
             TextButton(
               child: const Text('Aceptar'),
-              onPressed: () {
+              onPressed: () async {
+                bool existe = false;
                 if (_controllers[parametro.parametro]?.text != '' && parametro.control == 'T') {
-                  parametro.valor = _controllers[parametro.parametro]?.text;
-                  parametro.valorAMostrar = _controllers[parametro.parametro]?.text;
+                  if(parametro.control == 'T' && parametro.tieneLista == 'S'){
+                    existe = await InformesServices().getExisteParametro(context, token, parametro.informeId, parametro, _controllers[parametro.parametro]?.text);
+                    if(existe){
+                      parametro.valor = _controllers[parametro.parametro]?.text;
+                      parametro.valorAMostrar = _controllers[parametro.parametro]?.text;
+                    }
+                  }else{
+                    parametro.valor = _controllers[parametro.parametro]?.text;
+                    parametro.valorAMostrar = _controllers[parametro.parametro]?.text;
+                    router.pop();
+                  }
                 }
-                router.pop();
+                
                 setState(() {});
               },
             ),
