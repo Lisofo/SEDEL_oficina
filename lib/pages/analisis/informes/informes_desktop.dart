@@ -181,7 +181,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
                 if (selectedNodeData != null) ...[
                   if(parametros.isNotEmpty)...[
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.7,
+                      height: MediaQuery.of(context).size.height * 0.5,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: ListView.builder(
@@ -228,7 +228,6 @@ class _InformesDesktopState extends State<InformesDesktop> {
                       ),
                     ),
                     if(selectedNodeData.objetoArbol == 'informe')...[
-                      
                       const Spacer(),
                       const Center(
                         child: Text('Seleccione formato de generacion del Informe'),
@@ -512,13 +511,10 @@ class _InformesDesktopState extends State<InformesDesktop> {
                       parametro.valor = _controllers[parametro.parametro]?.text;
                       parametro.valorAMostrar = _controllers[parametro.parametro]?.text;
                     }
-                  }else{
-                    parametro.valor = _controllers[parametro.parametro]?.text;
-                    parametro.valorAMostrar = _controllers[parametro.parametro]?.text;
-                    router.pop();
                   }
+                }else{
+                  router.pop();
                 }
-                
                 setState(() {});
               },
             ),
