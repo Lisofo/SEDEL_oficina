@@ -114,7 +114,7 @@ class InformesServices {
       );
 
       final Reporte reporte = Reporte.fromJson(resp.data);
-
+      print(reporte.rptGenId);
       return reporte;
 
     } catch (e) {
@@ -140,6 +140,46 @@ class InformesServices {
       }
     }
   }
+
+  Future patchInforme(BuildContext context, Reporte reporte, String generado, String token) async {
+    String link = '${apiUrl}api/v1/rpts/${reporte.rptGenId}';
+
+    try {
+      var headers = {'Authorization': token};
+      var data = ({"generado": generado});
+      var resp = await _dio.request(link,
+          options: Options(
+            method: 'PATCH',
+            headers: headers,
+          ),
+          data: data);
+
+      return resp;
+    } catch (e) {
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+              return "Error: ${error['message']}";
+            }).toList();
+            showErrorDialog(context, errorMessages.join('\n'));
+          }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: ${e.message}');
+        }
+      }
+    }
+  }
+
+  
 
   Future getParametros(BuildContext context, String token, int informeId) async {
     String link = '$apiLink$informeId/parametros';
@@ -326,7 +366,7 @@ class InformesServices {
         print(resp.data["rptGenId"]);
         Provider.of<OrdenProvider>(context, listen: false).setRptId(resp.data["rptGenId"]);
         print(resp.data["rptGenId"]);
-        showDialogs(context, 'Informe generado correctamente', true, false);
+        //showDialogs(context, 'Informe generado correctamente', true, false);
       }
 
       return;

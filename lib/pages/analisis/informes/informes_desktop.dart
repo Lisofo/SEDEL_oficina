@@ -52,6 +52,9 @@ class _InformesDesktopState extends State<InformesDesktop> {
   List<TiposImpresion> tipos = [];
   late int rptGenId = 0;
   late Reporte reporte = Reporte.empty();
+  late bool generandoInforme = false;
+  late bool informeGeneradoEsS = false;
+  
 
   @override
   void initState() {
@@ -128,6 +131,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
                   selectedInforme = item.data;
                   // print(selectedInforme.informe);
                   tipos = selectedInforme.tiposImpresion;
+                  tipo = tipos[0].tipo;
                   print('nodo seleccionado: $selectedNodeData');
                   print('lista: $tipos');
                 }
@@ -163,7 +167,8 @@ class _InformesDesktopState extends State<InformesDesktop> {
             color: colors.secondary,
             width: 1,
           ),
-          Expanded(
+          if(!generandoInforme) ... [
+            Expanded(
             child: Column(
               children: [
                 const SizedBox(height: 10,),
@@ -223,7 +228,9 @@ class _InformesDesktopState extends State<InformesDesktop> {
                       ),
                     ),
                     if(selectedNodeData.objetoArbol == 'informe')...[
+                      
                       const Spacer(),
+<<<<<<< Updated upstream
                       BottomNavigationBar(
                         showUnselectedLabels: true,
                         selectedItemColor: colors.primary,
@@ -247,12 +254,59 @@ class _InformesDesktopState extends State<InformesDesktop> {
                           BottomNavigationBarItem(
                             icon: Icon(Icons.save),
                             label: 'Generar informe',
+=======
+                      const Center(
+                        child: Text('Seleccione formato de generacion del Informe'),
+                      ),
+                      
+                      const SizedBox(height: 5,),
+                      Center(
+                        child:SizedBox(
+                          width: 370,
+                          child: CustomDropdownFormMenu(
+                            value: tipos[0],
+                            isDense: true,
+                            items: tipos.map((e) {
+                              return DropdownMenuItem(
+                                value: e,
+                                child: Text(e.descripcion),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              tipo = (value as TiposImpresion).tipo;
+                            },
+                            
+>>>>>>> Stashed changes
                           ),
-                          BottomNavigationBarItem(
-                            icon: Icon(Icons.open_in_browser),
-                            label: 'Abrir informe',
+                        ) ,
+                      ),
+                      const SizedBox(height: 20,),
+                      Container(
+                        decoration:
+                            BoxDecoration(border: Border.all(color: colors.primary)),
+                        height: MediaQuery.of(context).size.height * 0.1,
+                        child: InkWell(
+                          onTap: () async {
+                            //await generarInformePopup(context, selectedInforme);
+                            await postInforme(selectedInforme);
+                            await generarInformeCompleto(context);
+                            informeGeneradoEsS = false;
+                            setState(() {});
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.save,
+                                color: colors.primary,
+                              ),
+                              Text(
+                                'Generar Informe',
+                                style: TextStyle(color: colors.primary),
+                              )
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ]
                   ]
@@ -260,12 +314,116 @@ class _InformesDesktopState extends State<InformesDesktop> {
               ],
             ),
           ),
+          ]else...[
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: CircularProgressIndicator(
+                      color: colors.primary,
+                      strokeWidth: 5,
+                    ),
+                  ),
+                  const Text('Generando Informe, espere por favor.'),
+                  TextButton(
+                    onPressed: () async {
+                      await InformesServices().patchInforme(context, reporte, 'D', token);
+                      generandoInforme = false;
+                      setState(() {});
+                    }, 
+                    child: const Text('Cancelar'))
+                ],
+              ),
+            )
+          ],
+          
         ],
       ),
     );
   }
 
-  void generarInformePopup(BuildContext context, dynamic informe) {
+
+
+  Future<void> generarInformeCompleto(BuildContext context) async {
+    int contador = 0;
+    generandoInforme = true;
+    
+    setState(() {});
+    while (contador < 15 && informeGeneradoEsS == false && generandoInforme){
+      print(contador);
+      
+      reporte = await InformesServices().getReporte(context, rptGenId, token);
+
+      if(reporte.generado == 'S'){
+        informeGeneradoEsS = true;
+        await abrirUrl(reporte.archivoUrl, token);
+        generandoInforme = false;
+        
+      }else{
+        await Future.delayed(const Duration(seconds: 1));
+      }
+      contador++;
+    }
+    if(informeGeneradoEsS != true && generandoInforme){
+      await popUpInformeDemoro(context);
+      
+      print('informe demoro en generarse');
+    }
+    
+  }
+
+
+  Future<void> generarInformeInfinite(BuildContext context) async {
+    
+    generandoInforme = true;
+    
+    while (informeGeneradoEsS == false){
+      reporte = await InformesServices().getReporte(context, rptGenId, token);
+      if(reporte.generado == 'S'){
+        informeGeneradoEsS = true;
+        await abrirUrl(reporte.archivoUrl, token);
+        generandoInforme = false;
+      }else{
+        await Future.delayed(const Duration(seconds: 1));
+      }
+    }
+    setState(() {});
+
+  }
+
+  Future<void> popUpInformeDemoro(BuildContext context) async{
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Su informe esta tardando demasiado en generarse, quiere seguir esperando?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                generandoInforme = false;
+                await InformesServices().patchInforme(context, reporte, 'D', token);
+                Navigator.of(context).pop();
+                setState(() {});
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              child: const Text('Si'),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                print('dije SI');
+                await generarInformeInfinite(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> generarInformePopup(BuildContext context, dynamic informe) async{
     print(selectedNodeData);
     showDialog<void>(
       context: context,
@@ -295,13 +453,17 @@ class _InformesDesktopState extends State<InformesDesktop> {
             TextButton(
               onPressed: () {
                 router.pop();
+                
               },
               child: const Text('Cancelar'),
             ),
             TextButton(
               child: const Text('Generar'),
               onPressed: () async {
+                router.pop();
                 await postInforme(informe);
+                await generarInformeCompleto(context);
+                
               },
             ),
           ],
@@ -461,5 +623,6 @@ class _InformesDesktopState extends State<InformesDesktop> {
 
   postInforme(dynamic informe) async{
     await InformesServices().postGenerarInforme(context, informe, parametros, tipo, token);
+    rptGenId = context.read<OrdenProvider>().rptGenId;
   }
 }
