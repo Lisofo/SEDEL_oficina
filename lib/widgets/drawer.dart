@@ -56,7 +56,7 @@ class _BotonesDrawerState extends State<BotonesDrawer> {
 
 List<Widget> _filaBotones2(List<Opcion> opciones, BuildContext context) {
   final List<Widget> opcionesRet = [];
-  opciones.forEach((opt) {
+  for (var opt in opciones) {
     final widgetTemp = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
@@ -76,6 +76,6 @@ List<Widget> _filaBotones2(List<Opcion> opciones, BuildContext context) {
       ),
     );
     opcionesRet.add(widgetTemp);
-  });
+  }
   return opcionesRet;
 }

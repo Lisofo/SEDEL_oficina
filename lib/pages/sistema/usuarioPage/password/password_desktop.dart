@@ -166,10 +166,10 @@ class _EditPasswordDesktopState extends State<EditPasswordDesktop> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 CustomButton(
-                                  onPressed: () {
+                                  onPressed: () async {
                                     if (_formKey.currentState!.validate()) {
-                                      _userServices.patchPwd(context,userSeleccionado.usuarioId.toString(),_passwordController.text,token);
-                                      _userServices.patchPIN(context,userSeleccionado.usuarioId.toString(),_pinController.text,token);
+                                      await _userServices.patchPwd(context,userSeleccionado.usuarioId.toString(),_passwordController.text,token);
+                                      await _userServices.patchPIN(context,userSeleccionado.usuarioId.toString(),_pinController.text,token);
                                     }
                                   },
                                   text: 'Guardar',

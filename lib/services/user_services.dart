@@ -244,15 +244,18 @@ class UserServices {
   }
 
   Future patchPwd(BuildContext context, String userId, String password, String token) async {
-    String link = apiLink;
-
+    String link = '$apiLink$userId';
     try {
       var headers = {'Authorization': token};
-
-      final resp = await _dio.request(link += userId,
-          data: {"password": password},
-          options: Options(method: 'PATCH', headers: headers));
-
+      var data = {"password": password};
+      final resp = await _dio.request(
+        link,
+        data: data,
+        options: Options(
+          method: 'PATCH', 
+          headers: headers
+        )
+      );
       if (resp.statusCode == 200) {
         showDialogs(context, 'Cambio hecho correctamente', false, false);
       }

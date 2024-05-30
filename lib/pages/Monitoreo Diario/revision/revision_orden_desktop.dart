@@ -165,8 +165,12 @@ class _RevisionOrdenDesktopState extends State<RevisionOrdenDesktop> with Single
             revision: selectedRevision,
             firmas: firmas,
           ),
-          if (menu == 'Cuestionario') const RevisionCuestionarioMenu(),
-          if (menu == 'Validacion') const RevisionValidacionMenu(),
+          if (menu == 'Cuestionario') RevisionCuestionarioMenu(
+            revision: selectedRevision,
+          ),
+          if (menu == 'Validacion') RevisionValidacionMenu(
+            revision: selectedRevision,
+          ),
           if (menu == 'Materiales') RevisionMaterialesDiagnositcoMenu(
             materiales: materiales,
             revisionMaterialesList: revisionMaterialesList,

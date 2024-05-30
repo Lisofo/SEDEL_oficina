@@ -107,10 +107,10 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
       _instruccionesController.text = orden.instrucciones;
       _comentarioController.text = orden.comentarios;
       _notasClienteController.text = orden.cliente.notas;
-      if(selectedDateDesde == DateTime.now()){
+      if(selectedDateDesde == DateTime(selectedDateDesde.year, selectedDateDesde.month, selectedDateDesde.day, selectedDateDesde.hour, selectedDateDesde.minute, 0)){
         selectedDateDesde = orden.fechaDesde;
       }
-      if(selectedDateHasta == DateTime.now()){
+      if(selectedDateHasta == DateTime(selectedDateHasta.year, selectedDateHasta.month, selectedDateHasta.day, selectedDateHasta.hour, selectedDateHasta.minute, 0)){
         selectedDateHasta = orden.fechaHasta;
       }
       if(serviciosSeleccionados.isEmpty){
@@ -550,42 +550,47 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                           ),
                           const SizedBox(height: 10),
                           const Text(
-                          'Instrucciones: ',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
+                            'Instrucciones: ',
+                              style: TextStyle(
+                              fontSize: 16, 
+                              fontWeight: FontWeight.w600
+                            ),
                           ),
                           Container(
                             width: MediaQuery.of(context).size.width * 0.45,
                             decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: colors.primary,
-                                    width: 2),
-                                borderRadius: BorderRadius.circular(5)),
+                              border: Border.all(
+                                color: colors.primary,
+                                width: 2
+                              ),
+                              borderRadius: BorderRadius.circular(5)
+                            ),
                             child: TextFormField(
                               enabled: editarOrden,
                               maxLines: 8,
                               minLines: 2,
                               controller: _instruccionesController,
                               decoration: const InputDecoration(
-                                  border: InputBorder.none,
-                                  fillColor: Colors.white,
-                                  filled: true),
+                                border: InputBorder.none,
+                                fillColor: Colors.white,
+                                filled: true
+                              ),
                             ),
                           ),
                           const SizedBox(height: 10,),
                           const Text(
-                            '*  Comentario:',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
-                          ),
-                          
+                            'Comentario:',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                          ),    
                           Container(
                             width: MediaQuery.of(context).size.width * 0.45,
                             decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: colors.primary,
-                                    width: 2),
-                                borderRadius: BorderRadius.circular(5)),
+                              border: Border.all(
+                                color: colors.primary,
+                                width: 2
+                              ),
+                              borderRadius: BorderRadius.circular(5)
+                            ),
                             child: TextFormField(
                               enabled: editarOrden,
                               maxLines: 8,

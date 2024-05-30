@@ -4,13 +4,15 @@ import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/config.dart';
 import 'package:sedel_oficina_maqueta/models/control_orden.dart';
 import 'package:sedel_oficina_maqueta/models/orden.dart';
+import 'package:sedel_oficina_maqueta/models/revision_orden.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/orden_control_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 
 class RevisionCuestionarioMenu extends StatefulWidget {
-  const RevisionCuestionarioMenu({super.key});
+  final RevisionOrden? revision;
+  const RevisionCuestionarioMenu({super.key, required this.revision});
 
   @override
   State<RevisionCuestionarioMenu> createState() => _RevisionCuestionarioMenuState();
@@ -41,7 +43,7 @@ class _RevisionCuestionarioMenuState extends State<RevisionCuestionarioMenu> {
     token = context.read<OrdenProvider>().token;
     orden = context.read<OrdenProvider>().orden;
     revisionId = context.read<OrdenProvider>().revisionId;
-    controles = await OrdenControlServices().getControlOrden(context, orden, token);
+    controles = await OrdenControlServices().getControlOrden(context, orden, widget.revision!.otRevisionId, token);
     
     for(var i = 0; i < controles.length; i++){
       models.add(controles[i].grupo);
@@ -134,7 +136,13 @@ class _RevisionCuestionarioMenuState extends State<RevisionCuestionarioMenu> {
                         borderWidth: 2,
                         borderRadius: BorderRadius.circular(5),
                         fillColor: colors.primary,
-                        onPressed: (i){
+                        onPressed: (i) async {
+                          if (widget.revision?.ordinal == 0) {
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                              content: Text('No se puede modificar esta revisión.'),
+                            ));
+                            return Future.value(false);
+                          }
                           setState(() {
                             
                             selections[0] = false;
@@ -177,6 +185,12 @@ class _RevisionCuestionarioMenuState extends State<RevisionCuestionarioMenu> {
               color: Colors.transparent,
               child: CustomButton(
                 onPressed: () async {
+                  if (widget.revision?.ordinal == 0) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('No se puede modificar esta revisión.'),
+                    ));
+                    return Future.value(false);
+                  }
                   await postPut(context);
                 },
                 text: 'Guardar',
@@ -206,9 +220,9 @@ class _RevisionCuestionarioMenuState extends State<RevisionCuestionarioMenu> {
   Future<void> postPut(BuildContext context) async {
     for(var i = 0; i < controles.length; i++){
       if(controles[i].controlRegId == 0 && controles[i].respuesta.isNotEmpty){
-        await OrdenControlServices().postControl(context, orden, controles[i], token);
+        await OrdenControlServices().postControl(context, orden, controles[i], widget.revision!.otRevisionId, token);
       }else{
-        await OrdenControlServices().putControl(context, orden, controles[i], token);
+        await OrdenControlServices().putControl(context, orden, controles[i], widget.revision!.otRevisionId, token);
       }
     }
     await OrdenControlServices.showDialogs(context, 'Controles actualizados correctamente', false, false);

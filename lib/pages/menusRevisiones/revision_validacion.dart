@@ -3,12 +3,13 @@ import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/config.dart';
 import 'package:sedel_oficina_maqueta/models/control_orden.dart';
 import 'package:sedel_oficina_maqueta/models/orden.dart';
+import 'package:sedel_oficina_maqueta/models/revision_orden.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/orden_control_services.dart';
-import 'package:sedel_oficina_maqueta/widgets/custom_button.dart';
 
 class RevisionValidacionMenu extends StatefulWidget {
-  const RevisionValidacionMenu({super.key});
+  final RevisionOrden? revision;
+  const RevisionValidacionMenu({super.key, required this.revision});
 
   @override
   State<RevisionValidacionMenu> createState() => _RevisionValidacionMenuState();
@@ -33,7 +34,7 @@ class _RevisionValidacionMenuState extends State<RevisionValidacionMenu> {
   cargarDatos() async {
     token = context.read<OrdenProvider>().token;
     orden = context.read<OrdenProvider>().orden;
-    controles = await OrdenControlServices().getControlOrden(context, orden, token);
+    controles = await OrdenControlServices().getControlOrden(context, orden, widget.revision!.otRevisionId,token);
     listaGenerica = controles.where((element) => element.controlRegId == 0).toList();
     count = listaGenerica.length;
     if(count == 0){
