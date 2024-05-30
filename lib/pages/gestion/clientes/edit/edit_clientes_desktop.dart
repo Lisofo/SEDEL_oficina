@@ -586,6 +586,12 @@ class _BodyState extends State<Body> {
                       ),
                     ),
                     const SizedBox(height: 10,),
+                    const Text('Notas del cliente',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
                     SizedBox(
                       width: 500,
                       height: 300,
