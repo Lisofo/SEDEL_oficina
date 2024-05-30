@@ -230,31 +230,6 @@ class _InformesDesktopState extends State<InformesDesktop> {
                     if(selectedNodeData.objetoArbol == 'informe')...[
                       
                       const Spacer(),
-<<<<<<< Updated upstream
-                      BottomNavigationBar(
-                        showUnselectedLabels: true,
-                        selectedItemColor: colors.primary,
-                        unselectedItemColor: colors.primary,
-                        onTap: (index) async {
-                          buttonIndex = index;
-                          switch (buttonIndex){
-                            case 0: 
-                              generarInformePopup(context, selectedInforme);
-                            break;
-                            case 1:
-                            rptGenId = context.read<OrdenProvider>().rptGenId;
-                              reporte = await InformesServices().getReporte(context, rptGenId, token);
-                              if(reporte.generado == 'S'){
-                                await abrirUrl(reporte.archivoUrl, token);
-                              } 
-                            break;
-                          }
-                        },
-                        items: const [
-                          BottomNavigationBarItem(
-                            icon: Icon(Icons.save),
-                            label: 'Generar informe',
-=======
                       const Center(
                         child: Text('Seleccione formato de generacion del Informe'),
                       ),
@@ -276,7 +251,6 @@ class _InformesDesktopState extends State<InformesDesktop> {
                               tipo = (value as TiposImpresion).tipo;
                             },
                             
->>>>>>> Stashed changes
                           ),
                         ) ,
                       ),
