@@ -52,6 +52,8 @@ class _InformesMobileState extends State<InformesMobile> {
   late MaskTextInputFormatter maskFormatter;
   late int rptGenId = 0;
   late Reporte reporte = Reporte.empty();
+  late bool generandoInforme = false;
+  late bool informeGeneradoEsS = false;
 
   @override
   void initState() {
@@ -127,6 +129,7 @@ class _InformesMobileState extends State<InformesMobile> {
                   selectedInforme = item.data;
                   // print(selectedInforme.informe);
                   tipos = selectedInforme.tiposImpresion;
+                  tipo = tipos[0].tipo;
                   print('nodo seleccionado: $selectedNodeData');
                   print('lista: $tipos');
                 }
@@ -166,113 +169,258 @@ class _InformesMobileState extends State<InformesMobile> {
       body: Flex(
         direction: Axis.vertical,
         children: [
-          Expanded(
-            child: Column(
-              children: [
-                const SizedBox(height: 10,),
-                Text('Parametros del informe: $nombreInforme'),
-                Divider(
-                  color: colors.primary,
-                  endIndent: 20,
-                  indent: 20,
-                ),
-                if (selectedNodeData != null) ...[
-                  if(parametros.isNotEmpty)...[
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.7,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: ListView.builder(
-                          itemCount: parametros.length,
-                          itemBuilder: (context, i) {
-                            var parametro = parametros[i];
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                TextButton(
-                                  onPressed: () async {
-                                    if (parametro.control == 'D') {
-                                      await _selectDate(context, parametro.parametro, parametro.tipo, parametro);
-                                      print(parametro.parametro);
-                                    } else if(parametro.control == 'L'){
-                                      final cliente = await showSearch(
-                                        context: context, 
-                                        delegate: ParametroClientSearchDelegate('Buscar cliente', historial, parametro.informeId, parametro.parametroId, parametro.dependeDe, parametros)
-                                      );
-                                      if(cliente != null) {
-                                        parametro.valor = cliente.id.toString();
-                                        parametro.valorAMostrar = cliente.descripcion;
-                                        setState(() {});
-                                        
-                                      } else{
-                                        parametro.valor = '';
-                                        parametro.valorAMostrar = '';
+          if(!generandoInforme) ... [
+            Expanded(
+              child: Column(
+                children: [
+                  const SizedBox(height: 10,),
+                  Text('Parametros del informe: $nombreInforme'),
+                  Divider(
+                    color: colors.primary,
+                    endIndent: 20,
+                    indent: 20,
+                  ),
+                  if (selectedNodeData != null) ...[
+                    if(parametros.isNotEmpty)...[
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.6,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: ListView.builder(
+                            itemCount: parametros.length,
+                            itemBuilder: (context, i) {
+                              var parametro = parametros[i];
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextButton(
+                                    onPressed: () async {
+                                      if (parametro.control == 'D') {
+                                        await _selectDate(context, parametro.parametro, parametro.tipo, parametro);
+                                        print(parametro.parametro);
+                                      } else if(parametro.control == 'L'){
+                                        final cliente = await showSearch(
+                                          context: context, 
+                                          delegate: ParametroClientSearchDelegate('Buscar cliente', historial, parametro.informeId, parametro.parametroId, parametro.dependeDe, parametros)
+                                        );
+                                        if(cliente != null) {
+                                          parametro.valor = cliente.id.toString();
+                                          parametro.valorAMostrar = cliente.descripcion;
+                                          setState(() {});
+                                          
+                                        } else{
+                                          parametro.valor = '';
+                                          parametro.valorAMostrar = '';
+                                        }
+                                      } else {
+                                        await _showPopup(context, parametro);
+                                        print(parametro.valor);
+                                        print(parametro.valorAMostrar);
                                       }
-                                    } else {
-                                      await _showPopup(context, parametro);
-                                      print(parametro.valor);
-                                      print(parametro.valorAMostrar);
-                                    }
-                                  },
-                                  
-                                  child: SizedBox(
-                                    width: MediaQuery.of(context).size.width * 0.4,
-                                    child: Text(parametro.parametro, textAlign: TextAlign.center),
+                                    },
+                                    
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width * 0.4,
+                                      child: Text(parametro.obligatorio == 'S' ? '* ${parametro.parametro}': parametro.parametro, 
+                                        textAlign: TextAlign.center
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                Text(parametro.comparador,),
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.4,
-                                  child: Text(parametro.valorAMostrar.toString(), textAlign: TextAlign.center)
-                                )
-                              ],
-                            );
-                          }
+                                  Text(parametro.comparador,),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width * 0.4,
+                                    child: Text(parametro.valorAMostrar.toString(), textAlign: TextAlign.center)
+                                  )
+                                ],
+                              );
+                            }
+                          ),
                         ),
                       ),
-                    ),
-                    if(selectedNodeData.objetoArbol == 'informe')...[
-                      const Spacer(),
-                      BottomNavigationBar(
-                        showUnselectedLabels: true,
-                        selectedItemColor: colors.primary,
-                        unselectedItemColor: colors.primary,
-                        onTap: (index) async {
-                          buttonIndex = index;
-                          switch (buttonIndex){
-                            case 0: 
-                              generarInformePopup(context, selectedInforme);
-                            break;
-                            case 1:
-                            rptGenId = context.read<OrdenProvider>().rptGenId;
-                              reporte = await InformesServices().getReporte(context, rptGenId, token);
-                              if(reporte.generado == 'S'){
-                                await abrirUrl(reporte.archivoUrl, token);
-                              } 
-                            break;
-                          }
-                        },
-                        items: const [
-                          BottomNavigationBarItem(
-                            icon: Icon(Icons.save),
-                            label: 'Generar informe',
+                      if(selectedNodeData.objetoArbol == 'informe')...[
+                        const Spacer(),
+                        const Center(
+                          child: Text('Seleccione formato de generacion del Informe'),
+                        ),
+                        
+                        const SizedBox(height: 5,),
+                        Center(
+                          child:SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            child: CustomDropdownFormMenu(
+                              value: tipos[0],
+                              isDense: true,
+                              items: tipos.map((e) {
+                                return DropdownMenuItem(
+                                  value: e,
+                                  child: Text(e.descripcion),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                tipo = (value as TiposImpresion).tipo;
+                              },
+                              
+                            ),
+                          ) ,
+                        ),
+                        const SizedBox(height: 20,),
+                        Container(
+                          decoration:
+                              BoxDecoration(border: Border.all(color: colors.primary)),
+                          height: MediaQuery.of(context).size.height * 0.1,
+                          child: InkWell(
+                            onTap: () async {
+                              int contador = 0;
+                              bool encontreVacios = false;
+                              while (contador < parametros.length && !encontreVacios){
+                                Parametro parametro = parametros[contador];
+                                if (parametro.obligatorio == 'S' && parametro.valor == ''){
+                                  encontreVacios = true;
+                                }
+                                contador++;
+                              }
+                              if(!encontreVacios){
+                                await postInforme(selectedInforme);
+                                await generarInformeCompleto(context);
+                                informeGeneradoEsS = false;
+                                setState(() {});
+                                tipo = tipos[0].tipo;
+                              }else{
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Hay campos obligatorios sin completar'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.save,
+                                  color: colors.primary,
+                                ),
+                                Text(
+                                  'Generar Informe',
+                                  style: TextStyle(color: colors.primary),
+                                )
+                              ],
+                            ),
                           ),
-                          BottomNavigationBarItem(
-                            icon: Icon(Icons.open_in_browser),
-                            label: 'Abrir informe',
-                          ),
-                        ],
-                      ),
+                        ),
+                      ]
                     ]
-                  ]
+                  ],
                 ],
-              ],
+              ),
             ),
-          ),
-        ],
+          ]else... [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: CircularProgressIndicator(
+                      color: colors.primary,
+                      strokeWidth: 5,
+                    ),
+                  ),
+                  const Text('Generando Informe, espere por favor.'),
+                  TextButton(
+                    onPressed: () async {
+                      await InformesServices().patchInforme(context, reporte, 'D', token);
+                      generandoInforme = false;
+                      setState(() {});
+                    }, 
+                    child: const Text('Cancelar'))
+                ],
+              ),
+            )
+          ]
+        ]
       ),
     );
   }
+
+  Future<void> generarInformeCompleto(BuildContext context) async {
+    int contador = 0;
+    generandoInforme = true;
+    
+    setState(() {});
+    while (contador < 15 && informeGeneradoEsS == false && generandoInforme){
+      print(contador);
+      
+      reporte = await InformesServices().getReporte(context, rptGenId, token);
+
+      if(reporte.generado == 'S'){
+        informeGeneradoEsS = true;
+        await abrirUrl(reporte.archivoUrl, token);
+        generandoInforme = false;
+        
+      }else{
+        await Future.delayed(const Duration(seconds: 1));
+      }
+      contador++;
+    }
+    if(informeGeneradoEsS != true && generandoInforme){
+      await popUpInformeDemoro(context);
+      
+      print('informe demoro en generarse');
+    }
+    
+  }
+
+  Future<void> popUpInformeDemoro(BuildContext context) async{
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Su informe esta tardando demasiado en generarse, quiere seguir esperando?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                generandoInforme = false;
+                await InformesServices().patchInforme(context, reporte, 'D', token);
+                Navigator.of(context).pop();
+                setState(() {});
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              child: const Text('Si'),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                print('dije SI');
+                await generarInformeInfinite(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> generarInformeInfinite(BuildContext context) async {
+    
+    generandoInforme = true;
+    
+    while (informeGeneradoEsS == false){
+      reporte = await InformesServices().getReporte(context, rptGenId, token);
+      if(reporte.generado == 'S'){
+        informeGeneradoEsS = true;
+        await abrirUrl(reporte.archivoUrl, token);
+        generandoInforme = false;
+      }else{
+        await Future.delayed(const Duration(seconds: 1));
+      }
+    }
+    setState(() {});
+
+  }
+
+
 
   void generarInformePopup(BuildContext context, dynamic informe) {
     print(selectedNodeData);
@@ -385,13 +533,10 @@ class _InformesMobileState extends State<InformesMobile> {
                       parametro.valor = _controllers[parametro.parametro]?.text;
                       parametro.valorAMostrar = _controllers[parametro.parametro]?.text;
                     }
-                  }else{
-                    parametro.valor = _controllers[parametro.parametro]?.text;
-                    parametro.valorAMostrar = _controllers[parametro.parametro]?.text;
-                    router.pop();
                   }
+                }else{
+                  router.pop();
                 }
-                
                 setState(() {});
               },
             ),
@@ -470,6 +615,7 @@ class _InformesMobileState extends State<InformesMobile> {
 
   postInforme(dynamic informe) async{
     await InformesServices().postGenerarInforme(context, informe, parametros, tipo, token);
+    rptGenId = context.read<OrdenProvider>().rptGenId;
   }
 
 }

@@ -215,7 +215,7 @@ class _InformesDesktopState extends State<InformesDesktop> {
                                       print(parametro.valorAMostrar);
                                     }
                                   },
-                                  child: Text(parametro.parametro),
+                                  child: Text(parametro.obligatorio == 'S' ? '* ${parametro.parametro}': parametro.parametro),
                                 ),
                                 const SizedBox(width: 30,),
                                 Text(parametro.comparador),
@@ -260,11 +260,30 @@ class _InformesDesktopState extends State<InformesDesktop> {
                         height: MediaQuery.of(context).size.height * 0.1,
                         child: InkWell(
                           onTap: () async {
-                            //await generarInformePopup(context, selectedInforme);
-                            await postInforme(selectedInforme);
-                            await generarInformeCompleto(context);
-                            informeGeneradoEsS = false;
-                            setState(() {});
+                            int contador = 0;
+                            bool encontreVacios = false;
+                            while (contador < parametros.length && !encontreVacios){
+                              Parametro parametro = parametros[contador];
+                              if (parametro.obligatorio == 'S' && parametro.valor == ''){
+                                encontreVacios = true;
+                              }
+                              contador++;
+                            }
+                            if(!encontreVacios){
+                              await postInforme(selectedInforme);
+                              await generarInformeCompleto(context);
+                              informeGeneradoEsS = false;
+                              setState(() {});
+                              tipo = tipos[0].tipo;
+                            }else{
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Hay campos obligatorios sin completar'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
