@@ -50,7 +50,7 @@ class _RevisionCuestionarioMenuState extends State<RevisionCuestionarioMenu> {
     }
     Set<String> conjunto = Set.from(models);
     grupos = conjunto.toList();
-preguntasFiltradas = widget.controles.where((objeto) => objeto.grupo == selectedPregunta).toList();
+    preguntasFiltradas = widget.controles.where((objeto) => objeto.grupo == selectedPregunta).toList();
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
