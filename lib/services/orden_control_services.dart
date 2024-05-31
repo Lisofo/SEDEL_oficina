@@ -95,14 +95,20 @@ class OrdenControlServices{
     }
   }
 
-  Future putControl(BuildContext context,Orden orden, ControlOrden control, int otRevisionId, String token) async {
+  Future putControl(BuildContext context, Orden orden, ControlOrden control, int revisionId, String token) async {
+    var data = control.toMap();
+    print(data);
     try {
-      String link = '$apiLink${orden.ordenTrabajoId}/revisiones/$otRevisionId/controles/${control.controlRegId}';
+      String link = '$apiLink${orden.ordenTrabajoId}/revisiones/$revisionId/controles/${control.controlRegId}';
       var headers = {'Authorization': token};
-
-      final resp = await _dio.request(link,
-          data: control.toMap(),
-          options: Options(method: 'PUT', headers: headers));
+      final resp = await _dio.request(
+        link,
+        data: data,
+        options: Options(
+          method: 'PUT', 
+          headers: headers
+        )
+      );
 
       if (resp.statusCode == 200) { }
       return;
@@ -130,9 +136,10 @@ class OrdenControlServices{
     }
   }
 
-  Future postControl(BuildContext context, Orden orden, ControlOrden control, int otRevisionId,String token) async {
+
+  Future postControl(BuildContext context, Orden orden, ControlOrden control, int revisionId, String token) async {
     try {
-       String link = '$apiLink${orden.ordenTrabajoId}/revisiones/$otRevisionId/controles/${control.controlRegId}';
+      String link = '$apiLink${orden.ordenTrabajoId}/revisiones/$revisionId/controles/';
       var headers = {'Authorization': token};
       var data = control.toMap();
       final resp = await _dio.request(link,

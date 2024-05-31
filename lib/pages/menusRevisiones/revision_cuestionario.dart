@@ -12,7 +12,8 @@ import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 
 class RevisionCuestionarioMenu extends StatefulWidget {
   final RevisionOrden? revision;
-  const RevisionCuestionarioMenu({super.key, required this.revision});
+  final List<ControlOrden> controles;
+  const RevisionCuestionarioMenu({super.key, required this.revision, required this.controles});
 
   @override
   State<RevisionCuestionarioMenu> createState() => _RevisionCuestionarioMenuState();
@@ -22,16 +23,11 @@ class _RevisionCuestionarioMenuState extends State<RevisionCuestionarioMenu> {
   String selectedPregunta = '';
   final TextEditingController comentarioController = TextEditingController();
   late Orden orden = Orden.empty();
-
-  List<ControlOrden> controles =[];
   String token = '';
   List<String> grupos = [];
   List<ControlOrden> preguntasFiltradas = [];
   List<String> models = [];
   late int revisionId = 0;
-
-
-  
 
   @override
   void initState() {
@@ -42,15 +38,6 @@ class _RevisionCuestionarioMenuState extends State<RevisionCuestionarioMenu> {
   cargarDatos() async {
     token = context.read<OrdenProvider>().token;
     orden = context.read<OrdenProvider>().orden;
-    revisionId = context.read<OrdenProvider>().revisionId;
-    controles = await OrdenControlServices().getControlOrden(context, orden, widget.revision!.otRevisionId, token);
-    
-    for(var i = 0; i < controles.length; i++){
-      models.add(controles[i].grupo);
-    }
-    Set<String> conjunto = Set.from(models);
-    grupos = conjunto.toList();
-
     setState(() {});
   }
 
@@ -58,6 +45,12 @@ class _RevisionCuestionarioMenuState extends State<RevisionCuestionarioMenu> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    for(var i = 0; i < widget.controles.length; i++){
+      models.add(widget.controles[i].grupo);
+    }
+    Set<String> conjunto = Set.from(models);
+    grupos = conjunto.toList();
+preguntasFiltradas = widget.controles.where((objeto) => objeto.grupo == selectedPregunta).toList();
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -86,7 +79,7 @@ class _RevisionCuestionarioMenuState extends State<RevisionCuestionarioMenu> {
                 onChanged: (value) {
                   setState(() {
                     selectedPregunta = value!;
-                    preguntasFiltradas = controles.where((objeto) => objeto.grupo == selectedPregunta).toList();
+                    preguntasFiltradas = widget.controles.where((objeto) => objeto.grupo == selectedPregunta).toList();
                     for (var element in preguntasFiltradas) {element.pregunta;}
                   });
                 },
@@ -100,7 +93,6 @@ class _RevisionCuestionarioMenuState extends State<RevisionCuestionarioMenu> {
               itemBuilder: (context, i) {
                 final ControlOrden pregunta = preguntasFiltradas[i];
                 List<bool> selections = List.generate(3, (_) => false);
-    
                 if(pregunta.respuesta.isNotEmpty){
                   if(pregunta.respuesta == 'APRUEBA'){
                     selections[0] = true;
@@ -200,29 +192,14 @@ class _RevisionCuestionarioMenuState extends State<RevisionCuestionarioMenu> {
           ],
         ),
       );
-    //   bottomNavigationBar: BottomAppBar(
-    //     notchMargin: 10,
-    //     elevation: 0,
-    //     shape: const CircularNotchedRectangle(),
-    //     color: Colors.grey.shade200,
-    //     child: CustomButton(
-    //       onPressed: () async {
-    //         await postPut(context);
-    //       },
-    //       text: 'Guardar',
-    //       tamano: 20,
-    //     ),
-    //   ),
-    //   backgroundColor: Colors.grey.shade200,
-    // );
   }
 
   Future<void> postPut(BuildContext context) async {
-    for(var i = 0; i < controles.length; i++){
-      if(controles[i].controlRegId == 0 && controles[i].respuesta.isNotEmpty){
-        await OrdenControlServices().postControl(context, orden, controles[i], widget.revision!.otRevisionId, token);
+    for(var i = 0; i < widget.controles.length; i++){
+      if(widget.controles[i].controlRegId == 0 && widget.controles[i].respuesta.isNotEmpty){
+        await OrdenControlServices().postControl(context, orden, widget.controles[i], widget.revision!.otRevisionId, token);
       }else{
-        await OrdenControlServices().putControl(context, orden, controles[i], widget.revision!.otRevisionId, token);
+        await OrdenControlServices().putControl(context, orden, widget.controles[i], widget.revision!.otRevisionId, token);
       }
     }
     await OrdenControlServices.showDialogs(context, 'Controles actualizados correctamente', false, false);

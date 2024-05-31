@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
+import 'package:sedel_oficina_maqueta/models/control_orden.dart';
 import 'package:sedel_oficina_maqueta/models/material.dart';
 import 'package:sedel_oficina_maqueta/models/observacion.dart';
 import 'package:sedel_oficina_maqueta/models/orden.dart';
@@ -22,6 +23,7 @@ import 'package:sedel_oficina_maqueta/pages/menusRevisiones/revision_validacion.
 import 'package:sedel_oficina_maqueta/provider/menu_provider.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/materiales_services.dart';
+import 'package:sedel_oficina_maqueta/services/orden_control_services.dart';
 import 'package:sedel_oficina_maqueta/services/orden_services.dart';
 import 'package:sedel_oficina_maqueta/services/plaga_services.dart';
 import 'package:sedel_oficina_maqueta/services/ptos_services.dart';
@@ -64,6 +66,7 @@ class _RevisionOrdenMobileState extends State<RevisionOrdenMobile> with SingleTi
   bool filtro = false;
   int buttonIndex = 0;
   String valorComentario = '';
+  List<ControlOrden> controles =[];
 
   @override
   void initState() {
@@ -87,6 +90,7 @@ class _RevisionOrdenMobileState extends State<RevisionOrdenMobile> with SingleTi
     revisiones = await RevisionServices().getRevision(context, orden, token);
     observacion = observaciones.isNotEmpty ? observaciones[0] : Observacion.empty();
     Provider.of<OrdenProvider>(context, listen: false).setRevisionId(revisionId);
+    controles = await OrdenControlServices().getControlOrden(context, orden, revisionId, token);
 
     setState(() {});
     
@@ -240,9 +244,11 @@ class _RevisionOrdenMobileState extends State<RevisionOrdenMobile> with SingleTi
             firmas: firmas,
           ),
           if (menu == 'Cuestionario') RevisionCuestionarioMenu(
+            controles: controles,
             revision: selectedRevision,
           ),
           if (menu == 'Validacion') RevisionValidacionMenu(
+            controles: controles,
             revision: selectedRevision,
           ),
           if (menu == 'Materiales') RevisionMaterialesDiagnositcoMenu(
@@ -260,6 +266,7 @@ class _RevisionOrdenMobileState extends State<RevisionOrdenMobile> with SingleTi
   Future<void> cambioDeRevision(value, BuildContext context) async {
     selectedRevision = value;
     revisionId = (value as RevisionOrden).otRevisionId;
+    print(revisionId);
     Provider.of<OrdenProvider>(context, listen: false).setRevisionId(revisionId);
     revisionMaterialesList = await MaterialesServices().getRevisionMateriales(context, orden, revisionId, token);
     revisionTareasList = await RevisionServices().getRevisionTareas(context, orden, revisionId, token);
@@ -268,9 +275,9 @@ class _RevisionOrdenMobileState extends State<RevisionOrdenMobile> with SingleTi
     observacion = observaciones.isNotEmpty ? observaciones[0] : Observacion.empty();
     ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token);
     firmas = await RevisionServices().getRevisionFirmas(context, orden, revisionId, token);
-
+    controles = await OrdenControlServices().getControlOrden(context, orden, revisionId, token);
+    print(controles[0]);
     setState(() {});
-    
   }
 
 void _showCreateCopyDialog(BuildContext context) {
