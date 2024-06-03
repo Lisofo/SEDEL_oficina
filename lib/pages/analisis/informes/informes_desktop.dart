@@ -555,13 +555,13 @@ class _InformesDesktopState extends State<InformesDesktop> {
       setState(() {
         selectedDate = picked;
         if (tipo == 'D') {
-          parametro.valor = DateFormat('y/M/d', 'es').format(picked);
+          parametro.valor = DateFormat('yyyy-MM-dd HH:mm:ss', 'es').format(DateTime(picked.year, picked.month, picked.day, 0,0,0));
           parametro.valorAMostrar = DateFormat('y/M/d', 'es').format(picked);
         } else if (tipo == 'Dd') {
-          parametro.valor = DateFormat('y/M/d', 'es').format(picked);
+          parametro.valor = DateFormat('yyyy-MM-dd HH:mm:ss', 'es').format(DateTime(picked.year, picked.month, picked.day, 0,0,0));
           parametro.valorAMostrar = DateFormat('y/M/d', 'es').format(picked);
         } else if (tipo == 'Dh') {
-          parametro.valor = DateFormat('y/M/d', 'es').format(picked);
+          parametro.valor = DateFormat('yyyy-MM-dd HH:mm:ss', 'es').format(DateTime(picked.year, picked.month, picked.day, 23,59,59));
           parametro.valorAMostrar = DateFormat('y/M/d', 'es').format(picked);
         }
       });
