@@ -558,13 +558,13 @@ class _InformesMobileState extends State<InformesMobile> {
       setState(() {
         selectedDate = picked;
         if (tipo == 'D') {
-          parametro.valor = DateFormat('yyyy-MM-dd HH:mm:ss', 'es').format(DateTime(picked.year, picked.month, picked.day, 0,0,0));
+          parametro.valor = DateFormat('yyyy-MM-dd HH:mm:ss.SSS', 'es').format(DateTime(picked.year, picked.month, picked.day, 0,0,0,0));
           parametro.valorAMostrar = DateFormat('y/M/d', 'es').format(picked);
         } else if (tipo == 'Dd') {
-          parametro.valor = DateFormat('yyyy-MM-dd HH:mm:ss', 'es').format(DateTime(picked.year, picked.month, picked.day, 0,0,0));
+          parametro.valor = DateFormat('yyyy-MM-dd HH:mm:ss.SSS', 'es').format(DateTime(picked.year, picked.month, picked.day, 0,0,0,0));
           parametro.valorAMostrar = DateFormat('y/M/d', 'es').format(picked);
         } else if (tipo == 'Dh') {
-          parametro.valor = DateFormat('yyyy-MM-dd HH:mm:ss', 'es').format(DateTime(picked.year, picked.month, picked.day, 23,59,59));
+          parametro.valor = DateFormat('yyyy-MM-dd HH:mm:ss.SSS', 'es').format(DateTime(picked.year, picked.month, picked.day, 23,59,59,0));
           parametro.valorAMostrar = DateFormat('y/M/d', 'es').format(picked);
         }
       });
