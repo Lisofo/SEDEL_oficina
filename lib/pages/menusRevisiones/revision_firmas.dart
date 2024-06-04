@@ -285,7 +285,7 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                   padding: const EdgeInsets.all(10),
                   child: CustomButton(
                     onPressed: () async {
-                      if (widget.revision?.ordinal == 0) {
+                      if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text('No se puede modificar esta revisión.'),
                       ));

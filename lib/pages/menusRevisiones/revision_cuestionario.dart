@@ -129,7 +129,7 @@ class _RevisionCuestionarioMenuState extends State<RevisionCuestionarioMenu> {
                         borderRadius: BorderRadius.circular(5),
                         fillColor: colors.primary,
                         onPressed: (i) async {
-                          if (widget.revision?.ordinal == 0) {
+                          if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
                             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                               content: Text('No se puede modificar esta revisión.'),
                             ));
@@ -177,7 +177,7 @@ class _RevisionCuestionarioMenuState extends State<RevisionCuestionarioMenu> {
               color: Colors.transparent,
               child: CustomButton(
                 onPressed: () async {
-                  if (widget.revision?.ordinal == 0) {
+                  if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text('No se puede modificar esta revisión.'),
                     ));

@@ -194,7 +194,7 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
               hint: const Text("Selecciona un material"),
               value: materialInicial,
               onChanged: (newValue) async {
-                if (widget.revision?.ordinal == 0) {
+                if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text('No se puede modificar esta revisión.'),
                   ));
@@ -233,7 +233,7 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
                   key: Key(item.toString()),
                   direction: DismissDirection.endToStart,
                   confirmDismiss: (DismissDirection direction) async {
-                    if (widget.revision?.ordinal == 0) {
+                    if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text('No se puede modificar esta revisión.'),
                       ));
@@ -294,7 +294,7 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
                       child: ListTile(
                         trailing: IconButton(
                             onPressed: () async {
-                              if (widget.revision?.ordinal == 0) {
+                              if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
                                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                   content: Text('No se puede modificar esta revisión.'),
                                 ));

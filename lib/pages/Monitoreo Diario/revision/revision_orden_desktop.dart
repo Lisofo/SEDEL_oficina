@@ -195,23 +195,41 @@ class _RevisionOrdenDesktopState extends State<RevisionOrdenDesktop> with Single
             const Spacer(),
             CustomButton(
               text: 'Orden revisada', 
-              onPressed: (){
-                cambiarEstado();
+              onPressed: () async {
+                if (orden.estado == 'REVISADA') {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text('No se puede cambiar el estado.'),
+                ));
+                return Future.value(false);
+              }
+                await cambiarEstado();
               },
               tamano: 20,
             ),
             const SizedBox(width: 10,),
             CustomButton(
-              onPressed: (){
-                _showCreateDeleteDialog(context);
+              onPressed: () async {
+                if (orden.estado == 'REVISADA') {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text('No se puede borrar revisiones.'),
+                ));
+                return Future.value(false);
+              }
+                await _showCreateDeleteDialog(context);
               },
               text: 'Borrar revisión',
               tamano: 20,
             ),
             const SizedBox(width: 10,),
             CustomButton(
-              onPressed: (){
-                _showCreateCopyDialog(context);
+              onPressed: () async {
+                if (orden.estado == 'REVISADA') {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text('No se puede crear nuevas revisiones.'),
+                ));
+                return Future.value(false);
+              }
+                await _showCreateCopyDialog(context);
               },
               text: 'Crear copia',
               tamano: 20,
@@ -239,7 +257,7 @@ class _RevisionOrdenDesktopState extends State<RevisionOrdenDesktop> with Single
     // setState(() {});
   }
 
-void _showCreateCopyDialog(BuildContext context) {
+ _showCreateCopyDialog(BuildContext context) {
   final colors = Theme.of(context).colorScheme;
   showDialog(
     context: context,
@@ -325,7 +343,7 @@ void _showCreateCopyDialog(BuildContext context) {
   );
 }
 
-void _showCreateDeleteDialog(BuildContext context) {
+_showCreateDeleteDialog(BuildContext context) {
   RevisionOrden? selectedRevision; // Variable para almacenar la revisión seleccionada
 
   showDialog(
@@ -426,7 +444,7 @@ void _showCreateDeleteDialog(BuildContext context) {
     return opciones;
   }
 
-  void cambiarEstado() {
+  cambiarEstado() {
     late String nuevoEstado = 'REVISADA';
 
     showDialog(

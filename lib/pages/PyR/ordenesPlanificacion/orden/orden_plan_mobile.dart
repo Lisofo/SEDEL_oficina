@@ -112,6 +112,14 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
   cargarDatos() async {
     token = context.read<OrdenProvider>().token;
     tipoOrden = await OrdenServices().getTipoOrden(context, token);
+    tipoOrden.insert(
+      0,
+      TipoOrden(
+        tipoOrdenId: 0, 
+        codTipoOrden: '0', 
+        descripcion: 'TODAS'
+      )
+    );
     setState(() {});
   }
 

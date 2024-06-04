@@ -160,7 +160,7 @@ class _RevisionPtosInspeccionDesktopState extends State<RevisionPtosInspeccionDe
               IconButton(
                 onPressed: () {
                   if (selectedTipoPto.tipoPuntoInspeccionId != 0) {
-                    if (widget.revision?.ordinal == 0) {
+                    if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text('No se puede modificar esta revisión.'),
                       ));
@@ -244,7 +244,7 @@ class _RevisionPtosInspeccionDesktopState extends State<RevisionPtosInspeccionDe
               ),
               IconButton(
                   onPressed: () async {
-                    if (widget.revision?.ordinal == 0) {
+                    if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text('No se puede modificar esta revisión.'),
                       ));
