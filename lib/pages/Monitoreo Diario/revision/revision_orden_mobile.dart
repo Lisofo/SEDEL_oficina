@@ -168,21 +168,38 @@ class _RevisionOrdenMobileState extends State<RevisionOrdenMobile> with SingleTi
             const Spacer(),
             BottomNavigationBar(
               currentIndex: buttonIndex,
-              onTap: (index) {
-                setState(() {
-                  buttonIndex = index;
-                  switch (buttonIndex){
-                    case 0: 
-                      _showCreateDeleteDialog(context);
-                    break;
-                    case 1:
-                      _showCreateCopyDialog(context);
-                    break;
-                    case 2:
-                      cambiarEstado();
-                    break;
-                  }
-                });
+              onTap: (index) async {
+                buttonIndex = index;
+                switch (buttonIndex){
+                  case 0: 
+                    if (orden.estado == 'REVISADA') {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('No se puede borrar revisiones.'),
+                      ));
+                      return Future.value(false);
+                    }
+                    _showCreateDeleteDialog(context);
+                  break;
+                  case 1:
+                    if (orden.estado == 'REVISADA') {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('No se puede crear nuevas revisiones.'),
+                      ));
+                      return Future.value(false);
+                    }
+                    _showCreateCopyDialog(context);
+                  break;
+                  case 2:
+                    if (orden.estado == 'REVISADA') {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('No se puede cambiar el estado.'),
+                      ));
+                      return Future.value(false);
+                    }
+                    cambiarEstado();
+                  break;
+                }
+                setState(() {});
               },
               showUnselectedLabels: true,
               selectedItemColor: colors.primary,

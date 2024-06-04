@@ -196,13 +196,16 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
                         width: 220,
                         child: DropdownSearch(
                           dropdownDecoratorProps:
-                              const DropDownDecoratorProps(
-                                  dropdownSearchDecoration: InputDecoration(
-                                      hintText: 'Seleccione un tecnico')),
+                          const DropDownDecoratorProps(
+                            dropdownSearchDecoration: InputDecoration(
+                              hintText: 'Seleccione un tecnico'
+                            )
+                          ),
                           items: tecnicos,
                           popupProps: const PopupProps.menu(
-                              showSearchBox: true,
-                              searchDelay: Duration.zero),
+                            showSearchBox: true,
+                            searchDelay: Duration.zero
+                          ),
                           onChanged: (value) {
                             setState(() {
                               selectedTecnico = value;

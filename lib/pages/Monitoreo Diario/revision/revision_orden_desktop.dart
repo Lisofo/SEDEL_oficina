@@ -196,7 +196,7 @@ class _RevisionOrdenDesktopState extends State<RevisionOrdenDesktop> with Single
             CustomButton(
               text: 'Orden revisada', 
               onPressed: () async {
-                if (orden.estado == 'REVISADA') {
+              if (orden.estado == 'REVISADA') {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text('No se puede cambiar el estado.'),
                 ));

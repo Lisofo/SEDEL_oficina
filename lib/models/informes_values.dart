@@ -31,4 +31,9 @@ class ParametrosValues {
     id = 0;
     descripcion = '';
   }
+
+  @override
+  String toString() {
+    return descripcion;
+  }
 }

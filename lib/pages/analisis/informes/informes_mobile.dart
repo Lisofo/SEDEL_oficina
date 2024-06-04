@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
@@ -488,20 +489,19 @@ class _InformesMobileState extends State<InformesMobile> {
             children: [
               if (parametro.control == 'C') ...[
                 SizedBox(
-                  width: 370,
-                  child: CustomDropdownFormMenu(
-                    items: parametrosValues.map((e) {
-                      return DropdownMenuItem(
-                        value: e,
-                        child: Text(e.descripcion),
-                      );
-                    }).toList(),
+                  width: 300,
+                  child: DropdownSearch(
+                    items: parametrosValues,
+                    popupProps: const PopupProps.menu(
+                      showSearchBox: true,
+                      searchDelay: Duration.zero
+                    ),
                     onChanged: (value) {
                       parametro.valor = (value as ParametrosValues).id.toString();
                       parametro.valorAMostrar = (value).descripcion;
                     },
-                  ),
-                )
+                  )
+                ),
               ] else if (parametro.control == 'T') ...[
                 SizedBox(
                   width: 370,
@@ -510,6 +510,21 @@ class _InformesMobileState extends State<InformesMobile> {
                     hint: parametro.parametro,
                     mascara: parametro.tipo == 'N' ? [maskFormatter] : [],
                     maxLines: 1,
+                    onFieldSubmitted: (value) async {
+                      bool existe = false;
+                      if (_controllers[parametro.parametro]?.text != '' && parametro.control == 'T') {
+                        if(parametro.control == 'T' && parametro.tieneLista == 'S'){
+                          existe = await InformesServices().getExisteParametro(context, token, parametro.informeId, parametro, _controllers[parametro.parametro]?.text);
+                          if(existe){
+                            parametro.valor = _controllers[parametro.parametro]?.text;
+                            parametro.valorAMostrar = _controllers[parametro.parametro]?.text;
+                          }
+                        }
+                      }else{
+                        router.pop();
+                      }
+                      setState(() {});
+                    },
                   ),
                 )
               ]
