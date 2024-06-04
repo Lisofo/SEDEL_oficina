@@ -307,11 +307,12 @@ void _showCreateCopyDialog(BuildContext context) {
         content: StatefulBuilder(
           builder: (context, setStateBd) => Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text('Está por generar la copia de una revisión, seleccione el origen de la copia'),
               const SizedBox(height: 10,),
               CustomDropdownFormMenu(
+                isDense: true,
                 hint: 'Seleccione una revisión',
                 // value: selectedRevision,
                 onChanged: (newValue) {
@@ -334,19 +335,35 @@ void _showCreateCopyDialog(BuildContext context) {
                 maxLines: 1,
               ),
               const SizedBox(height: 10),
-              Row(
-                mainAxisSize: MainAxisSize.min,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Text('Revision normal'),
-                  Switch(
-                    activeColor: colors.primary,
-                    value: filtro, 
-                    onChanged: (value) {
-                      filtro = value;
-                      setStateBd(() {});
-                    },
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Seleccione tipo de Revision:'),
+                    ],
                   ),
-                  const Text('Revision restringida')
+                  const SizedBox(height: 10,),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Text('Normal'),
+                      const SizedBox(width: 5,),
+                      Switch(
+                        activeColor: colors.primary,
+                        value: filtro, 
+                        onChanged: (value) {
+                          filtro = value;
+                          setStateBd(() {});
+                        },
+                      ),
+                      const SizedBox(width: 5,),
+                      const Text('Restringida'),
+                    ],
+                  )
                 ],
               )
             ],
