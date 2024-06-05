@@ -25,8 +25,7 @@ class RevisionPtosInspeccionDesktop extends StatefulWidget {
   
 
   @override
-  State<RevisionPtosInspeccionDesktop> createState() =>
-      _RevisionPtosInspeccionDesktopState();
+  State<RevisionPtosInspeccionDesktop> createState() => _RevisionPtosInspeccionDesktopState();
 }
 
 class _RevisionPtosInspeccionDesktopState extends State<RevisionPtosInspeccionDesktop> {
@@ -42,6 +41,7 @@ class _RevisionPtosInspeccionDesktopState extends State<RevisionPtosInspeccionDe
   late PlagaObjetivo plagaObjetivoSeleccionada = PlagaObjetivo.empty();
   bool selectAll = false;
   bool filtro = false;
+  bool filtro2 = false;
   late String token = '';
   late Orden orden = Orden.empty();
   bool isReadOnly = true;
@@ -79,14 +79,23 @@ class _RevisionPtosInspeccionDesktopState extends State<RevisionPtosInspeccionDe
   cargarDatos() async {
     token = context.read<OrdenProvider>().token;
     orden = context.read<OrdenProvider>().orden;
-
-    tiposDePuntos =  await PtosInspeccionServices().getTiposPtosInspeccion(context, token);
-    // ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token);
+    // tiposDePuntos = await getTipos();
+    tiposDePuntos = await PtosInspeccionServices().getTiposPtosInspeccion(context, token);
     plagasObjetivo = await PlagaObjetivoServices().getPlagasObjetivo(context, '', '', token);
     Provider.of<OrdenProvider>(context, listen: false).setTipoPTI(selectedTipoPto);
 
     setState(() {});
   }
+
+  Future<dynamic> getTipos() async {
+    late List<TipoPtosInspeccion> tiposDePuntosFiltrados = [];
+    if(!filtro2){
+      tiposDePuntosFiltrados = await PtosInspeccionServices().getTiposPtosInspeccion(context, token);
+      return tiposDePuntosFiltrados.where((pto)=> cantidadSolo(pto) > 0).toList();
+    } else {
+      return await PtosInspeccionServices().getTiposPtosInspeccion(context, token);
+    }
+  } 
 
   Future<void> refreshData() async {
     widget.ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token);
@@ -100,149 +109,159 @@ class _RevisionPtosInspeccionDesktopState extends State<RevisionPtosInspeccionDe
     print(revisionId);
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Column(children: [
-        Container(
-          width: Constantes().ancho,
-          decoration: BoxDecoration(
+      child: Column(
+        children: [
+          Container(
+            width: Constantes().ancho,
+            decoration: BoxDecoration(
               border: Border.all(
-                  width: 1, color: colors.primary),
-              borderRadius: BorderRadius.circular(5)),
-          child: DropdownButtonFormField(
-                  decoration: const InputDecoration(border: InputBorder.none),
-                  hint: const Padding(
-                    padding: EdgeInsets.only(left: 8.0),
-                    child: Text('Ptos de Inspeccion'),
-                  ),
-                  items: tiposDePuntos.map((e) {
-                    return DropdownMenuItem(
-                      value: e,
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Text(
-                          nombreYCantidad(e),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                  isDense: true,
-                  isExpanded: true,
-                  onChanged: (value) async {
-                    widget.ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token, );
-                    setState(() {
-                      
-                      Provider.of<OrdenProvider>(context, listen: false).setTipoPTI(value!);
-                      selectedTipoPto = value;
-                      selectAll = false;
-                      for (var i = 0; i < ptosFiltrados.length; i++) {
-                        ptosFiltrados[i].seleccionado = false;
-                      }
-                      for (var ptos in context.read<OrdenProvider>().puntosSeleccionados) {
-                        ptos.seleccionado = false;
-                      }
-                    });
-                  },
-                ),
-        ),
-        SizedBox(
-          height: 380,
-          width: Constantes().ancho,
-          child: RefreshIndicator(
-            key: _refreshIndicatorKey,
-            onRefresh: refreshData,
-            child: listaDePuntos()
-          )
-        ),
-        SizedBox(
-          width: Constantes().ancho,
-          child: Row(
-            children: [
-              IconButton(
-                onPressed: () {
-                  if (selectedTipoPto.tipoPuntoInspeccionId != 0) {
-                    if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('No se puede modificar esta revisión.'),
-                      ));
-                    } else {
-                      _mostrarBottomSheet();
-                    }
-                  }
-                },
-                icon: Icon(
-                  Icons.control_point,
-                  size: 35,
-                  color: selectedTipoPto.tipoPuntoInspeccionId != 0
-                    ? colors.primary
-                    : Colors.grey,
-                ),
+                width: 1, color: colors.primary
               ),
-              Switch(
+              borderRadius: BorderRadius.circular(5)
+            ),
+            child: DropdownButtonFormField(
+              decoration: const InputDecoration(border: InputBorder.none),
+              hint: const Padding(
+                padding: EdgeInsets.only(left: 8.0),
+                child: Text('Ptos de Inspeccion'),
+              ),
+              items: tiposDePuntos.map((e) {
+                return DropdownMenuItem(
+                  value: e,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      nombreYCantidad(e),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                );
+              }).toList(),
+              isDense: true,
+              isExpanded: true,
+              onChanged: (value) async {
+                widget.ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token, );
+                setState(() {
+
+                  Provider.of<OrdenProvider>(context, listen: false).setTipoPTI(value!);
+                  selectedTipoPto = value;
+                  selectAll = false;
+                  for (var i = 0; i < ptosFiltrados.length; i++) {
+                    ptosFiltrados[i].seleccionado = false;
+                  }
+                  for (var ptos in context.read<OrdenProvider>().puntosSeleccionados) {
+                    ptos.seleccionado = false;
+                  }
+                });
+              },
+            ),
+          ),
+          SizedBox(
+            height: 380,
+            width: Constantes().ancho,
+            child: RefreshIndicator(
+              key: _refreshIndicatorKey,
+              onRefresh: refreshData,
+              child: listaDePuntos()
+            )
+          ),
+          SizedBox(
+            width: Constantes().ancho,
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    if (selectedTipoPto.tipoPuntoInspeccionId != 0) {
+                      if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('No se puede modificar esta revisión.'),
+                        ));
+                      } else {
+                        _mostrarBottomSheet();
+                      }
+                    }
+                  },
+                  icon: Icon(
+                    Icons.control_point,
+                    size: 35,
+                    color: selectedTipoPto.tipoPuntoInspeccionId != 0 ? colors.primary : Colors.grey,
+                  ),
+                ),
+                Switch(
                   activeColor: colors.primary,
                   value: filtro,
                   onChanged: (value) {
                     setState(() {
                       filtro = value;
                       pendientes = filtro;
-                      Provider.of<OrdenProvider>(context, listen: false)
-                          .setPendiente(pendientes);
+                      Provider.of<OrdenProvider>(context, listen: false).setPendiente(pendientes);
                       selectAll = false;
                       for (var i = 0; i < ptosFiltrados.length; i++) {
                         ptosFiltrados[i].seleccionado = false;
                       }
                       listaDePuntos();
                     });
-                  }),
-              const Spacer(),
-              IconButton(
-                onPressed: () async {
-                  widget.ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token, );
-                  await showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text("Buscar Puntos de Inspección"),
-                      content: CustomTextFormField(
-                        onChanged: (value) {
-                          setState(() {
-                            _searchTerm = value;
-                          });
-                        },
-                        hint: "Ingrese el término de búsqueda",
+                  }
+                ),
+                const Spacer(),
+                // Switch(
+                  // activeColor: colors.primary,
+                  // value: filtro2,
+                  // onChanged: (value) async {
+                    // filtro2 = value;
+                    // tiposDePuntos = await getTipos();
+                    // setState(() {});
+                  // }
+                // ),
+                IconButton(
+                  onPressed: () async {
+                    widget.ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token, );
+                    await showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text("Buscar Puntos de Inspección"),
+                        content: CustomTextFormField(
+                          onChanged: (value) {
+                            setState(() {
+                              _searchTerm = value;
+                            });
+                          },
+                          hint: "Ingrese el término de búsqueda",
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Cancelar"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Provider.of<OrdenProvider>(context, listen: false).filtrarPuntosInspeccion1(_searchTerm);
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Buscar"),
+                          ),
+                        ],
                       ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text("Cancelar"),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Provider.of<OrdenProvider>(context, listen: false).filtrarPuntosInspeccion1(_searchTerm);
-                            Navigator.pop(context);
-                          },
-                          child: const Text("Buscar"),
-                        ),
-                      ],
-                    ),
-                  );
-                }, 
-                icon: const Icon(Icons.search)
-              ),
-              Checkbox(
-                activeColor: colors.primary,
-                value: selectAll,
-                onChanged: (newValue) {
-                  setState(() {
-                    selectAll = newValue!;
-                    for (var ptos
-                        in context.read<OrdenProvider>().listaPuntos) {
-                      ptos.seleccionado = selectAll;
-                    }
-                  });
-                },
-              ),
-              IconButton(
+                    );
+                  },
+                  icon: const Icon(Icons.search)
+                ),
+                Checkbox(
+                  activeColor: colors.primary,
+                  value: selectAll,
+                  onChanged: (newValue) {
+                    setState(() {
+                      selectAll = newValue!;
+                      for (var ptos
+                          in context.read<OrdenProvider>().listaPuntos) {
+                        ptos.seleccionado = selectAll;
+                      }
+                    });
+                  },
+                ),
+                IconButton(
                   onPressed: () async {
                     if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -255,19 +274,26 @@ class _RevisionPtosInspeccionDesktopState extends State<RevisionPtosInspeccionDe
                   icon: const Icon(
                     Icons.delete,
                     color: Colors.red,
-                  ))
-            ],
+                  )
+                )
+              ],
+            ),
           ),
-        ),
-      ]),
+        ]
+      ),
     );
   }
 
   String nombreYCantidad(TipoPtosInspeccion e) { 
     String retorno = '';
     String cantidad = widget.ptosInspeccion.where((pto) => pto.tipoPuntoInspeccionId == e.tipoPuntoInspeccionId).toList().length.toString();
-     retorno = '${e.descripcion} ($cantidad)';
+    retorno = '${e.descripcion} ($cantidad)';
     return retorno;
+  }
+
+  int cantidadSolo(TipoPtosInspeccion e) {
+    int cantidad = widget.ptosInspeccion.where((pto) => pto.tipoPuntoInspeccionId == e.tipoPuntoInspeccionId).toList().length;
+    return cantidad;
   }
 
   listaDePuntos() {
@@ -285,8 +311,7 @@ class _RevisionPtosInspeccionDesktopState extends State<RevisionPtosInspeccionDe
                 const Spacer(),
                 Text(
                   puntoDeInspeccion.codAccion.toString(),
-                  style:
-                     TextStyle(color: colors.primary),
+                  style: TextStyle(color: colors.primary),
                 )
               ],
             ),
@@ -314,10 +339,8 @@ class _RevisionPtosInspeccionDesktopState extends State<RevisionPtosInspeccionDe
                 // Provider.of<OrdenProvider>(context, listen: false)
                 //     .setPI(puntosSeleccionados);
               } else {
-                Provider.of<OrdenProvider>(context, listen: false)
-                    .setRevisionPI(puntoDeInspeccion);
+                Provider.of<OrdenProvider>(context, listen: false).setRevisionPI(puntoDeInspeccion);
               }
-
               router.push('/ptosInspeccionRevision');
             },
           );
@@ -332,106 +355,101 @@ class _RevisionPtosInspeccionDesktopState extends State<RevisionPtosInspeccionDe
       builder: (BuildContext context) {
         List<BottomSheetOpcion> listaOpciones = [
           BottomSheetOpcion(
-              text: 'Sin Actividad',
-              icon: Icons.cancel,
-              ruta: 'Sin Actividad',
-              condicion: 'M'),
+            text: 'Sin Actividad',
+            icon: Icons.cancel,
+            ruta: 'Sin Actividad',
+            condicion: 'M'
+          ),
           BottomSheetOpcion(
-              text: 'Actividad',
-              icon: Icons.check,
-              ruta: '/ptosInspeccionActividad',
-              condicion: 'M'),
+            text: 'Actividad',
+            icon: Icons.check,
+            ruta: '/ptosInspeccionActividad',
+            condicion: 'M'
+          ),
           BottomSheetOpcion(
-              text: 'Mantenimiento',
-              icon: Icons.build,
-              ruta: '/ptosInspeccionActividad',
-              condicion: 'M'),
+            text: 'Mantenimiento',
+            icon: Icons.build,
+            ruta: '/ptosInspeccionActividad',
+            condicion: 'M'
+          ),
           BottomSheetOpcion(
-              text: 'Desinstalado',
-              icon: Icons.delete,
-              ruta: 'Desinstalado',
-              condicion: 'M'),
+            text: 'Desinstalado',
+            icon: Icons.delete,
+            ruta: 'Desinstalado',
+            condicion: 'M'
+          ),
           BottomSheetOpcion(
-              text: 'Nuevo', icon: Icons.add, ruta: 'Nuevo', condicion: 'S'),
+            text: 'Nuevo', 
+            icon: Icons.add, 
+            ruta: 'Nuevo', 
+            condicion: 'S'
+          ),
           BottomSheetOpcion(
-              text: 'Trasladado',
-              icon: Icons.swap_horiz,
-              ruta: 'Trasladado',
-              condicion: 'M'),
+            text: 'Trasladado',
+            icon: Icons.swap_horiz,
+            ruta: 'Trasladado',
+            condicion: 'M'
+          ),
           BottomSheetOpcion(
-              text: 'Sin Acceso',
-              icon: Icons.not_interested,
-              ruta: 'Sin Acceso',
-              condicion: 'M'),
+            text: 'Sin Acceso',
+            icon: Icons.not_interested,
+            ruta: 'Sin Acceso',
+            condicion: 'M'
+          ),
         ];
-
         {
           final List<BottomSheetOpcion> listaOpcionesAplicar = [];
-          List<RevisionPtoInspeccion> elementosEncontrados = puntosSeleccionados
-              .where((elemento) => elemento.piAccionId == 5)
-              .toList();
+          List<RevisionPtoInspeccion> elementosEncontrados = puntosSeleccionados.where((elemento) => elemento.piAccionId == 5).toList();
           for (var pto in listaOpciones) {
-            if (seleccionados == 0 ||
-                (seleccionados == 1 &&
-                    puntosSeleccionados[0].piAccionId == 5)) {
+            if (seleccionados == 0 || (seleccionados == 1 && puntosSeleccionados[0].piAccionId == 5)) {
               if (pto.condicion == 'S') {
                 listaOpcionesAplicar.add(pto);
               }
-            } else if (pto.condicion == 'M' &&
-                seleccionados > 0 &&
-                elementosEncontrados.isEmpty) {
+            } else if (pto.condicion == 'M' && seleccionados > 0 && elementosEncontrados.isEmpty) {
               listaOpcionesAplicar.add(pto);
             }
           }
-
           return listaOpcionesAplicar.isEmpty
-              ? const Center(
-                  child: Text(
-                  'No hay opciones disponibles',
-                  style: TextStyle(fontSize: 16),
-                ))
-              : ListView.separated(
-                  itemCount: listaOpcionesAplicar.length,
-                  itemBuilder: (context, i) {
-                    Color iconColor =
-                        listaOpcionesAplicar[i].text == 'Sin Acceso'
-                            ? Colors.red
-                            : Colors.green;
-                    return ListTile(
-                      onTap: () {
-                        opciones(listaOpcionesAplicar, i, context);
-                      },
-                      leading: Icon(
-                        listaOpcionesAplicar[i].icon,
-                        color: iconColor,
-                      ),
-                      title: Text(listaOpcionesAplicar[i].text),
-                    );
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return const Divider(
-                      height: 1,
-                      color: Colors.green,
-                    );
-                  },
-                );
+            ? const Center(
+                child: Text(
+                'No hay opciones disponibles',
+                style: TextStyle(fontSize: 16),
+                )
+              )
+            : ListView.separated(
+                itemCount: listaOpcionesAplicar.length,
+                itemBuilder: (context, i) {
+                  Color iconColor = listaOpcionesAplicar[i].text == 'Sin Acceso' ? Colors.red : Colors.green;
+                  return ListTile(
+                    onTap: () {
+                      opciones(listaOpcionesAplicar, i, context);
+                    },
+                    leading: Icon(
+                      listaOpcionesAplicar[i].icon,
+                      color: iconColor,
+                    ),
+                    title: Text(listaOpcionesAplicar[i].text),
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return const Divider(
+                    height: 1,
+                    color: Colors.green,
+                  );
+                },
+              );
         }
       },
     );
   }
 
-  void opciones(
-      List<BottomSheetOpcion> buttonTexts, int i, BuildContext context) {
+  void opciones(List<BottomSheetOpcion> buttonTexts, int i, BuildContext context) {
     BottomSheetOpcion botones = buttonTexts[i];
     switch (botones.text) {
       case 'Mantenimiento':
       case 'Actividad':
-        Provider.of<OrdenProvider>(context, listen: false)
-            .setPage(botones.text);
-        Provider.of<OrdenProvider>(context, listen: false)
-            .setTipoPTI(selectedTipoPto);
-        // Provider.of<OrdenProvider>(context, listen: false)
-        //     .setPI(puntosSeleccionados);
+        Provider.of<OrdenProvider>(context, listen: false).setPage(botones.text);
+        Provider.of<OrdenProvider>(context, listen: false).setTipoPTI(selectedTipoPto);
 
         if (botones.text == 'Mantenimiento') {
           Provider.of<OrdenProvider>(context, listen: false).setModo('M');

@@ -79,11 +79,15 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
     selectedCliente = context.read<OrdenProvider>().clienteEditOrdenes;
     servicios = await ServiciosServices().getServicios(context, '', '', '', token);
     tipoOrdenes = await OrdenServices().getTipoOrden(context, token);
-
-    // selectedDateOrden = DateTime(selectedDateOrden.year, selectedDateOrden.month, selectedDateOrden.day, 0, 0, 0);
-    selectedDateDesde = DateTime(selectedDateDesde.year, selectedDateDesde.month, selectedDateDesde.day, selectedDateDesde.hour, selectedDateDesde.minute, 0);
-    selectedDateHasta = DateTime(selectedDateHasta.year, selectedDateHasta.month, selectedDateHasta.day, selectedDateHasta.hour, selectedDateHasta.minute, 0);
-    selectedDateOrden = orden.fechaOrdenTrabajo;
+    if(orden.ordenTrabajoId != 0){
+      selectedDateOrden = orden.fechaOrdenTrabajo;
+      selectedDateDesde = orden.fechaDesde;
+      selectedDateHasta = orden.fechaHasta;
+    }else{
+      selectedDateDesde = DateTime(selectedDateDesde.year, selectedDateDesde.month, selectedDateDesde.day, selectedDateDesde.hour, selectedDateDesde.minute, 0);
+      selectedDateHasta = DateTime(selectedDateHasta.year, selectedDateHasta.month, selectedDateHasta.day, selectedDateHasta.hour, selectedDateHasta.minute, 0);
+      selectedDateOrden = orden.fechaOrdenTrabajo;
+    }
     if(orden.ordenTrabajoId != 0 && orden.estado != 'PENDIENTE'){
       editarOrdenFechas = false;
     }
@@ -107,8 +111,7 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
       _instruccionesController.text = orden.instrucciones;
       _comentarioController.text = orden.comentarios;
       _notasClienteController.text = orden.cliente.notas;
-      selectedDateDesde = orden.fechaDesde;
-      selectedDateHasta = orden.fechaHasta;
+      
       if(serviciosSeleccionados.isEmpty){
         List<Servicio> prueba = convertirServiciosOrden();
         serviciosSeleccionados = prueba;

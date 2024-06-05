@@ -25,8 +25,7 @@ class RevisionPtosInspeccionMobile extends StatefulWidget {
   
 
   @override
-  State<RevisionPtosInspeccionMobile> createState() =>
-      _RevisionPtosInspeccionMobileState();
+  State<RevisionPtosInspeccionMobile> createState() => _RevisionPtosInspeccionMobileState();
 }
 
 class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMobile> {
@@ -42,6 +41,7 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
   late PlagaObjetivo plagaObjetivoSeleccionada = PlagaObjetivo.empty();
   bool selectAll = false;
   bool filtro = false;
+  bool filtro2 = false;
   late String token = '';
   late Orden orden = Orden.empty();
   bool isReadOnly = true;
@@ -80,14 +80,23 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
   cargarDatos() async {
     token = context.read<OrdenProvider>().token;
     orden = context.read<OrdenProvider>().orden;
-
-    tiposDePuntos =  await PtosInspeccionServices().getTiposPtosInspeccion(context, token);
-    // ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token);
+    // tiposDePuntos = await getTipos();
+    tiposDePuntos = await PtosInspeccionServices().getTiposPtosInspeccion(context, token);
     plagasObjetivo = await PlagaObjetivoServices().getPlagasObjetivo(context, '', '', token);
     Provider.of<OrdenProvider>(context, listen: false).setTipoPTI(selectedTipoPto);
 
     setState(() {});
   }
+
+  Future<dynamic> getTipos() async {
+    late List<TipoPtosInspeccion> tiposDePuntosFiltrados = [];
+    if(!filtro2){
+      tiposDePuntosFiltrados = await PtosInspeccionServices().getTiposPtosInspeccion(context, token);
+      return tiposDePuntosFiltrados.where((pto)=> cantidadSolo(pto) > 0).toList();
+    } else {
+      return await PtosInspeccionServices().getTiposPtosInspeccion(context, token);
+    }
+  } 
 
   Future<void> refreshData() async {
     widget.ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token);
@@ -193,6 +202,15 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
                       });
                     }),
                 const Spacer(),
+                // Switch(
+                  // activeColor: colors.primary,
+                  // value: filtro2,
+                  // onChanged: (value) async {
+                    // filtro2 = value;
+                    // tiposDePuntos = await getTipos();
+                    // setState(() {});
+                  // }
+                // ),
                 IconButton(
                 onPressed: () async {
                   widget.ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token, );
@@ -268,6 +286,12 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
     String cantidad = widget.ptosInspeccion.where((pto) => pto.tipoPuntoInspeccionId == e.tipoPuntoInspeccionId).toList().length.toString();
      retorno = '${e.descripcion} ($cantidad)';
     return retorno;
+  }
+
+  int cantidadSolo(TipoPtosInspeccion e) {
+    int cantidad = widget.ptosInspeccion.where((pto) => pto.tipoPuntoInspeccionId == e.tipoPuntoInspeccionId).toList().length;
+    print(cantidad);
+    return cantidad;
   }
 
   listaDePuntos() {
