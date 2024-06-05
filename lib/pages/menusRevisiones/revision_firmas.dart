@@ -343,6 +343,12 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                           });
                     },
                     onDismissed: (direction) async {
+                      if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('No se puede modificar esta revisión.'),
+                      ));
+                      return Future.value(false);
+                    }
                       setState(() {
                         widget.firmas.removeAt(index);
                       });
@@ -374,7 +380,13 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                               splashColor: Colors.transparent,
                               splashRadius: 25,
                               icon: const Icon(Icons.edit),
-                              onPressed: () {
+                              onPressed: () async {
+                                if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
+                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                    content: Text('No se puede modificar esta revisión.'),
+                                  ));
+                                  return Future.value(false);
+                                }
                                 _editarCliente(widget.firmas[index]);
                               },
                             ),
@@ -382,7 +394,13 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                               splashColor: Colors.transparent,
                               splashRadius: 25,
                               icon: const Icon(Icons.delete),
-                              onPressed: () {
+                              onPressed: () async {
+                                if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
+                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                      content: Text('No se puede modificar esta revisión.'),
+                                    ));
+                                    return Future.value(false);
+                                  }
                                 _borrarCliente(index);
                               },
                             ),
