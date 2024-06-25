@@ -46,6 +46,7 @@ class OrdenProvider with ChangeNotifier {
   PlagaObjetivo _plagaObjetivo = PlagaObjetivo.empty();
   Usuario _usuario = Usuario.empty();
   Materiales _materiales = Materiales.empty();
+  TipoPtosInspeccion _tiposPuntosGestion = TipoPtosInspeccion.empty();
   MetodoAplicacion _metodoAplicacion = MetodoAplicacion.empty();
   Control _control = Control.empty();
   Marca _marca = Marca.empty();
@@ -62,21 +63,14 @@ class OrdenProvider with ChangeNotifier {
   bool get pendientes => _pendientes;
   int? get statusCode => _statusCode;
   List<RevisionPtoInspeccion> get _ptosInspeccionCompleta => listaPuntos;
-
+  TipoPtosInspeccion get tiposPuntosGestion => _tiposPuntosGestion;
   TipoPtosInspeccion get tipoPtosInspeccion => _tipoPtosInspeccion;
   List<RevisionPtoInspeccion> get ptosInspeccion => _ptosInspeccion;
-  List<RevisionPtoInspeccion> get puntosSeleccionados =>
-      _ptosInspeccion.where((pto) => pto.seleccionado).toList();
+  List<RevisionPtoInspeccion> get puntosSeleccionados => _ptosInspeccion.where((pto) => pto.seleccionado).toList();
   List<RevisionPtoInspeccion> get puntosFiltrados => _ptosInspeccion
-      .where((pto) =>
-          pto.tipoPuntoInspeccionId == tipoPtosInspeccion.tipoPuntoInspeccionId)
-      .toList();
+    .where((pto) => pto.tipoPuntoInspeccionId == tipoPtosInspeccion.tipoPuntoInspeccionId).toList();
   List<RevisionPtoInspeccion> get listaPuntos => puntosFiltrados
-      .where((element) => _pendientes
-          ? element.codAccion == ''
-          : element.codAccion == element.codAccion)
-      .toList();
-
+    .where((element) => _pendientes ? element.codAccion == '' : element.codAccion == element.codAccion).toList();
   Orden get orden => _orden;
   Indisponibilidad get indisponibilidad => _indisponibilidad;
   Cliente get cliente => _cliente;
@@ -283,6 +277,12 @@ class OrdenProvider with ChangeNotifier {
     _materiales = materials;
     notifyListeners();
   }
+
+  void setTipoPunto(TipoPtosInspeccion tipoPto) {
+    _tiposPuntosGestion = tipoPto;
+    notifyListeners();
+  }
+
   void setMetodo(MetodoAplicacion metodo) {
     _metodoAplicacion = metodo;
     notifyListeners();
@@ -290,6 +290,11 @@ class OrdenProvider with ChangeNotifier {
 
   void clearSelectedMaterial() {
     _materiales = Materiales.empty();
+    notifyListeners();
+  }
+
+  void clearSelectedTipo() {
+    _tiposPuntosGestion = TipoPtosInspeccion.empty();
     notifyListeners();
   }
 

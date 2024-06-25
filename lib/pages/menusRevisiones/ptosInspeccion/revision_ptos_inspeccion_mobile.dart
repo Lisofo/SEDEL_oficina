@@ -50,6 +50,7 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
   late int revisionId = 0;
   int buttonIndex = 0;
   String _searchTerm = '';
+  bool subiendoAcciones = false;
 
   List<ZonaPI> zonas = [
     ZonaPI(zona: 'Interior', codZona: 'I'),
@@ -57,10 +58,7 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
   ];
 
   List<RevisionPtoInspeccion> get ptosFiltrados {
-    return widget.ptosInspeccion
-        .where((pto) =>
-            pto.tipoPuntoInspeccionId == selectedTipoPto.tipoPuntoInspeccionId)
-        .toList();
+    return widget.ptosInspeccion.where((pto) => pto.tipoPuntoInspeccionId == selectedTipoPto.tipoPuntoInspeccionId).toList();
   }
 
   List<RevisionPtoInspeccion> get puntosSeleccionados {
@@ -118,9 +116,11 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
           Container(
             width: Constantes().ancho,
             decoration: BoxDecoration(
-                border: Border.all(
-                    width: 1, color: colors.primary),
-                borderRadius: BorderRadius.circular(5)),
+              border: Border.all(
+                width: 1, color: colors.primary
+              ),
+              borderRadius: BorderRadius.circular(5)
+            ),
             child: DropdownButtonFormField(
               decoration: const InputDecoration(border: InputBorder.none),
               hint: const Padding(
@@ -129,15 +129,15 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
               ),
               items: tiposDePuntos.map((e) {
                 return DropdownMenuItem(
-                      value: e,
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Text(
-                          nombreYCantidad(e),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    );
+                  value: e,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      nombreYCantidad(e),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                );
               }).toList(),
               isDense: true,
               isExpanded: true,
@@ -154,12 +154,13 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
             ),
           ),
           SizedBox(
-              height: MediaQuery.of(context).size.height * 0.60,
-              width: Constantes().ancho,
-              child: RefreshIndicator(
-                  key: _refreshIndicatorKey,
-                  onRefresh: refreshData,
-                  child: listaDePuntos())
+            height: MediaQuery.of(context).size.height * 0.60,
+            width: Constantes().ancho,
+            child: RefreshIndicator(
+              key: _refreshIndicatorKey,
+              onRefresh: refreshData,
+              child: listaDePuntos()
+            )
           ),
           BottomAppBar(
             elevation: 0,
@@ -180,27 +181,25 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
                   icon: Icon(
                     Icons.control_point,
                     size: 35,
-                    color: selectedTipoPto.tipoPuntoInspeccionId != 0
-                      ? colors.primary
-                      : Colors.grey,
+                    color: selectedTipoPto.tipoPuntoInspeccionId != 0 ? colors.primary : Colors.grey,
                   ),
                 ),
                 Switch(
-                    activeColor: colors.primary,
-                    value: filtro,
-                    onChanged: (value) {
-                      setState(() {
-                        filtro = value;
-                        pendientes = filtro;
-                        Provider.of<OrdenProvider>(context, listen: false)
-                            .setPendiente(pendientes);
-                        selectAll = false;
-                        for (var i = 0; i < ptosFiltrados.length; i++) {
-                          ptosFiltrados[i].seleccionado = false;
-                        }
-                        listaDePuntos();
-                      });
-                    }),
+                  activeColor: colors.primary,
+                  value: filtro,
+                  onChanged: (value) {
+                    setState(() {
+                      filtro = value;
+                      pendientes = filtro;
+                      Provider.of<OrdenProvider>(context, listen: false).setPendiente(pendientes);
+                      selectAll = false;
+                      for (var i = 0; i < ptosFiltrados.length; i++) {
+                        ptosFiltrados[i].seleccionado = false;
+                      }
+                      listaDePuntos();
+                    });
+                  }
+                ),
                 const Spacer(),
                 // Switch(
                   // activeColor: colors.primary,
@@ -252,27 +251,27 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
                   onChanged: (newValue) {
                     setState(() {
                       selectAll = newValue!;
-                      for (var ptos
-                          in context.read<OrdenProvider>().listaPuntos) {
+                      for (var ptos in context.read<OrdenProvider>().listaPuntos) {
                         ptos.seleccionado = selectAll;
                       }
                     });
                   },
                 ),
                 IconButton(
-                    onPressed: () async {
-                      if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Text('No se puede modificar esta revisión.'),
-                        ));
-                        return Future.value(false);
-                      }
-                      borrarAccion();
-                    },
-                    icon: const Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    ))
+                  onPressed: () async {
+                    if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('No se puede modificar esta revisión.'),
+                      ));
+                      return Future.value(false);
+                    }
+                    borrarAccion();
+                  },
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  )
+                )
               ],
             ),
             ),
@@ -284,7 +283,7 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
   String nombreYCantidad(TipoPtosInspeccion e) { 
     String retorno = '';
     String cantidad = widget.ptosInspeccion.where((pto) => pto.tipoPuntoInspeccionId == e.tipoPuntoInspeccionId).toList().length.toString();
-     retorno = '${e.descripcion} ($cantidad)';
+    retorno = '${e.descripcion} ($cantidad)';
     return retorno;
   }
 
@@ -309,8 +308,7 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
                 const Spacer(),
                 Text(
                   puntoDeInspeccion.codAccion.toString(),
-                  style:
-                     TextStyle(color: colors.primary),
+                  style: TextStyle(color: colors.primary),
                 )
               ],
             ),
@@ -338,8 +336,7 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
                 // Provider.of<OrdenProvider>(context, listen: false)
                 //     .setPI(puntosSeleccionados);
               } else {
-                Provider.of<OrdenProvider>(context, listen: false)
-                    .setRevisionPI(puntoDeInspeccion);
+                Provider.of<OrdenProvider>(context, listen: false).setRevisionPI(puntoDeInspeccion);
               }
 
               router.push('/ptosInspeccionRevision');
@@ -450,13 +447,10 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
     switch (botones.text) {
       case 'Mantenimiento':
       case 'Actividad':
-        Provider.of<OrdenProvider>(context, listen: false)
-            .setPage(botones.text);
-        Provider.of<OrdenProvider>(context, listen: false)
-            .setTipoPTI(selectedTipoPto);
+        Provider.of<OrdenProvider>(context, listen: false).setPage(botones.text);
+        Provider.of<OrdenProvider>(context, listen: false).setTipoPTI(selectedTipoPto);
         // Provider.of<OrdenProvider>(context, listen: false)
         //     .setPI(puntosSeleccionados);
-
         if (botones.text == 'Mantenimiento') {
           Provider.of<OrdenProvider>(context, listen: false).setModo('M');
         } else {
@@ -464,256 +458,159 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
         }
 
         router.push(botones.ruta);
-        break;
+      break;
       case 'Desinstalado':
       case 'Sin Actividad':
       case 'Sin Acceso':
         showDialog(
-            context: context,
-            builder: (context) {
-              if (puntosSeleccionados.length == 1 &&
-                      (puntosSeleccionados[0].piAccionId == 1 &&
-                          botones.text == 'Sin Actividad') ||
-                  (puntosSeleccionados[0].piAccionId == 4 &&
-                      botones.text == 'Desinstalado') ||
-                  puntosSeleccionados[0].piAccionId == 7 &&
-                      botones.text == 'Sin Acceso') {
-                comentarioController.text = puntosSeleccionados[0].comentario;
-              } else {
-                comentarioController.text = '';
-              }
-              return AlertDialog(
-                title: Text(botones.text),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextFormField(
-                      controller: comentarioController,
-                      minLines: 1,
-                      maxLines: 10,
-                      decoration: const InputDecoration(hintText: 'Comentario'),
-                    )
-                  ],
-                ),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text('Cancelar'),
-                    onPressed: () {
-                      router.pop(context);
-                    },
-                  ),
-                  TextButton(
-                    child: const Text('Confirmar'),
-                    onPressed: () {
-                      router.pop(context);
-                      if (botones.text == 'Sin Actividad') {
-                        marcarPISinActividad(1, comentarioController.text);
-                      } else if (botones.text == 'Desinstalado') {
-                        marcarPISinActividad(4, comentarioController.text);
-                      } else {
-                        marcarPISinActividad(7, comentarioController.text);
-                      }
-                    },
-                  ),
+          context: context,
+          builder: (context) {
+            if (puntosSeleccionados.length == 1 &&
+                    (puntosSeleccionados[0].piAccionId == 1 &&
+                        botones.text == 'Sin Actividad') ||
+                (puntosSeleccionados[0].piAccionId == 4 &&
+                    botones.text == 'Desinstalado') ||
+                puntosSeleccionados[0].piAccionId == 7 &&
+                    botones.text == 'Sin Acceso') {
+              comentarioController.text = puntosSeleccionados[0].comentario;
+            } else {
+              comentarioController.text = '';
+            }
+            return AlertDialog(
+              title: Text(botones.text),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    controller: comentarioController,
+                    minLines: 1,
+                    maxLines: 10,
+                    decoration: const InputDecoration(hintText: 'Comentario'),
+                  )
                 ],
-              );
-            });
-        break;
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Cancelar'),
+                  onPressed: () {
+                    router.pop(context);
+                  },
+                ),
+                TextButton(
+                  child: const Text('Confirmar'),
+                  onPressed: () {
+                    router.pop(context);
+                    if (botones.text == 'Sin Actividad') {
+                      marcarPISinActividad(1, comentarioController.text);
+                    } else if (botones.text == 'Desinstalado') {
+                      marcarPISinActividad(4, comentarioController.text);
+                    } else {
+                      marcarPISinActividad(7, comentarioController.text);
+                    }
+                  },
+                ),
+              ],
+            );
+          }
+        );
+      break;
       case 'Nuevo':
         showDialog(
-            context: context,
-            builder: (context) {
-              if (puntosSeleccionados.length == 1 &&
-                  puntosSeleccionados[0].piAccionId == 5) {
-                codigoBarraController.text = puntosSeleccionados[0].codigoBarra;
-                sectorController.text = puntosSeleccionados[0].sector;
-                comentarioController.text = puntosSeleccionados[0].comentario;
-                codPuntoInspeccionController.text =
-                    puntosSeleccionados[0].codPuntoInspeccion;
-                zonaSeleccionada = zonas.firstWhere((element) =>
-                    element.codZona ==
-                    puntosSeleccionados[0].trasladoNuevo[0].zona);
-                plagaObjetivoSeleccionada = plagasObjetivo.firstWhere(
-                    (element) =>
-                        element.plagaObjetivoId ==
-                        puntosSeleccionados[0]
-                            .trasladoNuevo[0]
-                            .plagaObjetivoId);
-              } else {
-                codigoBarraController.text = '';
-                sectorController.text = '';
-                comentarioController.text = '';
-                codPuntoInspeccionController.text = '';
-                plagaObjetivoSeleccionada = PlagaObjetivo.empty();
-                zonaSeleccionada = ZonaPI.empty();
-              }
-
-              return SingleChildScrollView(
-                child: AlertDialog(
-                  title: const Text('Nuevo Punto'),
-                  content: SizedBox(
-                    width: Constantes().ancho,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CustomTextFormField(
-                          controller: codPuntoInspeccionController,
-                          maxLines: 1,
-                          hint: 'Codigo punto de inspeccion',
-                          label: 'Codigo punto de inspeccion',
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        CustomDropdownFormMenu(
-                            hint: 'Zona',
-                            value: zonaSeleccionada.codZona != ''
-                                ? zonaSeleccionada
-                                : null,
-                            items: zonas.map((e) {
-                              return DropdownMenuItem(
-                                value: e,
-                                child: Text(
-                                  e.zona,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              zonaSeleccionada = value;
-                            }),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        CustomTextFormField(
-                          controller: sectorController,
-                          maxLines: 1,
-                          hint: 'Sector',
-                          label: "Sector",
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        CustomDropdownFormMenu(
-                            hint: 'Plaga objetivo',
-                            value:
-                                plagaObjetivoSeleccionada.plagaObjetivoId != 0
-                                    ? plagaObjetivoSeleccionada
-                                    : null,
-                            items: plagasObjetivo.map((e) {
-                              return DropdownMenuItem<PlagaObjetivo>(
-                                value: e,
-                                child: SizedBox(
-                                  width: 180,
-                                  child: Text(
-                                    e.descripcion,
-                                    softWrap: true,
-                                    overflow: TextOverflow.fade,
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              plagaObjetivoSeleccionada = value;
-                            }),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        CustomTextFormField(
-                            controller: comentarioController,
-                            maxLines: 1,
-                            hint: 'Comentario',
-                            label: 'Comentario'),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        CustomTextFormField(
-                          controller: codigoBarraController,
-                          maxLines: 1,
-                          hint: 'Codigo de barras',
-                          label: 'Codigo de barras',
-                        ),
-                      ],
-                    ),
-                  ),
-                  actions: <Widget>[
-                    TextButton(
-                      child: const Text('Cancelar'),
-                      onPressed: () {
-                        router.pop(context);
-                      },
-                    ),
-                    TextButton(
-                      child: const Text('Confirmar'),
-                      onPressed: () async {
-                        router.pop(context);
-                        await marcarPINuevo(5, zonaSeleccionada,
-                            sectorController.text, comentarioController.text);
-                      },
-                    ),
-                  ],
-                ),
-              );
-            });
-        break;
-      case 'Trasladado':
-        showDialog(
-            context: context,
-            builder: (context) {
-              if (puntosSeleccionados[0].otPuntoInspeccionId != 0 &&
-                  puntosSeleccionados[0].piAccionId == 6) {
-                sectorController.text =
-                    puntosSeleccionados[0].trasladoNuevo[0].sector;
-                comentarioController.text = puntosSeleccionados[0].comentario;
-                zonaSeleccionada = zonas.firstWhere((element) =>
-                    element.codZona ==
-                    puntosSeleccionados[0].trasladoNuevo[0].zona);
-              } else {
-                sectorController.text = '';
-                comentarioController.text = '';
-                zonaSeleccionada = ZonaPI.empty();
-              }
-              return AlertDialog(
-                title: Text(botones.text),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CustomDropdownFormMenu(
-                        hint: 'Zona',
-                        value: zonaSeleccionada.codZona != ''
-                            ? zonaSeleccionada
-                            : null,
-                        items: zonas.map((e) {
-                          return DropdownMenuItem(
+          context: context,
+          builder: (context) {
+            if (puntosSeleccionados.length == 1 && puntosSeleccionados[0].piAccionId == 5) {
+              codigoBarraController.text = puntosSeleccionados[0].codigoBarra;
+              sectorController.text = puntosSeleccionados[0].sector;
+              comentarioController.text = puntosSeleccionados[0].comentario;
+              codPuntoInspeccionController.text = puntosSeleccionados[0].codPuntoInspeccion;
+              zonaSeleccionada = zonas.firstWhere((element) => element.codZona == puntosSeleccionados[0].trasladoNuevo[0].zona);
+              plagaObjetivoSeleccionada = plagasObjetivo.firstWhere((element) => element.plagaObjetivoId == puntosSeleccionados[0].trasladoNuevo[0].plagaObjetivoId);
+            } else {
+              codigoBarraController.text = '';
+              sectorController.text = '';
+              comentarioController.text = '';
+              codPuntoInspeccionController.text = '';
+              plagaObjetivoSeleccionada = PlagaObjetivo.empty();
+              zonaSeleccionada = ZonaPI.empty();
+            }
+            return SingleChildScrollView(
+              child: AlertDialog(
+                title: const Text('Nuevo Punto'),
+                content: SizedBox(
+                  width: Constantes().ancho,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CustomTextFormField(
+                        controller: codPuntoInspeccionController,
+                        maxLines: 1,
+                        hint: 'Codigo punto de inspeccion',
+                        label: 'Codigo punto de inspeccion',
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomDropdownFormMenu(
+                          hint: 'Zona',
+                          value: zonaSeleccionada.codZona != ''
+                              ? zonaSeleccionada
+                              : null,
+                          items: zonas.map((e) {
+                            return DropdownMenuItem(
+                              value: e,
+                              child: Text(
+                                e.zona,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            zonaSeleccionada = value;
+                          }),
+                      const SizedBox(height: 10,),
+                      CustomTextFormField(
+                        controller: sectorController,
+                        maxLines: 1,
+                        hint: 'Sector',
+                        label: "Sector",
+                      ),
+                      const SizedBox(height: 10,),
+                      CustomDropdownFormMenu(
+                        hint: 'Plaga objetivo',
+                        value: plagaObjetivoSeleccionada.plagaObjetivoId != 0 ? plagaObjetivoSeleccionada : null,
+                        items: plagasObjetivo.map((e) {
+                          return DropdownMenuItem<PlagaObjetivo>(
                             value: e,
-                            child: Text(
-                              e.zona,
-                              overflow: TextOverflow.ellipsis,
+                            child: SizedBox(
+                              width: 180,
+                              child: Text(
+                                e.descripcion,
+                                softWrap: true,
+                                overflow: TextOverflow.fade,
+                              ),
                             ),
                           );
                         }).toList(),
                         onChanged: (value) {
-                          zonaSeleccionada = value;
-                        }),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    CustomTextFormField(
-                      controller: sectorController,
-                      maxLines: 1,
-                      hint: 'Sector',
-                      label: 'Sector',
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    CustomTextFormField(
-                      controller: comentarioController,
-                      maxLines: 1,
-                      hint: 'Comentario',
-                      label: 'Comentario',
-                    ),
-                  ],
+                          plagaObjetivoSeleccionada = value;
+                        }
+                      ),
+                      const SizedBox(height: 10,),
+                      CustomTextFormField(
+                        controller: comentarioController,
+                        maxLines: 1,
+                        hint: 'Comentario',
+                        label: 'Comentario'
+                      ),
+                      const SizedBox(height: 10,),
+                      CustomTextFormField(
+                        controller: codigoBarraController,
+                        maxLines: 1,
+                        hint: 'Codigo de barras',
+                        label: 'Codigo de barras',
+                      ),
+                    ],
+                  ),
                 ),
                 actions: <Widget>[
                   TextButton(
@@ -726,149 +623,175 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
                     child: const Text('Confirmar'),
                     onPressed: () async {
                       router.pop(context);
-                      await marcarPITraslado(6, zonaSeleccionada,
-                          sectorController.text, comentarioController.text);
+                      await marcarPINuevo(5, zonaSeleccionada, sectorController.text, comentarioController.text);
                     },
                   ),
                 ],
-              );
-            });
-        break;
+              ),
+            );
+          }
+        );
+      break;
+      case 'Trasladado':
+        showDialog(
+          context: context,
+          builder: (context) {
+            if (puntosSeleccionados[0].otPuntoInspeccionId != 0 &&
+                puntosSeleccionados[0].piAccionId == 6) {
+              sectorController.text =
+                  puntosSeleccionados[0].trasladoNuevo[0].sector;
+              comentarioController.text = puntosSeleccionados[0].comentario;
+              zonaSeleccionada = zonas.firstWhere((element) =>
+                  element.codZona ==
+                  puntosSeleccionados[0].trasladoNuevo[0].zona);
+            } else {
+              sectorController.text = '';
+              comentarioController.text = '';
+              zonaSeleccionada = ZonaPI.empty();
+            }
+            return AlertDialog(
+              title: Text(botones.text),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomDropdownFormMenu(
+                    hint: 'Zona',
+                    value: zonaSeleccionada.codZona != '' ? zonaSeleccionada : null,
+                    items: zonas.map((e) {
+                      return DropdownMenuItem(
+                        value: e,
+                        child: Text(
+                          e.zona,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      zonaSeleccionada = value;
+                    }
+                  ),
+                  const SizedBox(height: 10,),
+                  CustomTextFormField(
+                    controller: sectorController,
+                    maxLines: 1,
+                    hint: 'Sector',
+                    label: 'Sector',
+                  ),
+                  const SizedBox(height: 10,),
+                  CustomTextFormField(
+                    controller: comentarioController,
+                    maxLines: 1,
+                    hint: 'Comentario',
+                    label: 'Comentario',
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Cancelar'),
+                  onPressed: () {
+                    router.pop(context);
+                  },
+                ),
+                TextButton(
+                  child: const Text('Confirmar'),
+                  onPressed: () async {
+                    router.pop(context);
+                    await marcarPITraslado(6, zonaSeleccionada, sectorController.text, comentarioController.text);
+                  },
+                ),
+              ],
+            );
+          }
+        );
+      break;
     }
   }
 
   Future marcarPISinActividad(int idPIAccion, String comentario) async {
     for (var i = 0; i < puntosSeleccionados.length; i++) {
-      RevisionPtoInspeccion nuevaRevisionPtoInspeccion = RevisionPtoInspeccion(
-          otPuntoInspeccionId: puntosSeleccionados[i].otPuntoInspeccionId,
-          ordenTrabajoId: orden.ordenTrabajoId,
-          otRevisionId: orden.otRevisionId,
-          puntoInspeccionId: puntosSeleccionados[i].puntoInspeccionId,
-          planoId: puntosSeleccionados[i].planoId,
-          tipoPuntoInspeccionId: puntosSeleccionados[i].tipoPuntoInspeccionId,
-          codTipoPuntoInspeccion: puntosSeleccionados[i].codTipoPuntoInspeccion,
-          descTipoPuntoInspeccion: '',
-          plagaObjetivoId: puntosSeleccionados[i].plagaObjetivoId,
-          codPuntoInspeccion: puntosSeleccionados[i].codPuntoInspeccion,
-          codigoBarra: puntosSeleccionados[i].codigoBarra,
-          zona: puntosSeleccionados[i].zona,
-          sector: puntosSeleccionados[i].sector,
-          idPIAccion: idPIAccion,
-          piAccionId: 1,
-          codAccion: '1',
-          descPiAccion: '',
-          comentario: comentario,
-          materiales: [],
-          plagas: [],
-          tareas: [],
-          trasladoNuevo: [],
-          seleccionado: puntosSeleccionados[i].seleccionado);
-
-      print(puntosSeleccionados[i].puntoInspeccionId);
-      if (puntosSeleccionados[i].otPuntoInspeccionId != 0) {
-        await PtosInspeccionServices().putPtoInspeccionAccion(
-            context, orden, nuevaRevisionPtoInspeccion, revisionId, token);
-      } else {
-        await PtosInspeccionServices().postPtoInspeccionAccion(
-            context, orden, nuevaRevisionPtoInspeccion, revisionId, token);
-      }
+      puntosSeleccionados[i].ordenTrabajoId = orden.ordenTrabajoId;
+      puntosSeleccionados[i].otRevisionId = orden.otRevisionId;
+      puntosSeleccionados[i].descTipoPuntoInspeccion = '';
+      puntosSeleccionados[i].idPIAccion = idPIAccion;
+      puntosSeleccionados[i].piAccionId = idPIAccion;
+      puntosSeleccionados[i].codAccion = idPIAccion.toString();
+      puntosSeleccionados[i].descPiAccion = '';
+      puntosSeleccionados[i].comentario = comentario;
+      puntosSeleccionados[i].materiales = [];
+      puntosSeleccionados[i].plagas = [];
+      puntosSeleccionados[i].tareas = [];
+      puntosSeleccionados[i].trasladoNuevo = [];
     }
-
+    await postAcciones(puntosSeleccionados);
     await actualizarDatos();
     limpiarDatos();
-
-    await PtosInspeccionServices.showDialogs(
-        context, 'Punto guardado', true, false);
+    subiendoAcciones = false;
   }
 
-  Future marcarPITraslado(int idPIAccion, ZonaPI zonaSeleccionada,
-      String sector, String comentario) async {
+  Future marcarPITraslado(int idPIAccion, ZonaPI zonaSeleccionada, String sector, String comentario) async {
     for (var i = 0; i < puntosSeleccionados.length; i++) {
-      RevisionPtoInspeccion nuevaRevisionPtoInspeccion = RevisionPtoInspeccion(
-          otPuntoInspeccionId: puntosSeleccionados[i].otPuntoInspeccionId,
-          ordenTrabajoId: orden.ordenTrabajoId,
-          otRevisionId: orden.otRevisionId,
-          puntoInspeccionId: puntosSeleccionados[i].puntoInspeccionId,
-          planoId: puntosSeleccionados[i].planoId,
-          tipoPuntoInspeccionId: selectedTipoPto.tipoPuntoInspeccionId,
-          codTipoPuntoInspeccion: puntosSeleccionados[i].codTipoPuntoInspeccion,
-          descTipoPuntoInspeccion: '',
-          plagaObjetivoId: puntosSeleccionados[i].plagaObjetivoId,
-          codPuntoInspeccion: puntosSeleccionados[i].codPuntoInspeccion != ''
-              ? puntosSeleccionados[i].codPuntoInspeccion
-              : codPuntoInspeccionController.text,
-          codigoBarra: puntosSeleccionados[i].codigoBarra != ''
-              ? puntosSeleccionados[i].codigoBarra
-              : codigoBarraController.text,
-          zona: zonaSeleccionada.codZona,
-          sector: sector,
-          idPIAccion: idPIAccion,
-          piAccionId: 1,
-          codAccion: '1',
-          descPiAccion: '',
-          comentario: comentario,
-          materiales: [],
-          plagas: [],
-          tareas: [],
-          trasladoNuevo: [],
-          seleccionado: puntosSeleccionados[i].seleccionado);
-
-      print(puntosSeleccionados[i].puntoInspeccionId);
-      if (puntosSeleccionados[i].otPuntoInspeccionId != 0) {
-        await PtosInspeccionServices().putPtoInspeccionAccion(
-            context, orden, nuevaRevisionPtoInspeccion, revisionId, token);
-      } else {
-        await PtosInspeccionServices().postPtoInspeccionAccion(
-            context, orden, nuevaRevisionPtoInspeccion, revisionId, token);
-      }
+      puntosSeleccionados[i].ordenTrabajoId = orden.ordenTrabajoId;
+      puntosSeleccionados[i].otRevisionId = orden.otRevisionId;
+      puntosSeleccionados[i].tipoPuntoInspeccionId = selectedTipoPto.tipoPuntoInspeccionId;
+      puntosSeleccionados[i].descTipoPuntoInspeccion = '';
+      puntosSeleccionados[i].codPuntoInspeccion = puntosSeleccionados[i].codPuntoInspeccion != '' ? puntosSeleccionados[i].codPuntoInspeccion : codPuntoInspeccionController.text;
+      puntosSeleccionados[i].codigoBarra = puntosSeleccionados[i].codigoBarra != '' ? puntosSeleccionados[i].codigoBarra : codigoBarraController.text;
+      puntosSeleccionados[i].zona = zonaSeleccionada.codZona;
+      puntosSeleccionados[i].sector = sector;
+      puntosSeleccionados[i].idPIAccion = idPIAccion;
+      puntosSeleccionados[i].piAccionId = 6;
+      puntosSeleccionados[i].codAccion = '6';
+      puntosSeleccionados[i].descPiAccion = '';
+      puntosSeleccionados[i].comentario = comentario;
+      puntosSeleccionados[i].materiales = [];
+      puntosSeleccionados[i].plagas = [];
+      puntosSeleccionados[i].tareas = [];
+      puntosSeleccionados[i].trasladoNuevo = [];
     }
-
+    await postAcciones(puntosSeleccionados);
     await actualizarDatos();
     limpiarDatos();
-
-    await PtosInspeccionServices.showDialogs(
-        context, 'Punto guardado', true, false);
+    subiendoAcciones = false;
   }
 
-  Future marcarPINuevo(int idPIAccion, ZonaPI zonaSeleccionada, String sector,
-      String comentario) async {
+  Future marcarPINuevo(int idPIAccion, ZonaPI zonaSeleccionada, String sector, String comentario) async {
     RevisionPtoInspeccion nuevaRevisionPtoInspeccion = RevisionPtoInspeccion(
-        otPuntoInspeccionId: puntosSeleccionados.isNotEmpty ? puntosSeleccionados[0].otPuntoInspeccionId : 0,
-        ordenTrabajoId: orden.ordenTrabajoId,
-        otRevisionId: orden.otRevisionId,
-        puntoInspeccionId: 0,
-        planoId: 0,
-        tipoPuntoInspeccionId: selectedTipoPto.tipoPuntoInspeccionId,
-        codTipoPuntoInspeccion: '',
-        descTipoPuntoInspeccion: '',
-        plagaObjetivoId: plagaObjetivoSeleccionada.plagaObjetivoId,
-        codPuntoInspeccion: codPuntoInspeccionController.text,
-        codigoBarra: codigoBarraController.text,
-        zona: zonaSeleccionada.codZona,
-        sector: sector,
-        idPIAccion: idPIAccion,
-        piAccionId: 1,
-        codAccion: '1',
-        descPiAccion: '',
-        comentario: comentario,
-        materiales: [],
-        plagas: [],
-        tareas: [],
-        trasladoNuevo: [],
-        seleccionado: false);
+      otPuntoInspeccionId: puntosSeleccionados.isNotEmpty ? puntosSeleccionados[0].otPuntoInspeccionId : 0,
+      ordenTrabajoId: orden.ordenTrabajoId,
+      otRevisionId: orden.otRevisionId,
+      puntoInspeccionId: 0,
+      planoId: 0,
+      tipoPuntoInspeccionId: selectedTipoPto.tipoPuntoInspeccionId,
+      codTipoPuntoInspeccion: '',
+      descTipoPuntoInspeccion: '',
+      plagaObjetivoId: plagaObjetivoSeleccionada.plagaObjetivoId,
+      codPuntoInspeccion: codPuntoInspeccionController.text,
+      codigoBarra: codigoBarraController.text,
+      zona: zonaSeleccionada.codZona,
+      sector: sector,
+      idPIAccion: idPIAccion,
+      piAccionId: idPIAccion,
+      codAccion: idPIAccion.toString(),
+      descPiAccion: '',
+      comentario: comentario,
+      materiales: [],
+      plagas: [],
+      tareas: [],
+      trasladoNuevo: [],
+      seleccionado: false
+    );
 
     if (nuevaRevisionPtoInspeccion.otPuntoInspeccionId != 0) {
-      await PtosInspeccionServices().putPtoInspeccionAccion(
-          context, orden, nuevaRevisionPtoInspeccion, revisionId, token);
+      await PtosInspeccionServices().putPtoInspeccionAccion(context, orden, nuevaRevisionPtoInspeccion, revisionId, token);
     } else {
-      await PtosInspeccionServices().postPtoInspeccionAccion(
-          context, orden, nuevaRevisionPtoInspeccion, revisionId, token);
+      await PtosInspeccionServices().postPtoInspeccionAccion(context, orden, nuevaRevisionPtoInspeccion, revisionId, token);
     }
 
     await actualizarDatos();
     limpiarDatos();
-
     PtosInspeccionServices.showDialogs(context, 'Punto guardado', true, false);
+    subiendoAcciones = false;
   }
 
   void limpiarDatos() {
@@ -880,49 +803,49 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
   }
 
   Future<void> actualizarDatos() async {
-    widget.ptosInspeccion =
-        await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token);
-    plagasObjetivo =
-        await PlagaObjetivoServices().getPlagasObjetivo(context, '', '', token);
-
+    widget.ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token);
+    plagasObjetivo = await PlagaObjetivoServices().getPlagasObjetivo(context, '', '', token);
     setState(() {});
   }
 
   Future borrarAcciones() async {
-    for (var i = 0; i < puntosSeleccionados.length; i++) {
-      await PtosInspeccionServices()
-          .deleteAccionesPI(context, orden, puntosSeleccionados[i], token);
-    }
+    await PtosInspeccionServices().deleteAcciones(context, orden, puntosSeleccionados, revisionId, token);
     await actualizarDatos();
-    await PtosInspeccionServices.showDialogs(
-        context, 'Acciones borradas', true, false);
+    await PtosInspeccionServices.showDialogs(context, puntosSeleccionados.length == 1 ? 'Accion borrada' : 'Acciones borradas', true, false);
+  }
+
+  Future postAcciones(List<RevisionPtoInspeccion> acciones) async {
+    await PtosInspeccionServices().postAcciones(context, orden, acciones, revisionId, token);
+    await actualizarDatos();
+    await PtosInspeccionServices.showDialogs(context, acciones.length == 1 ? 'Accion creada' : 'Acciones creadas', true, false);
   }
 
   Future borrarAccion() async {
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Confirmación'),
-            content: const Text(
-              'Se eliminará toda la información ingresada para los puntos seleccionados. Desea confirmar la acción?',
-              style: TextStyle(fontSize: 16),
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Confirmación'),
+          content: const Text(
+            'Se eliminará toda la información ingresada para los puntos seleccionados. Desea confirmar la acción?',
+            style: TextStyle(fontSize: 16),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cerrar'),
             ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Cerrar'),
-              ),
-              TextButton(
-                onPressed: () {
-                  borrarAcciones();
-                },
-                child: const Text('Confirmar'),
-              ),
-            ],
-          );
-        });
+            TextButton(
+              onPressed: () {
+                borrarAcciones();
+              },
+              child: const Text('Confirmar'),
+            ),
+          ],
+        );
+      }
+    );
   }
 }

@@ -81,21 +81,60 @@ class RevisionServices {
     );
   }
 
-  Future getRevision(BuildContext context, Orden orden, String token) async {
+  Future getRevisiones(BuildContext context, Orden orden, String token) async {
     String link = apiLink;
-    link += 'api/v1/ordenes/${orden.ordenTrabajoId.toString()}/revisiones';
+    link += 'api/v1/ordenes/${orden.ordenTrabajoId}/revisiones';
     try {
       var headers = {'Authorization': token};
       var resp = await _dio.request(link,
-          options: Options(
-            method: 'GET',
-            headers: headers,
-          ),
+        options: Options(
+          method: 'GET',
+          headers: headers,
+        ),
       );
       final List revisionesList = resp.data;
       var retorno = revisionesList.map((e) => RevisionOrden.fromJson(e)).toList();
 
       return retorno;
+      
+    } catch (e) {
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+              return "Error: ${error['message']}";
+            }).toList();
+            showErrorDialog(context, errorMessages.join('\n'));
+          }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: ${e.message}');
+        }
+      }
+    }
+  }
+
+  Future getRevision(BuildContext context, Orden orden, int revisionId, String token) async {
+    String link = apiLink;
+    link += 'api/v1/ordenes/${orden.ordenTrabajoId}/revisiones/$revisionId';
+    try {
+      var headers = {'Authorization': token};
+      var resp = await _dio.request(link,
+        options: Options(
+          method: 'GET',
+          headers: headers,
+        ),
+      );
+
+      String firmaDisponible = resp.data["firmaClienteDisponible"];
+      return firmaDisponible;
       
     } catch (e) {
       if (e is DioException) {
@@ -790,6 +829,46 @@ class RevisionServices {
           showErrorDialog(context, 'Error: ${e.message}');
         }
       }
+    }
+  }
+
+  Future patchFirma(BuildContext context, Orden orden, String? disponible, String token) async {
+    String link = apiLink;
+    link += 'api/v1/ordenes/${orden.ordenTrabajoId}/revisiones/${orden.otRevisionId}/firmas';
+    var data = {
+      "valor": disponible
+    };
+
+
+    try {
+      var headers = {'Authorization': token};
+      var resp = await _dio.request(link,
+          options: Options(
+            method: 'PATCH',
+            headers: headers,
+          ),
+          data: data
+        );
+      return;
+    } catch (e) {
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+              return "Error: ${error['message']}";
+            }).toList();
+            showErrorDialog(context, errorMessages.join('\n'));
+          }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } 
+      } 
     }
   }
 }

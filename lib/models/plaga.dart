@@ -10,17 +10,20 @@ class Plaga {
   late int plagaId;
   late String codPlaga;
   late String descripcion;
+  late bool activo;
 
   Plaga({
     required this.plagaId,
     required this.codPlaga,
     required this.descripcion,
+    this.activo = false,
   });
 
   factory Plaga.fromJson(Map<String, dynamic> json) => Plaga(
         plagaId: json["plagaId"],
         codPlaga: json["codPlaga"],
         descripcion: json["descripcion"],
+        activo: false
       );
 
   Map<String, dynamic> toMap() => {
@@ -33,6 +36,7 @@ class Plaga {
     plagaId = 0;
     codPlaga = '';
     descripcion = '';
+    activo = false;
   }
 
   @override

@@ -85,25 +85,6 @@ class _TareasDesktopState extends State<TareasDesktop> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Row(
-                      children: [
-                        const Text('Tipo: '),
-                        const SizedBox(
-                          width: 44,
-                        ),
-                        SizedBox(
-                          width: 300,
-                          child: CustomTextFormField(
-                            maxLines: 1,
-                            label: 'Tipo',
-                            controller: _nombreController,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
                     Center(
                       child: ElevatedButton(
                           style: const ButtonStyle(
@@ -173,15 +154,13 @@ class _TareasDesktopState extends State<TareasDesktop> {
                         leading: CircleAvatar(
                           backgroundColor: colors.primary,
                           child: Text(
-                            tareas[index].tareaId.toString(),
+                            tareas[index].codTarea,
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),
                         title: Text(tareas[index].descripcion),
-                        trailing: Text(tareas[index].codTarea),
                         onTap: () {
-                          Provider.of<OrdenProvider>(context, listen: false)
-                              .setTarea(tareas[index]);
+                          Provider.of<OrdenProvider>(context, listen: false).setTarea(tareas[index]);
                           router.push('/editTareas');
                         },
                       ),

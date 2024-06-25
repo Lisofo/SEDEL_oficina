@@ -23,8 +23,7 @@ class MapaPageMobile extends StatefulWidget {
   State<MapaPageMobile> createState() => _MapaPageMobileState();
 }
 
-class _MapaPageMobileState extends State<MapaPageMobile>
-    with SingleTickerProviderStateMixin {
+class _MapaPageMobileState extends State<MapaPageMobile> with SingleTickerProviderStateMixin {
   Tecnico? selectedTecnico;
   Cliente? selectedCliente;
   DateTime selectedDate = DateTime.now();
@@ -224,8 +223,7 @@ class _MapaPageMobileState extends State<MapaPageMobile>
                             ubicacion.cliente.nombre,
                             style: const TextStyle(fontSize: 14),
                           ),
-                          subtitle: Text(
-                              '${ubicacion.ordenTrabajoId} - ${DateFormat('HH:mm', 'es').format(ubicacion.fechaDate)}'),
+                          subtitle: Text('${ubicacion.ordenTrabajoId} - ${DateFormat('HH:mm', 'es').format(ubicacion.fechaDate)}'),
                           value: ubicacion.seleccionado,
                           onChanged: (value) {
                             ubicacion.seleccionado = value!;
@@ -243,10 +241,10 @@ class _MapaPageMobileState extends State<MapaPageMobile>
                   onTap: (index) async{
                     buttonIndex = index;
                     switch (buttonIndex){
-                      case 0: 
-                        ubicaciones = await UbicacionesServices().getUbicaciones(context,selectedTecnico!.tecnicoId,
-                        selectedDate.toIso8601String(),
-                        selectedDate.add(const Duration(days: 1)).toIso8601String(),token);       
+                      case 0:
+                        String fechaDesde = ('${selectedDate.year}-${selectedDate.month}-${selectedDate.day}');
+                        String fechaHasta = ('${selectedDate.year}-${selectedDate.month}-${selectedDate.day + 1}');
+                        ubicaciones = await UbicacionesServices().getUbicaciones(context, selectedTecnico!.tecnicoId, fechaDesde, fechaHasta, token);
                         cargarUbicacion();
                         cargarMarkers();
                         setState(() {});
@@ -257,13 +255,9 @@ class _MapaPageMobileState extends State<MapaPageMobile>
                           ubicacion.seleccionado = selectAll;
                         }
                         cargarMarkers();
-                        setState(() {
-                          
-                        });
+                        setState(() {});
                       break;
                     }
-          
-                    
                   },
                   showUnselectedLabels: true,
                   selectedItemColor: colors.primary,
@@ -280,10 +274,7 @@ class _MapaPageMobileState extends State<MapaPageMobile>
                   ],
                 ),
               ],
-            
-              
             ),
-            
           ),
           body: SizedBox(
             width: MediaQuery.of(context).size.width,
@@ -304,8 +295,7 @@ class _MapaPageMobileState extends State<MapaPageMobile>
                   markers: _markers.values.toSet(),
                   polylines: {
                     Polyline(
-                      polylineId:
-                          const PolylineId('polyline'),
+                      polylineId: const PolylineId('polyline'),
                       color: Colors.blue,
                       width: 3,
                       points: polylineCoordinates,
@@ -345,8 +335,8 @@ class _MapaPageMobileState extends State<MapaPageMobile>
           addMarker(
             ubicacion.logId.toString(),
             LatLng(double.parse(coord[0]), double.parse(coord[1])),
-            'Cliente: ${ubicacion.cliente.nombre}',
-            'Tecnico: ${ubicacion.tecnico.nombre}'
+            ubicacion.cliente.nombre,
+            'Orden: ${ubicacion.ordenTrabajoId} - ${DateFormat('HH:mm', 'es').format(ubicacion.fechaDate)}'
           );
         } else {
           print('Error: Coordenates not properly formatted'); // Add this line for debugging

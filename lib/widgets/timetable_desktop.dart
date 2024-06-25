@@ -480,17 +480,15 @@ class _CustomizedTimetableDesktopState extends State<CustomizedTimetableDesktop>
   }
 
    Future<void> cargandoPlanificacion() async {
-      String fechaDesde =
-        ('${selectedDatePlanificacion.start.year}-${selectedDatePlanificacion.start.month}-${selectedDatePlanificacion.start.day}');
-    String fechaHasta =
-        ('${selectedDatePlanificacion.end.year}-${selectedDatePlanificacion.end.month}-${selectedDatePlanificacion.end.day}');
-     setState(() {
-       cargando = true;
-     });
-     await PlanificacionServices().generarPlanificacion(context,fechaDesde,fechaHasta,token);
-     setState(() {
-       cargando = false;
-     });
+    String fechaDesde = ('${selectedDatePlanificacion.start.year}-${selectedDatePlanificacion.start.month}-${selectedDatePlanificacion.start.day}');
+    String fechaHasta = ('${selectedDatePlanificacion.end.year}-${selectedDatePlanificacion.end.month}-${selectedDatePlanificacion.end.day}');
+    setState(() {
+      cargando = true;
+    });
+    await PlanificacionServices().generarPlanificacion(context,fechaDesde,fechaHasta,token);
+    setState(() {
+      cargando = false;
+    });
    }
 
   Future<void> buscar(String token) async {

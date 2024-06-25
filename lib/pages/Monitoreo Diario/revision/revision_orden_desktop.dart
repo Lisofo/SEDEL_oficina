@@ -78,19 +78,26 @@ class _RevisionOrdenDesktopState extends State<RevisionOrdenDesktop> with Single
     orden = context.read<OrdenProvider>().orden;
     revisionId = orden.otRevisionId;
     token = context.read<OrdenProvider>().token;
-    plagas = await PlagaServices().getPlagas(context, '', '', token);
-    materiales = await MaterialesServices().getMateriales(context, '', '', token);
-    revisionMaterialesList = await MaterialesServices().getRevisionMateriales(context, orden, revisionId, token);
-    revisionTareasList = await RevisionServices().getRevisionTareas(context, orden, revisionId, token);
-    revisionPlagasList = await RevisionServices().getRevisionPlagas(context, orden, revisionId, token);
     observaciones = await RevisionServices().getObservacion(context, orden, observacion, revisionId, token);
-    ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token);
-    firmas = await RevisionServices().getRevisionFirmas(context, orden, revisionId, token);
-    revisiones = await RevisionServices().getRevision(context, orden, token);
     observacion = observaciones.isNotEmpty ? observaciones[0] : Observacion.empty();
-    controles = await OrdenControlServices().getControlOrden(context, orden, revisionId, token);
+    firmas = await RevisionServices().getRevisionFirmas(context, orden, revisionId, token);
+    revisiones = await RevisionServices().getRevisiones(context, orden, token);
+    selectedRevision = revisiones[0];
     Provider.of<OrdenProvider>(context, listen: false).setRevisionId(revisionId);
-
+    switch (orden.tipoOrden.codTipoOrden){
+      case 'N':
+      case 'D':
+        plagas = await PlagaServices().getPlagas(context, '', '', token);
+        materiales = await MaterialesServices().getMateriales(context, '', '', token);
+        revisionMaterialesList = await MaterialesServices().getRevisionMateriales(context, orden, revisionId, token);
+        revisionTareasList = await RevisionServices().getRevisionTareas(context, orden, revisionId, token);
+        revisionPlagasList = await RevisionServices().getRevisionPlagas(context, orden, revisionId, token);
+        ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token);
+      break;
+      case 'C':
+        controles = await OrdenControlServices().getControlOrden(context, orden, revisionId, token);
+      break;
+    }
     setState(() {});
     
   }
@@ -245,16 +252,21 @@ class _RevisionOrdenDesktopState extends State<RevisionOrdenDesktop> with Single
     revisionId = (value as RevisionOrden).otRevisionId;
     print(revisionId);
     Provider.of<OrdenProvider>(context, listen: false).setRevisionId(revisionId);
-    revisionMaterialesList = await MaterialesServices().getRevisionMateriales(context, orden, revisionId, token);
-    revisionTareasList = await RevisionServices().getRevisionTareas(context, orden, revisionId, token);
-    revisionPlagasList = await RevisionServices().getRevisionPlagas(context, orden, revisionId, token);
     observaciones = await RevisionServices().getObservacion(context, orden, observacion, revisionId, token);
     observacion = observaciones.isNotEmpty ? observaciones[0] : Observacion.empty();
-    ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token);
     firmas = await RevisionServices().getRevisionFirmas(context, orden, revisionId, token);
-    controles = await OrdenControlServices().getControlOrden(context, orden, revisionId, token);
-    print(controles[0]);
-    // setState(() {});
+    switch (orden.tipoOrden.codTipoOrden){
+      case 'N':
+      case 'D':
+        revisionMaterialesList = await MaterialesServices().getRevisionMateriales(context, orden, revisionId, token);
+        revisionTareasList = await RevisionServices().getRevisionTareas(context, orden, revisionId, token);
+        revisionPlagasList = await RevisionServices().getRevisionPlagas(context, orden, revisionId, token);
+        ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token);
+      break;
+      case 'C':
+        controles = await OrdenControlServices().getControlOrden(context, orden, revisionId, token);
+      break;
+    }
   }
 
  _showCreateCopyDialog(BuildContext context) {
@@ -332,7 +344,7 @@ class _RevisionOrdenDesktopState extends State<RevisionOrdenDesktop> with Single
                 selectedRevision!.comentario = comentarioController.text;          
                 selectedRevision!.tipoRevision = filtro ? 'R' : 'N';
                 await RevisionServices().copyRevision(context, orden, selectedRevision!, token);
-                revisiones = await RevisionServices().getRevision(context, orden, token);
+                revisiones = await RevisionServices().getRevisiones(context, orden, token);
                 setState(() {});
               }
             },
@@ -396,7 +408,7 @@ _showCreateDeleteDialog(BuildContext context) {
                   );
                 }else{
                   await RevisionServices().deleteRevision(context, orden, selectedRevision!, token);
-                  revisiones = await RevisionServices().getRevision(context, orden, token);
+                  revisiones = await RevisionServices().getRevisiones(context, orden, token);
                   setState(() {});
                 }
               }

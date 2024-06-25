@@ -98,10 +98,10 @@ class PlagaServices {
   }
 
   Future getPlagas(BuildContext context, String descripcion, String codPlaga, String token) async {
-    String link = apiLink;
-    bool yaTieneFiltro = false;
+    String link = "$apiLink?sort=descripcion";
+    bool yaTieneFiltro = true;
     if (descripcion != '') {
-      link += '?descripcion=$descripcion';
+      link += '&descripcion=$descripcion';
       yaTieneFiltro = true;
     }
     if (codPlaga != '') {

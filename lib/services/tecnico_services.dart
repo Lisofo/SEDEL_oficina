@@ -1,5 +1,8 @@
 // ignore_for_file: unnecessary_string_interpolations, avoid_print, use_build_context_synchronously
 
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sedel_oficina_maqueta/config/config.dart';
@@ -192,9 +195,14 @@ class TecnicoServices {
     try {
       var headers = {'Authorization': token};
       // var xx = tecnico.toMap();
-      final resp = await _dio.request(link,
-          data: tecnico.toMap(),
-          options: Options(method: 'POST', headers: headers));
+      final resp = await _dio.request(
+        link,
+        data: tecnico.toMap(),
+        options: Options(
+          method: 'POST', 
+          headers: headers
+        )
+      );
 
       tecnico.tecnicoId = resp.data['tecnicoId'];
 
@@ -232,9 +240,14 @@ class TecnicoServices {
       String link = apiLink;
       var headers = {'Authorization': token};
       //var xx = tecnico.toMap();
-      final resp = await _dio.request(link += tecnico.tecnicoId.toString(),
-          data: tecnico.toMap(),
-          options: Options(method: 'PUT', headers: headers));
+      final resp = await _dio.request(
+        link += tecnico.tecnicoId.toString(),
+        data: tecnico.toMap(),
+        options: Options(
+          method: 'PUT', 
+          headers: headers
+        )
+      );
 
       if (resp.statusCode == 200) {
         showErrorDialog(context, 'Tecnico actualizado correctamente');
@@ -270,13 +283,65 @@ class TecnicoServices {
       String link = apiLink;
       var headers = {'Authorization': token};
 
-      final resp = await _dio.request(link += tecnico.tecnicoId.toString(),
-          options: Options(method: 'DELETE', headers: headers));
+      final resp = await _dio.request(
+        link += tecnico.tecnicoId.toString(),
+        options: Options(
+          method: 'DELETE', 
+          headers: headers
+        )
+      );
 
       if (resp.statusCode == 204) {
         showDialogs(context, 'Tecnico borrado correctamente', true, true);
       }
       return resp.statusCode;
+    } catch (e) {
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+              return "Error: ${error['message']}";
+            }).toList();
+            showErrorDialog(context, errorMessages.join('\n'));
+          }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: ${e.message}');
+        }
+      }
+    }
+  }
+
+  Future putTecnicoFirma(BuildContext context, int id, String token, Uint8List? firma, String? fileName, String md5) async {
+    String link = apiLink += '$id/firma';
+    
+    try {
+      var headers = {'Authorization': token};
+      var formData = FormData.fromMap({
+        'firma': MultipartFile.fromBytes(firma as List<int>, filename: fileName),
+        'firmaMD5': jsonEncode(md5),
+      });
+      print(formData);
+      var resp = await _dio.put(
+        link,
+        data: formData,
+        options: Options(
+          contentType: 'multipart/form-data',
+          headers: headers,
+        ),
+      );
+
+      // if (resp.statusCode == 201) {
+      //   showDialogs(context, 'PDF subido', false, false);
+      // }
+      return resp;
     } catch (e) {
       if (e is DioException) {
         if (e.response != null) {

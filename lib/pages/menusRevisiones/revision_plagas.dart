@@ -30,21 +30,21 @@ class _RevisionPlagasMenuState extends State<RevisionPlagasMenu> {
 
   List<GradoInfestacion> gradoInfeccion = [
     GradoInfestacion(
-        gradoInfestacionId: 1,
-        codGradoInfestacion: '1',
-        descripcion: 'Sin Avistamiento'),
+      gradoInfestacionId: 1,
+      codGradoInfestacion: '1',
+      descripcion: 'Sin Avistamiento'),
     GradoInfestacion(
-        gradoInfestacionId: 2,
-        codGradoInfestacion: '2',
-        descripcion: 'Población Controlada - Aceptable'),
+      gradoInfestacionId: 2,
+      codGradoInfestacion: '2',
+      descripcion: 'Población Controlada - Aceptable'),
     GradoInfestacion(
-        gradoInfestacionId: 3,
-        codGradoInfestacion: '3',
-        descripcion: 'Población Media - Requiere Atención'),
+      gradoInfestacionId: 3,
+      codGradoInfestacion: '3',
+      descripcion: 'Población Media - Requiere Atención'),
     GradoInfestacion(
-        gradoInfestacionId: 4,
-        codGradoInfestacion: '4',
-        descripcion: 'Población Alta - Grave'),
+      gradoInfestacionId: 4,
+      codGradoInfestacion: '4',
+      descripcion: 'Población Alta - Grave'),
   ];
   List<Plaga> plagasSeleccionadas = [];
   late Plaga selectedPlaga = Plaga.empty();

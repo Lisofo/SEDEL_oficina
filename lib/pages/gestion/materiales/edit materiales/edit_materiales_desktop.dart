@@ -413,8 +413,7 @@ class _EditMaterialesPageDesktopState extends State<EditMaterialesPageDesktop> {
       final files = input.files;
       if (files!.isNotEmpty) {
         final reader = html.FileReader();
-        reader.readAsArrayBuffer(
-            files[0]); // Leer el archivo como una matriz de bytes
+        reader.readAsArrayBuffer(files[0]); // Leer el archivo como una matriz de bytes
         reader.onLoadEnd.listen((e) {
           setState(() {
             // Asignar los bytes del archivo a pdfBytes

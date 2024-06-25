@@ -15,6 +15,7 @@ class Materiales {
   late String fabProv;
   late String enAppTecnico;
   late String enUso;
+  late bool activo;
 
   Materiales({
     required this.materialId,
@@ -25,6 +26,7 @@ class Materiales {
     required this.fabProv,
     required this.enAppTecnico,
     required this.enUso,
+    this.activo = false
   });
 
   factory Materiales.fromJson(Map<String, dynamic> json) => Materiales(
@@ -36,6 +38,7 @@ class Materiales {
         fabProv: json["fabProv"] as String? ?? '',
         enAppTecnico: json["enAppTecnico"] as String? ?? '',
         enUso: json["enUso"] as String? ?? '',
+        activo: false
       );
 
   Map<String, dynamic> toMap() => {
@@ -58,6 +61,7 @@ class Materiales {
     fabProv = '';
     enAppTecnico = '';
     enUso = '';
+    activo = false;
   }
 
   @override

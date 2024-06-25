@@ -170,6 +170,26 @@ final router = GoRouter(initialLocation: '/', routes: [
   ),
   GoRoute(
     path: '/informes',
-    builder: (context, state) => const InformesPage (),
+    builder: (context, state) => const InformesPage(),
+  ),
+  GoRoute(
+    path: '/tiposPunto',
+    builder: (context, state) => const TiposPuntosPage(),
+  ),
+  GoRoute(
+    path: '/editTiposPunto',
+    builder: (context, state) => const EditTiposPto(),
+  ),
+  GoRoute(
+    path: '/materialesTiposPunto',
+    builder: (context, state) => const MaterialesTiposPuntosPage(),
+  ),
+  GoRoute(
+    path: '/plagasTiposPunto',
+    builder: (context, state) => const PlagasTiposPuntosPage(),
+  ),
+  GoRoute(
+    path: '/tareasTiposPunto',
+    builder: (context, state) => const TareasTiposPuntosPage(),
   ),
 ]);

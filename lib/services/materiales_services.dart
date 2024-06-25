@@ -1234,5 +1234,54 @@ class MaterialesServices {
     }
   }
 
+  Future putRevisionMaterial(BuildContext context, Orden orden, List<int> plagasIds, RevisionMaterial revisionMaterial, int revisionId, String token) async {
+    
+    String link = '${apiUrl}api/v1/ordenes/${orden.ordenTrabajoId}/revisiones/$revisionId/materiales/${revisionMaterial.otMaterialId}';
+    var data = ({
+      "idsPlagas": plagasIds,
+      "comentario": "",
+      "cantidad": revisionMaterial.cantidad,
+      "idMaterialLote": revisionMaterial.lote.materialLoteId == 0 ? null : revisionMaterial.lote.materialLoteId,
+      "idMetodoAplicacion": revisionMaterial.metodoAplicacion.metodoAplicacionId,
+      "ubicacion": revisionMaterial.ubicacion,
+      "areaCobertura": revisionMaterial.areaCobertura,
+      "idMaterial": revisionMaterial.material.materialId
+    });
 
+    try {
+      var headers = {'Authorization': token};
+      var resp = await _dio.request(
+        link,
+        options: Options(
+          method: 'PUT',
+          headers: headers,
+        ),
+        data: data,
+      );
+      if (resp.statusCode == 200) {
+        await showDialogs(context, 'Material editado', true, false);
+      }
+
+      return;
+    } catch (e) {
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+              return "Error: ${error['message']}";
+            }).toList();
+            showErrorDialog(context, errorMessages.join('\n'));
+          }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } 
+      } 
+    }
+  }
 }

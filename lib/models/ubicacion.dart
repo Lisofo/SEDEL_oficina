@@ -7,11 +7,9 @@ import 'dart:convert';
 import 'package:sedel_oficina_maqueta/models/cliente.dart';
 import 'package:sedel_oficina_maqueta/models/tecnico.dart';
 
-List<Ubicacion> ubicacionFromMap(String str) =>
-    List<Ubicacion>.from(json.decode(str).map((x) => Ubicacion.fromJson(x)));
+List<Ubicacion> ubicacionFromMap(String str) => List<Ubicacion>.from(json.decode(str).map((x) => Ubicacion.fromJson(x)));
 
-String ubicacionToMap(List<Ubicacion> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toMap())));
+String ubicacionToMap(List<Ubicacion> data) => json.encode(List<dynamic>.from(data.map((x) => x.toMap())));
 
 class Ubicacion {
   late int ordenTrabajoId;
@@ -47,37 +45,37 @@ class Ubicacion {
   });
 
   factory Ubicacion.fromJson(Map<String, dynamic> json) => Ubicacion(
-        ordenTrabajoId: json["ordenTrabajoId"] as int? ?? 0,
-        fechaOrdenTrabajo: DateTime.parse(json["fechaOrdenTrabajo"]),
-        logId: json["logId"] as int? ?? 0,
-        fechaDate: DateTime.parse(json["fechaDate"]),
-        estado: json["estado"] as String? ?? '',
-        ubicacionId: json["ubicacionId"] as int? ?? 0,
-        ubicacion: json["ubicacion"] as String? ?? '',
-        inicio: DateTime.parse(json["inicio"]),
-        fin: DateTime.parse(json["fin"]),
-        estadoOt: json["estadoOT"] as String? ?? '',
-        tipoOrden: TipoOrden.fromMap(json["tipoOrden"]),
-        cliente: Cliente.fromJson(json["cliente"]),
-        tecnico: Tecnico.fromJson(json["tecnico"]),
-        seleccionado: true,
-      );
+    ordenTrabajoId: json["ordenTrabajoId"] as int? ?? 0,
+    fechaOrdenTrabajo: DateTime.parse(json["fechaOrdenTrabajo"]),
+    logId: json["logId"] as int? ?? 0,
+    fechaDate: DateTime.parse(json["fechaDate"]),
+    estado: json["estado"] as String? ?? '',
+    ubicacionId: json["ubicacionId"] as int? ?? 0,
+    ubicacion: json["ubicacion"] as String? ?? '',
+    inicio: DateTime.parse(json["inicio"]),
+    fin: DateTime.parse(json["fin"]),
+    estadoOt: json["estadoOT"] as String? ?? '',
+    tipoOrden: TipoOrden.fromMap(json["tipoOrden"]),
+    cliente: Cliente.fromJson(json["cliente"]),
+    tecnico: Tecnico.fromJson(json["tecnico"]),
+    seleccionado: true,
+  );
 
   Map<String, dynamic> toMap() => {
-        "ordenTrabajoId": ordenTrabajoId,
-        "fechaOrdenTrabajo": fechaOrdenTrabajo.toIso8601String(),
-        "logId": logId,
-        "fechaDate": fechaDate.toIso8601String(),
-        "estado": estado,
-        "ubicacionId": ubicacionId,
-        "ubicacion": ubicacion,
-        "inicio": inicio.toIso8601String(),
-        "fin": fin.toIso8601String(),
-        "estadoOT": estadoOt,
-        "tipoOrden": tipoOrden.toMap(),
-        "cliente": cliente.toMap(),
-        "tecnico": tecnico.toMap(),
-      };
+    "ordenTrabajoId": ordenTrabajoId,
+    "fechaOrdenTrabajo": fechaOrdenTrabajo.toIso8601String(),
+    "logId": logId,
+    "fechaDate": fechaDate.toIso8601String(),
+    "estado": estado,
+    "ubicacionId": ubicacionId,
+    "ubicacion": ubicacion,
+    "inicio": inicio.toIso8601String(),
+    "fin": fin.toIso8601String(),
+    "estadoOT": estadoOt,
+    "tipoOrden": tipoOrden.toMap(),
+    "cliente": cliente.toMap(),
+    "tecnico": tecnico.toMap(),
+  };
 
   Ubicacion.empty() {
     ordenTrabajoId = 0;
@@ -108,16 +106,16 @@ class TipoOrden {
   });
 
   factory TipoOrden.fromMap(Map<String, dynamic> json) => TipoOrden(
-        tipoOrdenId: json["tipoOrdenId"] as int? ?? 0,
-        codTipoOrden: json["codTipoOrden"] as String? ?? '',
-        descripcion: json["descripcion"] as String? ?? '',
-      );
+    tipoOrdenId: json["tipoOrdenId"] as int? ?? 0,
+    codTipoOrden: json["codTipoOrden"] as String? ?? '',
+    descripcion: json["descripcion"] as String? ?? '',
+  );
 
   Map<String, dynamic> toMap() => {
-        "tipoOrdenId": tipoOrdenId,
-        "codTipoOrden": codTipoOrden,
-        "descripcion": descripcion,
-      };
+    "tipoOrdenId": tipoOrdenId,
+    "codTipoOrden": codTipoOrden,
+    "descripcion": descripcion,
+  };
 
   TipoOrden.empty() {
     tipoOrdenId = 0;

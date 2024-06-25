@@ -82,22 +82,6 @@ class _TareasMobileState extends State<TareasMobile> {
                 const SizedBox(height: 10,),
                 Divider(color: colors.primary,),
                 const SizedBox(height: 10,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    const Text('Tipo: '),
-                    const SizedBox(width: 1,),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width *0.6,
-                      child: CustomTextFormField(
-                        maxLines: 1,
-                        label: 'Tipo',
-                        controller: _nombreController,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10,),
                 Divider(color: colors.primary,),
                 const SizedBox(height: 10,),
                 const Spacer(),
@@ -147,15 +131,13 @@ class _TareasMobileState extends State<TareasMobile> {
                         leading: CircleAvatar(
                           backgroundColor: colors.primary,
                           child: Text(
-                            tareas[index].tareaId.toString(),
+                            tareas[index].codTarea,
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),
                         title: Text(tareas[index].descripcion),
-                        trailing: Text(tareas[index].codTarea),
                         onTap: () {
-                          Provider.of<OrdenProvider>(context, listen: false)
-                              .setTarea(tareas[index]);
+                          Provider.of<OrdenProvider>(context, listen: false).setTarea(tareas[index]);
                           router.push('/editTareas');
                         },
                       ),
@@ -173,8 +155,7 @@ class _TareasMobileState extends State<TareasMobile> {
   Future<void> buscar(BuildContext context, String token) async {
     print(_descripcionController.text);
     print(_codTareaController.text);
-    List<Tarea> results = await _tareaServices.getTareas(
-        context, _descripcionController.text, _codTareaController.text, token);
+    List<Tarea> results = await _tareaServices.getTareas(context, _descripcionController.text, _codTareaController.text, token);
     setState(() {
       tareas = results;
     });

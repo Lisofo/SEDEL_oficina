@@ -1,5 +1,4 @@
-// ignore_for_file: unused_field, avoid_print, avoid_init_to_null
-
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
@@ -42,53 +41,61 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
   final _codController = TextEditingController();
   late String token = context.read<OrdenProvider>().token;
   late bool tieneId = false;
-  late Uint8List? _avatarTecnico = null;
-  late Uint8List? _firmaTecnico = null;
+  late Uint8List? _avatarTecnico;
+  late Uint8List? _firmaTecnico;
   late String? _avatarTecnico2 = '';
+  late String? _firmaTecnico2 = '';
+  late List<int> firmaBytes = [];
+  late List<int> avatarBytes = [];
+  late String md5Avatar = '';
+  late String md5Firma = '';
+  late String firmaName = '';
+  late String avatarName = '';
 
   String _formatDateAndTime(DateTime? date) {
     return '${date?.day.toString().padLeft(2, '0')}/${date?.month.toString().padLeft(2, '0')}/${date?.year.toString().padLeft(4, '0')}';
   }
 
-  Future<void> _uploadPhoto1() async {
-    final html.FileUploadInputElement input = html.FileUploadInputElement();
-    input.accept = 'image/*';
-    input.click();
+  Future<void> _uploadPhoto(Function(Uint8List?) setImage) async {
+  final html.FileUploadInputElement input = html.FileUploadInputElement();
+  input.accept = 'image/*';
+  input.click();
 
-    input.onChange.listen((e) {
-      final files = input.files;
-      if (files!.isNotEmpty) {
-        final reader = html.FileReader();
-        reader.readAsArrayBuffer(files[0]); // Leer el archivo como una matriz de bytes
-        reader.onLoadEnd.listen((e) {
-          setState(() {
-            // Asignar los bytes del archivo a _avatarTecnico
-            _avatarTecnico = reader.result as Uint8List?;
-          });
+  input.onChange.listen((e) {
+    final files = input.files;
+    if (files!.isNotEmpty) {
+      final reader = html.FileReader();
+      reader.readAsArrayBuffer(files[0]);
+      // nombre = files[0].name;
+      reader.onLoadEnd.listen((e) {
+        setState(() {
+          setImage(reader.result as Uint8List?);
         });
-      }
-    });
-  }
+      });
+    }
+  });
+}
 
-  Future<void> _uploadPhoto2() async {
-    final html.FileUploadInputElement input = html.FileUploadInputElement();
-    input.accept = 'image/*';
-    input.click();
-  
-    input.onChange.listen((e) {
-      final files = input.files;
-      if (files!.isNotEmpty) {
-        final reader = html.FileReader();
-        reader.readAsArrayBuffer(files[0]); // Leer el archivo como una matriz de bytes
-        reader.onLoadEnd.listen((e) {
-          setState(() {
-            // Asignar los bytes del archivo a _avatarTecnico
-            _firmaTecnico = reader.result as Uint8List?;
-          });
-        });
-      }
-    });
-  }
+void _setAvatarTecnico(Uint8List? image) {
+  setState(() {
+    _avatarTecnico = image;
+  });
+}
+
+void _setFirmaTecnico(Uint8List? image) {
+  setState(() {
+    _firmaTecnico = image;
+    // firmaName = nombre!;
+  });
+}
+
+Future<void> _uploadPhoto1() async {
+  await _uploadPhoto(_setAvatarTecnico);
+}
+
+Future<void> _uploadPhoto2() async {
+  await _uploadPhoto(_setFirmaTecnico);
+}
 
   @override
   void initState() {
@@ -103,6 +110,8 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
     tieneId = selectedTecnico.tecnicoId > 0;
     if(selectedTecnico.avatarPath != ''){
       _avatarTecnico2 = selectedTecnico.avatarPath;
+      _firmaTecnico2 = selectedTecnico.firmaPath;
+      print('$_avatarTecnico2?authorization:$token');
     }
     setState(() {});
   }
@@ -117,18 +126,12 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
       cargoSeleccionado = selectedTecnico.cargo;
     }
 
-    _dateNacimientoController.text = (selectedTecnico.tecnicoId != 0 &&
-            selectedDateNacimiento == selectedTecnico.fechaNacimiento)
-        ? _formatDateAndTime(selectedTecnico.fechaNacimiento)
-        : _formatDateAndTime(selectedDateNacimiento);
-    _dateCarneSaludController.text = (selectedTecnico.tecnicoId != 0 &&
-            selectedDateCarneSalud == selectedTecnico.fechaVtoCarneSalud)
-        ? _formatDateAndTime(selectedTecnico.fechaVtoCarneSalud)
-        : _formatDateAndTime(selectedDateCarneSalud);
-    _dateIngresoController.text = (selectedTecnico.tecnicoId != 0 &&
-            selectedDateIngreso == selectedTecnico.fechaIngreso)
-        ? _formatDateAndTime(selectedTecnico.fechaIngreso)
-        : _formatDateAndTime(selectedDateIngreso);
+    _dateNacimientoController.text = (selectedTecnico.tecnicoId != 0 && selectedDateNacimiento == selectedTecnico.fechaNacimiento) 
+      ? _formatDateAndTime(selectedTecnico.fechaNacimiento) : _formatDateAndTime(selectedDateNacimiento);
+    _dateCarneSaludController.text = (selectedTecnico.tecnicoId != 0 && selectedDateCarneSalud == selectedTecnico.fechaVtoCarneSalud)
+      ? _formatDateAndTime(selectedTecnico.fechaVtoCarneSalud) : _formatDateAndTime(selectedDateCarneSalud);
+    _dateIngresoController.text = (selectedTecnico.tecnicoId != 0 && selectedDateIngreso == selectedTecnico.fechaIngreso)
+      ? _formatDateAndTime(selectedDateIngreso) : _formatDateAndTime(selectedDateIngreso);
 
     late Cargo cargoInicialSeleccionado = cargos[0];
     if (cargoSeleccionado!.cargoId != 0) {
@@ -155,34 +158,79 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _avatarTecnico2 != '' ? 
-                        Image.network('$_avatarTecnico2?authorization:$token', width: 200, height: 200) : 
-                        const SizedBox(
-                          width: 200,
-                          height: 200,
-                          child: Placeholder(
-                            child: Text('Avatar del tecnico'),
-                          ),
-                        ),
+                        _avatarTecnico != null
+                            ? Image.memory(
+                                _avatarTecnico!,
+                                width: 300,
+                                height: 250,
+                                fit: BoxFit.cover,
+                              )
+                            : _avatarTecnico2 != ''
+                                ? Image.network(
+                                    '$_avatarTecnico2?authorization=$token',
+                                    width: 300,
+                                    height: 250,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const SizedBox(
+                                        width: 250,
+                                        height: 250,
+                                        child: Placeholder(
+                                          child: Text('Error al cargar avatar del técnico'),
+                                        ),
+                                      );
+                                    },
+                                  )
+                                : const SizedBox(
+                                    width: 250,
+                                    height: 250,
+                                    child: Placeholder(
+                                      child: Text('Avatar del técnico'),
+                                    ),
+                                  ),
                         IconButton(
                           tooltip: 'Subir foto',
                           onPressed: () async {
                             await _uploadPhoto1();
-                          }, 
-                          icon: const Icon(Icons.upload)),
-                        const SizedBox(
-                          height: 10,
+                          },
+                          icon: const Icon(Icons.upload),
                         ),
-                        SizedBox(
-                          width: 300,
-                          child: Image.asset('images/Firmas_Tecnicos/ANDRES ABREU.JPG'),
-                        ),
+                        const SizedBox(height: 10),
+                        _firmaTecnico != null
+                            ? Image.memory(
+                                _firmaTecnico!,
+                                width: 300,
+                                height: 109,
+                                fit: BoxFit.cover,
+                              )
+                            : _firmaTecnico2 != ''
+                                ? Image.network(
+                                    '$_firmaTecnico2?authorization=$token',
+                                    width: 300,
+                                    height: 109,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const SizedBox(
+                                        width: 250,
+                                        height: 250,
+                                        child: Placeholder(
+                                          child: Text('Error al cargar la firma del técnico'),
+                                        ),
+                                      );
+                                    },
+                                  )
+                                : const SizedBox(
+                                    width: 250,
+                                    height: 109,
+                                    child: Placeholder(
+                                      child: Text('Firma del técnico'),
+                                    ),
+                                  ),
                         IconButton(
                           tooltip: 'Subir firma',
                           onPressed: () async {
                             await _uploadPhoto2();
-                          }, 
-                          icon: const Icon(Icons.upload)),
+                          },
+                          icon: const Icon(Icons.upload),
+                        ),
                       ],
                     ),
                   ),
@@ -387,8 +435,17 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
       ),
     );
   }
+  
+  String calculateMD5(List<int> bytes) {
+    var md5c = md5.convert(bytes);
+    return md5c.toString();
+  }
 
   Future<void> postTecnico(BuildContext context) async {
+    avatarBytes = _avatarTecnico as List<int>;
+    md5Avatar = calculateMD5(avatarBytes);
+    firmaBytes = _firmaTecnico as List<int>;
+    md5Firma = calculateMD5(firmaBytes);
     selectedTecnico.codTecnico = _codController.text;
     selectedTecnico.documento = _docController.text;
     selectedTecnico.nombre = _nombreController.text;
@@ -397,9 +454,13 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
     selectedTecnico.cargoId = cargoSeleccionado!.cargoId;
     selectedTecnico.fechaIngreso = DateTime(selectedDateIngreso.year, selectedDateIngreso.month, selectedDateIngreso.day);
     selectedTecnico.fechaVtoCarneSalud = DateTime(selectedDateCarneSalud.year, selectedDateCarneSalud.month, selectedDateCarneSalud.day);
+    selectedTecnico.avatarMd5 = md5Avatar;
+    selectedTecnico.firmaMd5 = md5Firma;
 
     if (selectedTecnico.tecnicoId == 0) {
       await TecnicoServices().postTecnico(context, selectedTecnico, token);
+      await TecnicoServices().putTecnicoFirma(context, selectedTecnico.tecnicoId, token, _firmaTecnico, firmaName, md5Firma);
+
     } else {
       await TecnicoServices().putTecnico(context, selectedTecnico, token);
     }

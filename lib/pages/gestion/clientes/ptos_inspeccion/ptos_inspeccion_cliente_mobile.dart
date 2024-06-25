@@ -287,7 +287,7 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
                         child: SizedBox(
                           width: double.infinity,
                           child: Text(
-                            e.descripcion,
+                            nombreYCantidad(e),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -380,6 +380,13 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
         ),
       ),
     );
+  }
+
+  String nombreYCantidad(TipoPtosInspeccion e) { 
+    String retorno = '';
+    String cantidad = puntos.where((pto) => pto.tipoPuntoInspeccionId == e.tipoPuntoInspeccionId).toList().length.toString();
+     retorno = '${e.descripcion} ($cantidad)';
+    return retorno;
   }
 
   nuevoPuntoDeInspeccion(){

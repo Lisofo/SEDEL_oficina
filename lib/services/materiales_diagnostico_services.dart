@@ -245,4 +245,55 @@ class MaterialesDiagnosticoServices {
       }
     }
   }
+
+  Future putRevisionMaterial(BuildContext context, Orden orden, RevisionMaterial revisionMaterial, int revisionId, String token) async {
+    
+    String link = '${apiUrl}api/v1/ordenes/${orden.ordenTrabajoId}/revisiones/$revisionId/materiales/${revisionMaterial.otMaterialId}';
+    var data = ({
+      "comentario": revisionMaterial.comentario,
+      "cantidad": revisionMaterial.cantidad,
+      "idMaterial": revisionMaterial.material.materialId,
+      "idMaterialLote": null,
+      "idMetodoAplicacion": null,
+      "ubicacion": null,
+      "areaCobertura": null,
+      "idsPlagas": []
+    });
+
+    try {
+      var headers = {'Authorization': token};
+      var resp = await _dio.request(
+        link,
+        options: Options(
+          method: 'PUT',
+          headers: headers,
+        ),
+        data: data,
+      );
+      if (resp.statusCode == 200) {
+        await showDialogs(context, 'Material editado', true, false);
+      }
+
+      return;
+    } catch (e) {
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              _mostrarError(context, 'Error: ${e.response!.data['message']}');
+            }else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+              return "Error: ${error['message']}";
+            }).toList();
+            _mostrarError(context, errorMessages.join('\n'));
+          }
+          } else {
+            _mostrarError(context, 'Error: ${e.response!.data}');
+          }
+        } 
+      } 
+    }
+  }
 }

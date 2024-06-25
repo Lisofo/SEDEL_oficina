@@ -217,7 +217,7 @@ class PtoPlaga {
   late int plagaId;
   late String codPlaga;
   late String descPlaga;
-  late int cantidad;
+  late int? cantidad;
 
   PtoPlaga({
     required this.otPiPlagaId,
@@ -234,7 +234,7 @@ class PtoPlaga {
         plagaId: json["plagaId"] as int? ?? 0,
         codPlaga: json["codPlaga"] as String? ?? '',
         descPlaga: json["descPlaga"] as String? ?? '',
-        cantidad: json["cantidad"] as int? ?? 0,
+        cantidad: json["cantidad"], // si a futuro no anda es culpa de Horacio
       );
 
   Map<String, dynamic> toMap() => {

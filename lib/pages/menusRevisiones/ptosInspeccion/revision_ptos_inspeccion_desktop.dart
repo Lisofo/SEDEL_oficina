@@ -49,6 +49,7 @@ class _RevisionPtosInspeccionDesktopState extends State<RevisionPtosInspeccionDe
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
   late int revisionId = 0;
   String _searchTerm = '';
+  bool subiendoAcciones = false;
 
   List<ZonaPI> zonas = [
     ZonaPI(zona: 'Interior', codZona: 'I'),
@@ -733,136 +734,88 @@ class _RevisionPtosInspeccionDesktopState extends State<RevisionPtosInspeccionDe
 
   Future marcarPISinActividad(int idPIAccion, String comentario) async {
     for (var i = 0; i < puntosSeleccionados.length; i++) {
-      RevisionPtoInspeccion nuevaRevisionPtoInspeccion = RevisionPtoInspeccion(
-          otPuntoInspeccionId: puntosSeleccionados[i].otPuntoInspeccionId,
-          ordenTrabajoId: orden.ordenTrabajoId,
-          otRevisionId: orden.otRevisionId,
-          puntoInspeccionId: puntosSeleccionados[i].puntoInspeccionId,
-          planoId: puntosSeleccionados[i].planoId,
-          tipoPuntoInspeccionId: puntosSeleccionados[i].tipoPuntoInspeccionId,
-          codTipoPuntoInspeccion: puntosSeleccionados[i].codTipoPuntoInspeccion,
-          descTipoPuntoInspeccion: '',
-          plagaObjetivoId: puntosSeleccionados[i].plagaObjetivoId,
-          codPuntoInspeccion: puntosSeleccionados[i].codPuntoInspeccion,
-          codigoBarra: puntosSeleccionados[i].codigoBarra,
-          zona: puntosSeleccionados[i].zona,
-          sector: puntosSeleccionados[i].sector,
-          idPIAccion: idPIAccion,
-          piAccionId: 1,
-          codAccion: '1',
-          descPiAccion: '',
-          comentario: comentario,
-          materiales: [],
-          plagas: [],
-          tareas: [],
-          trasladoNuevo: [],
-          seleccionado: puntosSeleccionados[i].seleccionado);
-
-      print(puntosSeleccionados[i].puntoInspeccionId);
-      if (puntosSeleccionados[i].otPuntoInspeccionId != 0) {
-        await PtosInspeccionServices().putPtoInspeccionAccion(
-            context, orden, nuevaRevisionPtoInspeccion, revisionId, token);
-      } else {
-        await PtosInspeccionServices().postPtoInspeccionAccion(
-            context, orden, nuevaRevisionPtoInspeccion, revisionId, token);
-      }
+      puntosSeleccionados[i].ordenTrabajoId = orden.ordenTrabajoId;
+      puntosSeleccionados[i].otRevisionId = orden.otRevisionId;
+      puntosSeleccionados[i].descTipoPuntoInspeccion = '';
+      puntosSeleccionados[i].idPIAccion = idPIAccion;
+      puntosSeleccionados[i].piAccionId = idPIAccion;
+      puntosSeleccionados[i].codAccion = idPIAccion.toString();
+      puntosSeleccionados[i].descPiAccion = '';
+      puntosSeleccionados[i].comentario = comentario;
+      puntosSeleccionados[i].materiales = [];
+      puntosSeleccionados[i].plagas = [];
+      puntosSeleccionados[i].tareas = [];
+      puntosSeleccionados[i].trasladoNuevo = [];
     }
-
+    await postAcciones(puntosSeleccionados);
     await actualizarDatos();
     limpiarDatos();
-
-    await PtosInspeccionServices.showDialogs(
-        context, 'Punto guardado', true, false);
+    subiendoAcciones = false;
   }
 
-  Future marcarPITraslado(int idPIAccion, ZonaPI zonaSeleccionada,
-      String sector, String comentario) async {
+  Future marcarPITraslado(int idPIAccion, ZonaPI zonaSeleccionada, String sector, String comentario) async {
     for (var i = 0; i < puntosSeleccionados.length; i++) {
-      RevisionPtoInspeccion nuevaRevisionPtoInspeccion = RevisionPtoInspeccion(
-          otPuntoInspeccionId: puntosSeleccionados[i].otPuntoInspeccionId,
-          ordenTrabajoId: orden.ordenTrabajoId,
-          otRevisionId: orden.otRevisionId,
-          puntoInspeccionId: puntosSeleccionados[i].puntoInspeccionId,
-          planoId: puntosSeleccionados[i].planoId,
-          tipoPuntoInspeccionId: selectedTipoPto.tipoPuntoInspeccionId,
-          codTipoPuntoInspeccion: puntosSeleccionados[i].codTipoPuntoInspeccion,
-          descTipoPuntoInspeccion: '',
-          plagaObjetivoId: puntosSeleccionados[i].plagaObjetivoId,
-          codPuntoInspeccion: puntosSeleccionados[i].codPuntoInspeccion != ''
-              ? puntosSeleccionados[i].codPuntoInspeccion
-              : codPuntoInspeccionController.text,
-          codigoBarra: puntosSeleccionados[i].codigoBarra != ''
-              ? puntosSeleccionados[i].codigoBarra
-              : codigoBarraController.text,
-          zona: zonaSeleccionada.codZona,
-          sector: sector,
-          idPIAccion: idPIAccion,
-          piAccionId: 1,
-          codAccion: '1',
-          descPiAccion: '',
-          comentario: comentario,
-          materiales: [],
-          plagas: [],
-          tareas: [],
-          trasladoNuevo: [],
-          seleccionado: puntosSeleccionados[i].seleccionado);
-
-      print(puntosSeleccionados[i].puntoInspeccionId);
-      if (puntosSeleccionados[i].otPuntoInspeccionId != 0) {
-        await PtosInspeccionServices().putPtoInspeccionAccion(
-            context, orden, nuevaRevisionPtoInspeccion, revisionId, token);
-      } else {
-        await PtosInspeccionServices().postPtoInspeccionAccion(
-            context, orden, nuevaRevisionPtoInspeccion, revisionId, token);
-      }
+      puntosSeleccionados[i].ordenTrabajoId = orden.ordenTrabajoId;
+      puntosSeleccionados[i].otRevisionId = orden.otRevisionId;
+      puntosSeleccionados[i].tipoPuntoInspeccionId = selectedTipoPto.tipoPuntoInspeccionId;
+      puntosSeleccionados[i].descTipoPuntoInspeccion = '';
+      puntosSeleccionados[i].codPuntoInspeccion = puntosSeleccionados[i].codPuntoInspeccion != '' ? puntosSeleccionados[i].codPuntoInspeccion : codPuntoInspeccionController.text;
+      puntosSeleccionados[i].codigoBarra = puntosSeleccionados[i].codigoBarra != '' ? puntosSeleccionados[i].codigoBarra : codigoBarraController.text;
+      puntosSeleccionados[i].zona = zonaSeleccionada.codZona;
+      puntosSeleccionados[i].sector = sector;
+      puntosSeleccionados[i].idPIAccion = idPIAccion;
+      puntosSeleccionados[i].piAccionId = 6;
+      puntosSeleccionados[i].codAccion = '6';
+      puntosSeleccionados[i].descPiAccion = '';
+      puntosSeleccionados[i].comentario = comentario;
+      puntosSeleccionados[i].materiales = [];
+      puntosSeleccionados[i].plagas = [];
+      puntosSeleccionados[i].tareas = [];
+      puntosSeleccionados[i].trasladoNuevo = [];
     }
-
+    await postAcciones(puntosSeleccionados);
     await actualizarDatos();
     limpiarDatos();
-
-    await PtosInspeccionServices.showDialogs(
-        context, 'Punto guardado', true, false);
+    subiendoAcciones = false;
   }
 
-  Future marcarPINuevo(int idPIAccion, ZonaPI zonaSeleccionada, String sector,
-      String comentario) async {
+  Future marcarPINuevo(int idPIAccion, ZonaPI zonaSeleccionada, String sector, String comentario) async {
     RevisionPtoInspeccion nuevaRevisionPtoInspeccion = RevisionPtoInspeccion(
-        otPuntoInspeccionId: puntosSeleccionados.isNotEmpty ? puntosSeleccionados[0].otPuntoInspeccionId : 0,
-        ordenTrabajoId: orden.ordenTrabajoId,
-        otRevisionId: orden.otRevisionId,
-        puntoInspeccionId: 0,
-        planoId: 0,
-        tipoPuntoInspeccionId: selectedTipoPto.tipoPuntoInspeccionId,
-        codTipoPuntoInspeccion: '',
-        descTipoPuntoInspeccion: '',
-        plagaObjetivoId: plagaObjetivoSeleccionada.plagaObjetivoId,
-        codPuntoInspeccion: codPuntoInspeccionController.text,
-        codigoBarra: codigoBarraController.text,
-        zona: zonaSeleccionada.codZona,
-        sector: sector,
-        idPIAccion: idPIAccion,
-        piAccionId: 1,
-        codAccion: '1',
-        descPiAccion: '',
-        comentario: comentario,
-        materiales: [],
-        plagas: [],
-        tareas: [],
-        trasladoNuevo: [],
-        seleccionado: false);
+      otPuntoInspeccionId: puntosSeleccionados.isNotEmpty ? puntosSeleccionados[0].otPuntoInspeccionId : 0,
+      ordenTrabajoId: orden.ordenTrabajoId,
+      otRevisionId: orden.otRevisionId,
+      puntoInspeccionId: 0,
+      planoId: 0,
+      tipoPuntoInspeccionId: selectedTipoPto.tipoPuntoInspeccionId,
+      codTipoPuntoInspeccion: '',
+      descTipoPuntoInspeccion: '',
+      plagaObjetivoId: plagaObjetivoSeleccionada.plagaObjetivoId,
+      codPuntoInspeccion: codPuntoInspeccionController.text,
+      codigoBarra: codigoBarraController.text,
+      zona: zonaSeleccionada.codZona,
+      sector: sector,
+      idPIAccion: idPIAccion,
+      piAccionId: idPIAccion,
+      codAccion: idPIAccion.toString(),
+      descPiAccion: '',
+      comentario: comentario,
+      materiales: [],
+      plagas: [],
+      tareas: [],
+      trasladoNuevo: [],
+      seleccionado: false
+    );
 
     if (nuevaRevisionPtoInspeccion.otPuntoInspeccionId != 0) {
-      await PtosInspeccionServices().putPtoInspeccionAccion(
-          context, orden, nuevaRevisionPtoInspeccion, revisionId, token);
+      await PtosInspeccionServices().putPtoInspeccionAccion(context, orden, nuevaRevisionPtoInspeccion, revisionId, token);
     } else {
-      await PtosInspeccionServices().postPtoInspeccionAccion(
-          context, orden, nuevaRevisionPtoInspeccion, revisionId, token);
+      await PtosInspeccionServices().postPtoInspeccionAccion(context, orden, nuevaRevisionPtoInspeccion, revisionId, token);
     }
 
     await actualizarDatos();
     limpiarDatos();
-
     PtosInspeccionServices.showDialogs(context, 'Punto guardado', true, false);
+    subiendoAcciones = false;
   }
 
   void limpiarDatos() {
@@ -874,49 +827,49 @@ class _RevisionPtosInspeccionDesktopState extends State<RevisionPtosInspeccionDe
   }
 
   Future<void> actualizarDatos() async {
-    widget.ptosInspeccion =
-        await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token);
-    plagasObjetivo =
-        await PlagaObjetivoServices().getPlagasObjetivo(context, '', '', token);
-
+    widget.ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token);
+    plagasObjetivo = await PlagaObjetivoServices().getPlagasObjetivo(context, '', '', token);
     setState(() {});
   }
 
   Future borrarAcciones() async {
-    for (var i = 0; i < puntosSeleccionados.length; i++) {
-      await PtosInspeccionServices()
-          .deleteAccionesPI(context, orden, puntosSeleccionados[i], token);
-    }
+    await PtosInspeccionServices().deleteAcciones(context, orden, puntosSeleccionados, revisionId, token);
     await actualizarDatos();
-    await PtosInspeccionServices.showDialogs(
-        context, 'Acciones borradas', true, false);
+    await PtosInspeccionServices.showDialogs(context, puntosSeleccionados.length == 1 ? 'Accion borrada' : 'Acciones borradas', true, false);
+  }
+
+  Future postAcciones(List<RevisionPtoInspeccion> acciones) async {
+    await PtosInspeccionServices().postAcciones(context, orden, acciones, revisionId, token);
+    await actualizarDatos();
+    await PtosInspeccionServices.showDialogs(context, acciones.length == 1 ? 'Accion creada' : 'Acciones creadas', true, false);
   }
 
   Future borrarAccion() async {
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Confirmación'),
-            content: const Text(
-              'Se eliminará toda la información ingresada para los puntos seleccionados. Desea confirmar la acción?',
-              style: TextStyle(fontSize: 16),
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Confirmación'),
+          content: const Text(
+            'Se eliminará toda la información ingresada para los puntos seleccionados. Desea confirmar la acción?',
+            style: TextStyle(fontSize: 16),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cerrar'),
             ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Cerrar'),
-              ),
-              TextButton(
-                onPressed: () {
-                  borrarAcciones();
-                },
-                child: const Text('Confirmar'),
-              ),
-            ],
-          );
-        });
+            TextButton(
+              onPressed: () {
+                borrarAcciones();
+              },
+              child: const Text('Confirmar'),
+            ),
+          ],
+        );
+      }
+    );
   }
 }

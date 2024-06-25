@@ -4,11 +4,9 @@
 
 import 'dart:convert';
 
-List<TipoPtosInspeccion> tipoPtosInspeccionFromMap(String str) =>
-    List<TipoPtosInspeccion>.from(json.decode(str).map((x) => TipoPtosInspeccion.fromJson(x)));
+List<TipoPtosInspeccion> tipoPtosInspeccionFromMap(String str) => List<TipoPtosInspeccion>.from(json.decode(str).map((x) => TipoPtosInspeccion.fromJson(x)));
 
-String tipoPtosInspeccionToMap(List<TipoPtosInspeccion> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toMap())));
+String tipoPtosInspeccionToMap(List<TipoPtosInspeccion> data) => json.encode(List<dynamic>.from(data.map((x) => x.toMap())));
 
 class TipoPtosInspeccion {
   late int tipoPuntoInspeccionId;
@@ -23,9 +21,9 @@ class TipoPtosInspeccion {
 
   factory TipoPtosInspeccion.fromJson(Map<String, dynamic> json) =>
     TipoPtosInspeccion(
-      tipoPuntoInspeccionId: json["tipoPuntoInspeccionId"],
-      codTipoPuntoInspeccion: json["codTipoPuntoInspeccion"],
-      descripcion: json["descripcion"],
+      tipoPuntoInspeccionId: json["tipoPuntoInspeccionId"] as int? ?? 0,
+      codTipoPuntoInspeccion: json["codTipoPuntoInspeccion"] as String? ?? '',
+      descripcion: json["descripcion"] as String? ?? '',
     );
 
   Map<String, dynamic> toMap() => 

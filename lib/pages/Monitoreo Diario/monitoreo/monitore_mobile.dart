@@ -348,7 +348,7 @@ class _MonitoreoMobileState extends State<MonitoreoMobile> {
               height: 30,
               child: Center(
                 child: Text(
-                  estado,
+                  '$estado (${ordenes.where((orden) => orden.estado.toLowerCase() == estado.toLowerCase()).length})',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18),

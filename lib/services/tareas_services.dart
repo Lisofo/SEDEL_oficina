@@ -98,10 +98,10 @@ class TareasServices {
   }
 
   Future getTareas(BuildContext context, String descripcion, String codTarea, String token) async {
-    bool yaTieneFiltro = false;
-    String link = apiLink;
+    String link = '$apiLink?sort=descripcion';
+    bool yaTieneFiltro = true;
     if (descripcion != '') {
-      link += '?descripcion=$descripcion';
+      link += '&descripcion=$descripcion';
       yaTieneFiltro = true;
     }
     if (codTarea != '') {
@@ -261,8 +261,8 @@ class TareasServices {
     }
   }
 
-  Future getTareasXTPI(BuildContext context, TipoPtosInspeccion tPI,String modo, String token) async {
-    String link = '${apiUrl}api/v1/tipos/puntos/${tPI.tipoPuntoInspeccionId}/tareas?modo=$modo';
+  Future getTareasXTPI(BuildContext context, TipoPtosInspeccion tPI, String modo, String token) async {
+    String link = '${apiLink}api/v1/tipos/puntos/${tPI.tipoPuntoInspeccionId}/tareas?modo=$modo&sort=descripcion';
 
     try {
       var headers = {'Authorization': token};

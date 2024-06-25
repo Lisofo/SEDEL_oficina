@@ -20,12 +20,10 @@ class RevisionPtosInspeccionActividad extends StatefulWidget {
   const RevisionPtosInspeccionActividad({super.key});
 
   @override
-  State<RevisionPtosInspeccionActividad> createState() =>
-      _RevisionPtosInspeccionActividadState();
+  State<RevisionPtosInspeccionActividad> createState() => _RevisionPtosInspeccionActividadState();
 }
 
-class _RevisionPtosInspeccionActividadState
-    extends State<RevisionPtosInspeccionActividad> {
+class _RevisionPtosInspeccionActividadState extends State<RevisionPtosInspeccionActividad> {
   late String token = '';
   late Orden orden = Orden.empty();
   late int marcaId = 0;
@@ -33,26 +31,21 @@ class _RevisionPtosInspeccionActividadState
   bool isReadOnly = true;
   late TipoPtosInspeccion tPISeleccionado = TipoPtosInspeccion.empty();
   late List<RevisionPtoInspeccion> ptoInspeccionSeleccionados = [];
-
   List<TareaXtpi> tareas = [];
-
   List<PlagaXtpi> plagas = [];
   List<PtoPlaga> plagasSeleccionadas = [];
   late PlagaXtpi plagaSeleccionada = PlagaXtpi.empty();
-
   List<Lote> lotesVencimientos = [];
-
   TextEditingController cantidadController = TextEditingController();
   TextEditingController cantidadControllerMateriales = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-
   MaterialXtpi? materialSeleccionado;
   Lote? loteSeleccionado;
   late String menu = context.read<OrdenProvider>().menu;
   List<MaterialXtpi> materiales = [];
   List<PtoMaterial> materialesSeleccionados = [];
-
   late RevisionPtoInspeccion nuevaRevisionPtoInspeccion = RevisionPtoInspeccion.empty();
+  bool subiendoAcciones = false;
 
   @override
   void initState() {
@@ -75,26 +68,23 @@ class _RevisionPtosInspeccionActividadState
     ptoInspeccionSeleccionados = context.read<OrdenProvider>().puntosSeleccionados;
     tareas = await TareasServices().getTareasXTPI(context, tPISeleccionado, modo, token);
     materiales = await MaterialesServices().getMaterialesXTPI(context, tPISeleccionado, token);
-
     if (orden.estado == "EN PROCESO" && marcaId != 0) {
       isReadOnly = false;
     }
     int accion = menu == "Actividad" ? 2 : 3;
-    bool modificando = ptoInspeccionSeleccionados.length == 1 &&
-        ptoInspeccionSeleccionados[0].piAccionId == accion;
-
+    bool modificando = ptoInspeccionSeleccionados.length == 1 && ptoInspeccionSeleccionados[0].piAccionId == accion;
     if (modificando) {
       for (var tarea in tareas) {
         tarea.selected = ptoInspeccionSeleccionados[0]
-            .tareas
-            .any((asignada) => asignada.tareaId == tarea.tareaId);
+          .tareas
+          .any((asignada) => asignada.tareaId == tarea.tareaId);
       }
       materialesSeleccionados = ptoInspeccionSeleccionados[0].materiales;
       plagasSeleccionadas = ptoInspeccionSeleccionados[0].plagas;
     }
     setState(() {});
   }
-
+  
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -207,8 +197,7 @@ class _RevisionPtosInspeccionActividadState
                             return Dismissible(
                               key: Key(plaga.toString()),
                               direction: DismissDirection.endToStart,
-                              confirmDismiss:
-                                  (DismissDirection direction) async {
+                              confirmDismiss: (DismissDirection direction) async {
                                 return await showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
@@ -218,16 +207,14 @@ class _RevisionPtosInspeccionActividadState
                                           "¿Estas seguro de querer borrar el item?"),
                                       actions: <Widget>[
                                         TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(false),
+                                          onPressed: () => Navigator.of(context).pop(false),
                                           child: const Text("CANCELAR"),
                                         ),
                                         TextButton(
                                             style: TextButton.styleFrom(
                                               foregroundColor: Colors.red,
                                             ),
-                                            onPressed: () =>
-                                                Navigator.of(context).pop(true),
+                                            onPressed: () => Navigator.of(context).pop(true),
                                             child: const Text("BORRAR")),
                                       ],
                                     );
@@ -238,15 +225,13 @@ class _RevisionPtosInspeccionActividadState
                                 setState(() {
                                   plagasSeleccionadas.removeAt(i);
                                 });
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                   content: Text('$plaga borrado'),
                                 ));
                               },
                               background: Container(
                                 color: Colors.red,
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
                                 alignment: AlignmentDirectional.centerEnd,
                                 child: const Icon(
                                   Icons.delete,
@@ -255,7 +240,7 @@ class _RevisionPtosInspeccionActividadState
                               ),
                               child: ListTile(
                                 title: Text(plaga.descPlaga),
-                                trailing: Text(plaga.cantidad.toString()),
+                                trailing: Text(plaga.cantidad == null ? '' : plaga.cantidad.toString()),
                               ),
                             );
                           }),
@@ -380,9 +365,7 @@ class _RevisionPtosInspeccionActividadState
                             ),
                             child: ListTile(
                               title: Text(material.descripcion),
-                              subtitle: Text(material.lote == ''
-                                  ? "No hay lote disponible"
-                                  : material.lote.toString()),
+                              subtitle: Text(material.lote == '' ? "No hay lote disponible" : material.lote.toString()),
                               trailing: Text(material.cantidad.toString()),
                             ),
                           );
@@ -399,99 +382,62 @@ class _RevisionPtosInspeccionActividadState
           shape: const CircularNotchedRectangle(),
           color: Colors.grey.shade200,
           child: ElevatedButton(
-              clipBehavior: Clip.antiAlias,
-              style: const ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(Colors.white),
-                  elevation: WidgetStatePropertyAll(10),
-                  shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.horizontal(
-                          left: Radius.circular(50),
-                          right: Radius.circular(50))))),
-              onPressed: () async {
-                if (menu == 'Mantenimiento') {
-                  await marcarPIActividad(3, '');
-                } else {
-                  await marcarPIActividad(2, '');
-                }
-              },
-              child: Text(
-                'Guardar',
-                style: TextStyle(
-                    color: colors.primary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
-              )),
+            clipBehavior: Clip.antiAlias,
+            style: const ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll(Colors.white),
+              elevation: WidgetStatePropertyAll(10),
+              shape: WidgetStatePropertyAll(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.horizontal(
+                    left: Radius.circular(50),
+                    right: Radius.circular(50)
+                  )
+                )
+              )
+            ),
+            onPressed: () async {
+              if (menu == 'Mantenimiento') {
+                await marcarPIActividad(3, '');
+              } else {
+                await marcarPIActividad(2, '');
+              }
+            },
+            child: Text(
+              'Guardar',
+              style: TextStyle(
+                color: colors.primary,
+                fontWeight: FontWeight.bold,
+                fontSize: 20
+              ),
+            )
+          ),
         ),
       ),
     );
   }
 
-  Future marcarPIActividad(int idPIAccion, String comentario) async {
+   Future marcarPIActividad(int idPIAccion, String comentario) async {
     List<PtoTarea> agregarTareas = [];
     agregarTareas = agregarTareasSeleccionadas(agregarTareas, tareas);
 
     for (var i = 0; i < ptoInspeccionSeleccionados.length; i++) {
-      nuevaRevisionPtoInspeccion = RevisionPtoInspeccion(
-          otPuntoInspeccionId:
-              ptoInspeccionSeleccionados[i].otPuntoInspeccionId,
-          ordenTrabajoId: orden.ordenTrabajoId,
-          otRevisionId: orden.otRevisionId,
-          puntoInspeccionId: ptoInspeccionSeleccionados[i].puntoInspeccionId,
-          planoId: ptoInspeccionSeleccionados[i].planoId,
-          tipoPuntoInspeccionId:
-              ptoInspeccionSeleccionados[i].tipoPuntoInspeccionId,
-          codTipoPuntoInspeccion:
-              ptoInspeccionSeleccionados[i].codTipoPuntoInspeccion,
-          descTipoPuntoInspeccion:
-              ptoInspeccionSeleccionados[i].descTipoPuntoInspeccion,
-          plagaObjetivoId: ptoInspeccionSeleccionados[i].plagaObjetivoId,
-          codPuntoInspeccion: ptoInspeccionSeleccionados[i].codPuntoInspeccion,
-          codigoBarra: ptoInspeccionSeleccionados[i].codigoBarra,
-          zona: ptoInspeccionSeleccionados[i].zona,
-          sector: ptoInspeccionSeleccionados[i].sector,
-          idPIAccion: idPIAccion,
-          piAccionId: ptoInspeccionSeleccionados[i].piAccionId,
-          codAccion: ptoInspeccionSeleccionados[i].codAccion,
-          descPiAccion: ptoInspeccionSeleccionados[i].descPiAccion,
-          comentario: comentario,
-          materiales: materialesSeleccionados,
-          plagas: plagasSeleccionadas,
-          tareas: agregarTareas,
-          trasladoNuevo: [],
-          seleccionado: ptoInspeccionSeleccionados[i].seleccionado);
-
-      print(ptoInspeccionSeleccionados[i].puntoInspeccionId);
-      // ptoInspeccionSeleccionados[i] = nuevaRevisionPtoInspeccion;
-      ptoInspeccionSeleccionados[i].codAccion =
-          idPIAccion == 2 ? 'ACTIVIDAD' : 'MANTENIMIENTO';
+      ptoInspeccionSeleccionados[i].codAccion = idPIAccion == 2 ? 'ACTIVIDAD' : 'MANTENIMIENTO';
       ptoInspeccionSeleccionados[i].idPIAccion = idPIAccion;
       ptoInspeccionSeleccionados[i].piAccionId = idPIAccion;
       ptoInspeccionSeleccionados[i].comentario = comentario;
-      ptoInspeccionSeleccionados[i].plagas =
-          List<PtoPlaga>.from(plagasSeleccionadas);
-      ptoInspeccionSeleccionados[i].materiales =
-          List<PtoMaterial>.from(materialesSeleccionados);
+      ptoInspeccionSeleccionados[i].plagas = List<PtoPlaga>.from(plagasSeleccionadas);
+      ptoInspeccionSeleccionados[i].materiales = List<PtoMaterial>.from(materialesSeleccionados);
       ptoInspeccionSeleccionados[i].tareas = List<PtoTarea>.from(agregarTareas);
       ptoInspeccionSeleccionados[i].trasladoNuevo = [];
-
-      if (ptoInspeccionSeleccionados[i].otPuntoInspeccionId != 0) {
-        await PtosInspeccionServices().putPtoInspeccionAccion(
-            context, orden, ptoInspeccionSeleccionados[i], revisionId, token);
-      } else {
-        await PtosInspeccionServices().postPtoInspeccionAccion(
-            context, orden, ptoInspeccionSeleccionados[i], revisionId, token);
-      }
-
-      Provider.of<OrdenProvider>(context, listen: false)
-          .actualizarPunto(i, ptoInspeccionSeleccionados[i]);
+      Provider.of<OrdenProvider>(context, listen: false).actualizarPunto(i, ptoInspeccionSeleccionados[i]);
     }
+    await postAcciones(ptoInspeccionSeleccionados);
+    subiendoAcciones = false;
+  }
 
-    await PtosInspeccionServices.showDialogs(
-      context,
-      'Punto guardado',
-      true,
-      true,
-    );
+  Future postAcciones(List<RevisionPtoInspeccion> acciones) async {
+    await PtosInspeccionServices().postAcciones(context, orden, acciones, revisionId, token);
+    await PtosInspeccionServices.showDialogs(context, acciones.length == 1 ? 'Accion creada' : 'Acciones creadas', true, true);
   }
 
   Widget popUpPlagas(BuildContext context) {
@@ -533,8 +479,7 @@ class _RevisionPtosInspeccionActividadState
                           nuevaCantidad = value;
                         },
                         keyboardType: TextInputType.number,
-                        decoration:
-                            const InputDecoration(labelText: 'Cantidad'),
+                        decoration: const InputDecoration(labelText: 'Cantidad'),
                       ),
                     ],
                   ),
@@ -548,15 +493,15 @@ class _RevisionPtosInspeccionActividadState
                     TextButton(
                       onPressed: () {
                         late PtoPlaga nuevaPlaga = PtoPlaga(
-                            otPiPlagaId: 0,
-                            otPuntoInspeccionId: 0,
-                            plagaId: nuevaPlagaSeleccionada!.plagaId,
-                            codPlaga: nuevaPlagaSeleccionada!.codPlaga,
-                            descPlaga: nuevaPlagaSeleccionada!.descripcion,
-                            cantidad: int.parse(nuevaCantidad));
+                          otPiPlagaId: 0,
+                          otPuntoInspeccionId: 0,
+                          plagaId: nuevaPlagaSeleccionada!.plagaId,
+                          codPlaga: nuevaPlagaSeleccionada!.codPlaga,
+                          descPlaga: nuevaPlagaSeleccionada!.descripcion,
+                          cantidad: nuevaCantidad == '' ? null : int.parse(nuevaCantidad)
+                        );
 
-                        if (nuevaPlagaSeleccionada != null &&
-                            nuevaCantidad.isNotEmpty) {
+                        if (nuevaPlagaSeleccionada != null) {
                           plagasSeleccionadas.add(nuevaPlaga);
                           Navigator.of(context).pop();
                           setState(() {
