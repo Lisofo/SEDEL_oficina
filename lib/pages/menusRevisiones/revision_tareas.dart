@@ -4,6 +4,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/config.dart';
+import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/orden.dart';
 import 'package:sedel_oficina_maqueta/models/revision_orden.dart';
 import 'package:sedel_oficina_maqueta/models/revision_tarea.dart';
@@ -30,6 +31,12 @@ class _RevisionTareasMenuState extends State<RevisionTareasMenu> {
   Tarea selectedTarea = Tarea.empty();
   late Orden orden = Orden.empty();
   late int revisionId = 0;
+  bool cargoDatosCorrectamente = false;
+  bool cargando = true;
+  bool agregandoTarea = false;
+  int? statusCodeTareas;
+  bool borrando = false;
+  final revisionServices = RevisionServices();
 
   @override
   void initState() {
@@ -45,17 +52,43 @@ class _RevisionTareasMenuState extends State<RevisionTareasMenu> {
 
   cargarDatos() async {
     token = context.read<OrdenProvider>().token;
-    tareas = await TareasServices().getTareas(context, '', '', token);
-    orden = context.read<OrdenProvider>().orden;
-    revisionId = context.read<OrdenProvider>().revisionId;
-
+    try {
+      tareas = await TareasServices().getTareas(context, '', '', token);
+      orden = context.read<OrdenProvider>().orden;
+      revisionId = context.read<OrdenProvider>().revisionId;
+      if (tareas.isNotEmpty && widget.revisionTareasList.isNotEmpty){
+        cargoDatosCorrectamente = true;
+      }
+      cargando = false;
+    } catch (e) {
+      cargando = false;
+    }
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    return Padding(
+    return cargando ? const Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+          Text('Cargando, por favor espere...')
+        ],
+      ),
+    ) : !cargoDatosCorrectamente ?
+    Center(
+      child: TextButton.icon(
+        onPressed: () async {
+          await cargarDatos();
+        }, 
+        icon: const Icon(Icons.replay_outlined),
+        label: const Text('Recargar'),
+      ),
+    ) :
+    Padding(
       padding: const EdgeInsets.all(8),
       child: Column(
         children: [
@@ -85,25 +118,37 @@ class _RevisionTareasMenuState extends State<RevisionTareasMenu> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 CustomButton(
-                  onPressed: () async {
+                  onPressed: !agregandoTarea ? () async {
+                    agregandoTarea = true;
+                    setState(() {});
                     if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text('No se puede modificar esta revisión.'),
                       ));
+                      agregandoTarea = false;
                       return Future.value(false);
                     }
                     bool agregarTarea = true;
                     if (widget.revisionTareasList.isNotEmpty) {
-                      agregarTarea = !widget.revisionTareasList.any(
-                          (tarea) => tarea.tareaId == selectedTarea.tareaId);
+                      agregarTarea = !widget.revisionTareasList.any((tarea) => tarea.tareaId == selectedTarea.tareaId);
                     }
                     if (agregarTarea) {
                       await posteoRevisionTarea(context);
+                      agregandoTarea = false;
                       setState(() {});
+                    }else {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Seleccione una tarea'),
+                        ));
+                        agregandoTarea = false;
+                        return Future.value(false);
                     }
-                  },
+                    agregandoTarea = false;
+                    setState(() {});
+                  } : null,
                   text: 'Agregar +',
                   tamano: 20,
+                  disabled: agregandoTarea,
                 ),
               ],
             ),
@@ -147,8 +192,12 @@ class _RevisionTareasMenuState extends State<RevisionTareasMenu> {
                                     foregroundColor: Colors.red,
                                   ),
                                   onPressed: () async {
-                                    Navigator.of(context).pop(true);
-                                    await RevisionServices().deleteRevisionTarea(context,orden,widget.revisionTareasList[i],revisionId,token);
+                                    await revisionServices.deleteRevisionTarea(context,orden,widget.revisionTareasList[i],revisionId,token);
+                                    statusCodeTareas = await revisionServices.getStatusCode();
+                                    await revisionServices.resetStatusCode();
+                                    if (statusCodeTareas == 1){
+                                      Navigator.of(context).pop(true);
+                                    }
                                   },
                                   child: const Text("BORRAR")
                                 ),
@@ -158,12 +207,15 @@ class _RevisionTareasMenuState extends State<RevisionTareasMenu> {
                         );
                       },
                       onDismissed: (direction) async {
-                        setState(() {
-                          widget.revisionTareasList.removeAt(i);
-                        });
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('La plaga $item ha sido borrada'),
-                        ));
+                        if (statusCodeTareas == 1){
+                          setState(() {
+                            widget.revisionTareasList.removeAt(i);
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('La tarea $item ha sido borrada'),
+                          ));
+                        }
+                        statusCodeTareas = null;
                       },
                       background: Container(
                         color: Colors.red,
@@ -201,9 +253,11 @@ class _RevisionTareasMenuState extends State<RevisionTareasMenu> {
                                         style: TextButton.styleFrom(
                                           foregroundColor: Colors.red,
                                         ),
-                                        onPressed: () async {
+                                        onPressed: !borrando ? () async {
+                                          borrando = true;
+                                          setState(() {});
                                           await borrarTarea(context, i);
-                                        },
+                                        } : null,
                                         child: const Text("BORRAR")
                                       ),
                                     ],
@@ -227,10 +281,20 @@ class _RevisionTareasMenuState extends State<RevisionTareasMenu> {
   }
 
   Future<void> borrarTarea(BuildContext context, int i) async {
-    await RevisionServices().deleteRevisionTarea(context, orden, widget.revisionTareasList[i], revisionId, token);
-    setState(() {
-      widget.revisionTareasList.removeAt(i);
-    });
+    await revisionServices.deleteRevisionTarea(context, orden, widget.revisionTareasList[i], revisionId, token);
+    statusCodeTareas = await revisionServices.getStatusCode();
+    revisionServices.resetStatusCode();
+    if (statusCodeTareas == 1){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('La tarea ${widget.revisionTareasList[i].descripcion} ha sido borrada'),
+      ));
+      setState(() {
+        widget.revisionTareasList.removeAt(i);
+      });
+      router.pop();
+    }
+    statusCodeTareas = null;
+    borrando = false;
   }
 
   Future<void> posteoRevisionTarea(BuildContext context) async {
@@ -243,12 +307,17 @@ class _RevisionTareasMenuState extends State<RevisionTareasMenu> {
       descripcion: selectedTarea.descripcion,
       comentario: ''
     );
-    await RevisionServices().postRevisionTarea(context, orden, selectedTarea.tareaId, nuevaTarea, revisionId, token);
-    widget.revisionTareasList.add(nuevaTarea);
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent + 200,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
+    await revisionServices.postRevisionTarea(context, orden, selectedTarea.tareaId, nuevaTarea, revisionId, token);
+    statusCodeTareas = await revisionServices.getStatusCode();
+    await revisionServices.resetStatusCode();
+    if (statusCodeTareas == 1){
+      widget.revisionTareasList.add(nuevaTarea);
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent + 200,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
+    statusCodeTareas = null;
   }
 }

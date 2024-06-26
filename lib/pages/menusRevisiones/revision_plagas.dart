@@ -4,6 +4,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/config.dart';
+import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/gradoInfestacion.dart';
 import 'package:sedel_oficina_maqueta/models/orden.dart';
 import 'package:sedel_oficina_maqueta/models/plaga.dart';
@@ -53,11 +54,54 @@ class _RevisionPlagasMenuState extends State<RevisionPlagasMenu> {
   final ScrollController _scrollController = ScrollController();
   late String token = context.read<OrdenProvider>().token;
   bool isReadOnly = true;
+  bool cargoDatosCorrectamente = false;
+  bool cargando = true;
+  bool agregandoPlaga = false;
+  int? statusCodeRevision;
+  bool borrando = false;
+  final revisionServices = RevisionServices();
+
+  @override
+  void initState() {
+    super.initState();
+    cargarDatos();
+  }
+
+  cargarDatos() async {
+    try {
+      if (widget.plagas.isNotEmpty && widget.revisionPlagasList.isNotEmpty){
+        cargoDatosCorrectamente = true;
+      }
+      cargando = false;
+    } catch (e) {
+      cargando = false;
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    return Padding(
+    return cargando ? const Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+          Text('Cargando, por favor espere...')
+        ],
+      ),
+    ) : !cargoDatosCorrectamente ? 
+    Center(
+      child: TextButton.icon(
+        onPressed: () async {
+          await cargarDatos();
+        }, 
+        icon: const Icon(Icons.replay_outlined),
+        label: const Text('Recargar'),
+      ),
+    ) :
+    Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
@@ -112,11 +156,14 @@ class _RevisionPlagasMenuState extends State<RevisionPlagasMenu> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 CustomButton(
-                  onPressed: () async {
+                  onPressed: !agregandoPlaga ? () async {
+                    agregandoPlaga = true;
+                    setState(() {});
                     if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text('No se puede modificar esta revisión.'),
                       ));
+                      agregandoPlaga = false;
                       return Future.value(false);
                     }
                     bool agregarPlaga = true;
@@ -126,9 +173,19 @@ class _RevisionPlagasMenuState extends State<RevisionPlagasMenu> {
                     }
                     if (agregarPlaga) {
                       await posteoRevisionPlaga(context);
+                      agregandoPlaga = false;
                       setState(() {});
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('Seleccione un grado de infestación'),
+                      ));
+                      agregandoPlaga = false;
+                      return Future.value(false);
                     }
-                  },
+                    agregandoPlaga = false;
+                    setState(() {});
+                  } : null,
+                  disabled: agregandoPlaga,
                   text: 'Agregar +',
                   tamano: 20,
                 ),
@@ -176,8 +233,12 @@ class _RevisionPlagasMenuState extends State<RevisionPlagasMenu> {
                                     foregroundColor: Colors.red,
                                   ),
                                   onPressed: () async {
-                                    Navigator.of(context).pop(true);
                                     await RevisionServices().deleteRevisionPlaga(context,orden,widget.revisionPlagasList[i],revisionId,token);
+                                    statusCodeRevision = await revisionServices.getStatusCode();
+                                    await revisionServices.resetStatusCode();
+                                    if (statusCodeRevision == 1){
+                                      Navigator.of(context).pop(true);
+                                    }
                                   },
                                   child: const Text("BORRAR")
                                 ),
@@ -187,12 +248,15 @@ class _RevisionPlagasMenuState extends State<RevisionPlagasMenu> {
                         );
                       },
                       onDismissed: (direction) async {
-                        setState(() {
-                          widget.revisionPlagasList.removeAt(i);
-                        });
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('La plaga $item ha sido borrada'),
-                        ));
+                        if (statusCodeRevision == 1) {
+                          setState(() {
+                            widget.revisionPlagasList.removeAt(i);
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('La plaga $item ha sido borrada'),
+                          ));
+                          }
+                        statusCodeRevision = null;
                       },
                       background: Container(
                         color: Colors.red,
@@ -235,10 +299,11 @@ class _RevisionPlagasMenuState extends State<RevisionPlagasMenu> {
                                               style: TextButton.styleFrom(
                                                 foregroundColor: Colors.red,
                                               ),
-                                              onPressed: () async {
-                                                await borrarPlaga(
-                                                    context, i);
-                                              },
+                                              onPressed: !borrando ? () async {
+                                                borrando = true;
+                                                setState(() {});
+                                                await borrarPlaga(context, i);
+                                              } : null,
                                               child: const Text("BORRAR")),
                                         ],
                                       );
@@ -270,20 +335,34 @@ class _RevisionPlagasMenuState extends State<RevisionPlagasMenu> {
         gradoInfestacionId: selectedGrado.gradoInfestacionId,
         codGradoInfestacion: selectedGrado.codGradoInfestacion,
         gradoInfestacion: selectedGrado.descripcion);
-    await RevisionServices().postRevisionPlaga(context,orden,selectedPlaga.plagaId,selectedGrado.gradoInfestacionId,nuevaPlaga,revisionId,token);
-    widget.revisionPlagasList.add(nuevaPlaga);
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent + 200,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
+    await revisionServices.postRevisionPlaga(context,orden,selectedPlaga.plagaId,selectedGrado.gradoInfestacionId,nuevaPlaga,revisionId,token);
+    statusCodeRevision = await revisionServices.getStatusCode();
+    await revisionServices.resetStatusCode();
+    if (statusCodeRevision == 1){
+      widget.revisionPlagasList.add(nuevaPlaga);
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent + 200,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
+    statusCodeRevision = null;
   }
 
   Future<void> borrarPlaga(BuildContext context, int i) async {
-    await RevisionServices().deleteRevisionPlaga(
-        context, orden, widget.revisionPlagasList[i], revisionId, token);
-    setState(() {
-      widget.revisionPlagasList.removeAt(i);
-    });
+    await revisionServices.deleteRevisionPlaga(context, orden, widget.revisionPlagasList[i], revisionId, token);
+    statusCodeRevision = await revisionServices.getStatusCode();
+    await revisionServices.resetStatusCode();
+    if (statusCodeRevision == 1){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('La plaga ${widget.revisionPlagasList[i].plaga} ha sido borrada'),
+      ));
+      setState(() {
+        widget.revisionPlagasList.removeAt(i);
+      });
+      router.pop();
+    }
+    statusCodeRevision = null;
+    borrando = false;  
   }
 }

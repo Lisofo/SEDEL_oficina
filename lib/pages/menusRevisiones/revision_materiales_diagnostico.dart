@@ -47,6 +47,9 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
   late List<ManualesMateriales> manuales = [];
   bool cargoDatosCorrectamente = false;
   bool cargando = true;
+  bool estaBuscando = false;
+  bool borrando = false;
+  bool agrengandoMaterial = false;
   int? statusCode;
   final materialesDiagnosticoServices = MaterialesDiagnosticoServices();
 
@@ -70,7 +73,7 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
     setState(() {});
   }
 
-  void _showMaterialDetails(BuildContext context, Materiales material) async {
+  Future<bool> _showMaterialDetails(BuildContext context, Materiales material) async {
     comentarioController.text = '';
 
     showDialog(
@@ -122,7 +125,9 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
             ),
             TextButton(
               child: const Text('Guardar'),
-              onPressed: () async {
+              onPressed: !agrengandoMaterial ? () async {
+                agrengandoMaterial = true;
+                setState(() {});
                 final RevisionMaterial nuevaRevisionMaterial =
                   RevisionMaterial(
                     otMaterialId: 0,
@@ -135,7 +140,8 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                     plagas: [],
                     material: material,
                     lote: Lote.empty(),
-                    metodoAplicacion: MetodoAplicacion.empty());
+                    metodoAplicacion: MetodoAplicacion.empty()
+                  );
                 await materialesDiagnosticoServices.postRevisionMaterial(context, orden, nuevaRevisionMaterial, revisionId, token);
                 statusCode = await materialesDiagnosticoServices.getStatusCode();
                 materialesDiagnosticoServices.resetStatusCode();
@@ -144,15 +150,14 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                   statusCode = null;
                   setState(() {});
                 }
-                
-        
-                
-              },
+                agrengandoMaterial = false;
+              } : null,
             ),
           ],
         );
       },
     );
+    return false;
   }
 
   @override
@@ -162,7 +167,26 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
       materialInicial = materiales.firstWhere((material) => material.materialId == selectedMaterial.materialId);
     }
     revisionId = context.read<OrdenProvider>().revisionId;
-    return Padding(
+    return cargando ? const Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            Text('Cargando, por favor espere...')
+          ],
+        ),
+      ) : !cargoDatosCorrectamente ? 
+      Center(
+        child: TextButton.icon(
+          onPressed: () async {
+            await cargarDatos();
+          }, 
+          icon: const Icon(Icons.replay_outlined),
+          label: const Text('Recargar'),
+        ),
+      ) :
+      Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
@@ -194,7 +218,11 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                   }
                   setState(() {
                     selectedMaterial = newValue!;
-                    _showMaterialDetails(context, selectedMaterial);
+                    estaBuscando = true;
+                  });
+                  bool resultado = await _showMaterialDetails(context, selectedMaterial);
+                  setState(() {
+                    estaBuscando = resultado;
                   });
                 },
               )
@@ -276,14 +304,14 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                           },
                           onDismissed: (direction) {
                             if (statusCode == 1 ){
-                              setState(() {
-                                widget.revisionMaterialesList.removeAt(i);
-                              });
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text('$item borrado'),
                                 )
                               );
+                              setState(() {
+                                widget.revisionMaterialesList.removeAt(i);
+                              });
                             }
                             statusCode = null;
                           },
@@ -305,15 +333,21 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     IconButton(
-                                      onPressed: () async {
+                                      onPressed: !estaBuscando ? () async {
                                         if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
                                           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                             content: Text('No se puede modificar esta revisión.'),
                                           ));
                                           return Future.value(false);
                                         }
-                                        await editMaterial(context, item);
-                                      }, 
+                                        setState(() {
+                                          estaBuscando = true;
+                                        });
+                                        bool resultado = await editMaterial(context, item);
+                                        setState(() {
+                                          estaBuscando = resultado;
+                                        });
+                                      } : null, 
                                       icon: const Icon(Icons.edit)
                                     ),
                                     IconButton(
