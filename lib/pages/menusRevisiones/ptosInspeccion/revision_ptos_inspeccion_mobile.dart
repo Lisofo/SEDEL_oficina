@@ -51,6 +51,10 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
   int buttonIndex = 0;
   String _searchTerm = '';
   bool subiendoAcciones = false;
+  final _ptosInspeccionServices = PtosInspeccionServices();
+  int? statusCodeRevision;
+  bool cargoDatosCorrectamente = false;
+  bool cargando = true;
 
   List<ZonaPI> zonas = [
     ZonaPI(zona: 'Interior', codZona: 'I'),
@@ -77,12 +81,20 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
 
   cargarDatos() async {
     token = context.read<OrdenProvider>().token;
-    orden = context.read<OrdenProvider>().orden;
-    // tiposDePuntos = await getTipos();
-    tiposDePuntos = await PtosInspeccionServices().getTiposPtosInspeccion(context, token);
-    plagasObjetivo = await PlagaObjetivoServices().getPlagasObjetivo(context, '', '', token);
-    Provider.of<OrdenProvider>(context, listen: false).setTipoPTI(selectedTipoPto);
-
+    try {
+      orden = context.read<OrdenProvider>().orden;
+      // tiposDePuntos = await getTipos();
+      tiposDePuntos = await _ptosInspeccionServices.getTiposPtosInspeccion(context, token);
+      plagasObjetivo = await PlagaObjetivoServices().getPlagasObjetivo(context, '', '', token);
+      Provider.of<OrdenProvider>(context, listen: false).setTipoPTI(selectedTipoPto);
+      if (statusCodeRevision == 1){
+        cargoDatosCorrectamente = true;
+      }
+      cargando = false;
+    } catch (e) {
+      cargando = false;
+    }
+    
     setState(() {});
   }
 
@@ -106,7 +118,25 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
     final colors = Theme.of(context).colorScheme;
     revisionId = context.read<OrdenProvider>().revisionId;
     print(revisionId);
-    return Padding(
+    return cargando ? const Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            Text('Cargando, por favor espere...')
+          ],
+        ),
+      ) : !cargoDatosCorrectamente ? 
+      Center(
+        child: TextButton.icon(
+          onPressed: () async {
+            await cargarDatos();
+          }, 
+          icon: const Icon(Icons.replay_outlined),
+          label: const Text('Recargar'),
+        ),
+      ) : Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
         height: MediaQuery.of(context).size.height * 0.88,
@@ -141,15 +171,24 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
               }).toList(),
               isDense: true,
               isExpanded: true,
-              onChanged: (value) {
-                setState(() {
-                  Provider.of<OrdenProvider>(context, listen: false).setTipoPTI(value!);
-                  selectedTipoPto = value;
-                  selectAll = false;
-                  for (var i = 0; i < ptosFiltrados.length; i++) {
-                    ptosFiltrados[i].seleccionado = false;
-                  }                
-                });
+              onChanged: (value) async {
+                widget.ptosInspeccion = await _ptosInspeccionServices.getPtosInspeccion(context, orden, revisionId, token,);
+                statusCodeRevision = await _ptosInspeccionServices.getStatusCode();
+                await _ptosInspeccionServices.resetStatusCode();
+                if(statusCodeRevision == 1){
+                  setState(() {
+                    Provider.of<OrdenProvider>(context, listen: false).setTipoPTI(value!);
+                    selectedTipoPto = value;
+                    selectAll = false;
+                    for (var i = 0; i < ptosFiltrados.length; i++) {
+                      ptosFiltrados[i].seleccionado = false;
+                    }
+                    for (var ptos in context.read<OrdenProvider>().puntosSeleccionados) {
+                      ptos.seleccionado = false;
+                    }
+                  });
+                }
+                
               },
             ),
           ),
@@ -211,40 +250,44 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
                   // }
                 // ),
                 IconButton(
-                onPressed: () async {
-                  widget.ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token, );
-                  await showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text("Buscar Puntos de Inspección"),
-                      content: CustomTextFormField(
-                        onChanged: (value) {
-                          setState(() {
-                            _searchTerm = value;
-                          });
-                        },
-                        hint: "Ingrese el término de búsqueda",
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text("Cancelar"),
+                  onPressed: () async {
+                    widget.ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token, );
+                    statusCodeRevision = await _ptosInspeccionServices.getStatusCode();
+                    await _ptosInspeccionServices.resetStatusCode();
+                    if(statusCodeRevision == 1){
+                      await showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text("Buscar Puntos de Inspección"),
+                          content: CustomTextFormField(
+                            onChanged: (value) {
+                              setState(() {
+                                _searchTerm = value;
+                              });
+                            },
+                            hint: "Ingrese el término de búsqueda",
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Cancelar"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Provider.of<OrdenProvider>(context, listen: false).filtrarPuntosInspeccion1(_searchTerm);
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Buscar"),
+                            ),
+                          ],
                         ),
-                        TextButton(
-                          onPressed: () {
-                            Provider.of<OrdenProvider>(context, listen: false).filtrarPuntosInspeccion1(_searchTerm);
-                            Navigator.pop(context);
-                          },
-                          child: const Text("Buscar"),
-                        ),
-                      ],
-                    ),
-                  );
-                }, 
-                icon: const Icon(Icons.search)
-              ),
+                      );
+                    }
+                  },
+                  icon: const Icon(Icons.search)
+                ),
                 Checkbox(
                   activeColor: colors.primary,
                   value: selectAll,
@@ -441,16 +484,14 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
     );
   }
 
-  void opciones(
-      List<BottomSheetOpcion> buttonTexts, int i, BuildContext context) {
+  void opciones(List<BottomSheetOpcion> buttonTexts, int i, BuildContext context) {
     BottomSheetOpcion botones = buttonTexts[i];
     switch (botones.text) {
       case 'Mantenimiento':
       case 'Actividad':
         Provider.of<OrdenProvider>(context, listen: false).setPage(botones.text);
         Provider.of<OrdenProvider>(context, listen: false).setTipoPTI(selectedTipoPto);
-        // Provider.of<OrdenProvider>(context, listen: false)
-        //     .setPI(puntosSeleccionados);
+
         if (botones.text == 'Mantenimiento') {
           Provider.of<OrdenProvider>(context, listen: false).setModo('M');
         } else {
@@ -459,19 +500,17 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
 
         router.push(botones.ruta);
       break;
-      case 'Desinstalado':
       case 'Sin Actividad':
+        marcarPISinActividad(1, '');
+      break;
+      case 'Desinstalado':
       case 'Sin Acceso':
         showDialog(
           context: context,
           builder: (context) {
-            if (puntosSeleccionados.length == 1 &&
-                    (puntosSeleccionados[0].piAccionId == 1 &&
-                        botones.text == 'Sin Actividad') ||
-                (puntosSeleccionados[0].piAccionId == 4 &&
-                    botones.text == 'Desinstalado') ||
-                puntosSeleccionados[0].piAccionId == 7 &&
-                    botones.text == 'Sin Acceso') {
+            if (puntosSeleccionados.length == 1 && (puntosSeleccionados[0].piAccionId == 1 && botones.text == 'Sin Actividad') ||
+                (puntosSeleccionados[0].piAccionId == 4 && botones.text == 'Desinstalado') || 
+                  puntosSeleccionados[0].piAccionId == 7 && botones.text == 'Sin Acceso') {
               comentarioController.text = puntosSeleccionados[0].comentario;
             } else {
               comentarioController.text = '';
@@ -499,15 +538,16 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
                 TextButton(
                   child: const Text('Confirmar'),
                   onPressed: () {
-                    router.pop(context);
-                    if (botones.text == 'Sin Actividad') {
-                      marcarPISinActividad(1, comentarioController.text);
-                    } else if (botones.text == 'Desinstalado') {
+                  if(!subiendoAcciones){
+                    subiendoAcciones = true;
+                    if (botones.text == 'Desinstalado') {
                       marcarPISinActividad(4, comentarioController.text);
                     } else {
                       marcarPISinActividad(7, comentarioController.text);
                     }
-                  },
+                    router.pop();
+                  }
+                },
                 ),
               ],
             );
@@ -524,7 +564,7 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
               comentarioController.text = puntosSeleccionados[0].comentario;
               codPuntoInspeccionController.text = puntosSeleccionados[0].codPuntoInspeccion;
               zonaSeleccionada = zonas.firstWhere((element) => element.codZona == puntosSeleccionados[0].trasladoNuevo[0].zona);
-              plagaObjetivoSeleccionada = plagasObjetivo.firstWhere((element) => element.plagaObjetivoId == puntosSeleccionados[0].trasladoNuevo[0].plagaObjetivoId);
+              plagaObjetivoSeleccionada = plagasObjetivo.firstWhere((element) => element.plagaObjetivoId ==puntosSeleccionados[0].trasladoNuevo[0].plagaObjetivoId);
             } else {
               codigoBarraController.text = '';
               sectorController.text = '';
@@ -567,42 +607,48 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
                           onChanged: (value) {
                             zonaSeleccionada = value;
                           }),
-                      const SizedBox(height: 10,),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       CustomTextFormField(
                         controller: sectorController,
                         maxLines: 1,
                         hint: 'Sector',
                         label: "Sector",
                       ),
-                      const SizedBox(height: 10,),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       CustomDropdownFormMenu(
-                        hint: 'Plaga objetivo',
-                        value: plagaObjetivoSeleccionada.plagaObjetivoId != 0 ? plagaObjetivoSeleccionada : null,
-                        items: plagasObjetivo.map((e) {
-                          return DropdownMenuItem<PlagaObjetivo>(
-                            value: e,
-                            child: SizedBox(
-                              width: 180,
-                              child: Text(
-                                e.descripcion,
-                                softWrap: true,
-                                overflow: TextOverflow.fade,
+                          hint: 'Plaga objetivo',
+                          value: plagaObjetivoSeleccionada.plagaObjetivoId != 0 ? plagaObjetivoSeleccionada: null,
+                          items: plagasObjetivo.map((e) {
+                            return DropdownMenuItem<PlagaObjetivo>(
+                              value: e,
+                              child: SizedBox(
+                                width: 180,
+                                child: Text(
+                                  e.descripcion,
+                                  softWrap: true,
+                                  overflow: TextOverflow.fade,
+                                ),
                               ),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          plagaObjetivoSeleccionada = value;
-                        }
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            plagaObjetivoSeleccionada = value;
+                          }),
+                      const SizedBox(
+                        height: 10,
                       ),
-                      const SizedBox(height: 10,),
                       CustomTextFormField(
-                        controller: comentarioController,
-                        maxLines: 1,
-                        hint: 'Comentario',
-                        label: 'Comentario'
+                          controller: comentarioController,
+                          maxLines: 1,
+                          hint: 'Comentario',
+                          label: 'Comentario'),
+                      const SizedBox(
+                        height: 10,
                       ),
-                      const SizedBox(height: 10,),
                       CustomTextFormField(
                         controller: codigoBarraController,
                         maxLines: 1,
@@ -636,14 +682,10 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
         showDialog(
           context: context,
           builder: (context) {
-            if (puntosSeleccionados[0].otPuntoInspeccionId != 0 &&
-                puntosSeleccionados[0].piAccionId == 6) {
-              sectorController.text =
-                  puntosSeleccionados[0].trasladoNuevo[0].sector;
+            if (puntosSeleccionados[0].otPuntoInspeccionId != 0 && puntosSeleccionados[0].piAccionId == 6) {
+              sectorController.text = puntosSeleccionados[0].trasladoNuevo[0].sector;
               comentarioController.text = puntosSeleccionados[0].comentario;
-              zonaSeleccionada = zonas.firstWhere((element) =>
-                  element.codZona ==
-                  puntosSeleccionados[0].trasladoNuevo[0].zona);
+              zonaSeleccionada = zonas.firstWhere((element) => element.codZona == puntosSeleccionados[0].trasladoNuevo[0].zona);
             } else {
               sectorController.text = '';
               comentarioController.text = '';
@@ -655,29 +697,34 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   CustomDropdownFormMenu(
-                    hint: 'Zona',
-                    value: zonaSeleccionada.codZona != '' ? zonaSeleccionada : null,
-                    items: zonas.map((e) {
-                      return DropdownMenuItem(
-                        value: e,
-                        child: Text(
-                          e.zona,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      zonaSeleccionada = value;
-                    }
+                      hint: 'Zona',
+                      value: zonaSeleccionada.codZona != ''
+                          ? zonaSeleccionada
+                          : null,
+                      items: zonas.map((e) {
+                        return DropdownMenuItem(
+                          value: e,
+                          child: Text(
+                            e.zona,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        zonaSeleccionada = value;
+                      }),
+                  const SizedBox(
+                    height: 10,
                   ),
-                  const SizedBox(height: 10,),
                   CustomTextFormField(
                     controller: sectorController,
                     maxLines: 1,
                     hint: 'Sector',
                     label: 'Sector',
                   ),
-                  const SizedBox(height: 10,),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   CustomTextFormField(
                     controller: comentarioController,
                     maxLines: 1,
@@ -696,8 +743,10 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
                 TextButton(
                   child: const Text('Confirmar'),
                   onPressed: () async {
-                    router.pop(context);
-                    await marcarPITraslado(6, zonaSeleccionada, sectorController.text, comentarioController.text);
+                   if(!subiendoAcciones){
+                      subiendoAcciones = true;
+                      await marcarPITraslado(6, zonaSeleccionada, sectorController.text, comentarioController.text);
+                    }
                   },
                 ),
               ],
@@ -715,7 +764,7 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
       puntosSeleccionados[i].descTipoPuntoInspeccion = '';
       puntosSeleccionados[i].idPIAccion = idPIAccion;
       puntosSeleccionados[i].piAccionId = idPIAccion;
-      puntosSeleccionados[i].codAccion = idPIAccion.toString();
+      puntosSeleccionados[i].codAccion = '';
       puntosSeleccionados[i].descPiAccion = '';
       puntosSeleccionados[i].comentario = comentario;
       puntosSeleccionados[i].materiales = [];
@@ -724,7 +773,6 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
       puntosSeleccionados[i].trasladoNuevo = [];
     }
     await postAcciones(puntosSeleccionados);
-    await actualizarDatos();
     limpiarDatos();
     subiendoAcciones = false;
   }
@@ -740,8 +788,8 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
       puntosSeleccionados[i].zona = zonaSeleccionada.codZona;
       puntosSeleccionados[i].sector = sector;
       puntosSeleccionados[i].idPIAccion = idPIAccion;
-      puntosSeleccionados[i].piAccionId = 6;
-      puntosSeleccionados[i].codAccion = '6';
+      puntosSeleccionados[i].piAccionId = idPIAccion;
+      puntosSeleccionados[i].codAccion = '';
       puntosSeleccionados[i].descPiAccion = '';
       puntosSeleccionados[i].comentario = comentario;
       puntosSeleccionados[i].materiales = [];
@@ -749,8 +797,7 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
       puntosSeleccionados[i].tareas = [];
       puntosSeleccionados[i].trasladoNuevo = [];
     }
-    await postAcciones(puntosSeleccionados);
-    await actualizarDatos();
+    await postTraslado(puntosSeleccionados);
     limpiarDatos();
     subiendoAcciones = false;
   }
@@ -772,7 +819,7 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
       sector: sector,
       idPIAccion: idPIAccion,
       piAccionId: idPIAccion,
-      codAccion: idPIAccion.toString(),
+      codAccion: '',
       descPiAccion: '',
       comentario: comentario,
       materiales: [],
@@ -783,14 +830,20 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
     );
 
     if (nuevaRevisionPtoInspeccion.otPuntoInspeccionId != 0) {
-      await PtosInspeccionServices().putPtoInspeccionAccion(context, orden, nuevaRevisionPtoInspeccion, revisionId, token);
+      await _ptosInspeccionServices.putPtoInspeccionAccion(context, orden, nuevaRevisionPtoInspeccion, revisionId, token);
+      statusCodeRevision = await _ptosInspeccionServices.getStatusCode();
+      await _ptosInspeccionServices.resetStatusCode();
     } else {
-      await PtosInspeccionServices().postPtoInspeccionAccion(context, orden, nuevaRevisionPtoInspeccion, revisionId, token);
+      await _ptosInspeccionServices.postPtoInspeccionAccion(context, orden, nuevaRevisionPtoInspeccion, revisionId, token);
+      statusCodeRevision = await _ptosInspeccionServices.getStatusCode();
+      await _ptosInspeccionServices.resetStatusCode();
     }
-
-    await actualizarDatos();
-    limpiarDatos();
-    PtosInspeccionServices.showDialogs(context, 'Punto guardado', true, false);
+    if(statusCodeRevision == 1) {
+      await actualizarDatos();
+      limpiarDatos();
+      PtosInspeccionServices.showDialogs(context, 'Punto guardado', true, true);
+    }
+    statusCodeRevision = null;
     subiendoAcciones = false;
   }
 
@@ -803,21 +856,49 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
   }
 
   Future<void> actualizarDatos() async {
-    widget.ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token);
-    plagasObjetivo = await PlagaObjetivoServices().getPlagasObjetivo(context, '', '', token);
+    try {
+      widget.ptosInspeccion = await _ptosInspeccionServices.getPtosInspeccion(context, orden, revisionId, token);
+      plagasObjetivo = await PlagaObjetivoServices().getPlagasObjetivo(context,'', '', token);  
+    } catch (e) {
+      widget.ptosInspeccion = [];
+      plagasObjetivo = [];
+    }
     setState(() {});
   }
 
   Future borrarAcciones() async {
-    await PtosInspeccionServices().deleteAcciones(context, orden, puntosSeleccionados, revisionId, token);
-    await actualizarDatos();
-    await PtosInspeccionServices.showDialogs(context, puntosSeleccionados.length == 1 ? 'Accion borrada' : 'Acciones borradas', true, false);
+    await _ptosInspeccionServices.deleteAcciones(context, orden, puntosSeleccionados, revisionId, token);
+    statusCodeRevision = await _ptosInspeccionServices.getStatusCode();
+    await _ptosInspeccionServices.resetStatusCode();
+    if(statusCodeRevision == 1) {
+      await PtosInspeccionServices.showDialogs(context, puntosSeleccionados.length == 1 ? 'Acción borrada' : 'Acciones borradas', true, false);
+      await actualizarDatos();
+    }
+    statusCodeRevision = null;
   }
 
   Future postAcciones(List<RevisionPtoInspeccion> acciones) async {
-    await PtosInspeccionServices().postAcciones(context, orden, acciones, revisionId, token);
-    await actualizarDatos();
-    await PtosInspeccionServices.showDialogs(context, acciones.length == 1 ? 'Accion creada' : 'Acciones creadas', true, false);
+    await _ptosInspeccionServices.postAcciones(context, orden, acciones, revisionId, token);
+    statusCodeRevision = await _ptosInspeccionServices.getStatusCode();
+    await _ptosInspeccionServices.resetStatusCode();
+    if(statusCodeRevision == 1) {
+      await actualizarDatos();
+      await PtosInspeccionServices.showDialogs(context, acciones.length == 1 ? 'Acción creada' : 'Acciones creadas', true, false);
+      
+    }
+    statusCodeRevision = null;
+  }
+
+  Future postTraslado(List<RevisionPtoInspeccion> acciones) async {
+    await _ptosInspeccionServices.postAcciones(context, orden, acciones, revisionId, token);
+    statusCodeRevision = await _ptosInspeccionServices.getStatusCode();
+    await _ptosInspeccionServices.resetStatusCode();
+    if(statusCodeRevision == 1) {
+      await actualizarDatos();
+      await PtosInspeccionServices.showDialogs(context, acciones.length == 1 ? 'Acción creada' : 'Acciones creadas', true, true);
+      
+    }
+    statusCodeRevision = null;
   }
 
   Future borrarAccion() async {
@@ -825,6 +906,7 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
       context: context,
       builder: (context) {
         return AlertDialog(
+          surfaceTintColor: Colors.white,
           title: const Text('Confirmación'),
           content: const Text(
             'Se eliminará toda la información ingresada para los puntos seleccionados. Desea confirmar la acción?',
@@ -835,11 +917,15 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cerrar'),
+              child: const Text('Cancelar'),
             ),
             TextButton(
-              onPressed: () {
-                borrarAcciones();
+              onPressed: () async {
+                if(!subiendoAcciones){
+                  subiendoAcciones = true;
+                  await borrarAcciones();
+                  subiendoAcciones = false;
+                }
               },
               child: const Text('Confirmar'),
             ),

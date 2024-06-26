@@ -13,6 +13,7 @@ import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 class PtosInspeccionServices {
   final _dio = Dio();
   String apiUrl = Config.APIURL;
+  int? statusCode;
 
   static Future<void> showDialogs(BuildContext context, String errorMessage, bool doblePop, bool triplePop,) async {
     showDialog(
@@ -40,24 +41,6 @@ class PtosInspeccionServices {
     );
   }
 
-  Future<void> mostrarError(BuildContext context, String mensaje) async {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Error'),
-        content: Text(mensaje),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Cerrar'),
-          ),
-        ],
-      ),
-    );
-  }
-
   static void showErrorDialog(BuildContext context, String errorMessage) {
     showDialog(
       context: context,
@@ -78,6 +61,14 @@ class PtosInspeccionServices {
     );
   }
 
+  Future<int?> getStatusCode () async {
+    return statusCode;
+  }
+
+  Future<void> resetStatusCode () async {
+    statusCode = null;
+  }
+
   Future getTiposPtosInspeccion(BuildContext context, String token) async {
     String link = '${apiUrl}api/v1/tipos/puntos';
 
@@ -90,31 +81,36 @@ class PtosInspeccionServices {
           headers: headers,
         ),
       );
+
+      statusCode = 1;
       final List tipoPtoInspeccionList = resp.data;
       var retorno = tipoPtoInspeccionList.map((e) => TipoPtosInspeccion.fromJson(e)).toList();
 
       return retorno;
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -130,6 +126,8 @@ class PtosInspeccionServices {
           headers: headers,
         ),
       );
+
+      statusCode = 1;
       final List ptoInspeccionList = resp.data;
       var retorno = ptoInspeccionList.map((e) => RevisionPtoInspeccion.fromJson(e)).toList();
 
@@ -137,26 +135,29 @@ class PtosInspeccionServices {
 
       return retorno;
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -167,42 +168,29 @@ class PtosInspeccionServices {
     var data;
     switch (revisionPtoInspeccion.idPIAccion) {
       case 1:
-        data =
-            ({"idPIAccion": 1, "comentario": revisionPtoInspeccion.comentario});
+        data = ({"idPIAccion": 1, "comentario": revisionPtoInspeccion.comentario});
         break;
       case 4:
-        data =
-            ({"idPIAccion": 4, "comentario": revisionPtoInspeccion.comentario});
+        data = ({"idPIAccion": 4, "comentario": revisionPtoInspeccion.comentario});
         break;
       case 7:
-        data =
-            ({"idPIAccion": 7, "comentario": revisionPtoInspeccion.comentario});
+        data = ({"idPIAccion": 7, "comentario": revisionPtoInspeccion.comentario});
         break;
       case 2:
         data = ({
           "idPIAccion": 2,
           "comentario": "actividad",
-          "materiales": revisionPtoInspeccion.materiales
-              .map((material) => material.toMap())
-              .toList(),
-          "tareas": revisionPtoInspeccion.tareas
-              .map((tarea) => tarea.toMap())
-              .toList(),
-          "plagas": revisionPtoInspeccion.plagas
-              .map((plaga) => plaga.toMap())
-              .toList()
+          "materiales": revisionPtoInspeccion.materiales.map((material) => material.toMap()).toList(),
+          "tareas": revisionPtoInspeccion.tareas.map((tarea) => tarea.toMap()).toList(),
+          "plagas": revisionPtoInspeccion.plagas.map((plaga) => plaga.toMap()).toList()
         });
         break;
       case 3:
         data = ({
           "idPIAccion": 3,
           "comentario": "mantenimiento",
-          "materiales": revisionPtoInspeccion.materiales
-              .map((material) => material.toMap())
-              .toList(),
-          "tareas": revisionPtoInspeccion.tareas
-              .map((tarea) => tarea.toMap())
-              .toList(),
+          "materiales": revisionPtoInspeccion.materiales.map((material) => material.toMap()).toList(),
+          "tareas": revisionPtoInspeccion.tareas.map((tarea) => tarea.toMap()).toList(),
         });
       case 6:
         data = ({
@@ -228,38 +216,44 @@ class PtosInspeccionServices {
     print(data);
     try {
       var headers = {'Authorization': token};
-      var resp = await _dio.request(link,
-          options: Options(
-            method: 'POST',
-            headers: headers,
-          ),
-          data: data);
+      var resp = await _dio.request(
+        link,
+        options: Options(
+          method: 'POST',
+          headers: headers,
+        ),
+        data: data
+      );
+
+      statusCode = 1;
       if (resp.statusCode == 201) {
-        revisionPtoInspeccion.otPuntoInspeccionId =
-            resp.data["otPuntoInspeccionId"];
+        revisionPtoInspeccion.otPuntoInspeccionId = resp.data["otPuntoInspeccionId"];
       }
       return;
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -270,42 +264,29 @@ class PtosInspeccionServices {
     var data;
     switch (revisionPtoInspeccion.idPIAccion) {
       case 1:
-        data =
-            ({"idPIAccion": 1, "comentario": revisionPtoInspeccion.comentario});
+        data = ({"idPIAccion": 1, "comentario": revisionPtoInspeccion.comentario});
         break;
       case 4:
-        data =
-            ({"idPIAccion": 4, "comentario": revisionPtoInspeccion.comentario});
+        data = ({"idPIAccion": 4, "comentario": revisionPtoInspeccion.comentario});
         break;
       case 7:
-        data =
-            ({"idPIAccion": 7, "comentario": revisionPtoInspeccion.comentario});
+        data = ({"idPIAccion": 7, "comentario": revisionPtoInspeccion.comentario});
         break;
       case 2:
         data = ({
           "idPIAccion": 2,
           "comentario": "actividad",
-          "materiales": revisionPtoInspeccion.materiales
-              .map((material) => material.toMap())
-              .toList(),
-          "tareas": revisionPtoInspeccion.tareas
-              .map((tarea) => tarea.toMap())
-              .toList(),
-          "plagas": revisionPtoInspeccion.plagas
-              .map((plaga) => plaga.toMap())
-              .toList()
+          "materiales": revisionPtoInspeccion.materiales.map((material) => material.toMap()).toList(),
+          "tareas": revisionPtoInspeccion.tareas.map((tarea) => tarea.toMap()).toList(),
+          "plagas": revisionPtoInspeccion.plagas.map((plaga) => plaga.toMap()).toList()
         });
         break;
       case 3:
         data = ({
           "idPIAccion": 3,
           "comentario": "mantenimiento",
-          "materiales": revisionPtoInspeccion.materiales
-              .map((material) => material.toMap())
-              .toList(),
-          "tareas": revisionPtoInspeccion.tareas
-              .map((tarea) => tarea.toMap())
-              .toList(),
+          "materiales": revisionPtoInspeccion.materiales.map((material) => material.toMap()).toList(),
+          "tareas": revisionPtoInspeccion.tareas.map((tarea) => tarea.toMap()).toList(),
         });
       case 6:
         data = ({
@@ -331,37 +312,44 @@ class PtosInspeccionServices {
     print(data);
     try {
       var headers = {'Authorization': token};
-      var resp = await _dio.request(link,
-          options: Options(
-            method: 'PUT',
-            headers: headers,
-          ),
-          data: data);
+      var resp = await _dio.request(
+        link,
+        options: Options(
+          method: 'PUT',
+          headers: headers,
+        ),
+        data: data
+      );
+
+      statusCode = 1;
       if (resp.statusCode == 200) {
         revisionPtoInspeccion.otPuntoInspeccionId = resp.data["otPuntoInspeccionId"];
       }
       return;
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -379,28 +367,32 @@ class PtosInspeccionServices {
         ),
       );
 
+      statusCode = 1;
       return resp;
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -417,29 +409,33 @@ class PtosInspeccionServices {
         ),
       );
 
+      statusCode = 1;
       final RevisionPtoInspeccion ptoInspeccion = RevisionPtoInspeccion.fromJson(resp.data);
       return ptoInspeccion;
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -545,6 +541,7 @@ class PtosInspeccionServices {
       // print(resp);
       // print(resp.data[0]["status"]);
       // print(resp.data[0]["content"]["otPuntoInspeccionId"]);
+      statusCode = 1;
       if (resp.statusCode == 201) {
         for(int i = 0; i < acciones.length; i++){
           if(acciones[i].otPuntoInspeccionId == 0){
@@ -565,12 +562,12 @@ class PtosInspeccionServices {
             final errorMessages = errors.map((error) {
               return "Error: ${error['message']}";
             }).toList();
-            await mostrarError(context, errorMessages.join('\n'));
+            showErrorDialog(context, errorMessages.join('\n'));
           } else {
-            await mostrarError(context, 'Error: ${e.response!.data}');
+            showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          await mostrarError(context, 'Error: ${e.message}');
+          showErrorDialog(context, 'Error: ${e.message}');
         }
       }
     }
@@ -604,6 +601,8 @@ class PtosInspeccionServices {
         ),
         data: datosJson
       );
+
+      statusCode = 1;
       print(resp);
       if (resp.statusCode == 201) {
         // for(int i = 0; i < acciones.length; i++){
@@ -620,12 +619,12 @@ class PtosInspeccionServices {
             final errorMessages = errors.map((error) {
               return "Error: ${error['message']}";
             }).toList();
-            await mostrarError(context, errorMessages.join('\n'));
+            showErrorDialog(context, errorMessages.join('\n'));
           } else {
-            await mostrarError(context, 'Error: ${e.response!.data}');
+            showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          await mostrarError(context, 'Error: ${e.message}');
+          showErrorDialog(context, 'Error: ${e.message}');
         }
       }
     }

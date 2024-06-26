@@ -7,6 +7,7 @@ import 'package:sedel_oficina_maqueta/models/ubicacion.dart';
 
 class UbicacionesServices {
   final _dio = Dio();
+  int? statusCode;
   String apiUrl = Config.APIURL;
   late String apiLink = '${apiUrl}api/v1/ordenes/';
 
@@ -30,6 +31,14 @@ class UbicacionesServices {
     );
   }
 
+  Future<int?> getStatusCode () async {
+    return statusCode;
+  }
+
+  Future<void> resetStatusCode () async {
+    statusCode = null;
+  }
+
   Future getUbicaciones(BuildContext context, int tecnicoId, String fechaDesde, String fechaHasta, String token) async {
     String link = apiLink += 'ubicaciones?tecnicoId=$tecnicoId&fechaDesde=$fechaDesde&fechaHasta=$fechaHasta';
     try {
@@ -41,30 +50,35 @@ class UbicacionesServices {
           headers: headers,
         ),
       );
+
+      statusCode = 1;
       final List<dynamic> ubicacionList = resp.data;
 
       return ubicacionList.map((obj) => Ubicacion.fromJson(obj)).toList();
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 }

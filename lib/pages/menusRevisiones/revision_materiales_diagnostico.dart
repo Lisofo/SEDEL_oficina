@@ -45,6 +45,10 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
   final TextEditingController cantidadController = TextEditingController();
   late int revisionId = 0;
   late List<ManualesMateriales> manuales = [];
+  bool cargoDatosCorrectamente = false;
+  bool cargando = true;
+  int? statusCode;
+  final materialesDiagnosticoServices = MaterialesDiagnosticoServices();
 
   @override
   void initState() {
@@ -54,10 +58,14 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
 
   cargarDatos() async {
     token = context.read<OrdenProvider>().token;
-    orden = context.read<OrdenProvider>().orden;
-    materiales = await MaterialesDiagnosticoServices().getMateriales(token);
-    if (orden.estado == "EN PROCESO" && marcaId != 0) {
-      isReadOnly = false;
+    try {
+      orden = context.read<OrdenProvider>().orden;
+      if (widget.materiales.isNotEmpty && widget.revisionMaterialesList.isNotEmpty){
+        cargoDatosCorrectamente = true;
+      }
+      cargando = false;
+    } catch (e) {
+      cargando = false;
     }
     setState(() {});
   }
@@ -128,10 +136,17 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                     material: material,
                     lote: Lote.empty(),
                     metodoAplicacion: MetodoAplicacion.empty());
-                await MaterialesDiagnosticoServices().postRevisionMaterial(context, orden, nuevaRevisionMaterial, revisionId, token);
-                widget.revisionMaterialesList.add(nuevaRevisionMaterial);
+                await materialesDiagnosticoServices.postRevisionMaterial(context, orden, nuevaRevisionMaterial, revisionId, token);
+                statusCode = await materialesDiagnosticoServices.getStatusCode();
+                materialesDiagnosticoServices.resetStatusCode();
+                if (statusCode == 1){
+                  widget.revisionMaterialesList.add(nuevaRevisionMaterial);
+                  statusCode = null;
+                  setState(() {});
+                }
+                
         
-                setState(() {});
+                
               },
             ),
           ],
@@ -246,8 +261,12 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                                         foregroundColor: Colors.red,
                                       ),
                                       onPressed: () async {
-                                        Navigator.of(context).pop(true);
-                                        await MaterialesDiagnosticoServices().deleteRevisionMaterial(context, orden, widget.revisionMaterialesList[i], revisionId, token);
+                                        await materialesDiagnosticoServices.deleteRevisionMaterial(context, orden, widget.revisionMaterialesList[i], revisionId, token);
+                                        statusCode = await materialesDiagnosticoServices.getStatusCode();
+                                        materialesDiagnosticoServices.resetStatusCode();
+                                        if (statusCode == 1){
+                                          Navigator.of(context).pop(true);
+                                        }
                                       },
                                       child: const Text("BORRAR")),
                                   ],
@@ -256,14 +275,17 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                             );
                           },
                           onDismissed: (direction) {
-                            setState(() {
-                              widget.revisionMaterialesList.removeAt(i);
-                            });
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('$item borrado'),
-                              )
-                            );
+                            if (statusCode == 1 ){
+                              setState(() {
+                                widget.revisionMaterialesList.removeAt(i);
+                              });
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('$item borrado'),
+                                )
+                              );
+                            }
+                            statusCode = null;
                           },
                           background: Container(
                             color: Colors.red,
@@ -316,25 +338,21 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                                                       child: const Text("CANCELAR"),
                                                     ),
                                                     TextButton(
-                                                        style: TextButton
-                                                            .styleFrom(
-                                                          foregroundColor:
-                                                              Colors.red,
+                                                        style: TextButton.styleFrom(
+                                                          foregroundColor: Colors.red,
                                                         ),
                                                         onPressed: () async {
-                                                          await MaterialesDiagnosticoServices()
-                                                              .deleteRevisionMaterial(
-                                                                  context,
-                                                                  orden,
-                                                                  widget.revisionMaterialesList[i],
-                                                                  revisionId,
-                                                                  token);
-                                                          setState(() {
-                                                            widget.revisionMaterialesList.removeAt(i);
-                                                          });
+                                                          await materialesDiagnosticoServices.deleteRevisionMaterial(context,orden,widget.revisionMaterialesList[i],revisionId,token);
+                                                          statusCode = await materialesDiagnosticoServices.getStatusCode();
+                                                          materialesDiagnosticoServices.resetStatusCode();
+                                                          if (statusCode == 1){
+                                                            setState(() {
+                                                              widget.revisionMaterialesList.removeAt(i);
+                                                            });
+                                                          }
+                                                          statusCode = null;
                                                         },
-                                                        child: const Text(
-                                                            "BORRAR")),
+                                                        child: const Text("BORRAR")),
                                                   ],
                                                 );
                                               });
@@ -343,8 +361,7 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                                   ],
                                 ),
                                 title: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('Material: ${widget.revisionMaterialesList[i].material.descripcion}'),
                                     Text('Unidad: ${widget.revisionMaterialesList[i].material.unidad}'),
@@ -518,10 +535,14 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                     lote: Lote.empty(),
                     metodoAplicacion: MetodoAplicacion.empty()
                   );
-                await MaterialesDiagnosticoServices().putRevisionMaterial(context, orden, nuevaRevisionMaterial, revisionId, token);
-                comentarioController.text = '';
-                cantidadController.text = '';
-                widget.revisionMaterialesList = await MaterialesDiagnosticoServices().getRevisionMateriales(orden, token);
+                await materialesDiagnosticoServices.putRevisionMaterial(context, orden, nuevaRevisionMaterial, revisionId, token);
+                statusCode = await materialesDiagnosticoServices.getStatusCode();
+                await materialesDiagnosticoServices.resetStatusCode();
+                if (statusCode == 1){
+                  comentarioController.text = '';
+                  cantidadController.text = '';
+                  widget.revisionMaterialesList = await materialesDiagnosticoServices.getRevisionMateriales(context, orden, token);
+                }
                 setState(() {});
               },
             ),

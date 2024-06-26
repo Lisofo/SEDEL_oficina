@@ -10,9 +10,11 @@ import 'package:sedel_oficina_maqueta/models/usuario.dart';
 
 class UserServices {
   final _dio = Dio();
+  int? statusCode;
+  String apiUrl = Config.APIURL;
+  late String apiLink = '${apiUrl}api/v1/usuarios/';
 
-  static Future<void> showDialogs(BuildContext context, String errorMessage,
-      bool doblePop, bool triplePop) async {
+  static Future<void> showDialogs(BuildContext context, String errorMessage, bool doblePop, bool triplePop) async {
     showDialog(
       context: context,
       builder: (context) {
@@ -38,24 +40,6 @@ class UserServices {
     );
   }
 
-  Future<void> _mostrarError(BuildContext context, String mensaje) async {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Error'),
-        content: Text(mensaje),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Cerrar'),
-          ),
-        ],
-      ),
-    );
-  }
-
   static void showErrorDialog(BuildContext context, String errorMessage) {
     showDialog(
       context: context,
@@ -75,10 +59,15 @@ class UserServices {
       },
     );
   }
-  
-  String apiUrl = Config.APIURL;
-  late String apiLink = '${apiUrl}api/v1/usuarios/';
 
+  Future<int?> getStatusCode () async {
+    return statusCode;
+  }
+
+  Future<void> resetStatusCode () async {
+    statusCode = null;
+  }
+  
   Future getUsers(BuildContext context, String login, String nombre, String apellido, String token) async {
     bool yaTieneFiltro = false;
     String link = '$apiLink?sort=nombre&limit=1000';
@@ -106,30 +95,35 @@ class UserServices {
           headers: headers,
         ),
       );
+
+      statusCode = 1;
       final List<dynamic> userList = resp.data;
 
       return userList.map((obj) => Usuario.fromJson(obj)).toList();
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -138,35 +132,44 @@ class UserServices {
       String link = apiLink;
       var headers = {'Authorization': token};
 
-      final resp = await _dio.request(link += usuario.usuarioId.toString(),
-          data: usuario.toMap(),
-          options: Options(method: 'PUT', headers: headers));
+      final resp = await _dio.request(
+        link += usuario.usuarioId.toString(),
+        data: usuario.toMap(),
+        options: Options(
+          method: 'PUT', 
+          headers: headers
+        )
+      );
 
+      statusCode = 1;
       if (resp.statusCode == 200) {
         showDialogs(context, 'Usuario actualizado correctamente', false, false);
       }
       return;
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -175,36 +178,45 @@ class UserServices {
       String link = apiLink;
       var headers = {'Authorization': token};
 
-      final resp = await _dio.request(link,
-          data: usuario.toMap(),
-          options: Options(method: 'POST', headers: headers));
+      final resp = await _dio.request(
+        link,
+        data: usuario.toMap(),
+        options: Options(
+          method: 'PUT', 
+          headers: headers
+        )
+      );
 
+      statusCode = 1;
       usuario.usuarioId = resp.data["usuarioId"];
       if (resp.statusCode == 201) {
         showDialogs(context, 'Usuario creado correctamente', false, false);
       }
       return;
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -213,33 +225,43 @@ class UserServices {
       String link = apiLink;
       var headers = {'Authorization': token};
 
-      final resp = await _dio.request(link += usuario.usuarioId.toString(),
-          options: Options(method: 'DELETE', headers: headers));
+      final resp = await _dio.request(
+        link += usuario.usuarioId.toString(),
+        options: Options(
+          method: 'DELETE', 
+          headers: headers
+        )
+      );
+
+      statusCode = 1;
       if (resp.statusCode == 204) {
         showDialogs(context, 'Cambio hecho correctamente', false, false);
       }
       return resp.statusCode;
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -256,30 +278,34 @@ class UserServices {
           headers: headers
         )
       );
+      statusCode = 1;
       if (resp.statusCode == 200) {
         showDialogs(context, 'Cambio hecho correctamente', false, false);
       }
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -289,32 +315,41 @@ class UserServices {
     try {
       var headers = {'Authorization': token};
 
-      final resp = await _dio.request(link += userId,
-          data: {"pin2": pin},
-          options: Options(method: 'PATCH', headers: headers));
+      final resp = await _dio.request(
+        link += userId,
+        data: {"pin2": pin},
+        options: Options(
+          method: 'PATCH', 
+          headers: headers
+        )
+      );
 
+      statusCode = 1;
       if (resp.statusCode == 200) {}
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -331,30 +366,31 @@ class UserServices {
       );
       final List<dynamic> clientesUserList = resp.data;
 
-      return clientesUserList
-          .map((obj) => ClienteUsuario.fromJson(obj))
-          .toList();
+      return clientesUserList.map((obj) => ClienteUsuario.fromJson(obj)).toList();
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -368,31 +404,40 @@ class UserServices {
       var headers = {'Authorization': token};
       final resp = await _dio.request(link,
           data:data,
-          options: Options(method: 'POST', headers: headers));
+          options: Options(
+          method: 'PUT', 
+          headers: headers
+        )
+      );
+
+      statusCode = 1;
       if (resp.statusCode == 201) {
         showDialogs(context, 'Cliente agregado correctamente', true, false);
       }
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -402,29 +447,43 @@ class UserServices {
     try {
       var headers = {'Authorization': token};
 
-      final resp = await _dio.request(link,
-          options: Options(method: 'DELETE', headers: headers));
+      final resp = await _dio.request(
+        link,
+        options: Options(
+          method: 'DELETE', 
+          headers: headers
+        )
+      );
+
+      statusCode = 1;
       if (resp.statusCode == 204) {
         showDialogs(context, 'Cliente borrado correctamente', true, false);
       }
       return resp.statusCode;
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
-            final errors = responseData['errors'] as List<dynamic>;
-            final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            _mostrarError(context, errorMessages.join('\n'));
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
-            _mostrarError(context, 'Error: ${e.response!.data}');
+            showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          _mostrarError(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -439,30 +498,35 @@ class UserServices {
           headers: headers,
         ),
       );
+
+      statusCode = 1;
       final List<dynamic> listaPerfiles = resp.data;
 
       return listaPerfiles.map((obj) => Perfil.fromJson(obj)).toList();
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
   
@@ -477,30 +541,35 @@ class UserServices {
           headers: headers,
         ),
       );
+
+      statusCode = 1;
       final List<dynamic> listaPerfilesUser = resp.data;
 
       return listaPerfilesUser.map((obj) => PerfilUsuario.fromJson(obj)).toList();
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -518,30 +587,34 @@ class UserServices {
         data: data
       );
 
+      statusCode = 1;
       if(resp.statusCode == 201){
         return;
       }
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -558,30 +631,34 @@ class UserServices {
         ),
       );
 
+      statusCode = 1;
       if(resp.statusCode == 204){
         return;
       }
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 

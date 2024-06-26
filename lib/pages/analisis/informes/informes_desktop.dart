@@ -65,12 +65,15 @@ class _InformesDesktopState extends State<InformesDesktop> {
 
   cargarDatos() async {
     token = context.read<OrdenProvider>().token;
-    informes = await InformesServices().getInformes(context, token);
-    
+    try {
+      informes = await InformesServices().getInformes(context, token);
+    }
+    catch (e){
+      informes = [];
+    }
     setState(() {
       sampleTree = convertInformesToTreeNode(informes);
     });
-   
   }
 
   abrirUrl(String url, String token) async {

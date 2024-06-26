@@ -9,6 +9,7 @@ class PlagaObjetivoServices {
   final _dio = Dio();
   String apiUrl = Config.APIURL;
   late String apiLink = '${apiUrl}api/v1/plagas-objetivo/';
+  int? statusCode;
 
   static void showErrorDialog(BuildContext context, String errorMessage) {
     showDialog(
@@ -56,6 +57,14 @@ class PlagaObjetivoServices {
     );
   }
 
+  Future<int?> getStatusCode () async {
+    return statusCode;
+  }
+
+  Future<void> resetStatusCode () async {
+    statusCode = null;
+  }
+
   Future getPlagaObjetivoById(BuildContext context, String id, String token) async {
     String link = apiLink;
     try {
@@ -68,30 +77,34 @@ class PlagaObjetivoServices {
         ),
       );
 
+      statusCode = 1;
       final PlagaObjetivo plagaObjetivo = PlagaObjetivo.fromJson(resp.data);
 
       return plagaObjetivo;
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -118,30 +131,35 @@ class PlagaObjetivoServices {
           headers: headers,
         ),
       );
+
+      statusCode = 1;
       final List<dynamic> plagaList = resp.data;
 
       return plagaList.map((obj) => PlagaObjetivo.fromJson(obj)).toList();
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -151,36 +169,44 @@ class PlagaObjetivoServices {
       var headers = {'Authorization': token};
 
       final resp = await _dio.request(
-          link += plagaObjetivo.plagaObjetivoId.toString(),
-          data: plagaObjetivo.toMap(),
-          options: Options(method: 'PUT', headers: headers));
+        link += plagaObjetivo.plagaObjetivoId.toString(),
+        data: plagaObjetivo.toMap(),
+        options: Options(
+          method: 'PUT', 
+          headers: headers
+        )
+      );
 
+      statusCode = 1;
       if (resp.statusCode == 200) {
         showDialogs(context, 'Plaga actualizada correctamente', false, false);
       }
 
       return;
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -189,36 +215,45 @@ class PlagaObjetivoServices {
       String link = apiLink;
       var headers = {'Authorization': token};
 
-      final resp = await _dio.request(link,
-          data: plagaObjetivo.toMap(),
-          options: Options(method: 'POST', headers: headers));
+      final resp = await _dio.request(
+        link,
+        data: plagaObjetivo.toMap(),
+        options: Options(
+          method: 'PUT', 
+          headers: headers
+        )
+      );
 
+      statusCode = 1;
       if (resp.statusCode == 201) {
         showDialogs(context, 'Plaga creada correctamente', false, false);
       }
 
       return;
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -228,33 +263,42 @@ class PlagaObjetivoServices {
       var headers = {'Authorization': token};
 
       final resp = await _dio.request(
-          link += plagaObjetivo.plagaObjetivoId.toString(),
-          options: Options(method: 'DELETE', headers: headers));
+        link += plagaObjetivo.plagaObjetivoId.toString(),
+        options: Options(
+          method: 'DELETE', 
+          headers: headers
+        )
+      );
+
+      statusCode = 1;
       if (resp.statusCode == 204) {
         showDialogs(context, 'Cambio hecho correctamente', true, true);
       }
       return resp.statusCode;
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 }

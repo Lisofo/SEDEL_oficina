@@ -44,7 +44,11 @@ class LoginServices {
     }
   }
 
-  Future<int?> getStatusCode() async {
+  Future<int?> getStatusCode () async {
     return statusCode;
+  }
+
+  Future<void> resetStatusCode () async {
+    statusCode = null;
   }
 }

@@ -12,6 +12,7 @@ import 'package:sedel_oficina_maqueta/models/tipos_ptos_inspeccion.dart';
 class MaterialesDiagnosticoServices {
   final _dio = Dio();
   String apiUrl = Config.APIURL;
+  int? statusCode;
 
   static Future<void> showDialogs(BuildContext context, String errorMessage, bool doblePop, bool triplePop) async {
     showDialog(
@@ -39,7 +40,7 @@ class MaterialesDiagnosticoServices {
     );
   }
 
-  Future<void> _mostrarError(BuildContext context, String mensaje) async {
+  Future<void> showErrorDialog(BuildContext context, String mensaje) async {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
@@ -57,7 +58,15 @@ class MaterialesDiagnosticoServices {
     );
   }
 
-  Future getMateriales(String token) async {
+  Future<int?> getStatusCode () async {
+    return statusCode;
+  }
+
+  Future<void> resetStatusCode () async {
+    statusCode = null;
+  }
+  
+  Future getMateriales(BuildContext context, String token) async {
     String link = '${apiUrl}api/v1/materiales/?enAppTecnico=S&enUso=S';
     try {
       var headers = {'Authorization': token};
@@ -69,17 +78,39 @@ class MaterialesDiagnosticoServices {
         ),
       );
 
+      statusCode = 1;
       final List<dynamic> materialList = resp.data;
 
       return materialList.map((obj) => Materiales.fromJson(obj)).toList();
     } catch (e) {
-      print(e);
+      statusCode = 0;
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
-  Future getMaterialesXTPI(TipoPtosInspeccion tPI, String token) async {
-    String link =
-        '${apiUrl}api/v1/tipos/puntos/${tPI.tipoPuntoInspeccionId}/materiales';
+  Future getMaterialesXTPI(BuildContext context, TipoPtosInspeccion tPI, String token) async {
+    String link = '${apiUrl}api/v1/tipos/puntos/${tPI.tipoPuntoInspeccionId}/materiales';
 
     try {
       var headers = {'Authorization': token};
@@ -90,15 +121,39 @@ class MaterialesDiagnosticoServices {
           headers: headers,
         ),
       );
+
+      statusCode = 1;
       final List<dynamic> materialXPTIList = resp.data;
 
       return materialXPTIList.map((obj) => MaterialXtpi.fromJson(obj)).toList();
     } catch (e) {
-      print(e);
+      statusCode = 0;
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
-  Future getLotes(int materialId, String token) async {
+  Future getLotes(BuildContext context, int materialId, String token) async {
     String link = '${apiUrl}api/v1/materiales/$materialId/lotes';
 
     try {
@@ -111,15 +166,38 @@ class MaterialesDiagnosticoServices {
         ),
       );
 
+      statusCode = 1;
       final List<dynamic> lotesList = resp.data;
 
       return lotesList.map((obj) => Lote.fromJson(obj)).toList();
     } catch (e) {
-      print(e);
+      statusCode = 0;
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
-  Future getMetodosAplicacion(String token) async {
+  Future getMetodosAplicacion(BuildContext context, String token) async {
     String link = '${apiUrl}api/v1/metodos-aplicacion/';
     try {
       var headers = {'Authorization': token};
@@ -131,15 +209,38 @@ class MaterialesDiagnosticoServices {
         ),
       );
 
+      statusCode = 1;
       final List<dynamic> metodosList = resp.data;
 
       return metodosList.map((obj) => MetodoAplicacion.fromJson(obj)).toList();
     } catch (e) {
-      print(e);
+      statusCode = 0;
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
-  Future getRevisionMateriales(Orden orden, String token) async {
+  Future getRevisionMateriales(BuildContext context, Orden orden, String token) async {
     String link = '${apiUrl}api/v1/ordenes/${orden.ordenTrabajoId}/revisiones/${orden.otRevisionId}/materiales';
 
     try {
@@ -152,13 +253,34 @@ class MaterialesDiagnosticoServices {
         ),
       );
 
+      statusCode = 1;
       final List<dynamic> revisionMaterialesList = resp.data;
 
-      return revisionMaterialesList
-          .map((obj) => RevisionMaterial.fromJson(obj))
-          .toList();
+      return revisionMaterialesList.map((obj) => RevisionMaterial.fromJson(obj)).toList();
     } catch (e) {
-      print(e);
+      statusCode = 0;
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -186,6 +308,8 @@ class MaterialesDiagnosticoServices {
         ),
         data: data,
       );
+
+      statusCode = 1;
       if (resp.statusCode == 201) {
         revisionMaterial.otMaterialId = resp.data["otMaterialId"];
         await showDialogs(context, 'Material guardado', true, false);
@@ -193,22 +317,29 @@ class MaterialesDiagnosticoServices {
 
       return;
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
-            final errors = responseData['errors'] as List<dynamic>;
-            final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            await _mostrarError(context, errorMessages.join('\n'));
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
-            await _mostrarError(context, 'Error: ${e.response!.data}');
+            showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          await _mostrarError(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -223,26 +354,35 @@ class MaterialesDiagnosticoServices {
           headers: headers,
         ),
       );
+
+      statusCode = 1;
       if (resp.statusCode == 204) {
         showDialogs(context, 'Material borrado', true, false);
       }
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
-            final errors = responseData['errors'] as List<dynamic>;
-            final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            await _mostrarError(context, errorMessages.join('\n'));
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
-            await _mostrarError(context, 'Error: ${e.response!.data}');
+            showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          await _mostrarError(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 
@@ -270,28 +410,35 @@ class MaterialesDiagnosticoServices {
         ),
         data: data,
       );
+
+      statusCode = 1;
       if (resp.statusCode == 200) {
         await showDialogs(context, 'Material editado', true, false);
       }
 
       return;
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
-              _mostrarError(context, 'Error: ${e.response!.data['message']}');
-            }else{
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            _mostrarError(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
-            _mostrarError(context, 'Error: ${e.response!.data}');
+            showErrorDialog(context, 'Error: ${e.response!.data}');
           }
+        } else {
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
         } 
       } 
     }

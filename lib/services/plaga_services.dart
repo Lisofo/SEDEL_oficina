@@ -11,6 +11,7 @@ class PlagaServices {
   final _dio = Dio();
   String apiUrl = Config.APIURL;
   late String apiLink = '${apiUrl}api/v1/plagas/';
+  int? statusCode;
 
   static void showErrorDialog(BuildContext context, String errorMessage) {
     showDialog(
@@ -58,6 +59,14 @@ class PlagaServices {
     );
   }
 
+  Future<int?> getStatusCode () async {
+    return statusCode;
+  }
+
+  Future<void> resetStatusCode () async {
+    statusCode = null;
+  }
+
   Future getPlagaById(BuildContext context, String id, String token) async {
     String link = apiLink;
     try {
@@ -70,29 +79,33 @@ class PlagaServices {
         ),
       );
 
+      statusCode = 1;
       final Plaga plaga = Plaga.fromJson(resp.data);
 
       return plaga;
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
       } 
     }
   }
@@ -119,29 +132,34 @@ class PlagaServices {
           headers: headers,
         ),
       );
+      
+      statusCode = 1;
       final List<dynamic> plagaList = resp.data;
 
       return plagaList.map((obj) => Plaga.fromJson(obj)).toList();
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
       } 
     }
   }
@@ -151,34 +169,43 @@ class PlagaServices {
       String link = apiLink;
       var headers = {'Authorization': token};
 
-      final resp = await _dio.request(link += plaga.plagaId.toString(),
-          data: plaga.toMap(),
-          options: Options(method: 'PUT', headers: headers));
+      final resp = await _dio.request(
+        link += plaga.plagaId.toString(),
+        data: plaga.toMap(),
+        options: Options(
+          method: 'PUT', 
+          headers: headers
+        )
+      );
 
+      statusCode = 1;
       if (resp.statusCode == 200) {
         showDialogs(context, 'Plaga actualizada correctamente', false, false);
       }
       return;
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
       } 
     }
   }
@@ -188,11 +215,17 @@ class PlagaServices {
       String link = apiLink;
       var headers = {'Authorization': token};
 
-      final resp = await _dio.request(link,
-          data: plaga.toMap(),
-          options: Options(method: 'POST', headers: headers));
+      final resp = await _dio.request(
+        link,
+        data: plaga.toMap(),
+        options: Options(
+          method: 'PUT', 
+          headers: headers
+        )
+      );
 
 
+      statusCode = 1;
       if (resp.statusCode == 201) {
         plaga.plagaId = resp.data['plagaId'];
         showDialogs(context, 'Plaga creada correctamente', false, false);
@@ -200,25 +233,28 @@ class PlagaServices {
 
       return;
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
       } 
     }
   }
@@ -228,39 +264,48 @@ class PlagaServices {
       String link = apiLink;
       var headers = {'Authorization': token};
 
-      final resp = await _dio.request(link += plaga.plagaId.toString(),
-          options: Options(method: 'DELETE', headers: headers));
+      final resp = await _dio.request(
+        link += plaga.plagaId.toString(),
+        options: Options(
+          method: 'DELETE', 
+          headers: headers
+        )
+      );
+
+      statusCode = 1;
       if (resp.statusCode == 204) {
         showDialogs(context, 'Cambio hecho correctamente', true, true);
       }
       return resp.statusCode;
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
       } 
     }
   }
 
   Future getPlagasXTPI(BuildContext context, TipoPtosInspeccion tPI, String token) async {
-    String link =
-        '${apiUrl}api/v1/tipos/puntos/${tPI.tipoPuntoInspeccionId}/plagas';
+    String link = '${apiUrl}api/v1/tipos/puntos/${tPI.tipoPuntoInspeccionId}/plagas';
 
     try {
       var headers = {'Authorization': token};
@@ -271,29 +316,34 @@ class PlagaServices {
           headers: headers,
         ),
       );
+
+      statusCode = 1;
       final List<dynamic> plagaXTPIList = resp.data;
 
       return plagaXTPIList.map((obj) => PlagaXtpi.fromJson(obj)).toList();
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
       } 
     }
   }

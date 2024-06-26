@@ -25,9 +25,7 @@ class MenuProvider with ChangeNotifier {
 
     Map dataMap = json.decode(resp);
     opcionesRevision = dataMap['rutas'];
-    return opcionesRevision
-        .where((menu) => menu['tipoOrden'].toString().contains(codTipoOrden))
-        .toList();
+    return opcionesRevision.where((menu) => menu['tipoOrden'].toString().contains(codTipoOrden)).toList();
   }
 
   String _menu = '';

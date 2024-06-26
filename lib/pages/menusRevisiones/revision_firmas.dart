@@ -41,6 +41,12 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
   bool clienteNoDisponible = false;
   bool filtro = false;
   late String? firmaDisponible = '';
+  bool guardandoFirma = false;
+  final revisionServices = RevisionServices(); 
+  int? statusCode;
+  bool cargando = true;
+  bool cargoDatosCorrectamente = false;
+  int contadorDeVeces = 0;
 
 
   SignatureController controller = SignatureController(
@@ -56,13 +62,26 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
   }
 
   cargarDatos() async {
-    revisionId = widget.revision!.otRevisionId;
-    firmaDisponible = await RevisionServices().getRevision(context, orden, revisionId, token);
-    print(firmaDisponible);
-    if(firmaDisponible == 'N'){
-      clienteNoDisponible = true;
-      filtro = true;
-      controller.disabled = !controller.disabled;
+    try {
+      orden = context.read<OrdenProvider>().orden;
+      if(orden.otRevisionId != 0){
+        firmaDisponible = await RevisionServices().getRevision(context, orden, revisionId, token);
+      }
+      print(firmaDisponible);
+      if(firmaDisponible == 'N'){
+        clienteNoDisponible = true;
+        filtro = true;
+        controller.disabled = !controller.disabled;
+      }
+      if (contadorDeVeces > 1 && widget.firmas.isNotEmpty){
+        cargoDatosCorrectamente = true;
+      }
+      else if (contadorDeVeces == 1){
+        cargoDatosCorrectamente = true;
+      }
+      cargando = false;
+    } catch (e) {
+      cargando = false;
     }
     setState(() {});
   }
@@ -70,7 +89,26 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    return Padding(
+    return cargando ? const Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+          Text('Cargando, por favor espere...')
+        ],
+      ),
+    ) : !cargoDatosCorrectamente ? 
+    Center(
+      child: TextButton.icon(
+        onPressed: () async {
+          await cargarDatos();
+        }, 
+        icon: const Icon(Icons.replay_outlined),
+        label: const Text('Recargar'),
+      ),
+    ) :
+    Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
         height: MediaQuery.of(context).size.height* 0.88,
@@ -175,21 +213,26 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: CustomButton(
-                      onPressed: () async {
+                      onPressed: !guardandoFirma ? () async {
+                        guardandoFirma = true;
                         if ((widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') || clienteNoDisponible) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(clienteNoDisponible ? 'Cliente no disponible' : 'No se puede modificar esta revisión.'),
-                        ));
-                        return Future.value(false);
-                      }
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(clienteNoDisponible ? 'Cliente no disponible' : 'No se puede modificar esta revisión.'),
+                          ));
+                          guardandoFirma = false;
+                          return Future.value(false);
+                        }
                         if (nameController.text.isNotEmpty && areaController.text.isNotEmpty) {
                           await guardarFirma(context, _firmaCliente);
+                          guardandoFirma = false;
                         } else {
                           completeDatosPopUp(context);
+                          guardandoFirma = false;
                         }
-                      },
+                      } : null,
                       text: 'Guardar',
                       tamano: 20,
+                      disabled: guardandoFirma,
                     ),
                   ),
                   Padding(
@@ -222,24 +265,31 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                         value: filtro,
                         onChanged: (value) async {
                           if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            content: Text('No se puede modificar esta revisión.'),
-                          ));
-                          return Future.value(false);
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                              content: Text('No se puede modificar esta revisión.'),
+                            ));
+                            return Future.value(false);
                           }
                           if(value){
-                            await RevisionServices().patchFirma(context, orden, 'N', token);
+                            await revisionServices.patchFirma(context, orden, 'N', token);
                           } else{
-                            await RevisionServices().patchFirma(context, orden, null, token);
+                            await revisionServices.patchFirma(context, orden, null, token);
                           }
-                          setState(() {
-                            filtro = value;
-                            clienteNoDisponible = filtro;
-                            controller.disabled = !controller.disabled;
-                            controller.clear();
-                            nameController.clear();
-                            areaController.clear();
-                          });
+                          statusCode = await revisionServices.getStatusCode();
+                          await revisionServices.resetStatusCode();
+
+                          if (statusCode == 1){
+                            setState(() {
+                              filtro = value;
+                              clienteNoDisponible = filtro;
+                              controller.disabled = !controller.disabled;
+                              controller.clear();
+                              nameController.clear();
+                              areaController.clear();
+                            });
+                          }
+                          statusCode = null;
+                          
                         }
                       ),
                       const Text('Cliente no disponible')
@@ -260,26 +310,29 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                     key: Key(item.toString()),
                     direction: DismissDirection.endToStart,
                     confirmDismiss: (DismissDirection direction) {
+                      if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('No se puede modificar esta revisión.'),
+                        ));
+                        return Future.value(false);
+                      }
                       return showDialog(
                         context: context,
-                        builder: (BuildContext context) {
+                        builder: (BuildContext context) {                        
                           return borrarDesdeDismiss(context, index);
                         }
                       );
                     },
                     onDismissed: (direction) async {
-                      if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('No se puede modificar esta revisión.'),
-                      ));
-                      return Future.value(false);
+                      if (statusCode == 1){
+                        setState(() {
+                          widget.firmas.removeAt(index);
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('La firma de $item ha sido borrada'),
+                        ));
                       }
-                      setState(() {
-                        widget.firmas.removeAt(index);
-                      });
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text('La firma de $item ha sido borrada'),
-                      ));
+                      statusCode = null;  
                     },
                     background: Container(
                       color: Colors.red,
@@ -356,8 +409,12 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
             foregroundColor: Colors.red,
           ),
           onPressed: () async {
-            Navigator.of(context).pop(true);
             await RevisionServices().deleteRevisionFirma(context, orden, widget.firmas[i], revisionId, token);
+            statusCode = await revisionServices.getStatusCode();
+            revisionServices.resetStatusCode();
+            if (statusCode == 1) {
+              Navigator.of(context).pop(true);
+            }
           },
           child: const Text("BORRAR")
         ),
@@ -387,15 +444,14 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
 
     await revisionServices.postRevisonFirma(context, orden, nuevaFirma, widget.revision!.otRevisionId, token);
     statusCode = await revisionServices.getStatusCode();
+    revisionServices.resetStatusCode;
 
-
-    print('call $statusCode');
-
-    if(statusCode == 201){
+    if(statusCode == 1){
       _agregarCliente(nuevaFirma);
-    }else{
+    } else {
       print('error');
     }
+    statusCode = null;
   }
 
   void completeDatosPopUp(BuildContext context) {
@@ -507,10 +563,13 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
             ),
             TextButton(
               onPressed: () async {
-                firma.area = nuevoArea;
-                firma.nombre = nuevoNombre;
-
                 await RevisionServices().putRevisionFirma(context, orden, firma, revisionId, token);
+                statusCode = await revisionServices.getStatusCode();
+                revisionServices.resetStatusCode();
+                if(statusCode == 1){
+                  firma.area = nuevoArea;
+                  firma.nombre = nuevoNombre;
+                }
               },
               child: const Text('Guardar'),
             ),

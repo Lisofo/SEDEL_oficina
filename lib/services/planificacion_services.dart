@@ -8,9 +8,9 @@ class PlanificacionServices{
   final _dio = Dio();
   String apiUrl = Config.APIURL;
   late String apiLink = '${apiUrl}api/v1/ordenes/planificaciones/generar';
+  int? statusCode;
 
-  static Future<void> showDialogs(BuildContext context, String errorMessage,
-      bool doblePop, bool triplePop) async {
+  static Future<void> showDialogs(BuildContext context, String errorMessage, bool doblePop, bool triplePop) async {
     showDialog(
       context: context,
       builder: (context) {
@@ -36,24 +36,6 @@ class PlanificacionServices{
     );
   }
 
-  Future<void> _mostrarError(BuildContext context, String mensaje) async {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Error'),
-        content: Text(mensaje),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Cerrar'),
-          ),
-        ],
-      ),
-    );
-  }
-
   static void showErrorDialog(BuildContext context, String errorMessage) {
     showDialog(
       context: context,
@@ -74,6 +56,14 @@ class PlanificacionServices{
     );
   }
 
+  Future<int?> getStatusCode () async {
+    return statusCode;
+  }
+
+  Future<void> resetStatusCode () async {
+    statusCode = null;
+  }
+
   Future generarPlanificacion(BuildContext context,String fechaDesde,String fechaHasta, String token) async {
     String link = apiLink;
 
@@ -83,42 +73,47 @@ class PlanificacionServices{
         "fechaDesde": fechaDesde,
         "fechaHasta": fechaHasta
       };
-      var resp = await _dio.request(link,
-          options: Options(
-            method: 'POST',
-            headers: headers,
-          ),
-          data: data);
+      var resp = await _dio.request(
+        link,
+        options: Options(
+          method: 'POST',
+          headers: headers,
+        ),
+        data: data
+      );
 
+      statusCode = 1;
       if (resp.statusCode == 201) {
-         showDialogs(context, 'Planificacion creada correctamente', false, false);
+        showDialogs(context, 'Planificacion creada correctamente', false, false);
       } else {
-        _mostrarError(
-            context, 'Hubo un error al momento de generar la planificacion');
+        showErrorDialog(context, 'Hubo un error al momento de generar la planificacion');
       }
 
       return;
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 

@@ -46,6 +46,14 @@ class _RevisionPtosInspeccionActividadState extends State<RevisionPtosInspeccion
   List<PtoMaterial> materialesSeleccionados = [];
   late RevisionPtoInspeccion nuevaRevisionPtoInspeccion = RevisionPtoInspeccion.empty();
   bool subiendoAcciones = false;
+  int? statusCodeRevision;
+  int? statusCodeTareas;
+  int? statusCodeMateriales;
+  final _ptosInspeccionServices = PtosInspeccionServices();
+  final _tareasServices = TareasServices();
+  final _materialesServices = MaterialesServices();
+  bool cargoDatosCorrectamente = false;
+  bool cargando = true;
 
   @override
   void initState() {
@@ -61,27 +69,41 @@ class _RevisionPtosInspeccionActividadState extends State<RevisionPtosInspeccion
 
   cargarDatos() async {
     token = context.read<OrdenProvider>().token;
-    orden = context.read<OrdenProvider>().orden;
-    revisionId = context.read<OrdenProvider>().revisionId;
-    final String modo = context.read<OrdenProvider>().modo;
-    tPISeleccionado = context.read<OrdenProvider>().tipoPtosInspeccion;
-    ptoInspeccionSeleccionados = context.read<OrdenProvider>().puntosSeleccionados;
-    tareas = await TareasServices().getTareasXTPI(context, tPISeleccionado, modo, token);
-    materiales = await MaterialesServices().getMaterialesXTPI(context, tPISeleccionado, token);
-    if (orden.estado == "EN PROCESO" && marcaId != 0) {
-      isReadOnly = false;
-    }
-    int accion = menu == "Actividad" ? 2 : 3;
-    bool modificando = ptoInspeccionSeleccionados.length == 1 && ptoInspeccionSeleccionados[0].piAccionId == accion;
-    if (modificando) {
-      for (var tarea in tareas) {
-        tarea.selected = ptoInspeccionSeleccionados[0]
-          .tareas
-          .any((asignada) => asignada.tareaId == tarea.tareaId);
+    try {
+      orden = context.read<OrdenProvider>().orden;
+      revisionId = context.read<OrdenProvider>().revisionId;
+      final String modo = context.read<OrdenProvider>().modo;
+      tPISeleccionado = context.read<OrdenProvider>().tipoPtosInspeccion;
+      ptoInspeccionSeleccionados = context.read<OrdenProvider>().puntosSeleccionados;
+      tareas = await _tareasServices.getTareasXTPI(context, tPISeleccionado, modo, token);
+      statusCodeTareas = await _tareasServices.getStatusCode();
+      await _tareasServices.resetStatusCode();
+      materiales = await _materialesServices.getMaterialesXTPI(context, tPISeleccionado, token);
+      statusCodeMateriales = await _materialesServices.getStatusCode();
+      await _materialesServices.resetStatusCode();
+
+      if (orden.estado == "EN PROCESO" && marcaId != 0) {
+        isReadOnly = false;
       }
-      materialesSeleccionados = ptoInspeccionSeleccionados[0].materiales;
-      plagasSeleccionadas = ptoInspeccionSeleccionados[0].plagas;
+      int accion = menu == "Actividad" ? 2 : 3;
+      bool modificando = ptoInspeccionSeleccionados.length == 1 && ptoInspeccionSeleccionados[0].piAccionId == accion;
+      if (modificando) {
+        for (var tarea in tareas) {
+          tarea.selected = ptoInspeccionSeleccionados[0].tareas.any((asignada) => asignada.tareaId == tarea.tareaId);
+        }
+        materialesSeleccionados = ptoInspeccionSeleccionados[0].materiales;
+        plagasSeleccionadas = ptoInspeccionSeleccionados[0].plagas;
+      }
+      if (statusCodeMateriales == 1 && statusCodeTareas == 1){
+        cargoDatosCorrectamente = true;
+        statusCodeMateriales = null;
+        statusCodeTareas = null;
+      }
+      cargando = false;
+    } catch (e) {
+      cargando = false;
     }
+    
     setState(() {});
   }
   
@@ -98,7 +120,25 @@ class _RevisionPtosInspeccionActividadState extends State<RevisionPtosInspeccion
           backgroundColor: colors.primary,
         ),
         backgroundColor: Colors.grey.shade200,
-        body: SingleChildScrollView(
+        body: cargando ? const Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              Text('Cargando, por favor espere...')
+            ],
+          ),
+          ) : !cargoDatosCorrectamente ? 
+            Center(
+              child: TextButton.icon(
+              onPressed: () async {
+                await cargarDatos();
+              }, 
+              icon: const Icon(Icons.replay_outlined),
+              label: const Text('Recargar'),
+            ),
+          ) : SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Center(
@@ -432,12 +472,17 @@ class _RevisionPtosInspeccionActividadState extends State<RevisionPtosInspeccion
       Provider.of<OrdenProvider>(context, listen: false).actualizarPunto(i, ptoInspeccionSeleccionados[i]);
     }
     await postAcciones(ptoInspeccionSeleccionados);
+    statusCodeRevision = null;
     subiendoAcciones = false;
   }
 
   Future postAcciones(List<RevisionPtoInspeccion> acciones) async {
-    await PtosInspeccionServices().postAcciones(context, orden, acciones, revisionId, token);
-    await PtosInspeccionServices.showDialogs(context, acciones.length == 1 ? 'Accion creada' : 'Acciones creadas', true, true);
+    await _ptosInspeccionServices.postAcciones(context, orden, acciones, revisionId, token);
+    statusCodeRevision = await _ptosInspeccionServices.getStatusCode();
+    await _ptosInspeccionServices.resetStatusCode();
+    if(statusCodeRevision == 1) {
+      await PtosInspeccionServices.showDialogs(context, acciones.length == 1 ? 'Accion creada' : 'Acciones creadas', true, true);
+    }
   }
 
   Widget popUpPlagas(BuildContext context) {
@@ -619,14 +664,13 @@ class _RevisionPtosInspeccionActividadState extends State<RevisionPtosInspeccion
 
     // Convertir los elementos seleccionados a PtoTarea y agregarlos a la listaPtoTarea
     listaPtoTarea.addAll(tareasSeleccionadas.map((tareaXtpi) => PtoTarea(
-          otPiTareaId: tareaXtpi
-              .configTpiTareaId, // Usar el campo adecuado según tus necesidades
-          otPuntoInspeccionId: tareaXtpi
-              .tipoPuntoInspeccionId, // Usar el campo adecuado según tus necesidades
-          tareaId: tareaXtpi.tareaId,
-          codTarea: tareaXtpi.codTarea,
-          descTarea: tareaXtpi.descripcion,
-        )));
+        otPiTareaId: tareaXtpi.configTpiTareaId, // Usar el campo adecuado según tus necesidades
+        otPuntoInspeccionId: tareaXtpi.tipoPuntoInspeccionId, // Usar el campo adecuado según tus necesidades
+        tareaId: tareaXtpi.tareaId,
+        codTarea: tareaXtpi.codTarea,
+        descTarea: tareaXtpi.descripcion,
+      ))
+    );
 
     return listaPtoTarea;
   }

@@ -4,7 +4,7 @@ import 'package:sedel_oficina_maqueta/config/config.dart';
 import 'package:sedel_oficina_maqueta/models/menu.dart';
 
 class MenuServices{
-
+  int? statusCode;
   final _dio = Dio();
   String apiUrl = Config.APIURL;
   late String apiLink = '${apiUrl}api/v1/appMenu/';
@@ -55,7 +55,14 @@ class MenuServices{
     );
   }
 
+  Future<int?> getStatusCode () async {
+    return statusCode;
+  }
 
+  Future<void> resetStatusCode () async {
+    statusCode = null;
+  }
+  
   Future getMenu(BuildContext context, String token) async {
     String link = apiLink;
     try {
@@ -68,30 +75,34 @@ class MenuServices{
         ),
       );
 
+      statusCode = 1;
       final Menu menu = Menu.fromJson(resp.data);
       return menu;
 
     } catch (e) {
+      statusCode = 0;
       if (e is DioException) {
         if (e.response != null) {
           final responseData = e.response!.data;
           if (responseData != null) {
             if(e.response!.statusCode == 403){
               showErrorDialog(context, 'Error: ${e.response!.data['message']}');
-            }else{
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
               final errors = responseData['errors'] as List<dynamic>;
               final errorMessages = errors.map((error) {
-              return "Error: ${error['message']}";
-            }).toList();
-            showErrorDialog(context, errorMessages.join('\n'));
-          }
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
           } else {
             showErrorDialog(context, 'Error: ${e.response!.data}');
           }
         } else {
-          showErrorDialog(context, 'Error: ${e.message}');
-        }
-      }
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
     }
   }
 }
