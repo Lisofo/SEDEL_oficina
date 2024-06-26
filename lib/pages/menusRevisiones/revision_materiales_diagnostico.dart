@@ -375,7 +375,9 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                                                         style: TextButton.styleFrom(
                                                           foregroundColor: Colors.red,
                                                         ),
-                                                        onPressed: () async {
+                                                        onPressed: !borrando ? () async {
+                                                          borrando = true;
+                                                          setState(() {});
                                                           await materialesDiagnosticoServices.deleteRevisionMaterial(context,orden,widget.revisionMaterialesList[i],revisionId,token);
                                                           statusCode = await materialesDiagnosticoServices.getStatusCode();
                                                           materialesDiagnosticoServices.resetStatusCode();
@@ -384,8 +386,10 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                                                               widget.revisionMaterialesList.removeAt(i);
                                                             });
                                                           }
+                                                          borrando = false;
                                                           statusCode = null;
-                                                        },
+                                                          setState(() {});
+                                                        } : null,
                                                         child: const Text("BORRAR")),
                                                   ],
                                                 );
@@ -577,7 +581,9 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                   cantidadController.text = '';
                   widget.revisionMaterialesList = await materialesDiagnosticoServices.getRevisionMateriales(context, orden, token);
                 }
+                statusCode = null;
                 setState(() {});
+                
               },
             ),
           ],
