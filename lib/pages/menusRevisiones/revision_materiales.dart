@@ -48,11 +48,13 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
   final ScrollController _scrollController = ScrollController();
   late int revisionId = 0;
   late List<ManualesMateriales> manuales = [];
+  bool cargoDatosCorrectamente = false;
+  bool cargando = true;
+  int? statusCode;
+  final materialesServices = MaterialesServices();
+  bool estaBuscando = false;
 
   void _showMaterialDetails(BuildContext context, Materiales material) async {
-    plagas = await PlagaServices().getPlagas(context, '', '', token);
-    lotes = await MaterialesServices().getLotes(context, selectedMaterial.materialId, token);
-    metodosAplicacion = await MaterialesServices().getMetodosAplicacion(context,'','', token);
     selectedMetodo = MetodoAplicacion.empty();
     selectedLote = Lote.empty();
 
@@ -222,6 +224,7 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
                     width: 1, color: colors.primary),
                 borderRadius: BorderRadius.circular(5)),
             child: DropdownSearch(
+              enabled: !estaBuscando,
                   dropdownDecoratorProps: const DropDownDecoratorProps(
                     textAlignVertical: TextAlignVertical.center,
                     dropdownSearchDecoration: InputDecoration(
@@ -239,6 +242,18 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
                       ));
                       return Future.value(false);
                     }
+                    try {
+                      plagas = await PlagaServices().getPlagas(context, '', '', token);
+                      lotes = await MaterialesServices().getLotes(context, selectedMaterial.materialId, token);
+                      metodosAplicacion = await MaterialesServices().getMetodosAplicacion(context,'','', token);
+                      if (plagas.isNotEmpty && lotes.isNotEmpty && metodosAplicacion.isNotEmpty){
+                        cargoDatosCorrectamente = true;
+                      }
+                      cargando = false;
+                    } catch (e) {
+                      cargando = false;
+                    }
+                    setState(() {});
                     setState(() {
                       selectedMaterial = newValue!;
                       _showMaterialDetails(context, selectedMaterial);
