@@ -54,6 +54,7 @@ class _RevisionPlagasMenuState extends State<RevisionPlagasMenu> {
   final ScrollController _scrollController = ScrollController();
   late String token = context.read<OrdenProvider>().token;
   bool isReadOnly = true;
+
   bool cargoDatosCorrectamente = false;
   bool cargando = true;
   bool agregandoPlaga = false;
@@ -166,15 +167,16 @@ class _RevisionPlagasMenuState extends State<RevisionPlagasMenu> {
                       agregandoPlaga = false;
                       return Future.value(false);
                     }
-                    bool agregarPlaga = true;
-                    if (widget.revisionPlagasList.isNotEmpty) {
-                      agregarPlaga = !widget.revisionPlagasList.any(
-                          (plaga) => plaga.plagaId == selectedPlaga.plagaId);
-                    }
-                    if (agregarPlaga) {
-                      await posteoRevisionPlaga(context);
-                      agregandoPlaga = false;
-                      setState(() {});
+                    if (selectedGrado.gradoInfestacionId != 0) {
+                      bool agregarPlaga = true;
+                      if (widget.revisionPlagasList.isNotEmpty) {
+                        agregarPlaga = !widget.revisionPlagasList.any((plaga) => plaga.plagaId == selectedPlaga.plagaId);
+                      }
+                      if (agregarPlaga) {
+                        await posteoRevisionPlaga(context);
+                        agregandoPlaga = false;
+                        setState(() {});
+                      }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text('Seleccione un grado de infestación'),
