@@ -765,7 +765,7 @@ class MaterialesServices {
 
       statusCode = 1;
       if (resp.statusCode == 204) {
-        showDialogs(context, 'Material borrado', true, false);
+        // showDialogs(context, 'Material borrado', true, false);
       }
     } catch (e) {
       statusCode = 0;

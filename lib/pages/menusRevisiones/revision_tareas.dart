@@ -208,12 +208,12 @@ class _RevisionTareasMenuState extends State<RevisionTareasMenu> {
                       },
                       onDismissed: (direction) async {
                         if (statusCodeTareas == 1){
-                          setState(() {
-                            widget.revisionTareasList.removeAt(i);
-                          });
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text('La tarea $item ha sido borrada'),
                           ));
+                          setState(() {
+                            widget.revisionTareasList.removeAt(i);
+                          });
                         }
                         statusCodeTareas = null;
                       },

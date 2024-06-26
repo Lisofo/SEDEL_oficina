@@ -554,7 +554,7 @@ class RevisionServices {
 
       statusCode = 1;
       if (resp.statusCode == 204) {
-        showDialogs(context, 'Tarea borrada', true, false);
+        // showDialogs(context, 'Tarea borrada', true, false);
       }
     } catch (e) {
       statusCode = 0;
@@ -641,7 +641,7 @@ class RevisionServices {
 
       statusCode = 1;
       if (resp.statusCode == 204) {
-        showDialogs(context, 'Plaga borrada', true, false);
+        // showDialogs(context, 'Plaga borrada', true, false);
       }
     } catch (e) {
       statusCode = 0;
@@ -838,7 +838,7 @@ class RevisionServices {
 
       statusCode = 1;
       if (resp.statusCode == 204) {
-        showDialogs(context, 'Firma borrada', false, false);
+        // showDialogs(context, 'Firma borrada', false, false);
       }
     } catch (e) {
       statusCode = 0;
@@ -867,12 +867,12 @@ class RevisionServices {
     }
   }
 
-  Future putRevisionFirma(BuildContext context, Orden orden, ClienteFirma revisionFirma, int revisionId, String token) async {
+  Future putRevisionFirma(BuildContext context, Orden orden, ClienteFirma revisionFirma, String nombre, String area, int revisionId, String token) async {
     String link = apiLink;
     link += 'api/v1/ordenes/${orden.ordenTrabajoId}/revisiones/$revisionId/firmas/${revisionFirma.otFirmaId}';
     var data = ({
-      "nombre": revisionFirma.nombre,
-      "area": revisionFirma.area,
+      "nombre": nombre,
+      "area": area,
     });
     try {
       var headers = {'Authorization': token};

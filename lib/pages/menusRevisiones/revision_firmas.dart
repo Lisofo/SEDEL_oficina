@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/config.dart';
+import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/clientesFirmas.dart';
 import 'package:sedel_oficina_maqueta/models/orden.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
@@ -42,11 +43,13 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
   bool filtro = false;
   late String? firmaDisponible = '';
   bool guardandoFirma = false;
-  final revisionServices = RevisionServices(); 
+  final _revisionServices = RevisionServices(); 
   int? statusCode;
   bool cargando = true;
   bool cargoDatosCorrectamente = false;
   int contadorDeVeces = 0;
+  bool estoyEditando = false;
+  bool estoyBorrando = false;
 
 
   SignatureController controller = SignatureController(
@@ -238,22 +241,26 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ElevatedButton(
-                        onPressed: () {
-                          controller.clear();
-                        },
-                        style: const ButtonStyle(
-                            backgroundColor:
-                                WidgetStatePropertyAll(Colors.white),
-                            elevation: WidgetStatePropertyAll(10),
-                            shape: WidgetStatePropertyAll(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.horizontal(
-                                        left: Radius.circular(50),
-                                        right: Radius.circular(50))))),
-                        child: Icon(
-                          Icons.delete,
-                          color: colors.primary,
-                        )),
+                      onPressed: () {
+                        controller.clear();
+                      },
+                      style: const ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(Colors.white),
+                        elevation: WidgetStatePropertyAll(10),
+                        shape: WidgetStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.horizontal(
+                              left: Radius.circular(50),
+                              right: Radius.circular(50)
+                            )
+                          )
+                        )
+                      ),
+                      child: Icon(
+                        Icons.delete,
+                        color: colors.primary,
+                      )
+                    ),
                   ),
                 ],
                 if(widget.firmas.isEmpty)...[
@@ -271,12 +278,12 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                             return Future.value(false);
                           }
                           if(value){
-                            await revisionServices.patchFirma(context, orden, 'N', token);
+                            await _revisionServices.patchFirma(context, orden, 'N', token);
                           } else{
-                            await revisionServices.patchFirma(context, orden, null, token);
+                            await _revisionServices.patchFirma(context, orden, null, token);
                           }
-                          statusCode = await revisionServices.getStatusCode();
-                          await revisionServices.resetStatusCode();
+                          statusCode = await _revisionServices.getStatusCode();
+                          await _revisionServices.resetStatusCode();
 
                           if (statusCode == 1){
                             setState(() {
@@ -318,21 +325,21 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                       }
                       return showDialog(
                         context: context,
-                        builder: (BuildContext context) {                        
+                        builder: (BuildContext context) {
                           return borrarDesdeDismiss(context, index);
                         }
                       );
                     },
                     onDismissed: (direction) async {
-                      if (statusCode == 1){
-                        setState(() {
-                          widget.firmas.removeAt(index);
-                        });
+                      if(statusCode == 1){
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text('La firma de $item ha sido borrada'),
                         ));
+                        setState(() {
+                          widget.firmas.removeAt(index);
+                        });
                       }
-                      statusCode = null;  
+                      statusCode = null;
                     },
                     background: Container(
                       color: Colors.red,
@@ -357,29 +364,36 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                               splashColor: Colors.transparent,
                               splashRadius: 25,
                               icon: const Icon(Icons.edit),
-                              onPressed: () async {
+                              onPressed: !estoyEditando ? () async {
+                                estoyEditando = true;
                                 if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
                                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                     content: Text('No se puede modificar esta revisión.'),
                                   ));
+                                  estoyEditando = false;
                                   return Future.value(false);
                                 }
                                 _editarCliente(widget.firmas[index]);
-                              },
+                                estoyEditando = false;
+                                setState(() {});
+                              } : null,
                             ),
                             IconButton(
                               splashColor: Colors.transparent,
                               splashRadius: 25,
                               icon: const Icon(Icons.delete),
-                              onPressed: () async {
+                              onPressed: !estoyBorrando ? () async {
+                                estoyBorrando = true;
                                 if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
                                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                       content: Text('No se puede modificar esta revisión.'),
                                     ));
+                                    estoyBorrando = false;
                                     return Future.value(false);
                                   }
                                 _borrarCliente(widget.firmas[index], index);
-                              },
+                                estoyBorrando = false;
+                              } : null,
                             ),
                           ],
                         ),
@@ -410,8 +424,8 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
           ),
           onPressed: () async {
             await RevisionServices().deleteRevisionFirma(context, orden, widget.firmas[i], revisionId, token);
-            statusCode = await revisionServices.getStatusCode();
-            revisionServices.resetStatusCode();
+            statusCode = await _revisionServices.getStatusCode();
+            _revisionServices.resetStatusCode();
             if (statusCode == 1) {
               Navigator.of(context).pop(true);
             }
@@ -440,11 +454,9 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
       firma: exportedImage
     );
 
-    RevisionServices revisionServices = RevisionServices();
-
-    await revisionServices.postRevisonFirma(context, orden, nuevaFirma, widget.revision!.otRevisionId, token);
-    statusCode = await revisionServices.getStatusCode();
-    revisionServices.resetStatusCode;
+    await _revisionServices.postRevisonFirma(context, orden, nuevaFirma, widget.revision!.otRevisionId, token);
+    statusCode = await _revisionServices.getStatusCode();
+    _revisionServices.resetStatusCode;
 
     if(statusCode == 1){
       _agregarCliente(nuevaFirma);
@@ -512,10 +524,22 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                 foregroundColor: Colors.red,
               ),
               onPressed: () async {
-                await RevisionServices().deleteRevisionFirma(context, orden, cliente, revisionId, token);
-                setState(() {
-                  widget.firmas.removeAt(index);
-                });
+                await _revisionServices.deleteRevisionFirma(context, orden, cliente, revisionId, token);
+                statusCode = await _revisionServices.getStatusCode();
+                await _revisionServices.resetStatusCode();
+
+                if (statusCode == 1){
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('La firma de ${cliente.nombre} ha sido borrada'),
+                  ));
+
+                  setState(() {
+                    widget.firmas.removeAt(index);
+                  });
+                  router.pop();
+                }
+                statusCode = null;
+                
               },
               child: const Text("BORRAR")
             ),
@@ -563,12 +587,12 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
             ),
             TextButton(
               onPressed: () async {
-                await RevisionServices().putRevisionFirma(context, orden, firma, revisionId, token);
-                statusCode = await revisionServices.getStatusCode();
-                revisionServices.resetStatusCode();
+                await _revisionServices.putRevisionFirma(context, orden, firma, nuevoNombre, nuevoArea, revisionId, token);
+                statusCode = await _revisionServices.getStatusCode();
+                await _revisionServices.resetStatusCode();
                 if(statusCode == 1){
-                  firma.area = nuevoArea;
                   firma.nombre = nuevoNombre;
+                  firma.area = nuevoArea;
                 }
               },
               child: const Text('Guardar'),
@@ -577,12 +601,14 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
         );
       },
     ).then((result) {
-      if (result != null && result['nombre'] != null && result['area'] != null) {
-        setState(() {
-          firma.nombre = result['nombre'];
-          firma.area = result['area'];
-        });
-      }
+      if(statusCode == 1){
+        if (result != null && result['nombre'] != null && result['area'] != null) {
+          setState(() {
+            firma.nombre = result['nombre'];
+            firma.area = result['area'];
+          });
+        }
+      }     
     });
   }
 

@@ -51,10 +51,30 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
   bool cargoDatosCorrectamente = false;
   bool cargando = true;
   int? statusCode;
-  final materialesServices = MaterialesServices();
+  final _materialesServices = MaterialesServices();
   bool estaBuscando = false;
+  bool borrando = false;
 
-  void _showMaterialDetails(BuildContext context, Materiales material) async {
+  @override
+  void initState() {
+    super.initState();
+    cargarDatos();
+  }
+
+  cargarDatos() async {
+    try {
+      if (widget.materiales.isNotEmpty && widget.revisionMaterialesList.isNotEmpty){
+        cargoDatosCorrectamente = true;
+      }
+      cargando = false;
+    } catch (e) {
+      cargando = false;
+    }
+    
+    setState(() {});
+  }
+
+  Future<bool> _showMaterialDetails(BuildContext context, Materiales material) async {
     selectedMetodo = MetodoAplicacion.empty();
     selectedLote = Lote.empty();
 
@@ -203,6 +223,7 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
         );
       },
     );
+    return false;
   }
 
   @override
@@ -213,7 +234,25 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
     }
     revisionId = context.read<OrdenProvider>().revisionId;
 
-    return Padding(
+    return cargando ? const Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(),
+                Text('Cargando, por favor espere...')
+              ],
+            ),
+          ) : !cargoDatosCorrectamente ? 
+          Center(
+            child: TextButton.icon(
+              onPressed: () async {
+                await cargarDatos();
+              }, 
+              icon: const Icon(Icons.replay_outlined),
+              label: const Text('Recargar'),
+            ),
+          ) : Padding(
       padding: const EdgeInsets.all(8),
       child: Column(
         children: [
@@ -242,22 +281,27 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
                       ));
                       return Future.value(false);
                     }
+                    setState(() {
+                      selectedMaterial = newValue!;
+                      estaBuscando = true;
+                    });
                     try {
                       plagas = await PlagaServices().getPlagas(context, '', '', token);
                       lotes = await MaterialesServices().getLotes(context, selectedMaterial.materialId, token);
-                      metodosAplicacion = await MaterialesServices().getMetodosAplicacion(context,'','', token);
-                      if (plagas.isNotEmpty && lotes.isNotEmpty && metodosAplicacion.isNotEmpty){
-                        cargoDatosCorrectamente = true;
-                      }
-                      cargando = false;
+                      metodosAplicacion = await MaterialesServices().getMetodosAplicacion(context, '', '', token);  
                     } catch (e) {
-                      cargando = false;
+                      plagas = [];
+                      lotes = [];
+                      metodosAplicacion = [];
+                      estaBuscando = false;
+                      setState(() {});
                     }
-                    setState(() {});
-                    setState(() {
-                      selectedMaterial = newValue!;
-                      _showMaterialDetails(context, selectedMaterial);
-                    });
+                    if(plagas.isNotEmpty && lotes.isNotEmpty && metodosAplicacion.isNotEmpty){
+                      bool resultado = await _showMaterialDetails(context, selectedMaterial);
+                      setState(() {
+                        estaBuscando = resultado;
+                      });
+                    }
                   },
                 )
           ),
@@ -286,6 +330,7 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
+                          surfaceTintColor: Colors.white,
                           title: const Text("Confirmar"),
                           content: const Text("¿Estas seguro de querer borrar el material?"),
                           actions: <Widget>[
@@ -298,8 +343,12 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
                                 foregroundColor: Colors.red,
                               ),
                               onPressed: () async {
-                                Navigator.of(context).pop(true);
-                                await MaterialesServices().deleteRevisionMaterial(context, orden, widget.revisionMaterialesList[i], revisionId, token);
+                                await _materialesServices.deleteRevisionMaterial(context, orden, widget.revisionMaterialesList[i], revisionId, token);
+                                statusCode = await _materialesServices.getStatusCode();
+                                await _materialesServices.resetStatusCode();
+                                if(statusCode == 1) {
+                                  Navigator.of(context).pop(true);
+                                }
                               },
                               child: const Text("BORRAR")
                             ),
@@ -309,12 +358,15 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
                     );
                   },
                   onDismissed: (direction) {
-                    setState(() {
-                      widget.revisionMaterialesList.removeAt(i);
-                    });
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('$item borrado'),
-                    ));
+                    if(statusCode == 1){
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('El material ${item.material.descripcion} ha sido borrado'),
+                      ));
+                      setState(() {
+                        widget.revisionMaterialesList.removeAt(i);
+                      });
+                    }
+                    statusCode = null;
                   },
                   background: Container(
                     color: Colors.red,
@@ -333,15 +385,38 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              onPressed: () async {
+                              onPressed: !estaBuscando ? () async {
+                                estaBuscando = true;
+                                setState(() {});
                                 if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
                                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                     content: Text('No se puede modificar esta revisión.'),
                                   ));
+                                  estaBuscando = false;
                                   return Future.value(false);
                                 }
-                                await editMaterial(context, item);
-                              }, 
+                                try {
+                                  plagas = await PlagaServices().getPlagas(context, '', '', token);
+                                  lotes = await MaterialesServices().getLotes(context, item.material.materialId, token);
+                                  metodosAplicacion = await MaterialesServices().getMetodosAplicacion(context, '', '', token);
+                                  estaBuscando = false;
+                                  setState(() {});  
+                                } catch (e) {
+                                  plagas = [];
+                                  lotes = [];
+                                  metodosAplicacion = [];
+                                  estaBuscando = false;
+                                  setState(() {});
+                                }
+                                if(plagas.isNotEmpty && lotes.isNotEmpty && metodosAplicacion.isNotEmpty){
+                                  bool resultado = await editMaterial(context, item);
+                                  setState(() {
+                                    estaBuscando = resultado;
+                                  });
+                                  
+                                }
+                                setState(() {});
+                              } : null, 
                               icon: const Icon(Icons.edit)
                             ),
                             IconButton(
@@ -352,33 +427,7 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
                                   ));
                                   return Future.value(false);
                                 }
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text("Confirmar"),
-                                      content: const Text("¿Estas seguro de querer borrar el material?"),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () => Navigator.of(context).pop(false),
-                                          child: const Text("CANCELAR"),
-                                        ),
-                                        TextButton(
-                                          style: TextButton.styleFrom(
-                                            foregroundColor: Colors.red,
-                                          ),
-                                          onPressed: () async {
-                                            await MaterialesServices().deleteRevisionMaterial(context,orden,widget.revisionMaterialesList[i],revisionId,token);
-                                            setState(() {
-                                              widget.revisionMaterialesList.removeAt(i);
-                                            });
-                                          },
-                                          child: const Text("BORRAR")
-                                        ),
-                                      ],
-                                    );
-                                  }
-                                );
+                                deleteMaterial(context, i);
                               },
                               icon: const Icon(Icons.delete)
                             ),
@@ -397,6 +446,9 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
                             Text('Plagas: ${widget.revisionMaterialesList[i].plagas}'),
                           ],
                         ),
+                        onLongPress: () async {
+                          await verManual(context, item, null);
+                        },
                       ),
                     ),
                   ),
@@ -415,8 +467,55 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
     );
   }
 
+  void deleteMaterial(BuildContext context, int i) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Confirmar"),
+          content: const Text("¿Estas seguro de querer borrar el material?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text("CANCELAR"),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red,
+              ),
+              onPressed: () async {
+                if(!borrando){
+                  borrando = true;
+                  await _materialesServices.deleteRevisionMaterial(context,orden,widget.revisionMaterialesList[i],revisionId,token);
+                  statusCode = await _materialesServices.getStatusCode();
+                  await _materialesServices.resetStatusCode();
+                  if(statusCode == 1) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('El material ${widget.revisionMaterialesList[i].material.descripcion} ha sido borrado'),
+                    ));
+                    setState(() {
+                      widget.revisionMaterialesList.removeAt(i);
+                    });
+                    router.pop();
+                  }
+                  statusCode = null;
+                  borrando = false;
+                }
+              },
+              child: const Text("BORRAR")
+            ),
+          ],
+        );
+      }
+    );
+  }
+
   Future<void> verManual(BuildContext context, RevisionMaterial? item, Materiales? material) async {
-    manuales = material == null ? await MaterialesServices().getManualesMateriales(context, item!.material.materialId, token) : await MaterialesServices().getManualesMateriales(context, material.materialId, token);
+    try {
+      manuales = material == null ? await _materialesServices.getManualesMateriales(context, item!.material.materialId, token) : await _materialesServices.getManualesMateriales(context, material.materialId, token);
+    } catch (e) {
+      print(e);
+    }
     showDialog(
       context: context, 
       builder: (BuildContext context) {
@@ -482,7 +581,7 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
     }
   }
 
-  editMaterial(BuildContext context, RevisionMaterial material) async {
+  Future <bool> editMaterial(BuildContext context, RevisionMaterial material) async {
     final TextEditingController ubicacionController = TextEditingController();
     final TextEditingController areaController = TextEditingController();
     final TextEditingController cantidadController = TextEditingController();
@@ -496,10 +595,7 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
     } else {
       selectedLote = Lote.empty();
       selectedMetodo = MetodoAplicacion.empty();
-    }
-    plagas = await PlagaServices().getPlagas(context, '', '', token);
-    lotes = await MaterialesServices().getLotes(context, selectedMaterial.materialId, token);
-    metodosAplicacion = await MaterialesServices().getMetodosAplicacion(context,'','', token);
+    }   
 
     showDialog(
       context: context,
@@ -560,9 +656,9 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
                   items: plagas,
                   selectedItems: material.plagas,
                   itemAsString: (Plaga p) => p.descripcion,
+                  compareFn: (Plaga p1, Plaga p2) => p1.plagaId == p2.plagaId,
                   popupProps: const PopupPropsMultiSelection.menu(
-                    showSelectedItems: false,
-                    // disabledItemFn: (String s) => s.startsWith('I'),
+                    showSelectedItems: true,
                   ),
                   onChanged: (value) {
                     plagasSeleccionadas = (value);
@@ -574,7 +670,7 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
                   controller: ubicacionController,
                 ),
                 const SizedBox(height: 16),
-                const Text('Área de Cobertura:'),
+                const Text('Área de Cobertura (m²-m³):'),
                 TextFormField(
                   controller: areaController,
                 )
@@ -621,13 +717,20 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
                     for (var i = 0; i < plagasSeleccionadas.length; i++) {
                       plagasIds.add(plagasSeleccionadas[i].plagaId);
                     }
-                    await MaterialesServices().putRevisionMaterial(context, orden, plagasIds, nuevaRevisionMaterial, revisionId, token);
-                    selectedLote = Lote.empty();
-                    selectedMetodo = MetodoAplicacion.empty();
-                    ubicacionController.text = '';
-                    areaController.text = '';
-                    cantidadController.text = '';
-                    widget.revisionMaterialesList = await MaterialesServices().getRevisionMateriales(context, orden, revisionId, token);
+                    await _materialesServices.putRevisionMaterial(context, orden, plagasIds, nuevaRevisionMaterial, revisionId, token);
+                    statusCode = await _materialesServices.getStatusCode();
+                    await _materialesServices.resetStatusCode();
+                    if(statusCode == 1){
+                      selectedLote = Lote.empty();
+                      selectedMetodo = MetodoAplicacion.empty();
+                      ubicacionController.text = '';
+                      areaController.text = '';
+                      cantidadController.text = '';
+                      widget.revisionMaterialesList = await _materialesServices.getRevisionMateriales(context, orden, revisionId, token);
+                      plagas = [];
+                      lotes = [];
+                      metodosAplicacion = [];
+                    }                   
                     setState(() {});
                   } else {
                     showDialog(
@@ -650,5 +753,6 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
         );
       },
     );
+    return false;
   }
 }
