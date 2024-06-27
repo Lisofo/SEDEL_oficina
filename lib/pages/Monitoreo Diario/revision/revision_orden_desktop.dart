@@ -96,6 +96,7 @@ class _RevisionOrdenDesktopState extends State<RevisionOrdenDesktop> with Single
       break;
       case 'C':
         controles = await OrdenControlServices().getControlOrden(context, orden, revisionId, token);
+        controles.sort((a, b) => a.pregunta.compareTo(b.pregunta));
       break;
     }
     setState(() {});

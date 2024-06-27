@@ -52,6 +52,7 @@ class _RevisionCuestionarioMenuState extends State<RevisionCuestionarioMenu> {
     }
     Set<String> conjunto = Set.from(models);
     grupos = conjunto.toList();
+    grupos.sort((a, b) => a.compareTo(b));
     preguntasFiltradas = widget.controles.where((objeto) => objeto.grupo == selectedPregunta).toList();
 
     return Padding(
