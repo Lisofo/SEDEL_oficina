@@ -25,7 +25,6 @@ class _AppBarMobileState extends State<AppBarMobile> {
         style: const TextStyle(color: Colors.white),
       ),
       iconTheme: IconThemeData(color: colors.onPrimary),
-      
     );
   }
 }

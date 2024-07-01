@@ -124,7 +124,6 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
               },
             ),
             TextButton(
-              child: const Text('Guardar'),
               onPressed: !agrengandoMaterial ? () async {
                 agrengandoMaterial = true;
                 setState(() {});
@@ -152,6 +151,7 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                 }
                 agrengandoMaterial = false;
               } : null,
+              child: const Text('Guardar'),
             ),
           ],
         );
