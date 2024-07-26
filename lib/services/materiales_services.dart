@@ -496,11 +496,11 @@ class MaterialesServices {
   }
 
   Future getMetodosAplicacion(BuildContext context,String descripcion, String codMetodoAplicacion, String token) async {
-    String link = '${apiUrl}api/v1/metodos-aplicacion/';
+    String link = '${apiUrl}api/v1/metodos-aplicacion/?sort=descripcion';
     String linkFiltrado = link;
-    bool yaTieneFiltro = false;
+    bool yaTieneFiltro = true;
     if (descripcion != '') {
-      linkFiltrado += '?descripcion=$descripcion';
+      linkFiltrado += '&descripcion=$descripcion';
       yaTieneFiltro = true;
     }
     if (codMetodoAplicacion != '') {

@@ -40,29 +40,6 @@ class _MaterialesPageMobileState extends State<MaterialesPageMobile> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      const Text('Codigo:'),
-                      const SizedBox(width: 20),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.6,
-                        child: CustomTextFormField(
-                          controller: _codMateriaController,
-                          maxLines: 1,
-                          label: 'Codigo',
-                          onFieldSubmitted: (value) async {
-                            await buscar(context, token);
-                            router.pop();
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  Divider(
-                    color: colors.primary,
-                    height: 40,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
                       const Text('Descripcion:'),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.6,

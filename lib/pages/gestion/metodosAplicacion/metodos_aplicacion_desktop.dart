@@ -29,7 +29,7 @@ class _MetodosAplicacionDesktopState extends State<MetodosAplicacionDesktop> {
     final token = context.watch<OrdenProvider>().token;
     return SafeArea(
       child: Scaffold(
-        appBar: AppBarDesktop(titulo: 'Metodos de aplicación',),
+        appBar: AppBarDesktop(titulo: 'Métodos de aplicación',),
         drawer: const Drawer(
           child: BotonesDrawer(),
         ),
@@ -41,26 +41,6 @@ class _MetodosAplicacionDesktopState extends State<MetodosAplicacionDesktop> {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
-                    Row(
-                      children: [
-                        const Text('Codigo: '),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        SizedBox(
-                          width: 300,
-                          child: CustomTextFormField(
-                            controller: _codMetodoController,
-                            maxLines: 1,
-                            label: 'Codigo',
-                            onFieldSubmitted: (value) async {
-                              await buscar(context, token);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20,),
                     Row(
                       children: [
                         const Text('Descripcion: '),
@@ -94,7 +74,7 @@ class _MetodosAplicacionDesktopState extends State<MetodosAplicacionDesktop> {
                             Provider.of<OrdenProvider>(context, listen: false).clearSelectedMetodo();
                             router.push('/editMetodosAplicacion');
                           },
-                          text: 'Agregar metodo',
+                          text: 'Agregar método',
                           tamano: 20,
                       ),
                     ),

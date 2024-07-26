@@ -287,7 +287,7 @@ class _EditMaterialesPageDesktopState extends State<EditMaterialesPageDesktop> {
               ),
               const SizedBox(width: 30,),
               CustomButton(
-                text: 'Detalles', 
+                text: 'Principio activo', 
                 onPressed: (){
                   router.push('/detallesMaterial');
                 }, 

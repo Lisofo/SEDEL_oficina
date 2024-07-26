@@ -41,8 +41,8 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
   final _codController = TextEditingController();
   late String token = context.read<OrdenProvider>().token;
   late bool tieneId = false;
-  late Uint8List? _avatarTecnico;
-  late Uint8List? _firmaTecnico;
+  late Uint8List? avatarTecnico = null;
+  late Uint8List? firmaTecnico = null;
   late String? _avatarTecnico2 = '';
   late String? _firmaTecnico2 = '';
   late List<int> firmaBytes = [];
@@ -51,6 +51,7 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
   late String md5Firma = '';
   late String firmaName = '';
   late String avatarName = '';
+  late String nombre = '';
 
   String _formatDateAndTime(DateTime? date) {
     return '${date?.day.toString().padLeft(2, '0')}/${date?.month.toString().padLeft(2, '0')}/${date?.year.toString().padLeft(4, '0')}';
@@ -66,7 +67,7 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
     if (files!.isNotEmpty) {
       final reader = html.FileReader();
       reader.readAsArrayBuffer(files[0]);
-      // nombre = files[0].name;
+      nombre = files[0].name;
       reader.onLoadEnd.listen((e) {
         setState(() {
           setImage(reader.result as Uint8List?);
@@ -78,14 +79,15 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
 
 void _setAvatarTecnico(Uint8List? image) {
   setState(() {
-    _avatarTecnico = image;
+    avatarTecnico = image;
   });
 }
 
 void _setFirmaTecnico(Uint8List? image) {
   setState(() {
-    _firmaTecnico = image;
-    // firmaName = nombre!;
+    firmaTecnico = image;
+    firmaName = nombre;
+    print(firmaName);
   });
 }
 
@@ -158,9 +160,9 @@ Future<void> _uploadPhoto2() async {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _avatarTecnico != null
+                        avatarTecnico != null
                             ? Image.memory(
-                                _avatarTecnico!,
+                                avatarTecnico!,
                                 width: 300,
                                 height: 250,
                                 fit: BoxFit.cover,
@@ -195,9 +197,9 @@ Future<void> _uploadPhoto2() async {
                           icon: const Icon(Icons.upload),
                         ),
                         const SizedBox(height: 10),
-                        _firmaTecnico != null
+                        firmaTecnico != null
                             ? Image.memory(
-                                _firmaTecnico!,
+                                firmaTecnico!,
                                 width: 300,
                                 height: 109,
                                 fit: BoxFit.cover,
@@ -214,7 +216,7 @@ Future<void> _uploadPhoto2() async {
                                         child: Placeholder(
                                           child: Text('Error al cargar la firma del técnico'),
                                         ),
-                                      );
+                                      ); 
                                     },
                                   )
                                 : const SizedBox(
@@ -385,7 +387,7 @@ Future<void> _uploadPhoto2() async {
                     )
                   ),
                   onPressed: () async {
-                    await postTecnico(context);
+                    await postTecnico();
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.5),
@@ -422,9 +424,10 @@ Future<void> _uploadPhoto2() async {
                     child: Text(
                       'Eliminar',
                       style: TextStyle(
-                          color: colors.primary,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
+                        color: colors.primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20
+                      ),
                     ),
                   )
                 ),
@@ -441,11 +444,13 @@ Future<void> _uploadPhoto2() async {
     return md5c.toString();
   }
 
-  Future<void> postTecnico(BuildContext context) async {
-    avatarBytes = _avatarTecnico as List<int>;
-    md5Avatar = calculateMD5(avatarBytes);
-    firmaBytes = _firmaTecnico as List<int>;
+  Future<void> postTecnico() async {
+    print('Entre al metodo');
+    // avatarBytes = avatarTecnico as List<int>;
+    // md5Avatar = calculateMD5(avatarBytes);
+    firmaBytes = firmaTecnico as List<int>;
     md5Firma = calculateMD5(firmaBytes);
+    print(md5Firma);
     selectedTecnico.codTecnico = _codController.text;
     selectedTecnico.documento = _docController.text;
     selectedTecnico.nombre = _nombreController.text;
@@ -459,10 +464,11 @@ Future<void> _uploadPhoto2() async {
 
     if (selectedTecnico.tecnicoId == 0) {
       await TecnicoServices().postTecnico(context, selectedTecnico, token);
-      await TecnicoServices().putTecnicoFirma(context, selectedTecnico.tecnicoId, token, _firmaTecnico, firmaName, md5Firma);
+      await TecnicoServices().putTecnicoFirma(context, selectedTecnico.tecnicoId, token, firmaTecnico, firmaName, md5Firma);
 
     } else {
       await TecnicoServices().putTecnico(context, selectedTecnico, token);
+      await TecnicoServices().putTecnicoFirma(context, selectedTecnico.tecnicoId, token, firmaTecnico, firmaName, md5Firma);
     }
 
     setState(() {

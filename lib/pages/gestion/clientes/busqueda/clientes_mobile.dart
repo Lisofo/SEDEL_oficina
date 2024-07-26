@@ -110,39 +110,6 @@ class _ClientesMobileState extends State<ClientesMobile> {
               const SizedBox(height: 5,),
               Column(
                 children: [
-                  const Text('Codigo: ', style: TextStyle(
-                    fontSize: 18,
-                  ),),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    child: CustomTextFormField(
-                      hint: 'Buscar codigo de cliente',
-                      maxLines: 1,
-                      controller: _codController,
-                      onFieldSubmitted: (value) async {
-                        value = _codController.text;
-                        await buscar(
-                          _nombreController.text,
-                          value,
-                          estadoSeleccionado?.codEstado,
-                          tecnicoFiltro.toString(),
-                          token
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 5,),
-              Divider(
-                thickness: 0.5,
-                color: colors.primary,
-                endIndent: 20,
-                indent: 20,
-              ),
-              const SizedBox(height: 5,),
-              Column(
-                children: [
                   const Text('Nombre: ', style: TextStyle(
                     fontSize: 18,
                   ),),
@@ -208,19 +175,25 @@ class _ClientesMobileState extends State<ClientesMobile> {
               const SizedBox(height: 5,),
               Column(
                 children: [
-                  const Text('Tecnico: ', style: TextStyle(
+                  const Text('Técnico: ', style: TextStyle(
                     fontSize: 18,
                   ),),
-                  SizedBox(
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(5)
+                    ),
                     width: MediaQuery.of(context).size.width * 0.7,
                     child: DropdownSearch(
-                      
                       dropdownDecoratorProps: const DropDownDecoratorProps(
+                        textAlignVertical: TextAlignVertical.center,
                         baseStyle: TextStyle(color: Colors.white),
                         dropdownSearchDecoration: InputDecoration(
                           isDense: true,
                           border: OutlineInputBorder(),
-                          hintText: 'Seleccione un tecnico',
+                          hintText: 'Seleccione un técnico',
                           hintStyle: TextStyle(color: Colors.black)
                         )
                       ),

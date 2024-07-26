@@ -43,47 +43,26 @@ class _TecnicosPageDesktopState extends State<TecnicosPageDesktop> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        const Text('Documento '),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.2,
-                          child: CustomTextFormField(
-                            controller: _documentoController,
-                            maxLines: 1,
-                            label: 'Documento',
-                            onFieldSubmitted: (value) async {
-                              await buscarTecnico(token);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        const SizedBox(width: 30,),
-                        const Text('Codigo '),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.2,
-                          child: CustomTextFormField(
-                            controller: _codTecnicoController,
-                            maxLines: 1,
-                            label: 'Codigo',
-                            onFieldSubmitted: (value) async {
-                              await buscarTecnico(token);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.end,
+                    //   children: [
+                    //     const Text('Documento '),
+                    //     SizedBox(
+                    //       width: MediaQuery.of(context).size.width * 0.2,
+                    //       child: CustomTextFormField(
+                    //         controller: _documentoController,
+                    //         maxLines: 1,
+                    //         label: 'Documento',
+                    //         onFieldSubmitted: (value) async {
+                    //           await buscarTecnico(token);
+                    //         },
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    // const SizedBox(
+                    //   height: 20,
+                    // ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -106,7 +85,6 @@ class _TecnicosPageDesktopState extends State<TecnicosPageDesktop> {
                       height: 20,
                     ),
                     Center(
-                      
                       child: ElevatedButton(
                           style: const ButtonStyle(
                               backgroundColor:
@@ -134,29 +112,34 @@ class _TecnicosPageDesktopState extends State<TecnicosPageDesktop> {
                     const Spacer(),
                     Center(
                       child: ElevatedButton(
-                          style: const ButtonStyle(
-                              backgroundColor:
-                                  WidgetStatePropertyAll(Colors.white),
-                              elevation: WidgetStatePropertyAll(10),
-                              shape: WidgetStatePropertyAll(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.horizontal(
-                                          left: Radius.circular(50),
-                                          right: Radius.circular(50))))),
-                          onPressed: () {
-                            Provider.of<OrdenProvider>(context, listen: false).clearSelectedTecnico();
-                            router.push('/editTecnicos');
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.5),
-                            child: Text(
-                              'Agregar Tecnico',
-                              style: TextStyle(
-                                  color: colors.primary,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
+                        style: const ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(Colors.white),
+                          elevation: WidgetStatePropertyAll(10),
+                          shape: WidgetStatePropertyAll(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.horizontal(
+                                left: Radius.circular(50),
+                                right: Radius.circular(50)
+                              )
+                            )
+                          )
+                        ),
+                        onPressed: () {
+                          Provider.of<OrdenProvider>(context, listen: false).clearSelectedTecnico();
+                          router.push('/editTecnicos');
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.5),
+                          child: Text(
+                            'Agregar Técnico',
+                            style: TextStyle(
+                              color: colors.primary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20
                             ),
-                          )),
+                          ),
+                        )
+                      ),
                     ),
                   ],
                 ),

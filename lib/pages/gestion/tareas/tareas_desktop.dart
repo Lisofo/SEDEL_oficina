@@ -63,28 +63,6 @@ class _TareasDesktopState extends State<TareasDesktop> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Row(
-                      children: [
-                        const Text('Codigo: '),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        SizedBox(
-                          width: 300,
-                          child: CustomTextFormField(
-                            controller: _codTareaController,
-                            maxLines: 1,
-                            label: 'Codigo',
-                            onFieldSubmitted: (value) async {
-                              await buscar(context, token);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
                     Center(
                       child: ElevatedButton(
                           style: const ButtonStyle(

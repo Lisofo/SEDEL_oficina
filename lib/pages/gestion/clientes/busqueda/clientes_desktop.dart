@@ -112,30 +112,6 @@ class _ClientesDesktopState extends State<ClientesDesktop> {
                 children: [
                   Row(
                     children: [
-                      const Text('Codigo: '),
-                      SizedBox(
-                        width: 300,
-                        child: CustomTextFormField(
-                          hint: 'Buscar codigo de cliente',
-                          maxLines: 1,
-                          controller: _codController,
-                          onFieldSubmitted: (value) async {
-                            value = _codController.text;
-                            await buscar(
-                              _nombreController.text,
-                              value,
-                              estadoSeleccionado?.codEstado,
-                              tecnicoFiltro.toString(),
-                              token
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20,),
-                  Row(
-                    children: [
                       const Text('Nombre: '),
                       SizedBox(
                         width: 300,
@@ -165,6 +141,7 @@ class _ClientesDesktopState extends State<ClientesDesktop> {
                       SizedBox(
                         width: 300,
                         child: CustomDropdownFormMenu(
+                          isDense: true,
                           value: estadoSeleccionado,
                           hint: 'Seleccione un estado',
                           items: estados.map((e) {
@@ -183,18 +160,24 @@ class _ClientesDesktopState extends State<ClientesDesktop> {
                   const SizedBox(height: 20,),
                   Row(
                     children: [
-                      const Text('Tecnico: '),
-                      SizedBox(
+                      const Text('Técnico: '),
+                      Container(
                         width: 300,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.circular(5)
+                        ),
                         child: DropdownSearch(
                           dropdownDecoratorProps: const DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
-                            hintText: 'Seleccione un tecnico')
+                            hintText: 'Seleccione un técnico'),
+                            textAlignVertical: TextAlignVertical.center
                           ),
                           items: tecnicos,
                           selectedItem: selectedTecnico,
-                          popupProps: const PopupProps.menu(
-                              showSearchBox: true, searchDelay: Duration.zero),
+                          popupProps: const PopupProps.menu(showSearchBox: true, searchDelay: Duration.zero),
                           onChanged: (value) {
                             setState(() {
                               selectedTecnico = value;

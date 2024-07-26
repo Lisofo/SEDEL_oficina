@@ -303,7 +303,7 @@ class _EditMaterialesPageMobileState extends State<EditMaterialesPageMobile> {
           ),
           const BottomNavigationBarItem(
             icon: Icon(Icons.details),
-            label: 'Detalles',
+            label: 'Principio Activo',
           ),
           const BottomNavigationBarItem(
             icon: Icon(Icons.add_box_outlined),

@@ -58,32 +58,6 @@ class _TareasMobileState extends State<TareasMobile> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10,),
-                Divider(color: colors.primary,),
-                const SizedBox(height: 10,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    const Text('Codigo: '),
-                    const SizedBox(width: 1,),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width *0.6,
-                      child: CustomTextFormField(
-                        controller: _codTareaController,
-                        maxLines: 1,
-                        label: 'Codigo',
-                        onFieldSubmitted: (value) async {
-                          await buscar(context, token);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10,),
-                Divider(color: colors.primary,),
-                const SizedBox(height: 10,),
-                Divider(color: colors.primary,),
-                const SizedBox(height: 10,),
                 const Spacer(),
                 BottomNavigationBar(
                    currentIndex: buttonIndex,

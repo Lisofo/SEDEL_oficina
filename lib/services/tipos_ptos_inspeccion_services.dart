@@ -67,8 +67,8 @@ class TiposPtosInspeccionServices{
   }
 
   Future getTiposPtosInspeccion(BuildContext context, String codigo, String descripcion, String token) async {
-    String link = apiLink;
-    bool yaTieneFiltro = false;
+    String link = '$apiLink?sort=descripcion';
+    bool yaTieneFiltro = true;
     if (codigo != '') {
       link += '?codTipoPuntoInspeccion=$codigo';
       yaTieneFiltro = true;

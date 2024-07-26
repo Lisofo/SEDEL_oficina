@@ -37,57 +37,39 @@ class _TecnicosPageMobileState extends State<TecnicosPageMobile> {
           child: Column(
                 children: [
                   const SizedBox(height: 10,),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      const Text('Documento: '),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width *0.8,
-                        child: CustomTextFormField(
-                          controller: _documentoController,
-                          maxLines: 1,
-                          label: 'Documento',
-                          onFieldSubmitted: (value) async {
-                            await buscarTecnico(token);
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 5,),
-                  Divider(
-                    thickness: 0.5,
-                    color: colors.primary,
-                    endIndent: 20,
-                    indent: 20,
-                  ),
-                  const SizedBox(height: 5,),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      const Text('Codigo: '),
-                      
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width *0.8,
-                        child: CustomTextFormField(
-                          controller: _codTecnicoController,
-                          maxLines: 1,
-                          label: 'Codigo',
-                          onFieldSubmitted: (value) async {
-                            await buscarTecnico(token);
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 5,),
-                  Divider(
-                    thickness: 0.5,
-                    color: colors.primary,
-                    endIndent: 20,
-                    indent: 20,
-                  ),
-                  const SizedBox(height: 5,),
+                  // Column(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  //   children: [
+                  //     const Text('Documento: '),
+                  //     SizedBox(
+                  //       width: MediaQuery.of(context).size.width *0.8,
+                  //       child: CustomTextFormField(
+                  //         controller: _documentoController,
+                  //         maxLines: 1,
+                  //         label: 'Documento',
+                  //         onFieldSubmitted: (value) async {
+                  //           await buscarTecnico(token);
+                  //         },
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  // const SizedBox(height: 5,),
+                  // Divider(
+                  //   thickness: 0.5,
+                  //   color: colors.primary,
+                  //   endIndent: 20,
+                  //   indent: 20,
+                  // ),
+                  // const SizedBox(height: 5,),
+    
+                  // Divider(
+                  //   thickness: 0.5,
+                  //   color: colors.primary,
+                  //   endIndent: 20,
+                  //   indent: 20,
+                  // ),
+                  // const SizedBox(height: 5,),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -127,7 +109,7 @@ class _TecnicosPageMobileState extends State<TecnicosPageMobile> {
                     items: const [
                       BottomNavigationBarItem(
                         icon: Icon(Icons.add_box_outlined),
-                        label: 'Agregar Tecnico',
+                        label: 'Agregar Técnico',
                       ),
                       BottomNavigationBarItem(
                         icon: Icon(Icons.search),

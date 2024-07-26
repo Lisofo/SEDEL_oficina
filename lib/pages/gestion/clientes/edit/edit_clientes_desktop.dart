@@ -237,21 +237,21 @@ class _BodyState extends State<Body> {
                             child: const Text('Buscar por nombre'),
                           ),
                         ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text('*  Nombre Fantasia  '),
-                            SizedBox(
-                              width: 300,
-                              child: CustomTextFormField(
-                                controller: _nombFantasiaController,
-                                label: 'Nombre Fantasia',
-                                maxLines: 1
-                              )
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20,),
+                        // Row(
+                        //   mainAxisSize: MainAxisSize.min,
+                        //   children: [
+                        //     const Text('*  Nombre Fantasia  '),
+                        //     SizedBox(
+                        //       width: 300,
+                        //       child: CustomTextFormField(
+                        //         controller: _nombFantasiaController,
+                        //         label: 'Nombre Fantasia',
+                        //         maxLines: 1
+                        //       )
+                        //     ),
+                        //   ],
+                        // ),
+                        // const SizedBox(height: 20,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -399,12 +399,12 @@ class _BodyState extends State<Body> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('RUC  '),
+                            const Text('RUT  '),
                             SizedBox(
                                 width: 300,
                                 child: CustomTextFormField(
                                     controller: _rucController,
-                                    label: 'RUC',
+                                    label: 'RUT',
                                     maxLines: 1)),
                           ],
                         ),
@@ -418,6 +418,7 @@ class _BodyState extends State<Body> {
                             SizedBox(
                               width: 300,
                               child: CustomDropdownFormMenu(
+                                isDense: true,
                                 value: estadoInicialSeleccionado,
                                 hint: 'Seleccione un estado',
                                 items: estados.map((e) {
@@ -442,20 +443,23 @@ class _BodyState extends State<Body> {
                           children: [
                             const Text('*  Tipo de cliente '),
                             SizedBox(
-                                width: 300,
-                                child: CustomDropdownFormMenu(
-                                    value: tipoInicialSeleccionado,
-                                    hint: 'Seleccione tipo de cliente',
-                                    onChanged: (newValue) {
-                                      tipoClienteSeleccionado = newValue;
-                                      cliente.tipoClienteId =
-                                          (newValue as TipoCliente)
-                                              .tipoClienteId;
-                                    },
-                                    items: tipoClientes.map((e) {
-                                      return DropdownMenuItem(
-                                          value: e, child: Text(e.descripcion));
-                                    }).toList())),
+                              width: 300,
+                              child: CustomDropdownFormMenu(
+                                isDense: true,
+                                value: tipoInicialSeleccionado,
+                                hint: 'Seleccione tipo de cliente',
+                                onChanged: (newValue) {
+                                  tipoClienteSeleccionado = newValue;
+                                  cliente.tipoClienteId = (newValue as TipoCliente) .tipoClienteId;
+                                },
+                                items: tipoClientes.map((e) {
+                                  return DropdownMenuItem(
+                                    value: e, 
+                                    child: Text(e.descripcion)
+                                  );
+                                }).toList()
+                              )
+                            ),
                           ],
                         ),
                       ],
@@ -483,6 +487,7 @@ class _BodyState extends State<Body> {
                                     width: 300,
                                     child: CustomDropdownFormMenu(
                                       value: tecnicoIncialSeleccionado,
+                                      isDense: true,
                                       hint: 'Seleccione tecnico',
                                       items: tecnicos.map((e) {
                                         return DropdownMenuItem(

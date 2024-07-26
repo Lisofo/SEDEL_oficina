@@ -58,25 +58,6 @@ class _PlagasDessktopState extends State<PlagasDessktop> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Row(
-                      children: [
-                        const Text('Codigo: '),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        SizedBox(
-                          width: 300,
-                          child: CustomTextFormField(
-                            controller: _codPlagaController,
-                            maxLines: 1,
-                            label: 'Codigo',
-                            onFieldSubmitted: (value) async {
-                              await buscar(context, token);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
                     Center(
                       child: ElevatedButton(
                           style: const ButtonStyle(

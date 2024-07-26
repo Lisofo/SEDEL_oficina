@@ -38,27 +38,6 @@ class _TiposPuntosMobileState extends State<TiposPuntosMobile> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  const Text('Codigo: '),
-                  const SizedBox(width: 1,),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width *0.6,
-                    child: CustomTextFormField(
-                      controller: _codTipoPuntoController,
-                      maxLines: 1,
-                      label: 'Codigo',
-                      onFieldSubmitted: (value) async {
-                        await buscar(context, token);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10,),
-              Divider(color: colors.primary,),
-              const SizedBox(height: 10,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
                   const Text('Descripcion: '),
                   const SizedBox(width: 1,),
                   SizedBox(

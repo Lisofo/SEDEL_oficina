@@ -59,52 +59,29 @@ class _ServiciosMobileState extends State<ServiciosMobile> {
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  const Text('Codigo: '),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    child: CustomTextFormField(
-                      controller: _codServicioController,
-                      maxLines: 1,
-                      label: 'Codigo',
-                      onFieldSubmitted: (value) async {
-                        await buscar(context, token);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  const Text('Tipo: '),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    child: CustomTextFormField(
-                      maxLines: 1,
-                      label: 'Tipo',
-                      controller: _tipoServicioController,
-                      onFieldSubmitted: (value) async {
-                        await buscar(context, token);
-                      },
-                    ),
-                  ),
-                ],
-              ),
+              // const SizedBox(
+              //   height: 20,
+              // ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //   children: [
+              //     const Text('Tipo: '),
+              //     const SizedBox(
+              //       width: 20,
+              //     ),
+              //     SizedBox(
+              //       width: MediaQuery.of(context).size.width * 0.6,
+              //       child: CustomTextFormField(
+              //         maxLines: 1,
+              //         label: 'Tipo',
+              //         controller: _tipoServicioController,
+              //         onFieldSubmitted: (value) async {
+              //           await buscar(context, token);
+              //         },
+              //       ),
+              //     ),
+              //   ],
+              // ),
               const Spacer(),
               BottomNavigationBar(
                 currentIndex: buttonIndex,

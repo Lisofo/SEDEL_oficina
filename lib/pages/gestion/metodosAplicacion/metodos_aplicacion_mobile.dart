@@ -29,33 +29,11 @@ class _MetodosAplicacionMobileState extends State<MetodosAplicacionMobile> {
     final token = context.watch<OrdenProvider>().token;
     return SafeArea(
       child: Scaffold(
-        appBar: AppBarDesktop(titulo: 'Metodos de aplicación',),
+        appBar: AppBarDesktop(titulo: 'Métodos de aplicación',),
         drawer: Drawer(
           width: MediaQuery.of(context).size.width *0.9,
           child: Column(
             children: [
-
-              const SizedBox(height: 20,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  const Text('Codigo: '),  
-                  const SizedBox(width: 1,),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width *0.6,
-                    child: CustomTextFormField(
-                      controller: _codMetodoController,
-                      maxLines: 1,
-                      label: 'Codigo',
-                      onFieldSubmitted: (value) async {
-                        await buscar(context, token);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20,),
-              
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -94,7 +72,7 @@ class _MetodosAplicacionMobileState extends State<MetodosAplicacionMobile> {
                 items: const [
                   BottomNavigationBarItem(
                     icon: Icon(Icons.add_box_outlined),
-                    label: 'Agregar metodo',
+                    label: 'Agregar método',
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.search),

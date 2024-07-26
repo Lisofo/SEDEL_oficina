@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_string_interpolations, avoid_print, use_build_context_synchronously
+// ignore_for_file: unnecessary_string_interpolations, avoid_print, use_build_context_synchronously, dead_code
 
 import 'dart:convert';
 import 'dart:typed_data';
@@ -112,21 +112,19 @@ class TecnicoServices {
   }
 
   Future getTecnicos(BuildContext context, String documento, String codTecnico, String nombre, String token) async {
-    bool yaTieneFiltro = false;
-    var link = apiLink;
-    if (documento != '') {
-      link += '?documento=$documento';
-      yaTieneFiltro = true;
-    }
-    if (codTecnico != '') {
-      yaTieneFiltro ? link += '&' : link += '?';
-      link += 'codTecnico=$codTecnico';
-      yaTieneFiltro = true;
-    }
+    var link = '$apiLink?sort=nombre';
+    // if (documento != '') {
+    //   link += '?documento=$documento';
+    //   yaTieneFiltro = true;
+    // }
+    // if (codTecnico != '') {
+    //   yaTieneFiltro ? link += '&' : link += '?';
+    //   link += 'codTecnico=$codTecnico';
+    //   yaTieneFiltro = true;
+    // }
     if (nombre != '') {
-      yaTieneFiltro ? link += '&' : link += '?';
-      link += 'nombre=$nombre';
-      yaTieneFiltro = true;
+      // yaTieneFiltro ? link += '&' : link += '?';
+      link += '&nombre=$nombre';
     }
     try {
       var headers = {'Authorization': token};
@@ -170,7 +168,7 @@ class TecnicoServices {
   }
 
   Future getAllTecnicos(BuildContext context, String token) async {
-    var link = apiLink;
+    var link = '$apiLink?sort=nombre';
     try {
       var headers = {'Authorization': token};
       var resp = await _dio.request(
@@ -355,7 +353,6 @@ class TecnicoServices {
 
   Future putTecnicoFirma(BuildContext context, int id, String token, Uint8List? firma, String? fileName, String md5) async {
     String link = apiLink += '$id/firma';
-    
     try {
       var headers = {'Authorization': token};
       var formData = FormData.fromMap({

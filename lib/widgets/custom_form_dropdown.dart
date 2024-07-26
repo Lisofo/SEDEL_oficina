@@ -36,18 +36,18 @@ class CustomDropdownFormMenu extends StatelessWidget {
       items: items,
       onChanged: onChanged,
       decoration: InputDecoration(
+        hintStyle: TextStyle(),
         constraints: BoxConstraints.tightFor(width: MediaQuery.of(context).size.width * 0.95),
         enabled: enabled,
         enabledBorder: border,
         focusedBorder: border.copyWith(),
-        errorBorder:
-            border.copyWith(borderSide: BorderSide(color: Colors.red.shade800)),
-        focusedErrorBorder:
-            border.copyWith(borderSide: BorderSide(color: Colors.red.shade800)),
+        errorBorder: border.copyWith(borderSide: BorderSide(color: Colors.red.shade800)),
+        focusedErrorBorder: border.copyWith(borderSide: BorderSide(color: Colors.red.shade800)),
         // disabledBorder: border,
         isDense: true,
         hintText: hint,
         errorText: errorMessage,
+        
       ),
       validator: validator,
       onSaved: onSaved,

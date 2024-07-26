@@ -59,50 +59,28 @@ class _ServiciosDesktopState extends State<ServiciosDesktop> {
                         ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      children: [
-                        const Text('Codigo: '),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        SizedBox(
-                          width: 300,
-                          child: CustomTextFormField(
-                            controller: _codServicioController,
-                            maxLines: 1,
-                            label: 'Codigo',
-                            onFieldSubmitted: (value) async {
-                              await buscar(context, token);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      children: [
-                        const Text('Tipo: '),
-                        const SizedBox(
-                          width: 44,
-                        ),
-                        SizedBox(
-                          width: 300,
-                          child: CustomTextFormField(
-                            maxLines: 1,
-                            label: 'Tipo',
-                            controller: _tipoServicioController,
-                            onFieldSubmitted: (value) async {
-                              await buscar(context, token);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+                    // const SizedBox(
+                    //   height: 20,
+                    // ),
+                    // Row(
+                    //   children: [
+                    //     const Text('Tipo: '),
+                    //     const SizedBox(
+                    //       width: 44,
+                    //     ),
+                    //     SizedBox(
+                    //       width: 300,
+                    //       child: CustomTextFormField(
+                    //         maxLines: 1,
+                    //         label: 'Tipo',
+                    //         controller: _tipoServicioController,
+                    //         onFieldSubmitted: (value) async {
+                    //           await buscar(context, token);
+                    //         },
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                     const SizedBox(
                       height: 20,
                     ),

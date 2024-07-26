@@ -53,29 +53,6 @@ class _PlagasObjetivoMobileState extends State<PlagasObjetivoMobile> {
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    const Text('Codigo: '),
-                    const SizedBox(
-                      width: 30,
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.6,
-                      child: CustomTextFormField(
-                        controller: _codPlagaObjetivoController,
-                        maxLines: 1,
-                        label: 'Codigo',
-                        onFieldSubmitted: (value) async {
-                          await buscar(context, token);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
                 const Spacer(),
                 BottomNavigationBar(
                   currentIndex: buttonIndex,

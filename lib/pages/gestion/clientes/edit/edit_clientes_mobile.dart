@@ -301,28 +301,6 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
             ),
             const SizedBox(height: 5,),
             Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text('Nombre Fantasia  '),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  child: CustomTextFormField(
-                    controller: _nombFantasiaController,
-                    label: 'Nombre Fantasia',
-                    maxLines: 1
-                  )
-                ),
-              ],
-            ),
-            const SizedBox(height: 5,),
-            Divider(
-              thickness: 0.5,
-              color: colors.primary,
-              endIndent: 20,
-              indent: 20,
-            ),
-            const SizedBox(height: 5,),
-            Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 const Text('Email  '),
@@ -537,12 +515,12 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('RUC  '),
+                const Text('RUT  '),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.8,
                   child: CustomTextFormField(
                     controller: _rucController,
-                    label: 'RUC',
+                    label: 'RUT',
                     maxLines: 1
                   )
                 ),
@@ -621,13 +599,13 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                const Text('Tecnico  '),
+                const Text('Técnico  '),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.8,
                   child: CustomDropdownFormMenu(
                     isDense: true,
                     value: tecnicoInicial,
-                    hint: 'Seleccione tecnico',
+                    hint: 'Seleccione técnico',
                     items: tecnicos.map((e) {
                       return DropdownMenuItem(
                         value: e,
