@@ -126,19 +126,19 @@ class _TareasDesktopState extends State<TareasDesktop> {
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
                   itemCount: tareas.length,
-                  itemBuilder: (context, index) {
+                  itemBuilder: (context, i) {
                     return Card(
                       child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: colors.primary,
-                          child: Text(
-                            tareas[index].codTarea,
-                            style: const TextStyle(color: Colors.white),
-                          ),
+                        leading: Container(
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: colors.primary,),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(tareas[i].codTarea, style: const TextStyle(color: Colors.white),),
+                          )
                         ),
-                        title: Text(tareas[index].descripcion),
+                        title: Text(tareas[i].descripcion),
                         onTap: () {
-                          Provider.of<OrdenProvider>(context, listen: false).setTarea(tareas[index]);
+                          Provider.of<OrdenProvider>(context, listen: false).setTarea(tareas[i]);
                           router.push('/editTareas');
                         },
                       ),

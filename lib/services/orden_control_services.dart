@@ -165,7 +165,7 @@ class OrdenControlServices{
       final resp = await _dio.request(link,
           data: data,
           options: Options(
-          method: 'PUT', 
+          method: 'POST', 
           headers: headers
         )
       );

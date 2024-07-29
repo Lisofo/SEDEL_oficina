@@ -100,15 +100,16 @@ class _EditMaterialesPageDesktopState extends State<EditMaterialesPageDesktop> {
                     children: [
                       Row(
                         children: [
-                          const Text("Codigo  "),
+                          const Text("Código  "),
                           const SizedBox(
                             width: 27,
                           ),
                           SizedBox(
                             width: 300,
                             child: CustomTextFormField(
+                              enabled: false,
                               maxLines: 1,
-                              label: 'Codigo',
+                              label: 'Código',
                               controller: _codMaterialController,
                             ),
                           )

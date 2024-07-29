@@ -182,7 +182,7 @@ class UserServices {
         link,
         data: usuario.toMap(),
         options: Options(
-          method: 'PUT', 
+          method: 'POST', 
           headers: headers
         )
       );
@@ -405,7 +405,7 @@ class UserServices {
       final resp = await _dio.request(link,
           data:data,
           options: Options(
-          method: 'PUT', 
+          method: 'POST', 
           headers: headers
         )
       );

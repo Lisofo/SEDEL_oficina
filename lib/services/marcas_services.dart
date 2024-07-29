@@ -184,7 +184,7 @@ class MarcaServices{
         link,
         data: marca.toMap(),
         options: Options(
-          method: 'PUT', 
+          method: 'POST', 
           headers: headers
         )
       );

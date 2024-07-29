@@ -219,7 +219,7 @@ class PlagaServices {
         link,
         data: plaga.toMap(),
         options: Options(
-          method: 'PUT', 
+          method: 'POST', 
           headers: headers
         )
       );
@@ -228,6 +228,7 @@ class PlagaServices {
       statusCode = 1;
       if (resp.statusCode == 201) {
         plaga.plagaId = resp.data['plagaId'];
+        plaga.codPlaga = resp.data['plagaId'];
         showDialogs(context, 'Plaga creada correctamente', false, false);
       }
 

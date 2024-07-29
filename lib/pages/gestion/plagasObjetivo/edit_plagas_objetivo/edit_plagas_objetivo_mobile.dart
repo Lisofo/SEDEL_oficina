@@ -72,6 +72,7 @@ class _EditPlagasObjetivoMobileState extends State<EditPlagasObjetivoMobile> {
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: CustomTextFormField(
                     maxLines: 1,
+                    enabled: false,
                     label: 'Codigo',
                     controller: _codController,
                   ),

@@ -245,7 +245,22 @@ Future<void> _uploadPhoto2() async {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      tipoDato('Codigo', _codController),
+                      Row(
+                        children: [
+                          const Text('Código'),
+                          const SizedBox(width: 10,),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            child: CustomTextFormField(
+                              enabled: false,
+                              maxLines: 1,
+                              label: 'Código',
+                              controller: _codController,
+                            ),
+                          ),
+                          const SizedBox(width: 40,),
+                        ],
+                      ),
                       const SizedBox(
                         height: 20,
                       ),

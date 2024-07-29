@@ -73,7 +73,7 @@ class _EditServiciosMobileState extends State<EditServiciosMobile> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                const Text("Codigo  "),
+                const Text("Código  "),
                 const SizedBox(
                   width: 1,
                 ),
@@ -81,8 +81,9 @@ class _EditServiciosMobileState extends State<EditServiciosMobile> {
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: CustomTextFormField(
                     controller: _codController,
+                    enabled: false,
                     maxLines: 1,
-                    label: 'Codigo',
+                    label: 'Código',
                   ),
                 )
               ],

@@ -65,7 +65,7 @@ class _EditTareasDesktopState extends State<EditTareasDesktop> {
                 children: [
                   Row(
                     children: [
-                      const Text("Codigo  "),
+                      const Text("Código  "),
                       const SizedBox(
                         width: 27,
                       ),
@@ -73,8 +73,9 @@ class _EditTareasDesktopState extends State<EditTareasDesktop> {
                         width: 300,
                         child: CustomTextFormField(
                           controller: _codController,
+                          enabled: false,
                           maxLines: 1,
-                          label: 'Codigo',
+                          label: 'Código',
                         ),
                       )
                     ],

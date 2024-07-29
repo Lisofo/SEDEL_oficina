@@ -168,7 +168,7 @@ class ControlServices{
         link,
         data: control.toMap(),
         options: Options(
-          method: 'PUT', 
+          method: 'POST', 
           headers: headers
         )
       );

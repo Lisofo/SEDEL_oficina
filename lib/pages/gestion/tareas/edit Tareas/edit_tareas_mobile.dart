@@ -58,7 +58,7 @@ class _EditTareasMobileState extends State<EditTareasMobile> {
             Column(
               children: [
                 const SizedBox(height: 20,),
-                const Text("Codigo  "),
+                const Text("Código  "),
                 const SizedBox(height: 10,),
                 const SizedBox(
                   width: 27,
@@ -67,8 +67,9 @@ class _EditTareasMobileState extends State<EditTareasMobile> {
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: CustomTextFormField(
                     controller: _codController,
+                    enabled: false,
                     maxLines: 1,
-                    label: 'Codigo',
+                    label: 'Código',
                   ),
                 )
               ],

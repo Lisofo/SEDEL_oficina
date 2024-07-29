@@ -151,25 +151,21 @@ class _TecnicosPageDesktopState extends State<TecnicosPageDesktop> {
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
                   itemCount: tecnicos.length,
-                  itemBuilder: (context, index) {
+                  itemBuilder: (context, i) {
                     return Card(
                       child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor:
-                             colors.primary,
-                          child: Text(
-                            tecnicos[index].codTecnico,
-                            style: const TextStyle(color: Colors.white),
-                          ),
+                        leading: Container(
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: colors.primary,),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(tecnicos[i].codTecnico, style: const TextStyle(color: Colors.white),),
+                          )
                         ),
-                        title: Text(tecnicos[index].nombre),
-                        subtitle:
-                            Text('Documento: ${tecnicos[index].documento}'),
-                        trailing: Text(
-                            'Fecha vencimiento del carne de salud: ${DateFormat("E d, MMM, yyyy", 'es').format(tecnicos[index].fechaVtoCarneSalud as DateTime)}'),
+                        title: Text(tecnicos[i].nombre),
+                        subtitle: Text('Documento: ${tecnicos[i].documento}'),
+                        trailing: Text('Fecha vencimiento del carne de salud: ${DateFormat("E d, MMM, yyyy", 'es').format(tecnicos[i].fechaVtoCarneSalud as DateTime)}'),
                         onTap: () {
-                          Provider.of<OrdenProvider>(context, listen: false)
-                              .setTecnico(tecnicos[index]);
+                          Provider.of<OrdenProvider>(context, listen: false).setTecnico(tecnicos[i]);
                           router.push('/editTecnicos');
                         },
                       ),

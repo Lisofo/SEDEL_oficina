@@ -92,12 +92,12 @@ class _MetodosAplicacionDesktopState extends State<MetodosAplicacionDesktop> {
                     var metodo = metodos[i];
                     return Card(
                       child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: colors.primary,
-                          child: Text(
-                            metodo.codMetodoAplicacion,
-                            style: const TextStyle(color: Colors.white),
-                          ),
+                        leading: Container(
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: colors.primary,),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(metodos[i].codMetodoAplicacion, style: const TextStyle(color: Colors.white),),
+                          )
                         ),
                         title: Text(metodos[i].descripcion),
                         onTap: () {

@@ -201,12 +201,13 @@ class _BodyState extends State<Body> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('*  Codigo '),
+                            const Text('*  Código '),
                             SizedBox(
                               width: 300,
                               child: CustomTextFormField(
                                 controller: _codController,
-                                label: 'Codigo',
+                                enabled: false,
+                                label: 'Código',
                                 maxLines: 1
                               )
                             ),

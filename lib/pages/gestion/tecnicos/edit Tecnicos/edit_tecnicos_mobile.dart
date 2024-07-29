@@ -224,7 +224,22 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
                   const SizedBox(
                     height: 5,
                   ),
-                  tipoDato('Codigo', _codController),
+                  Column(
+                    children: [
+                      const Text('Código'),
+                      const SizedBox(width: 10,),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: CustomTextFormField(
+                          enabled: false,
+                          maxLines: 1,
+                          label: 'Código',
+                          controller: _codController,
+                        ),
+                      ),
+                      const SizedBox(width: 40,),
+                    ],
+                  ),
                   const SizedBox(
                     height: 5,
                   ),

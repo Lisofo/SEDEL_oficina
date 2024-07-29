@@ -60,15 +60,16 @@ class _EditPlagasMobileState extends State<EditPlagasMobile> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                const Text("Codigo  "),
+                const Text("Código  "),
                 const SizedBox(
                   width: 1,
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: CustomTextFormField(
+                    enabled: false,
                     maxLines: 1,
-                    label: 'Codigo',
+                    label: 'Código',
                     controller: _codController,
                   ),
                 )
@@ -80,11 +81,11 @@ class _EditPlagasMobileState extends State<EditPlagasMobile> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                const Text("Descripcion  "),
+                const Text("Descripción  "),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: CustomTextFormField(
-                    label: 'Descripcion',
+                    label: 'Descripción',
                     maxLines: 4,
                     controller: _descripcionController,
                     maxLength: 100,

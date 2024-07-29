@@ -109,17 +109,18 @@ class PlagaObjetivoServices {
   }
 
   Future getPlagasObjetivo(BuildContext context, String descripcion, String codPlagaObjetivo, String token) async {
-    String link = apiLink;
+    String link = '$apiLink?sort=descripcion';
+    // ignore: unused_local_variable
     bool yaTieneFiltro = false;
     if (descripcion != '') {
-      link += '?descripcion=$descripcion';
+      link += '&descripcion=$descripcion';
       yaTieneFiltro = true;
     }
-    if (codPlagaObjetivo != '') {
-      yaTieneFiltro ? link += '&' : link += '?';
-      link += 'codPlagaObjetivo=$codPlagaObjetivo';
-      yaTieneFiltro = true;
-    }
+    // if (codPlagaObjetivo != '') {
+    //   yaTieneFiltro ? link += '&' : link += '?';
+    //   link += 'codPlagaObjetivo=$codPlagaObjetivo';
+    //   yaTieneFiltro = true;
+    // }
     print(link);
 
     try {
@@ -219,7 +220,7 @@ class PlagaObjetivoServices {
         link,
         data: plagaObjetivo.toMap(),
         options: Options(
-          method: 'PUT', 
+          method: 'POST', 
           headers: headers
         )
       );

@@ -226,7 +226,7 @@ class MaterialesServices {
         link,
         data: material.toMap(),
         options: Options(
-          method: 'PUT', 
+          method: 'POST', 
           headers: headers
         )
       );
@@ -560,7 +560,7 @@ class MaterialesServices {
         link,
         data: metodo.toMap(),
         options: Options(
-          method: 'PUT', 
+          method: 'POST', 
           headers: headers
         )
       );

@@ -63,15 +63,16 @@ class _EditPlagasDesktopState extends State<EditPlagasDesktop> {
                 children: [
                   Row(
                     children: [
-                      const Text("Codigo  "),
+                      const Text("Código  "),
                       const SizedBox(
                         width: 27,
                       ),
                       SizedBox(
                         width: 300,
                         child: CustomTextFormField(
+                          enabled: false,
                           maxLines: 1,
-                          label: 'Codigo',
+                          label: 'Código',
                           controller: _codController,
                         ),
                       )
@@ -82,11 +83,11 @@ class _EditPlagasDesktopState extends State<EditPlagasDesktop> {
                   ),
                   Row(
                     children: [
-                      const Text("Descripcion  "),
+                      const Text("Descripción  "),
                       SizedBox(
                         width: 800,
                         child: CustomTextFormField(
-                          label: 'Descripcion',
+                          label: 'Descripción',
                           maxLines: 1,
                           controller: _descripcionController,
                           maxLength: 100,

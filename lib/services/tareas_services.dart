@@ -220,7 +220,7 @@ class TareasServices {
         link,
         data: tarea.toMap(),
         options: Options(
-          method: 'PUT', 
+          method: 'POST', 
           headers: headers
         )
       );

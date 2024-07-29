@@ -66,7 +66,7 @@ class _EditPlagasObjetivoDesktopState extends State<EditPlagasObjetivoDesktop> {
                 children: [
                   Row(
                     children: [
-                      const Text("Codigo  "),
+                      const Text("Código  "),
                       const SizedBox(
                         width: 27,
                       ),
@@ -74,7 +74,8 @@ class _EditPlagasObjetivoDesktopState extends State<EditPlagasObjetivoDesktop> {
                         width: 300,
                         child: CustomTextFormField(
                           maxLines: 1,
-                          label: 'Codigo',
+                          label: 'Código',
+                          enabled: false,
                           controller: _codController,
                         ),
                       )

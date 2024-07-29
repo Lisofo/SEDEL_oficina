@@ -110,22 +110,23 @@ class ServiciosServices {
   }
 
   Future getServicios(BuildContext context, String descripcion, String codServicio, String tipoServicio, String token) async {
-    bool yaTieneFiltro = false;
-    String link = apiLink;
+    // ignore: unused_local_variable
+    bool yaTieneFiltro = true;
+    String link = '$apiLink?sort=descripcion';
     if (descripcion != '') {
-      link += '?descripcion=$descripcion';
+      link += '&descripcion=$descripcion';
       yaTieneFiltro = true;
     }
-    if (codServicio != '') {
-      yaTieneFiltro ? link += '&' : link += '?';
-      link += 'codServicio=$codServicio';
-      yaTieneFiltro = true;
-    }
-    if (tipoServicio != '') {
-      yaTieneFiltro ? link += '&' : link += '?';
-      link += 'tipoServicio=$tipoServicio';
-      yaTieneFiltro = true;
-    }
+    // if (codServicio != '') {
+    //   yaTieneFiltro ? link += '&' : link += '?';
+    //   link += 'codServicio=$codServicio';
+    //   yaTieneFiltro = true;
+    // }
+    // if (tipoServicio != '') {
+    //   yaTieneFiltro ? link += '&' : link += '?';
+    //   link += 'tipoServicio=$tipoServicio';
+    //   yaTieneFiltro = true;
+    // }
 
     try {
       var headers = {'Authorization': token};
@@ -224,7 +225,7 @@ class ServiciosServices {
         link,
         data: servicio.toMap(),
         options: Options(
-          method: 'PUT', 
+          method: 'POST', 
           headers: headers
         )
       );

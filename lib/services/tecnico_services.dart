@@ -1,6 +1,6 @@
 // ignore_for_file: unnecessary_string_interpolations, avoid_print, use_build_context_synchronously, dead_code
 
-import 'dart:convert';
+// import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
@@ -357,7 +357,7 @@ class TecnicoServices {
       var headers = {'Authorization': token};
       var formData = FormData.fromMap({
         'firma': MultipartFile.fromBytes(firma as List<int>, filename: fileName),
-        'firmaMD5': jsonEncode(md5),
+        'firmaMD5': md5,
       });
       print(formData);
       var resp = await _dio.put(

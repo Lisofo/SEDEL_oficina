@@ -133,13 +133,12 @@ class _TecnicosPageMobileState extends State<TecnicosPageMobile> {
                   itemBuilder: (context, index) {
                     return Card(
                       child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor:
-                             colors.primary,
-                          child: Text(
-                            tecnicos[index].codTecnico,
-                            style: const TextStyle(color: Colors.white),
-                          ),
+                        leading: Container(
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: colors.primary,),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(tecnicos[index].codTecnico, style: const TextStyle(color: Colors.white),),
+                          )
                         ),
                         title: Text(tecnicos[index].nombre),
                         subtitle:

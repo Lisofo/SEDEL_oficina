@@ -237,7 +237,7 @@ class IndisponibilidadServices {
         link,
         data: indisponibilidad.toMap(),
         options: Options(
-          method: 'PUT', 
+          method: 'POST', 
           headers: headers
         )
       );

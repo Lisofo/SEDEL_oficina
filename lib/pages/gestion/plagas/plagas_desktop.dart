@@ -121,20 +121,19 @@ class _PlagasDessktopState extends State<PlagasDessktop> {
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
                   itemCount: plagas.length,
-                  itemBuilder: (context, index) {
+                  itemBuilder: (context, i) {
                     return Card(
                       child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: colors.primary,
-                          child: Text(
-                            plagas[index].codPlaga,
-                            style: const TextStyle(color: Colors.white),
-                          ),
+                        leading: Container(
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: colors.primary,),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(plagas[i].codPlaga, style: const TextStyle(color: Colors.white),),
+                          )
                         ),
-                        title: Text(plagas[index].descripcion),
+                        title: Text(plagas[i].descripcion),
                         onTap: () {
-                          Provider.of<OrdenProvider>(context, listen: false)
-                              .setPlaga(plagas[index]);
+                          Provider.of<OrdenProvider>(context, listen: false).setPlaga(plagas[i]);
                           router.push('/editPlagas');
                         },
                       ),

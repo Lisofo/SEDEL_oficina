@@ -98,15 +98,16 @@ class _EditMaterialesPageMobileState extends State<EditMaterialesPageMobile> {
                       children: [
                         Row(
                           children: [
-                            const Text("Codigo  "),
+                            const Text("Código  "),
                             const SizedBox(
                               width: 27,
                             ),
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.6,
                               child: CustomTextFormField(
+                                enabled: false,
                                 maxLines: 1,
-                                label: 'Codigo',
+                                label: 'Código',
                                 controller: _codMaterialController,
                               ),
                             )

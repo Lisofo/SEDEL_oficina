@@ -114,23 +114,22 @@ class _ServiciosDesktopState extends State<ServiciosDesktop> {
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
                   itemCount: servicios.length,
-                  itemBuilder: (context, index) {
+                  itemBuilder: (context, i) {
                     return Card(
                       child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: colors.primary,
-                          child: Text(
-                            servicios[index].servicioId.toString(),
-                            style: const TextStyle(color: Colors.white),
-                          ),
+                        leading: Container(
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: colors.primary,),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(servicios[i].codServicio, style: const TextStyle(color: Colors.white),),
+                          )
                         ),
-                        title: Text(servicios[index].descripcion),
+                        title: Text(servicios[i].descripcion),
                         subtitle:
-                            Text(servicios[index].tipoServicio.descripcion),
-                        trailing: Text(servicios[index].codServicio),
+                            Text(servicios[i].tipoServicio.descripcion),
+                        trailing: Text(servicios[i].codServicio),
                         onTap: () {
-                          Provider.of<OrdenProvider>(context, listen: false)
-                              .setServicio(servicios[index]);
+                          Provider.of<OrdenProvider>(context, listen: false).setServicio(servicios[i]);
                           router.push('/editServicios');
                         },
                       ),

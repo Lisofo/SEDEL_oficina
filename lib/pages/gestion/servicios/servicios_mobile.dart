@@ -128,12 +128,12 @@ class _ServiciosMobileState extends State<ServiciosMobile> {
                   itemBuilder: (context, index) {
                     return Card(
                       child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: colors.primary,
-                          child: Text(
-                            servicios[index].servicioId.toString(),
-                            style: const TextStyle(color: Colors.white),
-                          ),
+                        leading: Container(
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: colors.primary,),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(servicios[index].codServicio.toString(), style: const TextStyle(color: Colors.white),),
+                          )
                         ),
                         title: Text(servicios[index].descripcion),
                         subtitle:

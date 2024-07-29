@@ -51,7 +51,7 @@ class _EditMetodosAplicacionMobileState extends State<EditMetodosAplicacionMobil
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                const Text("Codigo  "),
+                const Text("Código  "),
                 const SizedBox(
                   width: 1,
                 ),
@@ -59,7 +59,8 @@ class _EditMetodosAplicacionMobileState extends State<EditMetodosAplicacionMobil
                   width: MediaQuery.of(context).size.width *0.7,
                   child: CustomTextFormField(
                     maxLines: 1,
-                    label: 'Codigo',
+                    label: 'Código',
+                    enabled: false,
                     controller: _codController,
                   ),
                 )

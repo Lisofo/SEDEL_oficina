@@ -128,19 +128,19 @@ class _MaterialesPageDesktopState extends State<MaterialesPageDesktop> {
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
                   itemCount: materiales.length,
-                  itemBuilder: (context, index) {
+                  itemBuilder: (context, i) {
                     return Card(
                       child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: colors.primary,
-                          child: Text(
-                            materiales[index].codMaterial,
-                            style: const TextStyle(color: Colors.white),
-                          ),
+                        leading: Container(
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: colors.primary,),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(materiales[i].codMaterial, style: const TextStyle(color: Colors.white),),
+                          )
                         ),
-                        title: Text(materiales[index].descripcion),
+                        title: Text(materiales[i].descripcion),
                         onTap: () {
-                          Provider.of<OrdenProvider>(context, listen: false).setMateriales(materiales[index]);
+                          Provider.of<OrdenProvider>(context, listen: false).setMateriales(materiales[i]);
                           router.push('/editMateriales');
                         },
                       ),

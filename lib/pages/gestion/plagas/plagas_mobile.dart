@@ -99,12 +99,12 @@ class _PlagasMobileState extends State<PlagasMobile> {
                   itemBuilder: (context, index) {
                     return Card(
                       child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: colors.primary,
-                          child: Text(
-                            plagas[index].codPlaga,
-                            style: const TextStyle(color: Colors.white),
-                          ),
+                        leading: Container(
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: colors.primary,),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(plagas[index].codPlaga, style: const TextStyle(color: Colors.white),),
+                          )
                         ),
                         title: Text(plagas[index].descripcion),
                         onTap: () {

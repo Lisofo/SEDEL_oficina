@@ -61,7 +61,7 @@ class _EditTiposPtoDesktopState extends State<EditTiposPtoDesktop> {
                   children: [
                     Row(
                       children: [
-                        const Text("Codigo  "),
+                        const Text("Código  "),
                         const SizedBox(
                           width: 27,
                         ),
@@ -69,8 +69,9 @@ class _EditTiposPtoDesktopState extends State<EditTiposPtoDesktop> {
                           width: 300,
                           child: CustomTextFormField(
                             controller: _codController,
+                            enabled: false,
                             maxLines: 1,
-                            label: 'Codigo',
+                            label: 'Código',
                           ),
                         )
                       ],
