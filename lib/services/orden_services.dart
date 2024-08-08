@@ -2,6 +2,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:sedel_oficina_maqueta/config/config.dart';
+import 'package:sedel_oficina_maqueta/models/constancia_visita.dart';
 import 'package:sedel_oficina_maqueta/models/orden.dart';
 import 'package:flutter/material.dart';
 
@@ -162,6 +163,50 @@ class OrdenServices {
       statusCode = 1;
       final List<dynamic> ordenList = resp.data;
       var retorno = ordenList.map((obj) => Orden.fromJson(obj)).toList();
+      print(retorno.length);
+      return retorno;
+    } catch (e) {
+      statusCode = 0;
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
+    }
+  }
+
+  Future getOrdenCV(BuildContext context, int ordenId, String token) async {
+    String link = '${apiLink}cv?ordenTrabajoId=$ordenId';
+    try {
+      var headers = {'Authorization': token};
+      var resp = await _dio.request(
+        link,
+        options: Options(
+          method: 'GET',
+          headers: headers,
+        ),
+      );
+
+      statusCode = 1;
+      final List<dynamic> ordenCvList = resp.data;
+      var retorno = ordenCvList.map((obj) => ConstanciaVisita.fromJson(obj)).toList();
       print(retorno.length);
       return retorno;
     } catch (e) {

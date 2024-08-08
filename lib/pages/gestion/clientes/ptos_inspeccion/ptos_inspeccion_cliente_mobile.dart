@@ -59,7 +59,6 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
   bool copiando = false;
   List<String> estadosPuntos = [
     'ACTIVO / TRASLADADO',
-	  'ACTIVO / SINACCESO',
 	  'INACTIVO / DESINSTALADO'
   ];
   List<String> estadosPlano = [

@@ -63,7 +63,7 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
 
   cargarDatos() async {
     try {
-      if (widget.materiales.isNotEmpty && widget.revisionMaterialesList.isNotEmpty){
+      if (widget.materiales.isNotEmpty || widget.revisionMaterialesList.isNotEmpty){
         cargoDatosCorrectamente = true;
       }
       cargando = false;

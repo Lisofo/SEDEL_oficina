@@ -264,7 +264,6 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                   width: MediaQuery.of(context).size.width * 0.8,
                   child: CustomTextFormField(
                     controller: _codController,
-                    enabled: false,
                     label: 'Código',
                     maxLines: 1
                   )

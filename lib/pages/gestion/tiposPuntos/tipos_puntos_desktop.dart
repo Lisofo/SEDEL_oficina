@@ -128,19 +128,19 @@ class _TiposPuntosDesktopState extends State<TiposPuntosDesktop> {
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
                   itemCount: tiposPuntos.length,
-                  itemBuilder: (context, index) {
+                  itemBuilder: (context, i) {
                     return Card(
                       child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: colors.primary,
-                          child: Text(
-                            tiposPuntos[index].codTipoPuntoInspeccion,
-                            style: const TextStyle(color: Colors.white),
-                          ),
+                        leading: Container(
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: colors.primary,),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(tiposPuntos[i].codTipoPuntoInspeccion, style: const TextStyle(color: Colors.white),),
+                          )
                         ),
-                        title: Text(tiposPuntos[index].descripcion),
+                        title: Text(tiposPuntos[i].descripcion),
                         onTap: () {
-                          Provider.of<OrdenProvider>(context, listen: false).setTipoPunto(tiposPuntos[index]);
+                          Provider.of<OrdenProvider>(context, listen: false).setTipoPunto(tiposPuntos[i]);
                           router.push('/editTiposPunto');
                         },
                       ),

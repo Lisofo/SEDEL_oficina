@@ -162,8 +162,8 @@ class _EditTiposPtoDesktopState extends State<EditTiposPtoDesktop> {
       context: context, 
       builder: (context){
         return AlertDialog(
-          title: const Text('Borrar tarea'),
-          content: Text('Esta por borrar la tarea ${tipoPto.descripcion}, esta seguro de querer borrarla?'),
+          title: const Text('Borrar tipo de punto de inspección'),
+          content: Text('Esta por borrar el tipo de punto de inspección ${tipoPto.descripcion}, esta seguro de querer borrarla?'),
           actions: [
             TextButton(onPressed: (){router.pop();}, child: const Text('Cancelar')),
             TextButton(

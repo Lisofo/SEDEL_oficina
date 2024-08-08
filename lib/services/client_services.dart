@@ -514,15 +514,16 @@ class ClientServices {
   }
 
   Future postCliente(BuildContext context, Cliente cliente, String token) async {
+    String link = apiUrl += 'api/v1/clientes/';
+
     try {
-      String link = apiUrl += 'api/v1/clientes/';
       var headers = {'Authorization': token};
 
       final resp = await _dio.request(
         link,
         data: cliente.toMap(),
         options: Options(
-          method: 'PUT', 
+          method: 'POST', 
           headers: headers
         )
       );

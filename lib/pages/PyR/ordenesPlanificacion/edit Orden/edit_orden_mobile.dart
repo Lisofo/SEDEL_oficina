@@ -1,10 +1,12 @@
 // ignore_for_file: use_build_context_synchronously, avoid_init_to_null
 
+import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/cliente.dart';
+import 'package:sedel_oficina_maqueta/models/constancia_visita.dart';
 import 'package:sedel_oficina_maqueta/models/orden.dart';
 import 'package:sedel_oficina_maqueta/models/servicio.dart';
 import 'package:sedel_oficina_maqueta/models/servicios_ordenes.dart';
@@ -17,6 +19,7 @@ import 'package:sedel_oficina_maqueta/services/tecnico_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/appbar_mobile.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EditOrdenMobile extends StatefulWidget {
   const EditOrdenMobile({super.key});
@@ -58,6 +61,7 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
   List<Cliente> historial = [];
   int tecnicoFiltro = 0;
   int buttonIndex = 0;
+  List<ConstanciaVisita> constanciasOrden = [];
 
   @override
   void initState() {
@@ -79,6 +83,9 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
     selectedCliente = context.read<OrdenProvider>().clienteEditOrdenes;
     servicios = await ServiciosServices().getServicios(context, '', '', '', token);
     tipoOrdenes = await OrdenServices().getTipoOrden(context, token);
+    if(orden.estado == 'REVISADA') {
+      constanciasOrden = await OrdenServices().getOrdenCV(context, orden.ordenTrabajoId, token);
+    }
     if(orden.ordenTrabajoId != 0){
       selectedDateOrden = orden.fechaOrdenTrabajo;
       selectedDateDesde = orden.fechaDesde;
@@ -606,7 +613,51 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 20,),
+                      const SizedBox(height: 10,),
+                      if(orden.estado == 'REVISADA')...[
+                        const SizedBox(height: 10,),
+                        const Text(
+                          'Constancias:',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                        ), 
+                        const SizedBox(height: 10,),
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: colors.primary,
+                              width: 2
+                            ),
+                            color: colors.onPrimary,
+                            borderRadius: BorderRadius.circular(5)
+                          ),
+                          height: MediaQuery.of(context).size.height * 0.45,
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          child: ListView.separated(
+                            itemCount: constanciasOrden.length,
+                            itemBuilder: (context, i) {
+                              var item = constanciasOrden[i];
+                              return ListTile(
+                                style: ListTileStyle.list,
+                                title: Text(item.filename),
+                                trailing: IconButton(
+                                  icon: Icon(
+                                    Icons.picture_as_pdf,
+                                    color: colors.primary,
+                                  ),
+                                  onPressed: () async {
+                                    await abrirPDF(item.filepath, token);
+                                  }
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, i) {
+                              return Divider(
+                                color: colors.primary,
+                              );
+                            }, 
+                          ),
+                        )
+                      ]
                     ],
                   ),
                 ],
@@ -804,6 +855,8 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
       nuevoEstado = 'EN PROCESO';
     } else if (orden.estado == 'PENDIENTE') {
       nuevoEstado = 'DESCARTADA';
+    } else if(orden.estado == 'REVISADA') {
+      nuevoEstado = 'FINALIZADA';
     }
 
     showDialog(
@@ -1053,5 +1106,34 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
         );
       },
     );
+  }
+
+  abrirPDF(String url, String token) async {
+    Dio dio = Dio();
+    String link = url += '?authorization=$token';
+    print(link);
+    try {
+      // Realizar la solicitud HTTP con el encabezado de autorización
+      Response response = await dio.get(
+        link,
+        options: Options(
+          headers: {
+            'Authorization': 'headers $token',
+          },
+        ),                      
+      );
+      // Verificar si la solicitud fue exitosa (código de estado 200)
+      if (response.statusCode == 200) {
+        // Si la respuesta fue exitosa, abrir la URL en el navegador
+        Uri uri = Uri.parse(url);
+        await launchUrl(uri);
+      } else {
+        // Si la solicitud no fue exitosa, mostrar un mensaje de error
+        print('Error al cargar la URL: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Manejar errores de solicitud
+      print('Error al realizar la solicitud: $e');
+    }
   }
 }

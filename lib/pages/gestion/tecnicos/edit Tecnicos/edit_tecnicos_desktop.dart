@@ -41,8 +41,8 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
   final _codController = TextEditingController();
   late String token = context.read<OrdenProvider>().token;
   late bool tieneId = false;
-  late Uint8List? avatarTecnico = null;
-  late Uint8List? firmaTecnico = null;
+  late Uint8List? _avatarTecnico = null;
+  late Uint8List? _firmaTecnico = null;
   late String? _avatarTecnico2 = '';
   late String? _firmaTecnico2 = '';
   late List<int> firmaBytes = [];
@@ -57,47 +57,48 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
     return '${date?.day.toString().padLeft(2, '0')}/${date?.month.toString().padLeft(2, '0')}/${date?.year.toString().padLeft(4, '0')}';
   }
 
-  Future<void> _uploadPhoto(Function(Uint8List?) setImage) async {
-  final html.FileUploadInputElement input = html.FileUploadInputElement();
-  input.accept = 'image/*';
-  input.click();
 
-  input.onChange.listen((e) {
-    final files = input.files;
-    if (files!.isNotEmpty) {
-      final reader = html.FileReader();
-      reader.readAsArrayBuffer(files[0]);
-      nombre = files[0].name;
-      reader.onLoadEnd.listen((e) {
-        setState(() {
-          setImage(reader.result as Uint8List?);
+  Future<void> uploadFirmaTecnico () async {
+    final html.FileUploadInputElement input = html.FileUploadInputElement();
+    input.accept = 'image/*';
+    input.click();
+
+    input.onChange.listen((e) async {
+      final files = input.files;
+      if (files!.isNotEmpty) {
+        final reader = html.FileReader();
+        reader.readAsArrayBuffer(files[0]);
+        reader.onLoadEnd.listen((e) {
+          setState(() {
+            _firmaTecnico = reader.result as Uint8List?;
+            firmaName = files[0].name;
+          });
         });
-      });
-    }
-  });
-}
+      }
+    });
+  }
 
-void _setAvatarTecnico(Uint8List? image) {
-  setState(() {
-    avatarTecnico = image;
-  });
-}
+  Future<void> uploadAvatarTecnico () async {
+    final html.FileUploadInputElement input = html.FileUploadInputElement();
+    input.accept = 'image/*';
+    input.click();
 
-void _setFirmaTecnico(Uint8List? image) {
-  setState(() {
-    firmaTecnico = image;
-    firmaName = nombre;
-    print(firmaName);
-  });
-}
+    input.onChange.listen((e) async {
+      final files = input.files;
+      if (files!.isNotEmpty) {
+        final reader = html.FileReader();
+        reader.readAsArrayBuffer(files[0]);
+        reader.onLoadEnd.listen((e) {
+          setState(() {
+            _avatarTecnico = reader.result as Uint8List?;
+            avatarName = files[0].name;
+            print(avatarName);
+          });
+        });
+      }
+    });
+  }
 
-Future<void> _uploadPhoto1() async {
-  await _uploadPhoto(_setAvatarTecnico);
-}
-
-Future<void> _uploadPhoto2() async {
-  await _uploadPhoto(_setFirmaTecnico);
-}
 
   @override
   void initState() {
@@ -110,10 +111,9 @@ Future<void> _uploadPhoto2() async {
     selectedDateIngreso = selectedTecnico.fechaIngreso!;
     selectedDateCarneSalud = selectedTecnico.fechaVtoCarneSalud!;
     tieneId = selectedTecnico.tecnicoId > 0;
-    if(selectedTecnico.avatarPath != ''){
+    if(selectedTecnico.avatarPath != '' || selectedTecnico.firmaPath != ''){
       _avatarTecnico2 = selectedTecnico.avatarPath;
       _firmaTecnico2 = selectedTecnico.firmaPath;
-      print('$_avatarTecnico2?authorization:$token');
     }
     setState(() {});
   }
@@ -160,9 +160,9 @@ Future<void> _uploadPhoto2() async {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        avatarTecnico != null
+                        _avatarTecnico != null
                             ? Image.memory(
-                                avatarTecnico!,
+                                _avatarTecnico!,
                                 width: 300,
                                 height: 250,
                                 fit: BoxFit.cover,
@@ -192,14 +192,14 @@ Future<void> _uploadPhoto2() async {
                         IconButton(
                           tooltip: 'Subir foto',
                           onPressed: () async {
-                            await _uploadPhoto1();
+                            await uploadAvatarTecnico();
                           },
                           icon: const Icon(Icons.upload),
                         ),
                         const SizedBox(height: 10),
-                        firmaTecnico != null
+                        _firmaTecnico != null
                             ? Image.memory(
-                                firmaTecnico!,
+                                _firmaTecnico!,
                                 width: 300,
                                 height: 109,
                                 fit: BoxFit.cover,
@@ -229,7 +229,7 @@ Future<void> _uploadPhoto2() async {
                         IconButton(
                           tooltip: 'Subir firma',
                           onPressed: () async {
-                            await _uploadPhoto2();
+                            await uploadFirmaTecnico();
                           },
                           icon: const Icon(Icons.upload),
                         ),
@@ -454,18 +454,25 @@ Future<void> _uploadPhoto2() async {
     );
   }
   
-  String calculateMD5(List<int> bytes) {
+  Future<String> calculateMD5(List<int> bytes) async {
     var md5c = md5.convert(bytes);
     return md5c.toString();
   }
 
-  Future<void> postTecnico() async {
+  Future postTecnico() async {
     print('Entre al metodo');
-    // avatarBytes = avatarTecnico as List<int>;
-    // md5Avatar = calculateMD5(avatarBytes);
-    firmaBytes = firmaTecnico as List<int>;
-    md5Firma = calculateMD5(firmaBytes);
-    print(md5Firma);
+    if(_avatarTecnico != null){
+      avatarBytes = _avatarTecnico as List<int>;
+      print('pase el avatarBytes');
+      md5Avatar = await calculateMD5(avatarBytes);
+      print('md5Avatar');
+      print(md5Avatar);
+    }
+    if(_firmaTecnico != null){
+      print('entre al if firma');
+      firmaBytes = _firmaTecnico as List<int>;
+      md5Firma = await calculateMD5(firmaBytes);
+    }
     selectedTecnico.codTecnico = _codController.text;
     selectedTecnico.documento = _docController.text;
     selectedTecnico.nombre = _nombreController.text;
@@ -474,18 +481,27 @@ Future<void> _uploadPhoto2() async {
     selectedTecnico.cargoId = cargoSeleccionado!.cargoId;
     selectedTecnico.fechaIngreso = DateTime(selectedDateIngreso.year, selectedDateIngreso.month, selectedDateIngreso.day);
     selectedTecnico.fechaVtoCarneSalud = DateTime(selectedDateCarneSalud.year, selectedDateCarneSalud.month, selectedDateCarneSalud.day);
-    selectedTecnico.avatarMd5 = md5Avatar;
-    selectedTecnico.firmaMd5 = md5Firma;
+    selectedTecnico.avatarMd5 = md5Avatar != '' ? md5Avatar : '';
+    selectedTecnico.firmaMd5 = md5Firma != '' ? md5Firma : '';
 
     if (selectedTecnico.tecnicoId == 0) {
       await TecnicoServices().postTecnico(context, selectedTecnico, token);
-      await TecnicoServices().putTecnicoFirma(context, selectedTecnico.tecnicoId, token, firmaTecnico, firmaName, md5Firma);
+      if(_firmaTecnico != null){
+        await TecnicoServices().putTecnicoFirma(context, selectedTecnico.tecnicoId, token, _firmaTecnico, firmaName, md5Firma);
+      }
+      if(_avatarTecnico != null){
+        await TecnicoServices().putTecnicoAvatar(context, selectedTecnico.tecnicoId, token, _avatarTecnico, avatarName, md5Avatar);
+      }
 
     } else {
       await TecnicoServices().putTecnico(context, selectedTecnico, token);
-      await TecnicoServices().putTecnicoFirma(context, selectedTecnico.tecnicoId, token, firmaTecnico, firmaName, md5Firma);
+      if(_firmaTecnico != null){
+        await TecnicoServices().putTecnicoFirma(context, selectedTecnico.tecnicoId, token, _firmaTecnico, firmaName, md5Firma);
+      }
+      if(_avatarTecnico != null){
+        await TecnicoServices().putTecnicoAvatar(context, selectedTecnico.tecnicoId, token, _avatarTecnico, avatarName, md5Avatar);
+      }
     }
-
     setState(() {
       tieneId = true;
     });

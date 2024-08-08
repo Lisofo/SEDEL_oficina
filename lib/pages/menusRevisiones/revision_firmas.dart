@@ -67,8 +67,10 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
   cargarDatos() async {
     try {
       orden = context.read<OrdenProvider>().orden;
+      revisionId = widget.revision!.otRevisionId;
       if(orden.otRevisionId != 0){
         firmaDisponible = await RevisionServices().getRevision(context, orden, revisionId, token);
+        contadorDeVeces++;
       }
       print(firmaDisponible);
       if(firmaDisponible == 'N'){

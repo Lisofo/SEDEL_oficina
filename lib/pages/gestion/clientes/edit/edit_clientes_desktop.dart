@@ -206,7 +206,6 @@ class _BodyState extends State<Body> {
                               width: 300,
                               child: CustomTextFormField(
                                 controller: _codController,
-                                enabled: false,
                                 label: 'Código',
                                 maxLines: 1
                               )

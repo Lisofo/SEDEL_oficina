@@ -49,7 +49,7 @@ class _DetallesMaterialesDesktopState extends State<DetallesMaterialesDesktop> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBarDesktop(titulo: 'Detalles del material'),
+      appBar: AppBarDesktop(titulo: 'Detalles del principio activo'),
       drawer: const Drawer(
         child: BotonesDrawer(),
       ),
@@ -112,7 +112,7 @@ class _DetallesMaterialesDesktopState extends State<DetallesMaterialesDesktop> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             CustomButton(
-              text: 'Nuevo detalle', 
+              text: 'Nuevo principio', 
               onPressed: (){
                 nuevoDetalle(detalleACrear);
               },
@@ -136,7 +136,7 @@ class _DetallesMaterialesDesktopState extends State<DetallesMaterialesDesktop> {
       context: context, 
       builder: (context){
         return AlertDialog(
-          title: Text(detalle.materialDetId == 0 ? 'Nuevo detalle' : 'Editar detalle'),
+          title: Text(detalle.materialDetId == 0 ? 'Nuevo principio activo' : 'Editar principio activo'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -176,7 +176,7 @@ class _DetallesMaterialesDesktopState extends State<DetallesMaterialesDesktop> {
       concentracion: double.parse(concentracionController.text));
         
     await MaterialesServices().postDetalle(context, materialSeleccionado.materialId, detalle, token);    
-    await MaterialesServices.showDialogs(context, 'Detalle creado correctamente', true, false);
+    await MaterialesServices.showDialogs(context, 'Principio activo creado correctamente', true, false);
     detalles = await MaterialesServices().getDetalles(context, materialSeleccionado.materialId, token); 
       
     setState(() {});
@@ -189,7 +189,7 @@ class _DetallesMaterialesDesktopState extends State<DetallesMaterialesDesktop> {
     detalleAEditar.principioActivo = principioController.text;
         
     await MaterialesServices().putDetalle(context, materialSeleccionado.materialId, detalle, token);    
-    await MaterialesServices.showDialogs(context, 'Detalle editado correctamente', true, false);
+    await MaterialesServices.showDialogs(context, 'Principio activo editado correctamente', true, false);
     detalles = await MaterialesServices().getDetalles(context, materialSeleccionado.materialId, token);
 
     setState(() {});
@@ -200,14 +200,14 @@ class _DetallesMaterialesDesktopState extends State<DetallesMaterialesDesktop> {
       context: context, 
       builder: (context) {
         return AlertDialog(
-          title: const Text('Eliminar detalle'),
-          content: Text('Esta por eliminar el detalle ${detalle.principioActivo}, está seguro de querer borrarlo?'),
+          title: const Text('Eliminar principio activo'),
+          content: Text('Esta por eliminar el principio activo ${detalle.principioActivo}, está seguro de querer borrarlo?'),
           actions: [
             TextButton(onPressed: (){router.pop();}, child: const Text('Cancelar')),
             TextButton(
               onPressed: () async {
                 await MaterialesServices().deleteDetalle(context, materialSeleccionado.materialId, detalle, token);
-                await MaterialesServices.showDialogs(context, 'Detalle borrado correctamente', true, false);
+                await MaterialesServices.showDialogs(context, 'Principio activo borrado correctamente', true, false);
 
                 detalles = await MaterialesServices().getDetalles(context, materialSeleccionado.materialId, token);
                 setState(() {});

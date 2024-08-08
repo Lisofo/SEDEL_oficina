@@ -112,13 +112,37 @@ class _ClientesDesktopState extends State<ClientesDesktop> {
                 children: [
                   Row(
                     children: [
+                      const Text('Código: '),
+                      SizedBox(
+                        width: 300,
+                        child: CustomTextFormField(
+                          controller: _codController,
+                          maxLines: 1,
+                          hint: 'Buscar código del cliente',
+                          onFieldSubmitted: (value) async {
+                            String query = value;
+                            await buscar(
+                              _nombreController.text,
+                              query,
+                              estadoSeleccionado?.codEstado,
+                              tecnicoFiltro.toString(),
+                              token
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20,),
+                  Row(
+                    children: [
                       const Text('Nombre: '),
                       SizedBox(
                         width: 300,
                         child: CustomTextFormField(
                           controller: _nombreController,
                           maxLines: 1,
-                          hint: 'Buscar nombre de cliente',
+                          hint: 'Buscar nombre del cliente',
                           onFieldSubmitted: (value) async {
                             String query = value;
                             await buscar(

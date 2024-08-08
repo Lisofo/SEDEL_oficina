@@ -61,7 +61,6 @@ class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDe
   bool copiando = false;
   List<String> estadosPuntos = [
     'ACTIVO / TRASLADADO',
-	  'ACTIVO / SINACCESO',
 	  'INACTIVO / DESINSTALADO'
   ];
   List<String> estadosPlano = [
@@ -929,6 +928,7 @@ class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDe
                   const SizedBox(height: 10,),
                   CustomDropdownFormMenu(
                     hint: 'Estado / Subestado',
+                    isDense: true,
                     items: estadosPuntos.map((e) {
                       return DropdownMenuItem(
                         value: e,

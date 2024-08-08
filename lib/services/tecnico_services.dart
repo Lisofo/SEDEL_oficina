@@ -353,12 +353,64 @@ class TecnicoServices {
 
   Future putTecnicoFirma(BuildContext context, int id, String token, Uint8List? firma, String? fileName, String md5) async {
     String link = apiLink += '$id/firma';
+    FormData formData = FormData.fromMap({
+      'firma': MultipartFile.fromBytes(firma as List<int>, filename: fileName),
+      'firmaMD5': md5,
+    });
+
     try {
       var headers = {'Authorization': token};
-      var formData = FormData.fromMap({
-        'firma': MultipartFile.fromBytes(firma as List<int>, filename: fileName),
-        'firmaMD5': md5,
-      });
+      print(formData);
+      var resp = await _dio.put(
+        link,
+        data: formData,
+        options: Options(
+          contentType: 'multipart/form-data',
+          headers: headers,
+        ),
+      );
+
+      statusCode = 1;
+      // if (resp.statusCode == 201) {
+      //   showDialogs(context, 'PDF subido', false, false);
+      // }
+      return resp;
+    } catch (e) {
+      statusCode = 0;
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
+    }
+  }
+
+  Future putTecnicoAvatar(BuildContext context, int id, String token, Uint8List? avatar, String? fileName, String md5) async {
+    String link = apiLink += '$id/foto';
+    FormData formData = FormData.fromMap({
+      'foto': MultipartFile.fromBytes(avatar as List<int>, filename: 'avatarTecnico.jpg'),
+      'fotoMD5': md5,
+    });
+
+    try {
+      var headers = {'Authorization': token};
       print(formData);
       var resp = await _dio.put(
         link,

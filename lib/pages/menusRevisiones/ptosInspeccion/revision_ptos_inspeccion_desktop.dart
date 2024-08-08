@@ -89,6 +89,7 @@ class _RevisionPtosInspeccionDesktopState extends State<RevisionPtosInspeccionDe
       tiposDePuntos = await _ptosInspeccionServices.getTiposPtosInspeccion(context, token);
       plagasObjetivo = await PlagaObjetivoServices().getPlagasObjetivo(context, '', '', token);
       Provider.of<OrdenProvider>(context, listen: false).setTipoPTI(selectedTipoPto);
+      statusCodeRevision = await _ptosInspeccionServices.getStatusCode();
       if (statusCodeRevision == 1){
         cargoDatosCorrectamente = true;
       }

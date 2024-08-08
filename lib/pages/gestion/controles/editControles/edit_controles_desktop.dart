@@ -67,7 +67,7 @@ class _EditControlesDesktopState extends State<EditControlesDesktop> {
                       const Text("Grupo"),
                       const SizedBox(width: 23,),
                       SizedBox(
-                        width: 390,
+                        width: 800,
                         child: CustomTextFormField(
                           maxLines: 1,
                           label: 'Grupo',
