@@ -60,6 +60,7 @@ class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDe
   late Plano? planoSeleccionadoACopiar = null;
   bool copiando = false;
   List<String> estadosPuntos = [
+    'ACTIVO / REINSTALADO',
     'ACTIVO / TRASLADADO',
 	  'INACTIVO / DESINSTALADO'
   ];
@@ -528,8 +529,8 @@ class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDe
                     CustomTextFormField(
                       controller: descripcionController,
                       maxLines: 1,
-                      hint: 'Descripcion',
-                      label: "Descripcion",
+                      hint: 'Descripción',
+                      label: "Descripción",
                     ),
                     const SizedBox(height: 10,),
                     if(plano.planoId != 0)

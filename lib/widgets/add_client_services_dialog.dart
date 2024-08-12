@@ -15,15 +15,10 @@ class AddClientServicesDialog extends StatefulWidget {
   final Cliente cliente;
   final String token;
 
-  const AddClientServicesDialog(
-      {super.key,
-      required this.servicioClienteSeleccionado,
-      required this.cliente,
-      required this.token});
+  const AddClientServicesDialog({super.key, required this.servicioClienteSeleccionado, required this.cliente, required this.token});
 
   @override
-  State<AddClientServicesDialog> createState() =>
-      _AddClientServicesDialogState();
+  State<AddClientServicesDialog> createState() => _AddClientServicesDialogState();
 }
 
 class _AddClientServicesDialogState extends State<AddClientServicesDialog> {
@@ -49,10 +44,7 @@ class _AddClientServicesDialogState extends State<AddClientServicesDialog> {
 
   @override
   Widget build(BuildContext context) {
-    comentarioController.text =
-        (widget.servicioClienteSeleccionado?.comentario == null
-            ? comentarioController.text
-            : widget.servicioClienteSeleccionado!.comentario);
+    comentarioController.text = (widget.servicioClienteSeleccionado?.comentario == null ? comentarioController.text : widget.servicioClienteSeleccionado!.comentario);
     fechaDesde = (widget.servicioClienteSeleccionado?.desde ?? fechaDesde);
     fechaHasta = (widget.servicioClienteSeleccionado?.hasta ?? fechaHasta);
 
@@ -61,8 +53,7 @@ class _AddClientServicesDialogState extends State<AddClientServicesDialog> {
       if (widget.servicioClienteSeleccionado == null) {
         servicioInicial = null;
       } else {
-        servicioInicial = servicios.firstWhere((servicio) =>
-          servicio.servicioId == widget.servicioClienteSeleccionado?.servicioId);
+        servicioInicial = servicios.firstWhere((servicio) => servicio.servicioId == widget.servicioClienteSeleccionado?.servicioId);
       }
     }
 

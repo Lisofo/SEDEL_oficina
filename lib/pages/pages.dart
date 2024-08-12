@@ -11,6 +11,7 @@ export 'package:sedel_oficina_maqueta/pages/PyR/indisponibilidades/edit_indispon
 export 'package:sedel_oficina_maqueta/pages/gestion/clientes/busqueda/clientes.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/clientes/edit/edit_clientes.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/clientes/ptos_inspeccion/ptos_inspeccion_cliente.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/clientes/servicios/servicio_cliente.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/materiales/materiales/materiales.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/materiales/edit%20materiales/edit_materiales.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/materiales/lotes/lotes.dart';

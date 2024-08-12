@@ -85,11 +85,11 @@ class _EditPlagasObjetivoMobileState extends State<EditPlagasObjetivoMobile> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                const Text("Descripcion  "),
+                const Text("Descripción  "),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: CustomTextFormField(
-                    label: 'Descripcion',
+                    label: 'Descripción',
                     maxLines: 4,
                     controller: _descripcionController,
                     maxLength: 100,

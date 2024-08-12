@@ -94,11 +94,11 @@ class _EditServiciosMobileState extends State<EditServiciosMobile> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                const Text("Descripcion  "),
+                const Text("Descripción  "),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: CustomTextFormField(
-                    label: 'Descripcion',
+                    label: 'Descripción',
                     controller: _descripcionController,
                     maxLines: 4,
                     maxLength: 100,
@@ -117,6 +117,7 @@ class _EditServiciosMobileState extends State<EditServiciosMobile> {
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: CustomDropdownFormMenu(
                     value: tipoServicioInicialSeleccionado,
+                    isDense: true,
                     hint: 'Seleccione cargo',
                     items: tipoServicios.map((e) {
                       return DropdownMenuItem(
@@ -214,8 +215,8 @@ class _EditServiciosMobileState extends State<EditServiciosMobile> {
   Future<void> postPut(BuildContext context) async {
     servicioSeleccionado.codServicio =  _codController.text;
     servicioSeleccionado.descripcion =  _descripcionController.text;
-    servicioSeleccionado.tipoServicio.tipoServicioId = tipoServicioSeleccionado!.tipoServicioId;
-    servicioSeleccionado.tipoServicioId = tipoServicioSeleccionado!.tipoServicioId;
+    servicioSeleccionado.tipoServicio.tipoServicioId = tipoServicioSeleccionado!.tipoServicioId == 0 ? tipoServicios[0].tipoServicioId : tipoServicioSeleccionado!.tipoServicioId;
+    servicioSeleccionado.tipoServicioId = tipoServicioSeleccionado!.tipoServicioId == 0 ? tipoServicios[0].tipoServicioId : tipoServicioSeleccionado!.tipoServicioId;
     
     if(servicioSeleccionado.servicioId == 0){
       await ServiciosServices().postServicio(context, servicioSeleccionado, token);

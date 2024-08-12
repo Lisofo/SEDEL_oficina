@@ -42,7 +42,7 @@ class _ServiciosMobileState extends State<ServiciosMobile> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  const Text('Descripcion: '),
+                  const Text('Descripción: '),
                   const SizedBox(
                     width: 1,
                   ),
@@ -51,7 +51,7 @@ class _ServiciosMobileState extends State<ServiciosMobile> {
                     child: CustomTextFormField(
                       controller: _descripcionController,
                       maxLines: 1,
-                      label: 'Descripcion',
+                      label: 'Descripción',
                       onFieldSubmitted: (value) async {
                         await buscar(context, token);
                       },

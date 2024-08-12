@@ -79,11 +79,11 @@ class _EditTiposPtoDesktopState extends State<EditTiposPtoDesktop> {
                     const SizedBox(height: 20,),
                     Row(
                       children: [
-                        const Text("Descripcion  "),
+                        const Text("Descripción  "),
                         SizedBox(
                           width: 800,
                           child: CustomTextFormField(
-                            label: 'Descripcion',
+                            label: 'Descripción',
                             controller: _descripcionController,
                             maxLines: 1,
                             maxLength: 100,

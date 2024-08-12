@@ -102,8 +102,8 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
               ),
               const SizedBox(height: 16),
               CustomTextFormField(
-                label: 'Cantidad',
                 keyboard: TextInputType.number,
+                hint: 'Cantidad',
                 onChanged: (value) {
                   cantidad = value;
                 },
@@ -112,7 +112,7 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
               CustomTextFormField(
                 controller: comentarioController,
                 maxLines: 1,
-                label: 'Comentario',
+                hint: 'Comentario',
               )
             ],
           ),
@@ -205,7 +205,7 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                     hintText: 'Seleccione un material'
                   )
                 ),
-                items: materiales,
+                items: widget.materiales,
                 popupProps: const PopupProps.menu(
                   showSearchBox: true, searchDelay: Duration.zero
                 ),
@@ -533,7 +533,7 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                 ),
                 const SizedBox(height: 16),
                 CustomTextFormField(
-                  label: 'Cantidad',
+                  hint: 'Cantidad',
                   controller: cantidadController,
                   keyboard: TextInputType.number,
                 ),
@@ -542,7 +542,7 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                   controller: comentarioController,
                   minLines: 1,
                   maxLines: 5,
-                  label: 'Comentario',
+                  hint: 'Comentario',
                 )
               ],
             ),

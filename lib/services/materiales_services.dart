@@ -118,10 +118,10 @@ class MaterialesServices {
   }
 
   Future getMateriales(BuildContext context, String descripcion, String codMaterial, String token) async {
-    String link = apiLink;
-    bool yaTieneFiltro = false;
+    String link = "$apiLink?sort=descripcion";
+    bool yaTieneFiltro = true;
     if (descripcion != '') {
-      link += '?descripcion=$descripcion';
+      link += '&descripcion=$descripcion';
       yaTieneFiltro = true;
     }
     if (codMaterial != '') {
@@ -604,6 +604,8 @@ class MaterialesServices {
     try {
       String link = '${apiUrl}api/v1/metodos-aplicacion/${metodo.metodoAplicacionId}';
       var headers = {'Authorization': token};
+      var data = metodo.toMap();
+      print(data);
 
       final resp = await _dio.request(
         link,
@@ -839,7 +841,7 @@ class MaterialesServices {
   }
 
   Future getMaterialesXTPI(BuildContext context, TipoPtosInspeccion tPI, String token) async {
-    String link = '${apiUrl}api/v1/tipos/puntos/${tPI.tipoPuntoInspeccionId}/materiales';
+    String link = '${apiUrl}api/v1/tipos/puntos/${tPI.tipoPuntoInspeccionId}/materiales?sort=descripcion';
 
     try {
       var headers = {'Authorization': token};

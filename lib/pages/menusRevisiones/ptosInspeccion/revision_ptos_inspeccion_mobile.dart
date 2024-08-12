@@ -83,8 +83,8 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
     token = context.read<OrdenProvider>().token;
     try {
       orden = context.read<OrdenProvider>().orden;
-      // tiposDePuntos = await getTipos();
-      tiposDePuntos = await _ptosInspeccionServices.getTiposPtosInspeccion(context, token);
+      tiposDePuntos = await getTipos();
+      // tiposDePuntos = await _ptosInspeccionServices.getTiposPtosInspeccion(context, token);
       plagasObjetivo = await PlagaObjetivoServices().getPlagasObjetivo(context, '', '', token);
       Provider.of<OrdenProvider>(context, listen: false).setTipoPTI(selectedTipoPto);
       if (statusCodeRevision == 1){

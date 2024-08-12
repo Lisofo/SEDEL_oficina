@@ -1,5 +1,6 @@
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/tecnico.dart';
@@ -52,6 +53,7 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
   late String firmaName = '';
   late String avatarName = '';
   late String nombre = '';
+  late MaskTextInputFormatter maskFormatter = MaskTextInputFormatter(mask: '#.###.###-#', filter: { "#": RegExp(r'[0-9]') });
 
   String _formatDateAndTime(DateTime? date) {
     return '${date?.day.toString().padLeft(2, '0')}/${date?.month.toString().padLeft(2, '0')}/${date?.year.toString().padLeft(4, '0')}';
@@ -142,7 +144,7 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBarDesktop(
-          titulo: 'Editar Tecnico',
+          titulo: 'Editar Técnico',
         ),
         drawer: const Drawer(
           child: BotonesDrawer(),
@@ -477,8 +479,8 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
     selectedTecnico.documento = _docController.text;
     selectedTecnico.nombre = _nombreController.text;
     selectedTecnico.fechaNacimiento = DateTime(selectedDateNacimiento.year, selectedDateNacimiento.month, selectedDateNacimiento.day);
-    selectedTecnico.cargo = cargoSeleccionado;
-    selectedTecnico.cargoId = cargoSeleccionado!.cargoId;
+    selectedTecnico.cargo = cargoSeleccionado!.cargoId == 0 ? cargos[0] : cargoSeleccionado;
+    selectedTecnico.cargoId = cargoSeleccionado!.cargoId == 0 ? cargos[0].cargoId : cargoSeleccionado!.cargoId;
     selectedTecnico.fechaIngreso = DateTime(selectedDateIngreso.year, selectedDateIngreso.month, selectedDateIngreso.day);
     selectedTecnico.fechaVtoCarneSalud = DateTime(selectedDateCarneSalud.year, selectedDateCarneSalud.month, selectedDateCarneSalud.day);
     selectedTecnico.avatarMd5 = md5Avatar != '' ? md5Avatar : '';
@@ -486,10 +488,10 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
 
     if (selectedTecnico.tecnicoId == 0) {
       await TecnicoServices().postTecnico(context, selectedTecnico, token);
-      if(_firmaTecnico != null){
+      if(_firmaTecnico != null && selectedTecnico.tecnicoId != 0){
         await TecnicoServices().putTecnicoFirma(context, selectedTecnico.tecnicoId, token, _firmaTecnico, firmaName, md5Firma);
       }
-      if(_avatarTecnico != null){
+      if(_avatarTecnico != null && selectedTecnico.tecnicoId != 0){
         await TecnicoServices().putTecnicoAvatar(context, selectedTecnico.tecnicoId, token, _avatarTecnico, avatarName, md5Avatar);
       }
 
@@ -515,6 +517,7 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
         SizedBox(
           width: MediaQuery.of(context).size.width * 0.2,
           child: CustomTextFormField(
+            mascara: tipoDato == 'Documento' ? [maskFormatter] : [],
             maxLines: 1,
             label: tipoDato,
             controller: controller,

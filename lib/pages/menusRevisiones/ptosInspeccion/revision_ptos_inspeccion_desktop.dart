@@ -85,8 +85,8 @@ class _RevisionPtosInspeccionDesktopState extends State<RevisionPtosInspeccionDe
     token = context.read<OrdenProvider>().token;
     try {
       orden = context.read<OrdenProvider>().orden;
-      // tiposDePuntos = await getTipos();
-      tiposDePuntos = await _ptosInspeccionServices.getTiposPtosInspeccion(context, token);
+      tiposDePuntos = await getTipos();
+      // tiposDePuntos = await _ptosInspeccionServices.getTiposPtosInspeccion(context, token);
       plagasObjetivo = await PlagaObjetivoServices().getPlagasObjetivo(context, '', '', token);
       Provider.of<OrdenProvider>(context, listen: false).setTipoPTI(selectedTipoPto);
       statusCodeRevision = await _ptosInspeccionServices.getStatusCode();

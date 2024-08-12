@@ -62,8 +62,7 @@ class _BodyState extends State<Body> {
   ServicioCliente? servicioSeleccionado;
   List<UsuariosXCliente> usuariosXClientes = [];
   List<ServicioCliente> serviciosCliente = [];
-  var dateMask = MaskTextInputFormatter(
-      mask: '##/##/####', filter: {"#": RegExp(r'[0-9]')});
+  var dateMask = MaskTextInputFormatter(mask: '##/##/####', filter: {"#": RegExp(r'[0-9]')});
   late List<Servicio> servicios = [];
 
   final _codController = TextEditingController();
@@ -314,16 +313,16 @@ class _BodyState extends State<Body> {
                           children: [
                             const Text('Barrio  '),
                             SizedBox(
-                                width: 300,
-                                child: CustomTextFormField(
-                                    controller: _barrioController,
-                                    label: 'Barrio',
-                                    maxLines: 1)),
+                              width: 300,
+                              child: CustomTextFormField(
+                                controller: _barrioController,
+                                label: 'Barrio',
+                                maxLines: 1
+                              )
+                            ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
+                        const SizedBox(height: 20,),
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -435,9 +434,7 @@ class _BodyState extends State<Body> {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
+                        const SizedBox(height: 20,),
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -462,6 +459,32 @@ class _BodyState extends State<Body> {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 20,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            const Text('*  Tecnico  '),
+                            SizedBox(
+                              width: 300,
+                              child: CustomDropdownFormMenu(
+                                value: tecnicoIncialSeleccionado,
+                                isDense: true,
+                                hint: 'Seleccione tecnico',
+                                items: tecnicos.map((e) {
+                                  return DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e.nombre),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  selectedTecnico = value;
+                                  cliente.tecnicoId =
+                                      (value as Tecnico).tecnicoId;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -480,50 +503,24 @@ class _BodyState extends State<Body> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  const Text('*  Tecnico  '),
-                                  SizedBox(
-                                    width: 300,
-                                    child: CustomDropdownFormMenu(
-                                      value: tecnicoIncialSeleccionado,
-                                      isDense: true,
-                                      hint: 'Seleccione tecnico',
-                                      items: tecnicos.map((e) {
-                                        return DropdownMenuItem(
-                                          value: e,
-                                          child: Text(e.nombre),
-                                        );
-                                      }).toList(),
-                                      onChanged: (value) {
-                                        selectedTecnico = value;
-                                        cliente.tecnicoId =
-                                            (value as Tecnico).tecnicoId;
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   const Center(
                                     child: Text(
                                       'Servicios',
                                       style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold
+                                      ),
                                     ),
                                   ),
                                   PopUpServicios(
-                                      context,
-                                      cliente.clienteId.toString(),
-                                      cliente,
-                                      servicios,
-                                      token)
+                                    context,
+                                    cliente.clienteId.toString(),
+                                    cliente,
+                                    servicios,
+                                    token
+                                  )
                                 ],
                               ),
                               SizedBox(
@@ -689,21 +686,21 @@ class _BodyState extends State<Body> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             CustomButton(
-                onPressed: () async {
-                  establecerValoresDeCampo(cliente, estadoSeleccionado);
-                  if (cliente.clienteId != 0) {
-                    await ClientServices().putCliente(context, cliente, token);
-                  } else {
-                    await ClientServices().postCliente(context, cliente, token);
-                    setState(() {
-                      tieneId = true;
-                      BotonesConId(cliente, context, token, tieneId);
-                    });
-                  }
-                },
-                text: 'Guardar',
-                tamano: 20,
-                ),
+              onPressed: () async {
+                establecerValoresDeCampo(cliente, estadoSeleccionado);
+                if (cliente.clienteId != 0) {
+                  await ClientServices().putCliente(context, cliente, token);
+                } else {
+                  await ClientServices().postCliente(context, cliente, token);
+                  setState(() {
+                    tieneId = true;
+                    BotonesConId(cliente, context, token, tieneId);
+                  });
+                }
+              },
+              text: 'Guardar',
+              tamano: 20,
+            ),
             const SizedBox(
               width: 30,
             ),
@@ -715,16 +712,23 @@ class _BodyState extends State<Body> {
                 text:'Eliminar',
                 tamano: 20,
               ),
+              const SizedBox(width: 30,),
+              CustomButton(
+                onPressed: () {
+                  router.push('/ptosInspeccionCliente');
+                },
+                text: 'Puntos de inspeccion',
+                tamano: 20,
+              ),
+              const SizedBox(width: 30,),
+              CustomButton(
+                onPressed: () {
+                  router.push('/serviciosCliente');
+                },
+                text: 'Servicios',
+                tamano: 20,
+              ),
             ],
-            const SizedBox(width: 30,),
-            if(tieneId)
-            CustomButton(
-              onPressed: () {
-                router.push('/ptosInspeccionCliente');
-              },
-              text: 'Puntos de inspeccion',
-              tamano: 20,
-            ),
           ],
         ),
       ),
@@ -743,25 +747,28 @@ class _BodyState extends State<Body> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
-                    onPressed: () {
-                      context.pop();
-                    },
-                    child: const Text('Cancelar')),
+                  onPressed: () {
+                    context.pop();
+                  },
+                  child: const Text('Cancelar')
+                ),
                 TextButton(
-                    onPressed: () async {
-                      router.pop();
-                      await ClientServices().deleteClienteServices(
-                          context,
-                          cliente.clienteId.toString(),
-                          servicio.clienteServicioId.toString(),
-                          token);
-                      serviciosCliente.removeAt(i);
-                      setState(() {});
-                    },
-                    child: const Text(
-                      'Borrar',
-                      style: TextStyle(color: Colors.red),
-                    )),
+                  onPressed: () async {
+                    router.pop();
+                    await ClientServices().deleteClienteServices(
+                      context,
+                      cliente.clienteId.toString(),
+                      servicio.clienteServicioId.toString(),
+                      token
+                    );
+                    serviciosCliente.removeAt(i);
+                    setState(() {});
+                  },
+                  child: const Text(
+                    'Borrar',
+                    style: TextStyle(color: Colors.red),
+                  )
+                ),
               ],
             )
           ],
@@ -807,9 +814,7 @@ class _BodyState extends State<Body> {
     if(cliente.tecnico.cargo == null){
       selectedTecnico.cargo = Cargo.empty();
     }
-    estadoSeleccionado = cliente.estado != ''
-        ? estados.firstWhere((estado) => estado.codEstado == cliente.estado)
-        : EstadoCliente(codEstado: '', descripcion: '');
+    estadoSeleccionado = cliente.estado != '' ? estados.firstWhere((estado) => estado.codEstado == cliente.estado) : EstadoCliente(codEstado: '', descripcion: '');
     if (cliente.clienteId > 0) {
       cliente.tecnicoId = cliente.tecnico.tecnicoId;
       cliente.departamentoId = cliente.departamento.departamentoId;
@@ -820,12 +825,10 @@ class _BodyState extends State<Body> {
 
   void buscarPorCoordenadas(String coordenadas) {
     var coord = coordenadas.split(',');
-    MapsLauncher.launchCoordinates(
-        double.parse(coord[0]), double.parse(coord[1]));
+    MapsLauncher.launchCoordinates(double.parse(coord[0]), double.parse(coord[1]));
   }
 
-  Widget PopUpServicios(BuildContext context, String clienteId, Cliente cliente,
-      List servicios, String token) {
+  Widget PopUpServicios(BuildContext context, String clienteId, Cliente cliente, List servicios, String token) {
     return InkWell(
       onTap: () async {
         if (clienteId != '0') {
@@ -833,9 +836,10 @@ class _BodyState extends State<Body> {
             context: context,
             builder: (BuildContext context) {
               return AddClientServicesDialog(
-                  servicioClienteSeleccionado: null,
-                  cliente: cliente,
-                  token: token);
+                servicioClienteSeleccionado: null,
+                cliente: cliente,
+                token: token
+              );
             },
           );
           loadDatos();
@@ -845,8 +849,7 @@ class _BodyState extends State<Body> {
     );
   }
 
-  Future<dynamic> borrarClientDialog(
-      BuildContext context, Cliente clienteSeleccionado, String token) {
+  Future<dynamic> borrarClientDialog(BuildContext context, Cliente clienteSeleccionado, String token) {
     return showDialog(
       context: context,
       builder: (context) {
@@ -855,16 +858,17 @@ class _BodyState extends State<Body> {
           content: const Text('Desea borrar el cliente?'),
           actions: [
             TextButton(
-                onPressed: () async {
-                  ClientServices()
-                      .deleteCliente(context, clienteSeleccionado, token);
-                },
-                child: const Text('Borrar')),
+              onPressed: () async {
+                ClientServices().deleteCliente(context, clienteSeleccionado, token);
+              },
+              child: const Text('Borrar')
+            ),
             TextButton(
-                onPressed: () {
-                  router.pop();
-                },
-                child: const Text('Cancelar'))
+              onPressed: () {
+                router.pop();
+              },
+              child: const Text('Cancelar')
+            )
           ],
         );
       },

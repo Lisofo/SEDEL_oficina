@@ -121,7 +121,10 @@ class _RevisionCuestionarioMenuState extends State<RevisionCuestionarioMenu> {
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.comment),
+                        icon: Icon(
+                          Icons.comment,
+                          color: pregunta.comentario == '' ? Colors.black : colors.secondary,
+                        ),
                         onPressed: () {
                           popUpComentario(context, pregunta);
                         }
@@ -248,6 +251,7 @@ class _RevisionCuestionarioMenuState extends State<RevisionCuestionarioMenu> {
               onPressed: () {
                 pregunta.comentario = comentarioController.text;
                 Navigator.of(context).pop();
+                setState(() {});
               },
             ),
           ],

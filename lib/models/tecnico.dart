@@ -59,19 +59,11 @@ class Tecnico {
   );
 
   Map<String, dynamic> toMap() => {
-    "tecnicoId": tecnicoId,
-    "codTecnico": codTecnico,
     "nombre": nombre,
     "fechaNacimiento": fechaNacimiento == null ? null : fechaNacimiento!.toIso8601String(),
     "documento": documento,
     "fechaIngreso": fechaIngreso == null ? null : fechaIngreso!.toIso8601String(),
     "fechaVtoCarneSalud": fechaVtoCarneSalud == null ? null : fechaVtoCarneSalud!.toIso8601String(),
-    "deshabilitado": deshabilitado,
-    "firmaPath": firmaPath,
-    "firmaMD5": firmaMd5,
-    "avatarPath": avatarPath,
-    "avatarMD5": avatarMd5,
-    "cargo": cargo == null ? Cargo.empty() : cargo!.toMap(),
     "cargoId": cargoId
   };
 

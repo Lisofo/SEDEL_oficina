@@ -30,7 +30,7 @@ class _TecnicosPageMobileState extends State<TecnicosPageMobile> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBarDesktop(
-          titulo: 'Tecnicos',
+          titulo: 'Técnicos',
         ),
         drawer: Drawer(
           width: MediaQuery.of(context).size.width *0.9,

@@ -117,11 +117,11 @@ class _EditMaterialesPageMobileState extends State<EditMaterialesPageMobile> {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("Descripcion "),
+                            const Text("Descripción "),
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.6,
                               child: CustomTextFormField(
-                                label: 'Descripcion',
+                                label: 'Descripción',
                                 minLines: 1,
                                 maxLines: 10,
                                 controller: _descripcionController,

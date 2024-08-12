@@ -1,4 +1,5 @@
 // ignore_for_file: unused_field, avoid_print, avoid_init_to_null
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
@@ -29,19 +30,14 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
     Cargo(cargoId: 3, codCargo: '3', descripcion: 'Supervisor'),
   ];
   late Cargo? cargoSeleccionado = Cargo.empty();
-  DateTime selectedDateNacimiento =
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-  DateTime selectedDateIngreso =
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-  DateTime selectedDateCarneSalud =
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime selectedDateNacimiento =DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime selectedDateIngreso =DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime selectedDateCarneSalud =DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   late String _setDate;
   late String dateTime;
-  final TextEditingController _dateNacimientoController =
-      TextEditingController();
+  final TextEditingController _dateNacimientoController =TextEditingController();
   final TextEditingController _dateIngresoController = TextEditingController();
-  final TextEditingController _dateCarneSaludController =
-      TextEditingController();
+  final TextEditingController _dateCarneSaludController =TextEditingController();
   final _nombreController = TextEditingController();
   final _docController = TextEditingController();
   final _codController = TextEditingController();
@@ -49,53 +45,62 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
   late bool tieneId = false;
   late Uint8List? _avatarTecnico = null;
   late Uint8List? _firmaTecnico = null;
+  late final String _avatarTecnico2 = '';
+  late final String _firmaTecnico2 = '';
+  late List<int> firmaBytes = [];
+  late List<int> avatarBytes = [];
+  late String md5Avatar = '';
+  late String md5Firma = '';
+  late String firmaName = '';
+  late String avatarName = '';
+  late String nombre = '';
   int buttonIndex = 0;
 
   String _formatDateAndTime(DateTime? date) {
     return '${date?.day.toString().padLeft(2, '0')}/${date?.month.toString().padLeft(2, '0')}/${date?.year.toString().padLeft(4, '0')}';
   }
 
-  Future<void> _uploadPhoto1() async {
+  Future<void> uploadFirmaTecnico () async {
     final html.FileUploadInputElement input = html.FileUploadInputElement();
     input.accept = 'image/*';
     input.click();
 
-    input.onChange.listen((e) {
+    input.onChange.listen((e) async {
       final files = input.files;
       if (files!.isNotEmpty) {
         final reader = html.FileReader();
-        reader.readAsArrayBuffer(
-            files[0]); // Leer el archivo como una matriz de bytes
+        reader.readAsArrayBuffer(files[0]);
         reader.onLoadEnd.listen((e) {
           setState(() {
-            // Asignar los bytes del archivo a _avatarTecnico
-            _avatarTecnico = reader.result as Uint8List?;
-          });
-        });
-      }
-    });
-  }
-
-  Future<void> _uploadPhoto2() async {
-    final html.FileUploadInputElement input = html.FileUploadInputElement();
-    input.accept = 'image/*';
-    input.click();
-
-    input.onChange.listen((e) {
-      final files = input.files;
-      if (files!.isNotEmpty) {
-        final reader = html.FileReader();
-        reader.readAsArrayBuffer(
-            files[0]); // Leer el archivo como una matriz de bytes
-        reader.onLoadEnd.listen((e) {
-          setState(() {
-            // Asignar los bytes del archivo a _avatarTecnico
             _firmaTecnico = reader.result as Uint8List?;
+            firmaName = files[0].name;
           });
         });
       }
     });
   }
+
+  Future<void> uploadAvatarTecnico () async {
+    final html.FileUploadInputElement input = html.FileUploadInputElement();
+    input.accept = 'image/*';
+    input.click();
+
+    input.onChange.listen((e) async {
+      final files = input.files;
+      if (files!.isNotEmpty) {
+        final reader = html.FileReader();
+        reader.readAsArrayBuffer(files[0]);
+        reader.onLoadEnd.listen((e) {
+          setState(() {
+            _avatarTecnico = reader.result as Uint8List?;
+            avatarName = files[0].name;
+            print(avatarName);
+          });
+        });
+      }
+    });
+  }
+
 
   @override
   void initState() {
@@ -142,7 +147,7 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBarMobile(
-          titulo: 'Editar Tecnico',
+          titulo: 'Editar Técnico',
         ),
         body: SingleChildScrollView(
           child: Container(
@@ -160,7 +165,7 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
                                   WidgetStatePropertyAll(colors.secondary)),
                           tooltip: 'Subir foto',
                           onPressed: () async {
-                            await _uploadPhoto1();
+                            await uploadAvatarTecnico();
                           },
                           icon: const Icon(Icons.upload)),
                       const SizedBox(
@@ -199,7 +204,7 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
                                   WidgetStatePropertyAll(colors.secondary)),
                           tooltip: 'Subir firma',
                           onPressed: () async {
-                            await _uploadPhoto2();
+                            await uploadFirmaTecnico();
                           },
                           icon: const Icon(Icons.upload)),
                       const SizedBox(
@@ -428,7 +433,7 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
                   buttonIndex = index;
                   switch (buttonIndex) {
                     case 0:
-                      await postTecnico(context);
+                      await postTecnico();
                       break;
                     case 1:
                       await borrarTecnico(context, selectedTecnico, token);
@@ -455,7 +460,7 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
                 height: MediaQuery.of(context).size.height * 0.1,
                 child: InkWell(
                   onTap: () async {
-                    await postTecnico(context);
+                    await postTecnico();
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(top: 8),
@@ -479,25 +484,54 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
     );
   }
 
-  Future<void> postTecnico(BuildContext context) async {
+  Future<String> calculateMD5(List<int> bytes) async {
+    var md5c = md5.convert(bytes);
+    return md5c.toString();
+  }
+
+  Future postTecnico() async {
+    print('Entre al metodo');
+    if(_avatarTecnico != null){
+      avatarBytes = _avatarTecnico as List<int>;
+      print('pase el avatarBytes');
+      md5Avatar = await calculateMD5(avatarBytes);
+      print('md5Avatar');
+      print(md5Avatar);
+    }
+    if(_firmaTecnico != null){
+      print('entre al if firma');
+      firmaBytes = _firmaTecnico as List<int>;
+      md5Firma = await calculateMD5(firmaBytes);
+    }
     selectedTecnico.codTecnico = _codController.text;
     selectedTecnico.documento = _docController.text;
     selectedTecnico.nombre = _nombreController.text;
-    selectedTecnico.fechaNacimiento = DateTime(selectedDateNacimiento.year,
-        selectedDateNacimiento.month, selectedDateNacimiento.day);
-    selectedTecnico.cargo = cargoSeleccionado;
-    selectedTecnico.cargoId = cargoSeleccionado!.cargoId;
-    selectedTecnico.fechaIngreso = DateTime(selectedDateIngreso.year,
-        selectedDateIngreso.month, selectedDateIngreso.day);
-    selectedTecnico.fechaVtoCarneSalud = DateTime(selectedDateCarneSalud.year,
-        selectedDateCarneSalud.month, selectedDateCarneSalud.day);
+    selectedTecnico.fechaNacimiento = DateTime(selectedDateNacimiento.year, selectedDateNacimiento.month, selectedDateNacimiento.day);
+    selectedTecnico.cargo = cargoSeleccionado!.cargoId == 0 ? cargos[0] : cargoSeleccionado;
+    selectedTecnico.cargoId = cargoSeleccionado!.cargoId == 0 ? cargos[0].cargoId : cargoSeleccionado!.cargoId;
+    selectedTecnico.fechaIngreso = DateTime(selectedDateIngreso.year, selectedDateIngreso.month, selectedDateIngreso.day);
+    selectedTecnico.fechaVtoCarneSalud = DateTime(selectedDateCarneSalud.year, selectedDateCarneSalud.month, selectedDateCarneSalud.day);
+    selectedTecnico.avatarMd5 = md5Avatar != '' ? md5Avatar : '';
+    selectedTecnico.firmaMd5 = md5Firma != '' ? md5Firma : '';
 
     if (selectedTecnico.tecnicoId == 0) {
       await TecnicoServices().postTecnico(context, selectedTecnico, token);
+      if(_firmaTecnico != null && selectedTecnico.tecnicoId != 0){
+        await TecnicoServices().putTecnicoFirma(context, selectedTecnico.tecnicoId, token, _firmaTecnico, firmaName, md5Firma);
+      }
+      if(_avatarTecnico != null && selectedTecnico.tecnicoId != 0){
+        await TecnicoServices().putTecnicoAvatar(context, selectedTecnico.tecnicoId, token, _avatarTecnico, avatarName, md5Avatar);
+      }
+
     } else {
       await TecnicoServices().putTecnico(context, selectedTecnico, token);
+      if(_firmaTecnico != null){
+        await TecnicoServices().putTecnicoFirma(context, selectedTecnico.tecnicoId, token, _firmaTecnico, firmaName, md5Firma);
+      }
+      if(_avatarTecnico != null){
+        await TecnicoServices().putTecnicoAvatar(context, selectedTecnico.tecnicoId, token, _avatarTecnico, avatarName, md5Avatar);
+      }
     }
-
     setState(() {
       tieneId = true;
     });

@@ -307,7 +307,7 @@ class TareasServices {
   }
 
   Future getTareasXTPI(BuildContext context, TipoPtosInspeccion tPI, String modo, String token) async {
-    String link = '${apiLink}api/v1/tipos/puntos/${tPI.tipoPuntoInspeccionId}/tareas?modo=$modo&sort=descripcion';
+    String link = '${apiUrl}api/v1/tipos/puntos/${tPI.tipoPuntoInspeccionId}/tareas?modo=$modo&sort=descripcion';
 
     try {
       var headers = {'Authorization': token};

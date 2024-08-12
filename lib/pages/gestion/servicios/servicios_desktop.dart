@@ -45,13 +45,13 @@ class _ServiciosDesktopState extends State<ServiciosDesktop> {
                   children: [
                     Row(
                       children: [
-                        const Text('Descripcion: '),
+                        const Text('Descripción: '),
                         SizedBox(
                           width: 300,
                           child: CustomTextFormField(
                             controller: _descripcionController,
                             maxLines: 1,
-                            label: 'Descripcion',
+                            label: 'Descripción',
                             onFieldSubmitted: (value) async {
                               await buscar(context, token);
                             },

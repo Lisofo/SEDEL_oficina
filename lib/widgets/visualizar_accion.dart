@@ -122,10 +122,10 @@ class VisualizarAccion extends StatelessWidget {
                       child: TextFormField(
                         textAlign: TextAlign.right,
                         decoration: InputDecoration(
-                            hintText:
-                                revision!.materiales[i].cantidad.toString(),
-                            enabled: false,
-                            border: InputBorder.none),
+                          hintText: revision!.materiales[i].cantidad.toString(),
+                          enabled: false,
+                          border: InputBorder.none
+                        ),
                       ),
                     ),
                   ],

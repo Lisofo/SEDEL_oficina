@@ -98,11 +98,11 @@ class _EditServiciosDesktopState extends State<EditServiciosDesktop> {
                   ),
                   Row(
                     children: [
-                      const Text("Descripcion  "),
+                      const Text("Descripción  "),
                       SizedBox(
                         width: 800,
                         child: CustomTextFormField(
-                          label: 'Descripcion',
+                          label: 'Descripción',
                           controller: _descripcionController,
                           maxLines: 1,
                           maxLength: 100,
@@ -120,6 +120,7 @@ class _EditServiciosDesktopState extends State<EditServiciosDesktop> {
                         width: 300,
                         child: CustomDropdownFormMenu(
                           value: tipoServicioInicialSeleccionado,
+                          isDense: true,
                           hint: 'Seleccione cargo',
                           items: tipoServicios.map((e) {
                             return DropdownMenuItem(
@@ -196,8 +197,8 @@ class _EditServiciosDesktopState extends State<EditServiciosDesktop> {
   Future<void> postPut(BuildContext context) async {
     servicioSeleccionado.codServicio =  _codController.text;
     servicioSeleccionado.descripcion =  _descripcionController.text;
-    servicioSeleccionado.tipoServicio.tipoServicioId = tipoServicioSeleccionado!.tipoServicioId;
-    servicioSeleccionado.tipoServicioId = tipoServicioSeleccionado!.tipoServicioId;
+    servicioSeleccionado.tipoServicio.tipoServicioId = tipoServicioSeleccionado!.tipoServicioId == 0 ? tipoServicios[0].tipoServicioId : tipoServicioSeleccionado!.tipoServicioId;
+    servicioSeleccionado.tipoServicioId = tipoServicioSeleccionado!.tipoServicioId == 0 ? tipoServicios[0].tipoServicioId : tipoServicioSeleccionado!.tipoServicioId;
     
     if(servicioSeleccionado.servicioId == 0){
       await ServiciosServices().postServicio(context, servicioSeleccionado, token);

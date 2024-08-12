@@ -79,12 +79,12 @@ class _EditTareasMobileState extends State<EditTareasMobile> {
             ),
             Column(
               children: [
-                const Text("Descripcion  "),
+                const Text("Descripción  "),
                 const SizedBox(height: 10,),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: CustomTextFormField(
-                    label: 'Descripcion',
+                    label: 'Descripción',
                     controller: _descripcionController,
                     maxLines: 4,
                     maxLength: 100,

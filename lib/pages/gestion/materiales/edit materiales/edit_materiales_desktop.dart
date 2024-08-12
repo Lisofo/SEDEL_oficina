@@ -118,11 +118,11 @@ class _EditMaterialesPageDesktopState extends State<EditMaterialesPageDesktop> {
                       const SizedBox(height: 20,),
                       Row(
                         children: [
-                          const Text("Descripcion  "),
+                          const Text("Descripción  "),
                           SizedBox(
                             width: 500,
                             child: CustomTextFormField(
-                              label: 'Descripcion',
+                              label: 'Descripción',
                               maxLines: 1,
                               controller: _descripcionController,
                               maxLength: 100,

@@ -77,11 +77,11 @@ class _EditMetodosAplicacionDesktopState extends State<EditMetodosAplicacionDesk
                   ),
                   Row(
                     children: [
-                      const Text("Descripcion  "),
+                      const Text("Descripción  "),
                       SizedBox(
                         width: 800,
                         child: CustomTextFormField(
-                          label: 'Descripcion',
+                          label: 'Descripción',
                           maxLines: 1,
                           controller: _descripcionController,
                           maxLength: 100,

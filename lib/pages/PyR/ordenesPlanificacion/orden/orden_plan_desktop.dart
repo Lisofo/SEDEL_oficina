@@ -533,11 +533,10 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
   Future<void> buscar(String token) async {
     late Cliente clienteSeleccionado = context.read<OrdenProvider>().clienteOrdenes;
     print(clienteSeleccionado.clienteId.toString());
-    String fechaDesde = ('${selectedDate.start.year}-${selectedDate.start.month}-${selectedDate.start.day}');
-    String fechaHasta = ('${selectedDate.end.year}-${selectedDate.end.month}-${selectedDate.end.day}');
-
+    String fechaDesde = DateFormat('yyyy-MM-dd', 'es').format(selectedDate.start);
+    String fechaHasta = DateFormat('yyyy-MM-dd', 'es').format(selectedDate.end);
     String tecnicoId = selectedTecnico != null ? selectedTecnico!.tecnicoId.toString() : '';
-
+    
     List<Orden> results = await _ordenServices.getOrden(
       context, 
       clienteSeleccionado.clienteId.toString(),

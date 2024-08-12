@@ -40,13 +40,13 @@ class _MaterialesPageMobileState extends State<MaterialesPageMobile> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      const Text('Descripcion:'),
+                      const Text('Descripción:'),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.6,
                         child: CustomTextFormField(
                           controller: _descripcionController,
                           maxLines: 1,
-                          label: 'Descripcion',
+                          label: 'Descripción',
                           onFieldSubmitted: (value) async {
                             await buscar(context, token);
                             router.pop();

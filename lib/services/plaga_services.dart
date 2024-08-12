@@ -306,7 +306,7 @@ class PlagaServices {
   }
 
   Future getPlagasXTPI(BuildContext context, TipoPtosInspeccion tPI, String token) async {
-    String link = '${apiUrl}api/v1/tipos/puntos/${tPI.tipoPuntoInspeccionId}/plagas';
+    String link = '${apiUrl}api/v1/tipos/puntos/${tPI.tipoPuntoInspeccionId}/plagas?sort=descripcion';
 
     try {
       var headers = {'Authorization': token};

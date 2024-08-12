@@ -30,7 +30,7 @@ class _TecnicosPageDesktopState extends State<TecnicosPageDesktop> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBarDesktop(
-          titulo: 'Tecnicos',
+          titulo: 'Técnicos',
         ),
         drawer: const Drawer(
           child: BotonesDrawer(),
