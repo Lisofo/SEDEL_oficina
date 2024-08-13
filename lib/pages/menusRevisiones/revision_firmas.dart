@@ -151,37 +151,39 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                     Container(
                       width: Constantes().ancho,
                       decoration: BoxDecoration(
-                          border: Border.all(
-                              color: colors.primary,
-                              width: 1),
-                          borderRadius: BorderRadius.circular(5)),
+                        border: Border.all(
+                          color: colors.primary,
+                          width: 1),
+                        borderRadius: BorderRadius.circular(5)
+                      ),
                       child: TextFormField(
                         controller: areaController,
                         decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                                borderRadius: BorderRadius.circular(5)),
-                            fillColor: !clienteNoDisponible ? Colors.white : Colors.grey,
-                            filled: true,
-                            hintText: 'Area'),
-                            enabled: !clienteNoDisponible,
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(5)),
+                          fillColor: !clienteNoDisponible ? Colors.white : Colors.grey,
+                          filled: true,
+                          hintText: 'Area'
+                        ),
+                        enabled: !clienteNoDisponible,
                       ),
                     )
                   ],
                 ),
               ),
             ),
-            const SizedBox(
-              height: 8,
-            ),
+            const SizedBox(height: 8,),
             Padding(
               padding: const EdgeInsets.only(left: 5, right: 5),
               child: Container(
                 decoration: BoxDecoration(
-                    border: Border.all(
-                        color: colors.primary,
-                        width: 1),
-                    borderRadius: BorderRadius.circular(5)),
+                  border: Border.all(
+                    color: colors.primary,
+                    width: 1
+                  ),
+                  borderRadius: BorderRadius.circular(5)
+                ),
                 child: 
                 widget.revision!.ordinal == 0 ?
                 Signature(
@@ -456,7 +458,7 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
       firma: exportedImage
     );
 
-    await _revisionServices.postRevisonFirma(context, orden, nuevaFirma, widget.revision!.otRevisionId, token);
+    await _revisionServices.postRevisonFirma(context, orden, nuevaFirma, revisionId, token);
     statusCode = await _revisionServices.getStatusCode();
     _revisionServices.resetStatusCode;
 

@@ -240,8 +240,8 @@ class MaterialesDiagnosticoServices {
     }
   }
 
-  Future getRevisionMateriales(BuildContext context, Orden orden, String token) async {
-    String link = '${apiUrl}api/v1/ordenes/${orden.ordenTrabajoId}/revisiones/${orden.otRevisionId}/materiales';
+  Future getRevisionMateriales(BuildContext context, Orden orden, int revisionId, String token) async {
+    String link = '${apiUrl}api/v1/ordenes/${orden.ordenTrabajoId}/revisiones/$revisionId/materiales';
 
     try {
       var headers = {'Authorization': token};

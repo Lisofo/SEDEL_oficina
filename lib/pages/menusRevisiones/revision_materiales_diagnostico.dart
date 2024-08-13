@@ -317,8 +317,7 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                           },
                           background: Container(
                             color: Colors.red,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20),
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
                             alignment: AlignmentDirectional.centerEnd,
                             child: const Icon(
                               Icons.delete,
@@ -344,6 +343,7 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                                           estaBuscando = true;
                                         });
                                         bool resultado = await editMaterial(context, item);
+                                        print(resultado);
                                         setState(() {
                                           estaBuscando = resultado;
                                         });
@@ -351,51 +351,52 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                                       icon: const Icon(Icons.edit)
                                     ),
                                     IconButton(
-                                        onPressed: () async {
-                                          if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
-                                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                              content: Text('No se puede modificar esta revisión.'),
-                                            ));
-                                            return Future.value(false);
+                                      onPressed: () async {
+                                        if (widget.revision?.ordinal == 0 || orden.estado == 'REVISADA') {
+                                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                            content: Text('No se puede modificar esta revisión.'),
+                                          ));
+                                          return Future.value(false);
+                                        }
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text("Confirmar"),
+                                              content: const Text("¿Estas seguro de querer borrar el material?"),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () => Navigator.of(context).pop(false),
+                                                  child: const Text("CANCELAR"),
+                                                ),
+                                                TextButton(
+                                                  style: TextButton.styleFrom(
+                                                    foregroundColor: Colors.red,
+                                                  ),
+                                                  onPressed: !borrando ? () async {
+                                                    borrando = true;
+                                                    setState(() {});
+                                                    await materialesDiagnosticoServices.deleteRevisionMaterial(context,orden,widget.revisionMaterialesList[i],revisionId,token);
+                                                    statusCode = await materialesDiagnosticoServices.getStatusCode();
+                                                    materialesDiagnosticoServices.resetStatusCode();
+                                                    if (statusCode == 1){
+                                                      setState(() {
+                                                        widget.revisionMaterialesList.removeAt(i);
+                                                      });
+                                                    }
+                                                    borrando = false;
+                                                    statusCode = null;
+                                                    setState(() {});
+                                                  } : null,
+                                                  child: const Text("BORRAR")
+                                                ),
+                                              ],
+                                            );
                                           }
-                                          showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title:
-                                                      const Text("Confirmar"),
-                                                  content: const Text(
-                                                      "¿Estas seguro de querer borrar el material?"),
-                                                  actions: <Widget>[
-                                                    TextButton(
-                                                      onPressed: () => Navigator.of(context).pop(false),
-                                                      child: const Text("CANCELAR"),
-                                                    ),
-                                                    TextButton(
-                                                        style: TextButton.styleFrom(
-                                                          foregroundColor: Colors.red,
-                                                        ),
-                                                        onPressed: !borrando ? () async {
-                                                          borrando = true;
-                                                          setState(() {});
-                                                          await materialesDiagnosticoServices.deleteRevisionMaterial(context,orden,widget.revisionMaterialesList[i],revisionId,token);
-                                                          statusCode = await materialesDiagnosticoServices.getStatusCode();
-                                                          materialesDiagnosticoServices.resetStatusCode();
-                                                          if (statusCode == 1){
-                                                            setState(() {
-                                                              widget.revisionMaterialesList.removeAt(i);
-                                                            });
-                                                          }
-                                                          borrando = false;
-                                                          statusCode = null;
-                                                          setState(() {});
-                                                        } : null,
-                                                        child: const Text("BORRAR")),
-                                                  ],
-                                                );
-                                              });
-                                        },
-                                        icon: const Icon(Icons.delete)),
+                                        );
+                                      },
+                                      icon: const Icon(Icons.delete)
+                                    ),
                                   ],
                                 ),
                                 title: Column(
@@ -412,8 +413,7 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                           ),
                         );
                       },
-                      separatorBuilder:
-                          (BuildContext context, int index) {
+                      separatorBuilder: (BuildContext context, int index) {
                         return const Divider(
                           thickness: 2,
                           color: Colors.green,
@@ -496,7 +496,7 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
     }
   }
 
-  editMaterial(BuildContext context, RevisionMaterial material) async {
+  Future<bool> editMaterial(BuildContext context, RevisionMaterial material) async {
     if(material.otMaterialId != 0){
       comentarioController.text = material.comentario;
       cantidadController.text = material.cantidad.toString();
@@ -579,7 +579,7 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
                 if (statusCode == 1){
                   comentarioController.text = '';
                   cantidadController.text = '';
-                  widget.revisionMaterialesList = await materialesDiagnosticoServices.getRevisionMateriales(context, orden, token);
+                  widget.revisionMaterialesList = await materialesDiagnosticoServices.getRevisionMateriales(context, orden, revisionId, token);
                 }
                 statusCode = null;
                 setState(() {});
@@ -590,5 +590,6 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
         );
       },
     );
+    return false;
   }
 }
