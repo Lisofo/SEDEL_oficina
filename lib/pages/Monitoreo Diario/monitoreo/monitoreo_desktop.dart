@@ -94,14 +94,11 @@ class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
 
   Future<void> buscar(String token) async {
     clienteSeleccionado = context.read<OrdenProvider>().clienteMonitoreo;
-    Provider.of<OrdenProvider>(context, listen: false)
-        .clearSelectedCliente('Monitoreo');
+    Provider.of<OrdenProvider>(context, listen: false).clearSelectedCliente('Monitoreo');
     print(clienteSeleccionado.clienteId.toString());
 
-    String tecnicoId =
-        selectedTecnico != null ? selectedTecnico!.tecnicoId.toString() : '';
-    String fechaDesde =
-        ('${selectedDate.year}-${selectedDate.month}-${selectedDate.day}');
+    String tecnicoId = selectedTecnico != null ? selectedTecnico!.tecnicoId.toString() : '';
+    String fechaDesde = DateFormat('yyyy-MM-dd', 'es').format(selectedDate);
 
     List<Orden> results = await _ordenServices.getOrden(
       context, 
@@ -338,8 +335,7 @@ class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
                               scrollDirection: Axis.vertical,
                               itemCount: ordenesEnProceso.length,
                               itemBuilder: (context, index) {
-                                return cardsDeLaLista(
-                                    ordenesEnProceso, index, 'En Proceso');
+                                return cardsDeLaLista(ordenesEnProceso, index, 'En Proceso');
                               },
                             ),
                           ],
@@ -357,8 +353,7 @@ class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
                               scrollDirection: Axis.vertical,
                               itemCount: ordenesFinalizadas.length,
                               itemBuilder: (context, index) {
-                                return cardsDeLaLista(
-                                    ordenesFinalizadas, index, 'Finalizada');
+                                return cardsDeLaLista(ordenesFinalizadas, index, 'Finalizada');
                               },
                             ),
                           ],
@@ -395,11 +390,10 @@ class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
     );
   }
 
-  cardsDeLaLista(List<Orden> orden, int index, String color) {
+  cardsDeLaLista(List<Orden> orden, int i, String color) {
     return InkWell(
       onTap: () {
-        Provider.of<OrdenProvider>(context, listen: false)
-            .setOrden(orden[index]);
+        Provider.of<OrdenProvider>(context, listen: false).setOrden(orden[i]);
         router.push('/editOrden');
       },
       child: Card(
@@ -410,19 +404,20 @@ class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                  child: Text(
-                'Orden  ${orden[index].ordenTrabajoId}',
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
-              )),
-              Text('Tecnico: ${orden[index].tecnico.nombre}'
-                  '\n${orden[index].cliente.codCliente} Cliente: ${orden[index].cliente.nombre}'),
-              Text(
-                  'Fecha Desde: ${DateFormat("E d, MMM, HH:mm", 'es').format(orden[index].fechaDesde)}'),
-              Text(
-                  'Fecha Hasta: ${DateFormat("E d, MMM, HH:mm", 'es').format(orden[index].fechaHasta)}'),
-              Text(orden[index].tipoOrden.descripcion),
-              Text(orden[index].estado),
+                child: Text(
+                  'Orden  ${orden[i].ordenTrabajoId}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+                )
+              ),
+              Text('Tecnico: ${orden[i].tecnico.nombre}''\n${orden[i].cliente.codCliente} Cliente: ${orden[i].cliente.nombre}'),
+              Text('Fecha Desde: ${DateFormat("E d, MMM, HH:mm", 'es').format(orden[i].fechaDesde)}'),
+              Text('Fecha Hasta: ${DateFormat("E d, MMM, HH:mm", 'es').format(orden[i].fechaHasta)}'),
+              if(orden[i].estado != 'PENDIENTE')...[
+                Text(orden[i].iniciadaEn == null ? '' : 'Iniciada: ${_formatDateAndTime(orden[i].iniciadaEn)}'),
+                if(orden[i].estado != 'EN PROCESO')
+                Text(orden[i].finalizadaEn == null ? '' : 'Finalizada: ${_formatDateAndTime(orden[i].finalizadaEn)}')
+              ],
+              Text(orden[i].tipoOrden.descripcion),
+              Text(orden[i].estado),
               // for (var i = 0; i < orden[index].servicios.length; i++) ...[
               //   Text(orden[index].servicios[i].descripcion)
               // ],
@@ -432,4 +427,9 @@ class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
       ),
     );
   }
+
+  String _formatDateAndTime(DateTime? date) {
+    return '${date?.day.toString().padLeft(2, '0')}/${date?.month.toString().padLeft(2, '0')}/${date?.year.toString().padLeft(4, '0')} ${date?.hour.toString().padLeft(2, '0')}:${date?.minute.toString().padLeft(2, '0')}';
+  }
+
 }

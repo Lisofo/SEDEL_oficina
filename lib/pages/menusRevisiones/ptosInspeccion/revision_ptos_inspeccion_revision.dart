@@ -56,8 +56,9 @@ class _RevisionPtosInspeccionRevisionState
             ] else ...[
               Center(
                 child: SizedBox(
-                    width: 600,
-                    child: VisualizarAccion(revision: puntoSeleccionado)),
+                  width: 600,
+                  child: VisualizarAccion(revision: puntoSeleccionado)
+                ),
               )
             ],
           ]),

@@ -18,7 +18,7 @@ class ServicioCliente {
   late DateTime? hasta;
   late String comentario;
   late String codServicio;
-  late String servicio;
+  late String descripcion;
 
   ServicioCliente({
     required this.clienteServicioId,
@@ -27,7 +27,7 @@ class ServicioCliente {
     required this.hasta,
     required this.comentario,
     required this.codServicio,
-    required this.servicio,
+    required this.descripcion,
   });
 
   factory ServicioCliente.fromJson(Map<String, dynamic> json) =>
@@ -38,7 +38,7 @@ class ServicioCliente {
         hasta: (json["hasta"] == null || json['hasta'] == 'null') ? null : DateTime.tryParse(json['hasta']),
         comentario: json["comentario"] as String? ?? '',
         codServicio: json["codServicio"] as String? ?? '',
-        servicio: json["servicio"] as String? ?? '',
+        descripcion: json["servicio"] as String? ?? '',
       );
 
   Map<String, dynamic> toMap() => {
@@ -48,7 +48,7 @@ class ServicioCliente {
         "hasta": hasta != null ? _formatDate(hasta!) : null,
         "comentario": comentario,
         "codServicio": codServicio,
-        "servicio": servicio,
+        "servicio": descripcion,
       };
 
   ServicioCliente.empty() {
@@ -58,10 +58,15 @@ class ServicioCliente {
     hasta = DateTime.now();
     comentario = '';
     codServicio = '';
-    servicio = '';
+    descripcion = '';
   }
 
   String _formatDate(DateTime date) {
     return '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+  }
+
+  @override
+  String toString() {
+    return descripcion;
   }
 }

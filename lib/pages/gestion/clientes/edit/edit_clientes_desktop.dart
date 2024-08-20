@@ -24,7 +24,6 @@ import 'package:sedel_oficina_maqueta/widgets/custom_form_field.dart';
 import 'package:sedel_oficina_maqueta/widgets/drawer.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:intl/intl.dart';
 
 class EditClientesDesktop extends StatefulWidget {
   const EditClientesDesktop({super.key});
@@ -129,7 +128,7 @@ class _BodyState extends State<Body> {
     servicios =  await ServiciosServices().getServicios(context, '', '', '', token);
     if (cliente.clienteId != 0) {
       final loadedUsuarios = await ClientServices().getUsuariosXCliente(context, cliente.clienteId.toString(), token);
-      final loadedServiciosCliente = await ClientServices().getClienteServices(context, cliente.clienteId.toString(), token);
+      final loadedServiciosCliente = await ClientServices().getClienteServices(context, cliente.clienteId, token);
       usuariosTodos = await UserServices().getUsers(context, '', '', '', token);
       setState(() {
         usuariosXClientes = loadedUsuarios ?? [];
@@ -494,99 +493,99 @@ class _BodyState extends State<Body> {
                 ),
                 Column(
                   children: [
-                    SizedBox(
-                      width: 500,
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Center(
-                                    child: Text(
-                                      'Servicios',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                  ),
-                                  PopUpServicios(
-                                    context,
-                                    cliente.clienteId.toString(),
-                                    cliente,
-                                    servicios,
-                                    token
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 300,
-                                width: 500,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.vertical,
-                                  shrinkWrap: true,
-                                  itemCount: serviciosCliente.length,
-                                  itemBuilder: (context, i) {
-                                    final servicio = serviciosCliente[i];
-                                    return ListTile(
-                                      title: Text(servicio.servicio),
-                                      subtitle: Text(servicio.comentario),
-                                      trailing: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Column(
-                                            children: [
-                                              Text(DateFormat('E, d , MMM, yyyy', 'es').format(servicio.desde!)),
-                                              Text(servicio.hasta == null ? '' : DateFormat('E, d , MMM, yyyy', 'es').format(servicio.hasta!)),
-                                            ],
-                                          ),
-                                          const SizedBox(width: 5,),
-                                          IconButton(
-                                            onPressed: () {
-                                              popUpBorrar(context, cliente, servicio, token, i);
-                                            },
-                                            icon: const Icon(
-                                              Icons.delete,
-                                              color: Colors.red,
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          IconButton(
-                                            onPressed: () async {
-                                              await showDialog(
-                                                context: context,
-                                                builder: (BuildContext context) {
-                                                  return AddClientServicesDialog(
-                                                    servicioClienteSeleccionado: serviciosCliente[i],
-                                                    cliente: cliente,
-                                                    token: token
-                                                  );
-                                                },
-                                              );
-                                              loadDatos();
-                                            },
-                                            icon: const Icon(
-                                              Icons.edit,
-                                              color: Colors.blue,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                    // SizedBox(
+                    //   width: 500,
+                    //   child: Card(
+                    //     child: Padding(
+                    //       padding: const EdgeInsets.all(8.0),
+                    //       child: Column(
+                    //         mainAxisAlignment: MainAxisAlignment.center,
+                    //         children: [
+                    //           Row(
+                    //             mainAxisSize: MainAxisSize.min,
+                    //             children: [
+                    //               const Center(
+                    //                 child: Text(
+                    //                   'Servicios',
+                    //                   style: TextStyle(
+                    //                     fontSize: 20,
+                    //                     fontWeight: FontWeight.bold
+                    //                   ),
+                    //                 ),
+                    //               ),
+                    //               PopUpServicios(
+                    //                 context,
+                    //                 cliente.clienteId.toString(),
+                    //                 cliente,
+                    //                 servicios,
+                    //                 token
+                    //               )
+                    //             ],
+                    //           ),
+                    //           SizedBox(
+                    //             height: 300,
+                    //             width: 500,
+                    //             child: ListView.builder(
+                    //               scrollDirection: Axis.vertical,
+                    //               shrinkWrap: true,
+                    //               itemCount: serviciosCliente.length,
+                    //               itemBuilder: (context, i) {
+                    //                 final servicio = serviciosCliente[i];
+                    //                 return ListTile(
+                    //                   title: Text(servicio.servicio),
+                    //                   subtitle: Text(servicio.comentario),
+                    //                   trailing: Row(
+                    //                     mainAxisSize: MainAxisSize.min,
+                    //                     children: [
+                    //                       Column(
+                    //                         children: [
+                    //                           Text(DateFormat('E, d , MMM, yyyy', 'es').format(servicio.desde!)),
+                    //                           Text(servicio.hasta == null ? '' : DateFormat('E, d , MMM, yyyy', 'es').format(servicio.hasta!)),
+                    //                         ],
+                    //                       ),
+                    //                       const SizedBox(width: 5,),
+                    //                       IconButton(
+                    //                         onPressed: () {
+                    //                           popUpBorrar(context, cliente, servicio, token, i);
+                    //                         },
+                    //                         icon: const Icon(
+                    //                           Icons.delete,
+                    //                           color: Colors.red,
+                    //                         ),
+                    //                       ),
+                    //                       const SizedBox(
+                    //                         width: 5,
+                    //                       ),
+                    //                       IconButton(
+                    //                         onPressed: () async {
+                    //                           await showDialog(
+                    //                             context: context,
+                    //                             builder: (BuildContext context) {
+                    //                               return AddClientServicesDialog(
+                    //                                 servicioClienteSeleccionado: serviciosCliente[i],
+                    //                                 cliente: cliente,
+                    //                                 token: token
+                    //                               );
+                    //                             },
+                    //                           );
+                    //                           loadDatos();
+                    //                         },
+                    //                         icon: const Icon(
+                    //                           Icons.edit,
+                    //                           color: Colors.blue,
+                    //                         ),
+                    //                       ),
+                    //                     ],
+                    //                   ),
+                    //                 );
+                    //               },
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     const SizedBox(height: 10,),
                     const Text('Notas del cliente',
                       style: TextStyle(

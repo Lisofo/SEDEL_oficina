@@ -35,7 +35,7 @@ class _ServicioClienteDesktopState extends State<ServicioClienteDesktop> {
   }
 
   cargarDatos() async {
-    final loadedServiciosCliente = await ClientServices().getClienteServices(context, widget.cliente.clienteId.toString(), widget.token);
+    final loadedServiciosCliente = await ClientServices().getClienteServices(context, widget.cliente.clienteId, widget.token);
     servicios =  await ServiciosServices().getServicios(context, '', '', '', widget.token);
     setState(() {
       serviciosCliente = loadedServiciosCliente ?? [];
@@ -58,7 +58,7 @@ class _ServicioClienteDesktopState extends State<ServicioClienteDesktop> {
             itemBuilder: (context, i) {
               final servicio = serviciosCliente[i];
               return ListTile(
-                title: Text(servicio.servicio),
+                title: Text(servicio.descripcion),
                 subtitle: Text(servicio.comentario),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -123,6 +123,7 @@ class _ServicioClienteDesktopState extends State<ServicioClienteDesktop> {
                         return AddClientServicesDialog(servicioClienteSeleccionado: null, cliente: widget.cliente, token: widget.token);
                       },
                     );
+                    await cargarDatos();
                   }
                 )
               ],

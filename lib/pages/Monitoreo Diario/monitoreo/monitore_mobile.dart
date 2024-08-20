@@ -98,10 +98,8 @@ class _MonitoreoMobileState extends State<MonitoreoMobile> {
     Provider.of<OrdenProvider>(context, listen: false).clearSelectedCliente('Monitoreo');
     // print(clienteSeleccionado.clienteId.toString());
 
-    String tecnicoId =
-        selectedTecnico != null ? selectedTecnico!.tecnicoId.toString() : '';
-    String fechaDesde =
-        ('${selectedDate.year}-${selectedDate.month}-${selectedDate.day}');
+    String tecnicoId = selectedTecnico != null ? selectedTecnico!.tecnicoId.toString() : '';
+    String fechaDesde = DateFormat('yyyy-MM-dd', 'es').format(selectedDate);
 
     List<Orden> results = await _ordenServices.getOrden(
       context, 
@@ -298,8 +296,7 @@ class _MonitoreoMobileState extends State<MonitoreoMobile> {
   cardsDeLaLista(List<Orden> orden, int index, String color) {
     return InkWell(
       onTap: () {
-        Provider.of<OrdenProvider>(context, listen: false)
-            .setOrden(orden[index]);
+        Provider.of<OrdenProvider>(context, listen: false).setOrden(orden[index]);
         router.push('/editOrden');
       },
       child: Card(
@@ -310,17 +307,19 @@ class _MonitoreoMobileState extends State<MonitoreoMobile> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                  child: Text(
-                'Orden  ${orden[index].ordenTrabajoId}',
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
-              )),
-              Text('Tecnico: ${orden[index].tecnico.nombre}'
-                  '\n${orden[index].cliente.codCliente} Cliente: ${orden[index].cliente.nombre}'),
-              Text(
-                  'Fecha Desde: ${DateFormat("E d, MMM, HH:mm", 'es').format(orden[index].fechaDesde)}'),
-              Text(
-                  'Fecha Hasta: ${DateFormat("E d, MMM, HH:mm", 'es').format(orden[index].fechaHasta)}'),
+                child: Text(
+                  'Orden  ${orden[index].ordenTrabajoId}',
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+                )
+              ),
+              Text('Tecnico: ${orden[index].tecnico.nombre}''\n${orden[index].cliente.codCliente} Cliente: ${orden[index].cliente.nombre}'),
+              Text('Fecha Desde: ${DateFormat("E d, MMM, HH:mm", 'es').format(orden[index].fechaDesde)}'),
+              Text('Fecha Hasta: ${DateFormat("E d, MMM, HH:mm", 'es').format(orden[index].fechaHasta)}'),
+              if(orden[index].estado != 'PENDIENTE')...[
+                Text(orden[index].iniciadaEn == null ? '' : 'Iniciada: ${_formatDateAndTime(orden[index].iniciadaEn)}'),
+                if(orden[index].estado != 'EN PROCESO')
+                Text(orden[index].finalizadaEn == null ? '' : 'Finalizada: ${_formatDateAndTime(orden[index].finalizadaEn)}')
+              ],
               Text(orden[index].tipoOrden.descripcion),
               Text(orden[index].estado),
               // for (var i = 0; i < orden[index].servicios.length; i++) ...[
@@ -369,5 +368,10 @@ class _MonitoreoMobileState extends State<MonitoreoMobile> {
       ),
     );
   }
+
+  String _formatDateAndTime(DateTime? date) {
+    return '${date?.day.toString().padLeft(2, '0')}/${date?.month.toString().padLeft(2, '0')}/${date?.year.toString().padLeft(4, '0')} ${date?.hour.toString().padLeft(2, '0')}:${date?.minute.toString().padLeft(2, '0')}';
+  }
+
 
 }

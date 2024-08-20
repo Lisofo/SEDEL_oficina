@@ -9,10 +9,12 @@ import 'package:sedel_oficina_maqueta/models/cliente.dart';
 import 'package:sedel_oficina_maqueta/models/constancia_visita.dart';
 import 'package:sedel_oficina_maqueta/models/orden.dart';
 import 'package:sedel_oficina_maqueta/models/servicio.dart';
+import 'package:sedel_oficina_maqueta/models/servicios_clientes.dart';
 import 'package:sedel_oficina_maqueta/models/servicios_ordenes.dart';
 import 'package:sedel_oficina_maqueta/models/tecnico.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/search/client_delegate.dart';
+import 'package:sedel_oficina_maqueta/services/client_services.dart';
 import 'package:sedel_oficina_maqueta/services/orden_services.dart';
 import 'package:sedel_oficina_maqueta/services/servicio_services.dart';
 import 'package:sedel_oficina_maqueta/services/tecnico_services.dart';
@@ -54,7 +56,8 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
   final TextEditingController _comentarioController = TextEditingController();
   final TextEditingController _notasClienteController = TextEditingController();
   List<Servicio> servicios = [];
-  List<Servicio> serviciosSeleccionados = [];
+  List serviciosSeleccionados = [];
+  List<ServicioCliente> serviciosCliente = [];
   late List<TipoOrden> tipoOrdenes = [];
   late TipoOrden selectedTipoOrden = TipoOrden.empty();
   late TipoOrden? tipoOrdenInicial = null;
@@ -64,6 +67,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
   int buttonIndex = 2;
   bool yaCargue = false;
   List<ConstanciaVisita> constanciasOrden = [];
+  bool cambieListaServicios = false;
 
   @override
   void initState() {
@@ -378,6 +382,46 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                           )
                                       ],
                                     ),
+                                    if(orden.estado != 'PENDIENTE')...[
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      RichText(
+                                        text: TextSpan(
+                                          style: const TextStyle(
+                                            fontSize: 16.0,
+                                            color: Colors.black,
+                                          ),
+                                          children: <TextSpan>[
+                                            const TextSpan(
+                                              text: 'Fecha Iniciada: ',
+                                              style: TextStyle(fontWeight: FontWeight.w600)
+                                            ),
+                                            TextSpan(text: _formatDateAndTime(orden.iniciadaEn)),
+                                          ],
+                                        ),
+                                      ),
+                                      if(orden.estado != 'EN PROCESO')...[
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        RichText(
+                                          text: TextSpan(
+                                            style: const TextStyle(
+                                              fontSize: 16.0,
+                                              color: Colors.black,
+                                            ),
+                                            children: <TextSpan>[
+                                              const TextSpan(
+                                                text: 'Fecha finalizada: ',
+                                                style: TextStyle(fontWeight: FontWeight.w600)
+                                              ),
+                                              TextSpan(text: _formatDateAndTime(orden.finalizadaEn)),
+                                            ],
+                                          ),
+                                        ),
+                                      ]
+                                    ],
                                     const SizedBox(
                                       height: 10,
                                     ),
@@ -386,8 +430,9 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                         const Text(
                                           'Estado: ',
                                           style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600
+                                          ),
                                         ),
                                         Text(
                                           orden.estado,
@@ -403,12 +448,11 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                         const Text(
                                           '*  Tipo de Orden: ',
                                           style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600
+                                          ),
                                         ),
-                                        Text(orden.tipoOrden.descripcion,
-                                            style:
-                                                const TextStyle(fontSize: 16))
+                                        Text(orden.tipoOrden.descripcion, style: const TextStyle(fontSize: 16))
                                       ],
                                     ),
                                     if(orden.ordenTrabajoId == 0)
@@ -476,21 +520,36 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                         fontWeight: FontWeight.w600
                                       ),
                                     ),
-                                    if(/*orden.ordenTrabajoId == 0 &&*/ (orden.estado == 'PENDIENTE' || orden.estado == 'EN PROCESO'))
-                                    SizedBox(
-                                      width: 400,
-                                      child: DropdownSearch<Servicio>(
-                                        items: servicios,
-                                        popupProps: const PopupProps.menu(
-                                          showSearchBox: true, searchDelay: Duration.zero),
-                                        onChanged: (value) {
-                                          print(value);
-                                          serviciosSeleccionados.insert(0, value!);
-                                          print(serviciosSeleccionados);
-                                          setState(() {});
-                                        },
+                                    if(/*orden.ordenTrabajoId == 0 &&*/ (orden.estado == 'PENDIENTE' || orden.estado == 'EN PROCESO'))...[
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          SizedBox(
+                                            width: 400,
+                                            child: DropdownSearch(
+                                              items: cambieListaServicios ? serviciosCliente : servicios,
+                                              popupProps: const PopupProps.menu(showSearchBox: true, searchDelay: Duration.zero),
+                                              onChanged: (value) {
+                                                print(value);
+                                                serviciosSeleccionados.insert(0, value!);
+                                                print(serviciosSeleccionados);
+                                                setState(() {});
+                                              },
+                                            ),
+                                          ),
+                                          Switch(
+                                            activeColor: colors.primary,
+                                            value: cambieListaServicios, 
+                                            onChanged: (value) async {
+                                              cambieListaServicios = value;
+                                              serviciosCliente = selectedCliente.clienteId != 0 ? await ClientServices().getClienteServices(context, selectedCliente.clienteId, token) : await ClientServices().getClienteServices(context, orden.cliente.clienteId, token);
+                                              setState(() {});
+                                            }
+                                          ),
+                                          const Text('Servicios del cliente')
+                                        ],
                                       ),
-                                    ),
+                                    ],
                                     if(/*orden.ordenTrabajoId != 0*/serviciosSeleccionados.isNotEmpty && (orden.estado == 'PENDIENTE' || orden.estado == 'EN PROCESO'))...[
                                       SizedBox(
                                       height: 250,
@@ -743,7 +802,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
   orden.fechaHasta = selectedDateHasta;
   orden.instrucciones = _instruccionesController.text;
   orden.comentarios = _comentarioController.text;
-  List<ServicioOrdenes> serviciosOrdenes = convertirServicios();
+  List<ServicioOrdenes> serviciosOrdenes = convertirServiciosSeleccionados();
   orden.servicio = serviciosOrdenes;
   
   if (orden.ordenTrabajoId == 0) {
@@ -758,19 +817,19 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
   setState(() {});
 }
 
- List<ServicioOrdenes> convertirServicios() {
-   List<ServicioOrdenes> serviciosOrdenes = serviciosSeleccionados.map((servicio) {
+ List<ServicioOrdenes> convertirServiciosSeleccionados() {
+   List<ServicioOrdenes> serviciosAAgregar = serviciosSeleccionados.map((servicio) {
      return ServicioOrdenes(
       servicioId: servicio.servicioId,
       codServicio: servicio.codServicio,
       descripcion: servicio.descripcion,
      );
    }).toList();
-   return serviciosOrdenes;
+   return serviciosAAgregar;
  }
 
  List<Servicio> convertirServiciosOrden() {
-   List<Servicio> ordenesServicios = orden.servicio.map((servicio) {
+   List<Servicio> serviciosOrdenes = orden.servicio.map((servicio) {
      return Servicio(
       servicioId: servicio.servicioId,
       codServicio: servicio.codServicio,
@@ -778,9 +837,27 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
       tipoServicio: TipoServicio.empty(),
      );
    }).toList();
-   return ordenesServicios;
+   return serviciosOrdenes;
  }
 
+//  List<ServicioCliente> convertirServiciosCliente() {
+//    List<ServicioCliente> serviciosClientes = servicios.map((servicio) {
+//     return ServicioCliente(
+//       clienteServicioId: servicio.clienteServicioId, 
+//       servicioId: servicio.servicioId, 
+//       desde: servicio.desde, 
+//       hasta: servicio.hasta, 
+//       comentario: servicio.comentario,
+//       codServicio: servicio.codServicio,
+//       servicio: servicio.descripcion
+//     );
+//    }).toList();
+//    return serviciosClientes;
+//  }
+
+  String _formatDateAndTime(DateTime? date) {
+    return '${date?.day.toString().padLeft(2, '0')}/${date?.month.toString().padLeft(2, '0')}/${date?.year.toString().padLeft(4, '0')} ${date?.hour.toString().padLeft(2, '0')}:${date?.minute.toString().padLeft(2, '0')}';
+  }
 
   void cambiarEstado() {
     late String nuevoEstado = '';

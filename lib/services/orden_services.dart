@@ -287,6 +287,60 @@ class OrdenServices {
     }
   }
 
+
+  Future patchInicioFin(BuildContext context, Orden orden, String desde, String hasta, String token) async {
+    String link = '$apiLink${orden.ordenTrabajoId}/fechas';
+
+    try {
+      var headers = {'Authorization': token};
+      var data = ({
+        "iniciadaEn": desde, 
+        "finalizadaEn": hasta
+      });
+      var resp = await _dio.request(
+        link,
+        options: Options(
+          method: 'PATCH',
+          headers: headers,
+        ),
+        data: data
+      );
+
+      statusCode = 1;
+      if (resp.statusCode == 200) {
+        showDialogs(context, "Fechas cambiadas correctamente", true, false);
+      } else {
+        showErrorDialog(context, 'Hubo un error al momento de cambiar el servicio');
+      }
+
+      return;
+    } catch (e) {
+      statusCode = 0;
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
+    }
+  }
+
   Future cambiarTecnicoDeLaOrden(BuildContext context, Orden orden, int tecnicoId, String token) async {
     String link = apiLink;
     link += orden.ordenTrabajoId.toString();

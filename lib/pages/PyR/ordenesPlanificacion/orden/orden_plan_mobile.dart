@@ -87,8 +87,8 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
   Future<void> buscar(String token) async {
     late Cliente clienteSeleccionado = context.read<OrdenProvider>().clienteOrdenes;
     print(clienteSeleccionado.clienteId.toString());
-    String fechaDesde = ('${selectedDate.start.year}-${selectedDate.start.month}-${selectedDate.start.day}');
-    String fechaHasta = ('${selectedDate.end.year}-${selectedDate.end.month}-${selectedDate.end.day}');
+    String fechaDesde = DateFormat('yyyy-MM-dd', 'es').format(selectedDate.start);
+    String fechaHasta = DateFormat('yyyy-MM-dd', 'es').format(selectedDate.end);
 
     String tecnicoId = selectedTecnico != null ? selectedTecnico!.tecnicoId.toString() : '';
 
@@ -493,8 +493,7 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
                               //   width: 30,
                               // ),
                               Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: colors.primary,),
@@ -503,25 +502,17 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
                                       child: Text('${ordenesFiltradas[i].ordenTrabajoId}', style: const TextStyle(color: Colors.white),),
                                     )
                                   ),
-                                  const SizedBox(height: 30,),
-                                  
+                                  const SizedBox(height: 15,),
                                   Text(ordenesFiltradas[i].cliente.codCliente),
-                                  
                                   // ignore: sized_box_for_whitespace
                                   Container(
                                     width: MediaQuery.of(context).size.width * 0.85,
                                     child: Text(ordenesFiltradas[i].cliente.nombre,softWrap: true,),
                                   ),
-                                  Text(
-                                      'Tecnico: ${ordenesFiltradas[i].tecnico.nombre}'),
-                                  Text(
-                                      'Tipo de orden: ${ordenesFiltradas[i].tipoOrden.descripcion}'),
-                                  Text(
-                                      'Estado: ${ordenesFiltradas[i].estado}'),
-                              
-                              
-                              
-                                  const SizedBox(height: 20,),
+                                  Text('Tecnico: ${ordenesFiltradas[i].tecnico.nombre}'),
+                                  Text('Tipo de orden: ${ordenesFiltradas[i].tipoOrden.descripcion}'),
+                                  Text('Estado: ${ordenesFiltradas[i].estado}'),
+                                  const SizedBox(height: 10,),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
@@ -529,7 +520,7 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
                                         text: TextSpan(
                                           style: const TextStyle(color: Colors.black),
                                           children: <TextSpan>[
-                                            const TextSpan(text: 'Inicio: '),
+                                            const TextSpan(text: 'Desde: '),
                                             TextSpan(
                                               text: DateFormat("E d, MMM HH:mm", 'es').format(ordenesFiltradas[i].fechaDesde),
                                             ),
@@ -541,7 +532,7 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
                                         text: TextSpan(
                                           style: const TextStyle(color: Colors.black),
                                           children: <TextSpan>[
-                                            const TextSpan(text: 'Finalizacion: '),
+                                            const TextSpan(text: 'Hasta: '),
                                             TextSpan(
                                               text: DateFormat("E d, MMM HH:mm", 'es').format(ordenesFiltradas[i].fechaHasta),
                                             ),
@@ -550,8 +541,13 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
                                         )
                                       ),
                                     ],
-                                  )
-                              
+                                  ),
+                                  //${DateFormat("dd/mm/yyyy HH:mm").format(ordenesFiltradas[i].iniciadaEn)
+                                  if(ordenesFiltradas[i].estado != 'PENDIENTE')...[
+                                    Text(ordenesFiltradas[i].iniciadaEn == null ? '' : 'Iniciada: ${_formatDateAndTime(ordenesFiltradas[i].iniciadaEn)}'),
+                                    if(ordenesFiltradas[i].estado != 'EN PROCESO')
+                                    Text(ordenesFiltradas[i].finalizadaEn == null ? '' : 'Finalizada: ${_formatDateAndTime(ordenesFiltradas[i].finalizadaEn)}')
+                                  ]
                                 ],
                               ),
                             ],
@@ -580,6 +576,10 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
         ],
       ),
     );
+  }
+
+  String _formatDateAndTime(DateTime? date) {
+    return '${date?.day.toString().padLeft(2, '0')}/${date?.month.toString().padLeft(2, '0')}/${date?.year.toString().padLeft(4, '0')} ${date?.hour.toString().padLeft(2, '0')}:${date?.minute.toString().padLeft(2, '0')}';
   }
 
 }

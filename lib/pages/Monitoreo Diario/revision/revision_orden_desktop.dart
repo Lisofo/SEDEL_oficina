@@ -202,6 +202,20 @@ class _RevisionOrdenDesktopState extends State<RevisionOrdenDesktop> with Single
             ),
             const Spacer(),
             CustomButton(
+              text: 'Cambiar fechas inicio/finalizada', 
+              onPressed: () async {
+              if (orden.estado != 'FINALIZADA') {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text('No se puede cambiar las fechas.'),
+                ));
+                return Future.value(false);
+              }
+                await cambiarFechas(orden.iniciadaEn, orden.finalizadaEn);
+              },
+              tamano: 20,
+            ),
+            const SizedBox(width: 10,),
+            CustomButton(
               text: 'Orden revisada', 
               onPressed: () async {
               if (orden.estado == 'REVISADA') {
@@ -489,4 +503,123 @@ _showCreateDeleteDialog(BuildContext context) {
       }
     );
   }
+
+  cambiarFechas(DateTime? inicio, DateTime? fin) async {
+    DateTime? fechaInicio = inicio;
+    DateTime? fechaFinalizacion = fin;
+    TimeOfDay? horaInicio = TimeOfDay.fromDateTime(fechaInicio ?? DateTime.now());
+    TimeOfDay? horaFinalizacion = TimeOfDay.fromDateTime(fechaFinalizacion ?? DateTime.now());
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Cambiar Fechas'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    title: Text(
+                      fechaInicio == null
+                        ? 'Seleccione fecha de inicio'
+                        : 'Fecha de inicio: ${_formatDateTime(fechaInicio, horaInicio)}',
+                    ),
+                    trailing: const Icon(Icons.calendar_today),
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: fechaInicio ?? DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+                      if (pickedDate != null) {
+                        TimeOfDay? pickedTime = await showTimePicker(
+                          context: context,
+                          initialTime: horaInicio ?? TimeOfDay.now(),
+                        );
+                        if (pickedTime != null) {
+                          setState(() {
+                            fechaInicio = pickedDate;
+                            horaInicio = pickedTime;
+                          });
+                        }
+                      }
+                    },
+                  ),
+                  ListTile(
+                    title: Text(
+                      fechaFinalizacion == null
+                        ? 'Seleccione fecha de finalización'
+                        : 'Fecha de finalización: ${_formatDateTime(fechaFinalizacion, horaFinalizacion)}',
+                    ),
+                    trailing: const Icon(Icons.calendar_today),
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: fechaFinalizacion ?? DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+                      if (pickedDate != null) {
+                        TimeOfDay? pickedTime = await showTimePicker(
+                          context: context,
+                          initialTime: horaFinalizacion ?? TimeOfDay.now(),
+                        );
+                        if (pickedTime != null) {
+                          setState(() {
+                            fechaFinalizacion = pickedDate;
+                            horaFinalizacion = pickedTime;
+                          });
+                        }
+                      }
+                    },
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  child: const Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: const Text('Guardar'),
+                  onPressed: () async {
+                    if (fechaInicio != null && fechaFinalizacion != null) {
+                      await OrdenServices().patchInicioFin(context, orden, _formatDateTimeWithoutMilliseconds(fechaInicio, horaInicio), _formatDateTimeWithoutMilliseconds(fechaFinalizacion, horaFinalizacion), token);
+                      print('Fecha de Inicio: ${_formatDateTimeWithoutMilliseconds(fechaInicio, horaInicio)}');
+                      print('Fecha de Finalización: ${_formatDateTimeWithoutMilliseconds(fechaFinalizacion, horaFinalizacion)}');
+                    }
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+  
+  String _formatDateTime(DateTime? date, TimeOfDay? time) {
+  if (date == null || time == null) return '';
+  final DateTime combined = _combineDateAndTime(date, time);
+  return '${combined.year}-${combined.month.toString().padLeft(2, '0')}-${combined.day.toString().padLeft(2, '0')} '
+         '${combined.hour.toString().padLeft(2, '0')}:${combined.minute.toString().padLeft(2, '0')}';
+}
+  
+  DateTime _combineDateAndTime(DateTime date, TimeOfDay time) {
+    return DateTime(date.year, date.month, date.day, time.hour, time.minute);
+  }
+
+  String _formatDateTimeWithoutMilliseconds(DateTime? date, TimeOfDay? time) {
+    if (date == null || time == null) return '';
+    final DateTime combined = _combineDateAndTime(date, time);
+    return '${combined.year}-${combined.month.toString().padLeft(2, '0')}-${combined.day.toString().padLeft(2, '0')} '
+           '${combined.hour.toString().padLeft(2, '0')}:${combined.minute.toString().padLeft(2, '0')}:'
+           '${combined.second.toString().padLeft(2, '0')}';
+  }
+
 }

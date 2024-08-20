@@ -367,11 +367,12 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
                         height: 3,
                       ),
                       SizedBox(
-                          width: 200,
-                          child: CustomTextFormField(
-                            controller: _nroOrdenController,
-                            maxLines: 1,
-                          ))
+                        width: 200,
+                        child: CustomTextFormField(
+                          controller: _nroOrdenController,
+                          maxLines: 1,
+                        )
+                      )
                     ],
                   ),
                   
@@ -469,14 +470,16 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
                                                 '${ordenesFiltradas[i].cliente.codCliente} ${ordenesFiltradas[i].cliente.nombre}'),
                                             Row(
                                               children: [
-                                                Text(
-                                                    'Tecnico: ${ordenesFiltradas[i].tecnico.nombre}'),
+                                                Text('Tecnico: ${ordenesFiltradas[i].tecnico.nombre}'),
                                               ],
                                             ),
-                                            Text(
-                                                'Tipo de orden: ${ordenesFiltradas[i].tipoOrden.descripcion}'),
-                                            Text(
-                                                'Estado: ${ordenesFiltradas[i].estado}'),
+                                            Text('Tipo de orden: ${ordenesFiltradas[i].tipoOrden.descripcion}'),
+                                            Text('Estado: ${ordenesFiltradas[i].estado}'),
+                                            if(ordenesFiltradas[i].estado != 'PENDIENTE')...[
+                                              Text(ordenesFiltradas[i].iniciadaEn == null ? '' : 'Iniciada: ${_formatDateAndTime(ordenesFiltradas[i].iniciadaEn)}'),
+                                              if(ordenesFiltradas[i].estado != 'EN PROCESO')
+                                              Text(ordenesFiltradas[i].finalizadaEn == null ? '' : 'Finalizada: ${_formatDateAndTime(ordenesFiltradas[i].finalizadaEn)}')
+                                            ]
                                           ],
                                         ),
                                       ),
@@ -497,10 +500,8 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
                                   flex: 1,
                                   child: Column(
                                     children: [
-                                      Text(DateFormat("E d, MMM HH:mm", 'es').format(
-                                          ordenesFiltradas[i].fechaDesde)),
-                                      Text(DateFormat("E d, MMM HH:mm", 'es').format(
-                                          ordenesFiltradas[i].fechaHasta)),
+                                      Text(DateFormat("E d, MMM HH:mm", 'es').format(ordenesFiltradas[i].fechaDesde)),
+                                      Text(DateFormat("E d, MMM HH:mm", 'es').format(ordenesFiltradas[i].fechaHasta)),
                                     ],
                                   ),
                                 )
@@ -527,8 +528,9 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
     });
   }
 
-
-
+  String _formatDateAndTime(DateTime? date) {
+    return '${date?.day.toString().padLeft(2, '0')}/${date?.month.toString().padLeft(2, '0')}/${date?.year.toString().padLeft(4, '0')} ${date?.hour.toString().padLeft(2, '0')}:${date?.minute.toString().padLeft(2, '0')}';
+  }
 
   Future<void> buscar(String token) async {
     late Cliente clienteSeleccionado = context.read<OrdenProvider>().clienteOrdenes;

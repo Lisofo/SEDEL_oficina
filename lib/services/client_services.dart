@@ -195,7 +195,7 @@ class ClientServices {
     }
   }
 
-  Future getClienteServices(BuildContext context, String clienteId, String token) async {
+  Future getClienteServices(BuildContext context, int clienteId, String token) async {
     String link = apiUrl += 'api/v1/clientes/$clienteId/servicios';
 
     try {

@@ -8,11 +8,9 @@ import 'cliente.dart';
 import 'servicios_ordenes.dart';
 import 'tecnico.dart';
 
-List<Orden> ordenFromMap(String str) =>
-    List<Orden>.from(json.decode(str).map((x) => Orden.fromJson(x)));
+List<Orden> ordenFromMap(String str) => List<Orden>.from(json.decode(str).map((x) => Orden.fromJson(x)));
 
-String ordenToMap(List<Orden> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toMap())));
+String ordenToMap(List<Orden> data) => json.encode(List<dynamic>.from(data.map((x) => x.toMap())));
 
 class Orden {
   late int ordenTrabajoId;
@@ -22,14 +20,16 @@ class Orden {
   late String instrucciones;
   late String comentarios;
   late String estado;
+  late DateTime? iniciadaEn;
+  late DateTime? finalizadaEn;
+  late String origen;
+  late int otRevisionId;
+  late int planoId;
   late TipoOrden tipoOrden;
   late Cliente cliente;
   late Tecnico tecnico;
-  late List<ServicioOrdenes> servicio;
-  late int otRevisionId;
-  late int planoId;
-  late String origen;
   late List<int> servicios;
+  late List<ServicioOrdenes> servicio;
 
   Orden({
     required this.ordenTrabajoId,
@@ -47,25 +47,29 @@ class Orden {
     required this.planoId,
     required this.origen,
     required this.servicios,
+    required this.iniciadaEn,
+    required this.finalizadaEn,
   });
 
   factory Orden.fromJson(Map<String, dynamic> json) => Orden(
-        ordenTrabajoId: json["ordenTrabajoId"],
-        fechaOrdenTrabajo: DateTime.parse(json["fechaOrdenTrabajo"]),
-        fechaDesde: DateTime.parse(json["fechaDesde"]),
-        fechaHasta: DateTime.parse(json["fechaHasta"]),
-        instrucciones: json["instrucciones"] as String? ?? '',
-        comentarios: json["comentarios"] as String? ?? '',
-        estado: json["estado"],
-        tipoOrden: TipoOrden.fromJson(json["tipoOrden"]),
-        cliente: Cliente.fromJson(json["cliente"]),
-        tecnico: Tecnico.fromJson(json["tecnico"]),
-        servicio: List<ServicioOrdenes>.from(json["servicios"].map((x) => ServicioOrdenes.fromJson(x))),
-        otRevisionId: json["otRevisionId"] as int? ?? 0,
-        planoId: json["planoId"] as int? ?? 0,
-        servicios: [],
-        origen: json["origen"],
-      );
+      ordenTrabajoId: json["ordenTrabajoId"],
+      fechaOrdenTrabajo: DateTime.parse(json["fechaOrdenTrabajo"]),
+      fechaDesde: DateTime.parse(json["fechaDesde"]),
+      fechaHasta: DateTime.parse(json["fechaHasta"]),
+      instrucciones: json["instrucciones"] as String? ?? '',
+      comentarios: json["comentarios"] as String? ?? '',
+      estado: json["estado"] as String? ?? '',
+      iniciadaEn: json["iniciadaEn"] != null ? DateTime.parse(json["iniciadaEn"]) : null,
+      finalizadaEn: json["finalizadaEn"] != null ? DateTime.parse(json["finalizadaEn"]) : null,
+      tipoOrden: TipoOrden.fromJson(json["tipoOrden"]),
+      cliente: Cliente.fromJson(json["cliente"]),
+      tecnico: Tecnico.fromJson(json["tecnico"]),
+      servicio: List<ServicioOrdenes>.from(json["servicios"].map((x) => ServicioOrdenes.fromJson(x))),
+      otRevisionId: json["otRevisionId"] as int? ?? 0,
+      planoId: json["planoId"] as int? ?? 0,
+      servicios: [],
+      origen: json["origen"],
+    );
 
   Map<String, dynamic> toMap() => {
     "fechaOrdenTrabajo": _formatFechaOrdenTrabajo(fechaOrdenTrabajo),
@@ -108,14 +112,16 @@ class Orden {
     instrucciones = '';
     comentarios = '';
     estado = 'PENDIENTE';
+    iniciadaEn = DateTime.now();
+    finalizadaEn = DateTime.now();
+    origen = '';
+    otRevisionId = 0;
+    planoId = 0;
     tipoOrden = TipoOrden.empty();
     cliente = Cliente.empty();
     tecnico = Tecnico.empty();
-    otRevisionId = 0;
-    planoId = 0;
-    servicio = [];
     servicios = [];
-    origen = '';
+    servicio = [];
   }
 }
 
@@ -131,16 +137,16 @@ class TipoOrden {
   });
 
   factory TipoOrden.fromJson(Map<String, dynamic> json) => TipoOrden(
-        tipoOrdenId: json["tipoOrdenId"],
-        codTipoOrden: json["codTipoOrden"],
-        descripcion: json["descripcion"],
-      );
+    tipoOrdenId: json["tipoOrdenId"],
+    codTipoOrden: json["codTipoOrden"],
+    descripcion: json["descripcion"],
+  );
 
   Map<String, dynamic> toMap() => {
-        "tipoOrdenId": tipoOrdenId,
-        "codTipoOrden": codTipoOrden,
-        "descripcion": descripcion,
-      };
+    "tipoOrdenId": tipoOrdenId,
+    "codTipoOrden": codTipoOrden,
+    "descripcion": descripcion,
+  };
 
   TipoOrden.empty() {
     tipoOrdenId = 0;

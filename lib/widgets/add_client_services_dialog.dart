@@ -159,7 +159,7 @@ class _AddClientServicesDialogState extends State<AddClientServicesDialog> {
             width: 300,
             child: CustomTextFormField(
               controller: comentarioController,
-              label: 'Comentario',
+              hint: 'Comentario',
               maxLines: 1,
             ),
           ),
@@ -177,7 +177,7 @@ class _AddClientServicesDialogState extends State<AddClientServicesDialog> {
               hasta: fechaHasta,
               comentario: comentarioController.text,
               codServicio: '',
-              servicio: '',
+              descripcion: '',
             );
 
             if (widget.servicioClienteSeleccionado != null) {

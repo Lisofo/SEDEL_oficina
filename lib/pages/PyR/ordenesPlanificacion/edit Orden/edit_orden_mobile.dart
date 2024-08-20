@@ -374,13 +374,57 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
                                 const SizedBox(
                                   height: 10,
                                 ),
+                                if(orden.estado != 'PENDIENTE')...[
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  RichText(
+                                    text: TextSpan(
+                                      style: const TextStyle(
+                                        fontSize: 16.0,
+                                        color: Colors.black,
+                                      ),
+                                      children: <TextSpan>[
+                                        const TextSpan(
+                                          text: 'Fecha Iniciada: ',
+                                          style: TextStyle(fontWeight: FontWeight.w600)
+                                        ),
+                                        TextSpan(text: _formatDateAndTime(orden.iniciadaEn)),
+                                      ],
+                                    ),
+                                  ),
+                                  if(orden.estado != 'EN PROCESO')...[
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    RichText(
+                                      text: TextSpan(
+                                        style: const TextStyle(
+                                          fontSize: 16.0,
+                                          color: Colors.black,
+                                        ),
+                                        children: <TextSpan>[
+                                          const TextSpan(
+                                            text: 'Fecha Finalizada: ',
+                                            style: TextStyle(fontWeight: FontWeight.w600)
+                                          ),
+                                          TextSpan(text: _formatDateAndTime(orden.finalizadaEn)),
+                                        ],
+                                      ),
+                                    ),
+                                  ]
+                                ],
+                                const SizedBox(
+                                  height: 10,
+                                ),
                                 Row(
                                   children: [
                                     const Text(
                                       'Estado: ',
                                       style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600
+                                      ),
                                     ),
                                     Text(
                                       orden.estado,
@@ -1106,6 +1150,10 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
         );
       },
     );
+  }
+
+  String _formatDateAndTime(DateTime? date) {
+    return '${date?.day.toString().padLeft(2, '0')}/${date?.month.toString().padLeft(2, '0')}/${date?.year.toString().padLeft(4, '0')} ${date?.hour.toString().padLeft(2, '0')}:${date?.minute.toString().padLeft(2, '0')}';
   }
 
   abrirPDF(String url, String token) async {

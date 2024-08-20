@@ -110,7 +110,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
     servicios =  await ServiciosServices().getServicios(context, '', '', '', token);
     if (cliente.clienteId != 0) {
       final loadedUsuarios = await ClientServices().getUsuariosXCliente(context, cliente.clienteId.toString(), token);
-      final loadedServiciosCliente = await ClientServices().getClienteServices(context, cliente.clienteId.toString(), token);
+      final loadedServiciosCliente = await ClientServices().getClienteServices(context, cliente.clienteId, token);
       usuariosTodos = await UserServices().getUsers(context, '', '', '', token);
       setState(() {
         usuariosXClientes = loadedUsuarios ?? [];
@@ -687,7 +687,7 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
               itemBuilder: (context, i) {
                 final servicio = serviciosCliente[i];
                 return ListTile(
-                  title: Text(servicio.servicio),
+                  title: Text(servicio.descripcion),
                   subtitle: Text(servicio.comentario),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
