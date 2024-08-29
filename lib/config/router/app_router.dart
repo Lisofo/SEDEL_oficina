@@ -46,6 +46,10 @@ final router = GoRouter(initialLocation: '/', routes: [
     builder: (context, state) => const ServicioClientePage(),
   ),
   GoRoute(
+    path: '/frecuenciaServicios',
+    builder: (context, state) => const FrecuenciaServicioClientePage(),
+  ),
+  GoRoute(
     path: '/tecnicos',
     builder: (context, state) => const TecnicosPage(),
   ),

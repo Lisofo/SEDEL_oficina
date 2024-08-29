@@ -89,9 +89,10 @@ class _AddClientServicesDialogState extends State<AddClientServicesDialog> {
               TextButton(
                 onPressed: () async {
                   final fechaDesdeSeleccionada = await showDatePicker(
-                      context: context,
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2099));
+                    context: context,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2099)
+                  );
                   setState(() {
                     if (fechaDesdeSeleccionada == null) {
                       fechaDesde = fechaDesde;
@@ -170,24 +171,17 @@ class _AddClientServicesDialogState extends State<AddClientServicesDialog> {
           onPressed: () async {
             final ServicioCliente nuevoServicioCliente = ServicioCliente(
               clienteServicioId: 0,
-              servicioId: widget.servicioClienteSeleccionado?.servicioId == null
-                  ? servicioSeleccionado!.servicioId
-                  : widget.servicioClienteSeleccionado!.servicioId,
+              servicioId: widget.servicioClienteSeleccionado?.servicioId == null ? servicioSeleccionado!.servicioId : widget.servicioClienteSeleccionado!.servicioId,
               desde: fechaDesde,
               hasta: fechaHasta,
               comentario: comentarioController.text,
               codServicio: '',
               descripcion: '',
+              frecuencia: []
             );
-
             if (widget.servicioClienteSeleccionado != null) {
-              widget.servicioClienteSeleccionado!.servicioId =
-                  servicioSeleccionado != null
-                      ? servicioSeleccionado!.servicioId
-                      : widget.servicioClienteSeleccionado!.servicioId;
-              widget.servicioClienteSeleccionado?.comentario =
-                  comentarioController.text;
-
+              widget.servicioClienteSeleccionado!.servicioId = servicioSeleccionado != null ? servicioSeleccionado!.servicioId : widget.servicioClienteSeleccionado!.servicioId;
+              widget.servicioClienteSeleccionado?.comentario = comentarioController.text;
               ClientServices().putClienteServices(
                 context,
                 widget.cliente.clienteId.toString(),

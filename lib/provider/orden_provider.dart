@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sedel_oficina_maqueta/models/marca.dart';
+import 'package:sedel_oficina_maqueta/models/servicios_clientes.dart';
 import '../models/indisponibilidades.dart';
 import '../models/revision_materiales.dart';
 import '../models/cliente.dart';
@@ -52,6 +53,7 @@ class OrdenProvider with ChangeNotifier {
   Marca _marca = Marca.empty();
   int _revisionId = 0;
   int _rptGenId = 0;
+  ServicioCliente _servicioCliente = ServicioCliente.empty();
 
 
   // Getters
@@ -94,6 +96,7 @@ class OrdenProvider with ChangeNotifier {
   Marca get marca => _marca;
   int get revisionId => _revisionId;
   int get rptGenId => _rptGenId;
+  ServicioCliente get servicioCliente => _servicioCliente;
 
   // Setters
   void setPendiente(bool pendi) {
@@ -355,6 +358,11 @@ class OrdenProvider with ChangeNotifier {
 
   void filtrarPuntosInspeccion2(String criterio) {
     _ptosInspeccion = _ptosInspeccionCompleta.where((pto) => pto.codigoBarra.contains(criterio)).toList();
+    notifyListeners();
+  }
+
+  void setServicioCliente(ServicioCliente serCli) {
+    _servicioCliente = serCli;
     notifyListeners();
   }
 }

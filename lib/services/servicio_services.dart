@@ -3,6 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sedel_oficina_maqueta/config/config.dart';
+import 'package:sedel_oficina_maqueta/models/frecuencia.dart';
 import 'package:sedel_oficina_maqueta/models/servicio.dart';
 
 class ServiciosServices {
@@ -282,6 +283,223 @@ class ServiciosServices {
         showDialogs(context, 'Servicio borrado correctamente', true, true);
       }
       return resp.statusCode;
+    } catch (e) {
+      statusCode = 0;
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
+    }
+  }
+
+  Future getFrecuencias(BuildContext context, int clienteId, int clienteServicioId, String token) async {
+    // ignore: unused_local_variable
+    String link =  '${apiUrl}api/v1/clientes/$clienteId/servicios/$clienteServicioId/frecuencias';
+    try {
+      var headers = {'Authorization': token};
+      var resp = await _dio.request(
+        link,
+        options: Options(
+          method: 'GET',
+          headers: headers,
+        ),
+      );
+      
+      statusCode = 1;
+      final List<dynamic> frecuenciaServicioList = resp.data;
+
+      return frecuenciaServicioList.map((obj) => Frecuencia.fromJson(obj)).toList();
+    } catch (e) {
+      statusCode = 0;
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
+    }
+  }
+
+  Future postFrecuencias(BuildContext context, Frecuencia frecuencia, String token) async {
+    // ignore: unused_local_variable
+    String link =  '${apiUrl}api/v1/clientes/${frecuencia.clienteId}/servicios/${frecuencia.clienteServicioId}/frecuencias';
+    var data = frecuencia.toMap();
+    // {
+      // "frecuenciaId": frecuencia.frecuenciaId,
+      // "desde": frecuencia.desde,
+      // "hasta": frecuencia.hasta,
+      // "repetir": frecuencia.repetir,
+      // "comentario": frecuencia.comentario,
+      // "D": frecuencia.d, 
+      // "L": frecuencia.l, 
+      // "MA": frecuencia.ma, 
+      // "MI": frecuencia.mi, 
+      // "J": frecuencia.j, 
+      // "V": frecuencia.v, 
+      // "S": frecuencia.s
+    // };
+    print(data);
+    print(link);
+    try {
+      var headers = {'Authorization': token};
+      var resp = await _dio.request(
+        link,
+        options: Options(
+          method: 'POST',
+          headers: headers,
+        ),
+        data: data
+      );
+      
+      statusCode = 1;
+      frecuencia.clienteServFrecuenciaId = resp.data['clienteServFrecuenciaId'];
+      if (resp.statusCode == 201) {
+        showDialogs(context, 'Frecuencia creada correctamente', true, false);
+      }
+      return;
+    } catch (e) {
+      statusCode = 0;
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
+    }
+  }
+
+  Future putFrecuencias(BuildContext context, Frecuencia frecuencia, String token) async {
+    // ignore: unused_local_variable
+    String link =  '${apiUrl}api/v1/clientes/${frecuencia.clienteId}/servicios/${frecuencia.clienteServicioId}/frecuencias/${frecuencia.clienteServFrecuenciaId}';
+    var data = frecuencia.toMap();
+    // {
+      // "frecuenciaId": frecuencia.frecuenciaId,
+      // "desde": frecuencia.desde,
+      // "hasta": frecuencia.hasta,
+      // "repetir": frecuencia.repetir,
+      // "comentario": frecuencia.comentario,
+      // "D": frecuencia.d, 
+      // "L": frecuencia.l, 
+      // "MA": frecuencia.ma, 
+      // "MI": frecuencia.mi, 
+      // "J": frecuencia.j, 
+      // "V": frecuencia.v, 
+      // "S": frecuencia.s
+    // };
+    print(data);
+    print(link);
+    try {
+      var headers = {'Authorization': token};
+      var resp = await _dio.request(
+        link,
+        options: Options(
+          method: 'PUT',
+          headers: headers,
+        ),
+        data: data
+      );
+      
+      statusCode = 1;      
+      if (resp.statusCode == 200) {
+        showDialogs(context, 'Frecuencia editada correctamente', true, false);
+      }
+      return;
+    } catch (e) {
+      statusCode = 0;
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
+    }
+  }
+
+  Future deleteFrecuencias(BuildContext context, Frecuencia frecuencia, String token) async {
+    // ignore: unused_local_variable
+    String link =  '${apiUrl}api/v1/clientes/${frecuencia.clienteId}/servicios/${frecuencia.clienteServicioId}/frecuencias/${frecuencia.clienteServFrecuenciaId}';
+    print(link);
+    try {
+      var headers = {'Authorization': token};
+      var resp = await _dio.request(
+        link,
+        options: Options(
+          method: 'DELETE',
+          headers: headers,
+        ),
+      );
+      
+      statusCode = 1;      
+      if (resp.statusCode == 204) {
+        showDialogs(context, 'Frecuencia borrada correctamente', true, false);
+      }
+      return;
     } catch (e) {
       statusCode = 0;
       if (e is DioException) {

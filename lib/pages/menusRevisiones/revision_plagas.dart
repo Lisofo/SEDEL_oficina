@@ -70,7 +70,7 @@ class _RevisionPlagasMenuState extends State<RevisionPlagasMenu> {
 
   cargarDatos() async {
     try {
-      if (widget.plagas.isNotEmpty && widget.revisionPlagasList.isNotEmpty){
+      if (widget.plagas.isNotEmpty || widget.revisionPlagasList.isNotEmpty){
         cargoDatosCorrectamente = true;
       }
       cargando = false;

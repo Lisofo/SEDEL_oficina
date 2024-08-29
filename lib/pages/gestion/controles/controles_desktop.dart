@@ -125,8 +125,7 @@ class _ControlesDesktopState extends State<ControlesDesktop> {
   }
 
   Future<void> buscar(BuildContext context, String token) async {
-    List<Control> results = await ControlServices().getControles(
-        context, _grupoController.text, token);
+    List<Control> results = await ControlServices().getControles(context, _grupoController.text, token);
     setState(() {
       controles = results;
     });

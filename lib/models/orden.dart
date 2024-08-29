@@ -30,6 +30,7 @@ class Orden {
   late Tecnico tecnico;
   late List<int> servicios;
   late List<ServicioOrdenes> servicio;
+  late String? modalidad;
 
   Orden({
     required this.ordenTrabajoId,
@@ -49,6 +50,7 @@ class Orden {
     required this.servicios,
     required this.iniciadaEn,
     required this.finalizadaEn,
+    required this.modalidad
   });
 
   factory Orden.fromJson(Map<String, dynamic> json) => Orden(
@@ -69,6 +71,7 @@ class Orden {
       planoId: json["planoId"] as int? ?? 0,
       servicios: [],
       origen: json["origen"],
+      modalidad: '',
     );
 
   Map<String, dynamic> toMap() => {
@@ -80,7 +83,8 @@ class Orden {
     "tecnicoId": tecnico.tecnicoId,
     "clienteId": cliente.clienteId,
     "comentarios": comentarios,
-    "tipoOrdenId": tipoOrden.tipoOrdenId
+    "tipoOrdenId": tipoOrden.tipoOrdenId,
+    "modalidad": modalidad
       // "ordenTrabajoId": ordenTrabajoId,
       // "fechaOrdenTrabajo": fechaOrdenTrabajo.toIso8601String(),
       // "fechaDesde": fechaDesde.toIso8601String(),

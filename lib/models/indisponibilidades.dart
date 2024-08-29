@@ -40,14 +40,9 @@ class Indisponibilidad {
         desde: DateTime.parse(json["desde"]),
         hasta: DateTime.parse(json["hasta"]),
         comentario: json["comentario"],
-        tipoIndisponibilidad:
-            TipoIndisponibilidad.fromJson(json["tipoIndisponibilidad"]),
-        cliente: json["cliente"] == null
-            ? Cliente.empty()
-            : Cliente.fromJson(json["cliente"]),
-        tecnico: json["tecnico"] == null
-            ? Tecnico.empty()
-            : Tecnico.fromJson(json["tecnico"]),
+        tipoIndisponibilidad: TipoIndisponibilidad.fromJson(json["tipoIndisponibilidad"]),
+        cliente: json["cliente"] == null ? Cliente.empty() : Cliente.fromJson(json["cliente"]),
+        tecnico: json["tecnico"] == null ? Tecnico.empty() : Tecnico.fromJson(json["tecnico"]),
         tipoIndisponibilidadId: 0,
         clienteId: 0,
         tecnicoId: 0,
@@ -75,10 +70,8 @@ class Indisponibilidad {
     indisponibilidadId = 0;
     tecnicoId = 0;
     clienteId = 0;
-    desde = DateTime(
-        DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
-    hasta = DateTime(
-        DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
+    desde = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
+    hasta = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
     comentario = '';
     tipoIndisponibilidad = TipoIndisponibilidad.empty();
     cliente = Cliente.empty();

@@ -56,7 +56,7 @@ class _RevisionTareasMenuState extends State<RevisionTareasMenu> {
       tareas = await TareasServices().getTareas(context, '', '', token);
       orden = context.read<OrdenProvider>().orden;
       revisionId = context.read<OrdenProvider>().revisionId;
-      if (tareas.isNotEmpty && widget.revisionTareasList.isNotEmpty){
+      if (tareas.isNotEmpty || widget.revisionTareasList.isNotEmpty){
         cargoDatosCorrectamente = true;
       }
       cargando = false;

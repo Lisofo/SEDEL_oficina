@@ -145,8 +145,9 @@ class _MapaPageDesktopState extends State<MapaPageDesktop> with SingleTickerProv
                   const SizedBox(width: 10,),
                   IconButton(
                     onPressed: () async {
-                      String fechaDesde = ('${selectedDate.year}-${selectedDate.month}-${selectedDate.day}');
-                      String fechaHasta = ('${selectedDate.year}-${selectedDate.month}-${selectedDate.day + 1}');
+                      String fechaDesde = DateFormat('yyyy-MM-dd', 'es').format(selectedDate);
+                      DateTime manana = DateTime(selectedDate.year, selectedDate.month, selectedDate. day + 1);
+                      String fechaHasta = DateFormat('yyyy-MM-dd', 'es').format(manana);
         
                       ubicaciones = await UbicacionesServices().getUbicaciones(context, selectedTecnico!.tecnicoId, fechaDesde, fechaHasta, token);
                       await cargarUbicacion();
@@ -304,7 +305,7 @@ class _MapaPageDesktopState extends State<MapaPageDesktop> with SingleTickerProv
                                   ubicacion.cliente.nombre,
                                   style: const TextStyle(fontSize: 14),
                                 ),
-                                subtitle: Text('${ubicacion.ordenTrabajoId} - ${DateFormat('HH:mm', 'es').format(ubicacion.fechaDate)}'),
+                                subtitle: Text('${ubicacion.ordenTrabajoId} - ${DateFormat('HH:mm', 'es').format(ubicacion.fechaDate)} ${ubicacion.estado}'),
                                 value: ubicacion.seleccionado,
                                 onChanged: (value) {
                                   ubicacion.seleccionado = value!;
@@ -354,7 +355,7 @@ class _MapaPageDesktopState extends State<MapaPageDesktop> with SingleTickerProv
             ubicacion.logId.toString(),
             LatLng(double.parse(coord[0]), double.parse(coord[1])),
             ubicacion.cliente.nombre,
-            'Orden: ${ubicacion.ordenTrabajoId} - ${DateFormat('HH:mm', 'es').format(ubicacion.fechaDate)}'
+            'Orden: ${ubicacion.ordenTrabajoId} - ${DateFormat('HH:mm', 'es').format(ubicacion.fechaDate)} ${ubicacion.estado}'
           );
         } else {
           print('Error: Coordenates not properly formatted'); // Add this line for debugging

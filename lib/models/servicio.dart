@@ -4,11 +4,9 @@
 
 import 'dart:convert';
 
-List<Servicio> servicioFromMap(String str) =>
-    List<Servicio>.from(json.decode(str).map((x) => Servicio.fromJson(x)));
+List<Servicio> servicioFromMap(String str) => List<Servicio>.from(json.decode(str).map((x) => Servicio.fromJson(x)));
 
-String servicioToMap(List<Servicio> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toMap())));
+String servicioToMap(List<Servicio> data) => json.encode(List<dynamic>.from(data.map((x) => x.toMap())));
 
 class Servicio {
   late int servicioId;

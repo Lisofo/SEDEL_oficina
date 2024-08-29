@@ -68,6 +68,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
   bool yaCargue = false;
   List<ConstanciaVisita> constanciasOrden = [];
   bool cambieListaServicios = false;
+  bool adm = false;
 
   @override
   void initState() {
@@ -280,11 +281,28 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      'Nro. Orden: ',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Text(
+                                          'Nro. Orden: ',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        if(orden.ordenTrabajoId == 0)...[
+                                          const Text('Adm'),
+                                          Switch(
+                                            value: adm, 
+                                            onChanged: (value) {
+                                              adm = value;
+                                              setState(() {});
+                                            }
+                                          )
+                                        ]
+                                      ],
                                     ),
                                     Text(
                                       'Orden ${orden.ordenTrabajoId}',
@@ -796,7 +814,6 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
  Future<void> datosAGuardar(BuildContext context) async {
   DateTime fechaOrden = DateTime(selectedDateOrden.year, selectedDateOrden.month, selectedDateOrden.day);
   
-  
   orden.fechaOrdenTrabajo = fechaOrden;
   orden.fechaDesde = selectedDateDesde;
   orden.fechaHasta = selectedDateHasta;
@@ -809,6 +826,7 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
     orden.cliente = selectedCliente;
     orden.tipoOrden = selectedTipoOrden;
     orden.tecnico = selectedTecnico!;
+    orden.modalidad = adm ? 'IMPREVISTA' : null;
 
     await OrdenServices().postOrden(context, orden, token);
   }else{

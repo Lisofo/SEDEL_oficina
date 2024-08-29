@@ -1,4 +1,5 @@
 //Login y menu
+
 export 'package:sedel_oficina_maqueta/pages/login/login.dart';
 export 'package:sedel_oficina_maqueta/pages/menu/menu.dart';
 //PyR
@@ -12,6 +13,7 @@ export 'package:sedel_oficina_maqueta/pages/gestion/clientes/busqueda/clientes.d
 export 'package:sedel_oficina_maqueta/pages/gestion/clientes/edit/edit_clientes.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/clientes/ptos_inspeccion/ptos_inspeccion_cliente.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/clientes/servicios/servicio_cliente.dart';
+export 'package:sedel_oficina_maqueta/pages/gestion/clientes/servicios/frecuencia_servicios/frecuencia_servicio.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/materiales/materiales/materiales.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/materiales/edit%20materiales/edit_materiales.dart';
 export 'package:sedel_oficina_maqueta/pages/gestion/materiales/lotes/lotes.dart';

@@ -359,11 +359,24 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                       decoration: const BoxDecoration(border: Border(bottom: BorderSide())),
                       child: ListTile(
                         tileColor: Colors.white,
-                        title: Text(widget.firmas[index].nombre),
-                        subtitle: Text(widget.firmas[index].area),
+                        title: Text(item.nombre),
+                        subtitle: Text(item.area),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
+                            TextButton(
+                              onPressed: () async {
+                                await showDialog(
+                                  context: context, 
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      content: item.firma != null ? Image.memory(item.firma!, width: 200, height: 150) : const Center(child: Text('No hay firma registrada'),),
+                                    );
+                                  },
+                                );
+                              }, 
+                              child: const Text('Ver firma')
+                            ),
                             IconButton(
                               splashColor: Colors.transparent,
                               splashRadius: 25,
@@ -377,7 +390,7 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                                   estoyEditando = false;
                                   return Future.value(false);
                                 }
-                                _editarCliente(widget.firmas[index]);
+                                _editarCliente(item);
                                 estoyEditando = false;
                                 setState(() {});
                               } : null,
@@ -395,7 +408,7 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                                     estoyBorrando = false;
                                     return Future.value(false);
                                   }
-                                _borrarCliente(widget.firmas[index], index);
+                                _borrarCliente(item, index);
                                 estoyBorrando = false;
                               } : null,
                             ),
