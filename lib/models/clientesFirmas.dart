@@ -7,8 +7,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-ClienteFirma clienteFirmaFromMap(String str) =>
-    ClienteFirma.fromJson(json.decode(str));
+ClienteFirma clienteFirmaFromMap(String str) => ClienteFirma.fromJson(json.decode(str));
 
 String clienteFirmaToMap(ClienteFirma data) => json.encode(data.toMap());
 

@@ -21,7 +21,7 @@ class _ServicioClientePageState extends State<ServicioClientePage> {
       child: Scaffold(body: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth < 800) {
-            return const ServicioClienteMobile();
+            return ServicioClienteMobile(cliente: cliente, token: token);
           } else if (constraints.maxWidth > 900) {
             return ServicioClienteDesktop(cliente: cliente, token: token);
           }

@@ -24,7 +24,7 @@ class _FrecuenciaServicioClientePageState extends State<FrecuenciaServicioClient
       child: Scaffold(body: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth < 800) {
-            return FrecuenciaServicioMobile(cliente: cliente, token: token);
+            return FrecuenciaServicioMobile(cliente: cliente, token: token, servicioCliente: servicioCliente,);
           } else if (constraints.maxWidth > 900) {
             return FrecuenciaServicioDesktop(cliente: cliente, token: token, servicioCliente: servicioCliente,);
           }

@@ -177,8 +177,6 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
               tecnicoIncialSeleccionado, 
               estadoInicialSeleccionado
             ),
-            
-            _serviciosCliente(servicios),
             _usuariosCliente(usuariosXClientes),
           ],
         ),
@@ -189,7 +187,6 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
             switch (buttonIndex){
               case 0: 
                 establecerValoresDeCampo(cliente, estadoSeleccionado);
-                
               if (cliente.clienteId != 0) {
                 await ClientServices().putCliente(context, cliente, token);
               } else {
@@ -203,6 +200,9 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                 }
               break;
               case 2:
+                router.push('/serviciosCliente');
+              break;
+              case 3:
                 await borrarClientDialog(context, cliente, token);
               break;
             }
@@ -218,6 +218,10 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
             const BottomNavigationBarItem(
               icon: Icon(Icons.place),
               label: 'Puntos de inspeccion',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.description),
+              label: 'Servicios',
             ),
             if(tieneId)...[
               const BottomNavigationBarItem(
@@ -290,6 +294,12 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                     maxLines: 1,
                   )
                 ),
+                TextButton(
+                  onPressed: () {
+                  MapsLauncher.launchQuery(_nombreController.text);
+                  },
+                  child: const Text('Buscar por nombre')
+                ),
               ],
             ),
             const SizedBox(height: 5,),
@@ -334,6 +344,12 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                     maxLines: 1
                   )
                 ),
+                TextButton(
+                  onPressed: () {
+                  MapsLauncher.launchQuery('${_direccionController.text}, ${_localidadController.text}');
+                  },
+                  child: const Text('Buscar por direccion')
+                ),
               ],
             ),
             const SizedBox(height: 5,),
@@ -348,7 +364,6 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Text('Coordenadas  '),
-                
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.8,
                   child: CustomTextFormField(
@@ -359,28 +374,11 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                   )
                 ),
                 const SizedBox(height: 5,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                      MapsLauncher.launchQuery(_nombreController.text);
-                      },
-                      child: const Text('Buscar por nombre')
-                    ),
-                    TextButton(
-                      onPressed: () {
-                      MapsLauncher.launchQuery('${_direccionController.text}, ${_localidadController.text}');
-                      },
-                      child: const Text('Buscar por direccion')
-                    ),
-                    TextButton(
-                      onPressed: () {
-                      buscarPorCoordenadas(_coordenadasController.text);
-                      },
-                      child: const Text('Buscar por coordenadas')
-                    ),
-                  ],
+                TextButton(
+                  onPressed: () {
+                  buscarPorCoordenadas(_coordenadasController.text);
+                  },
+                  child: const Text('Buscar por coordenadas')
                 ),
               ],
             ),

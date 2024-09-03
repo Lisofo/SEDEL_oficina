@@ -370,7 +370,12 @@ class _RevisionFirmasMenuState extends State<RevisionFirmasMenu> {
                                   context: context, 
                                   builder: (context) {
                                     return AlertDialog(
-                                      content: item.firma != null ? Image.memory(item.firma!, width: 200, height: 150) : const Center(child: Text('No hay firma registrada'),),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          item.firmaPath != '' ? Image.network('${item.firmaPath}?authorization=$token', width: 600, height: 450) : item.firma != null ? Image.memory(item.firma!, width: 600, height: 450) :const Center(child: Text('No hay firma registrada'),),
+                                        ],
+                                      ) 
                                     );
                                   },
                                 );

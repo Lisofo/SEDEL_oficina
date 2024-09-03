@@ -64,14 +64,18 @@ class _AddClientServicesDialogState extends State<AddClientServicesDialog> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           DropdownButtonFormField(
+            isExpanded: true,
+            isDense: true,
             items: servicios.map((e) {
               return DropdownMenuItem(
+  
                 value: e,
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.17,
+                child: Flexible(
                   child: Text(
+                    maxLines: 2,
                     e.descripcion,
-                    overflow: TextOverflow.fade,
+                    overflow: TextOverflow.clip,
+                    softWrap: true,
                   ),
                 ),
               );
@@ -81,6 +85,7 @@ class _AddClientServicesDialogState extends State<AddClientServicesDialog> {
             },
             value: servicioInicial,
             hint: const Text('Servicios'),
+            
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -107,7 +112,7 @@ class _AddClientServicesDialogState extends State<AddClientServicesDialog> {
                     }
                   });
                 },
-                child: const Text('Seleccione fecha desde')
+                child: const Text('Fecha desde')
               ),
               const SizedBox(width: 8,),
               Text((DateFormat('E, d , MMM, yyyy', 'es').format(fechaDesde)),
@@ -139,7 +144,7 @@ class _AddClientServicesDialogState extends State<AddClientServicesDialog> {
                     }
                   });
                 },
-                child: const Text('Seleccione fecha hasta')
+                child: const Text('Fecha hasta')
               ),
               const SizedBox(width: 8,),
               Text(

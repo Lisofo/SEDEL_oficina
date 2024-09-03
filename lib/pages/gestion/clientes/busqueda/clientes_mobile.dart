@@ -150,6 +150,7 @@ class _ClientesMobileState extends State<ClientesMobile> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.7,
                     child: CustomDropdownFormMenu(
+                      isDense: true,
                       value: estadoSeleccionado,
                       hint: 'Seleccione un estado',
                       items: estados.map((e) {
