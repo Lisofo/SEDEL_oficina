@@ -301,6 +301,16 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                               setState(() {});
                                             }
                                           )
+                                        ],
+                                        if(orden.modalidad == 'IMPREVISTA')...[
+                                          IconButton(
+                                            icon: Icon(
+                                              Icons.assignment_ind,
+                                              color: colors.primary,
+                                            ),
+                                            onPressed: null,
+                                            tooltip: 'Orden administrativa',
+                                          )
                                         ]
                                       ],
                                     ),
@@ -521,7 +531,8 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
                                         selectedItem: selectedCliente.tecnico,
                                         items: tecnicos,
                                         popupProps: const PopupProps.menu(
-                                            showSearchBox: true, searchDelay: Duration.zero),
+                                          showSearchBox: true, searchDelay: Duration.zero
+                                        ),
                                         onChanged: (value) {
                                           setState(() {
                                             selectedTecnico = value;

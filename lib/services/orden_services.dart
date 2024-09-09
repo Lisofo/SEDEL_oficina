@@ -192,6 +192,69 @@ class OrdenServices {
     }
   }
 
+  Future getOrdenCampanita(BuildContext context, String desde, String hasta, String estado, int limit, String token) async {
+    bool yaTieneFiltro = false;
+    String link = apiLink;
+    String linkFiltrado = link += '?sort=fechaDesde&limit=$limit';
+    yaTieneFiltro = true;
+    if (desde != '') {
+      linkFiltrado += '&fechaDesde=$desde';
+      yaTieneFiltro = true;
+    }
+    if (hasta != '') {
+      yaTieneFiltro ? linkFiltrado += '&' : linkFiltrado += '?';
+      linkFiltrado += 'fechaHasta=$hasta';
+      yaTieneFiltro = true;
+    }
+    if (estado != '') {
+      yaTieneFiltro ? linkFiltrado += '&' : linkFiltrado += '?';
+      linkFiltrado += 'estado=$estado';
+      yaTieneFiltro = true;
+    }
+
+    print(linkFiltrado);
+    try {
+      var headers = {'Authorization': token};
+      var resp = await _dio.request(
+        linkFiltrado,
+        options: Options(
+          method: 'GET',
+          headers: headers,
+        ),
+      );
+
+      statusCode = 1;
+      final List<dynamic> ordenList = resp.data;
+      var retorno = ordenList.map((obj) => Orden.fromJson(obj)).toList();
+      print(retorno.length);
+      return retorno;
+    } catch (e) {
+      statusCode = 0;
+      if (e is DioException) {
+        if (e.response != null) {
+          final responseData = e.response!.data;
+          if (responseData != null) {
+            if(e.response!.statusCode == 403){
+              showErrorDialog(context, 'Error: ${e.response!.data['message']}');
+            }else if(e.response!.statusCode! >= 500) {
+              showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+            } else{
+              final errors = responseData['errors'] as List<dynamic>;
+              final errorMessages = errors.map((error) {
+                return "Error: ${error['message']}";
+              }).toList();
+              showErrorDialog(context, errorMessages.join('\n'));
+            }
+          } else {
+            showErrorDialog(context, 'Error: ${e.response!.data}');
+          }
+        } else {
+          showErrorDialog(context, 'Error: No se pudo completar la solicitud');
+        } 
+      } 
+    }
+  }
+
   Future getOrdenCV(BuildContext context, int ordenId, String token) async {
     String link = '${apiLink}cv?ordenTrabajoId=$ordenId';
     try {

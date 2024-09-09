@@ -9,10 +9,12 @@ import 'package:sedel_oficina_maqueta/models/cliente.dart';
 import 'package:sedel_oficina_maqueta/models/constancia_visita.dart';
 import 'package:sedel_oficina_maqueta/models/orden.dart';
 import 'package:sedel_oficina_maqueta/models/servicio.dart';
+import 'package:sedel_oficina_maqueta/models/servicios_clientes.dart';
 import 'package:sedel_oficina_maqueta/models/servicios_ordenes.dart';
 import 'package:sedel_oficina_maqueta/models/tecnico.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/search/client_delegate.dart';
+import 'package:sedel_oficina_maqueta/services/client_services.dart';
 import 'package:sedel_oficina_maqueta/services/orden_services.dart';
 import 'package:sedel_oficina_maqueta/services/servicio_services.dart';
 import 'package:sedel_oficina_maqueta/services/tecnico_services.dart';
@@ -54,6 +56,7 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
   final TextEditingController _notasClienteController = TextEditingController();
   List<Servicio> servicios = [];
   List<Servicio> serviciosSeleccionados = [];
+  List<ServicioCliente> serviciosCliente = [];
   late List<TipoOrden> tipoOrdenes = [];
   late TipoOrden selectedTipoOrden = TipoOrden.empty();
   late TipoOrden? tipoOrdenInicial = null;
@@ -62,6 +65,8 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
   int tecnicoFiltro = 0;
   int buttonIndex = 0;
   List<ConstanciaVisita> constanciasOrden = [];
+  bool cambieListaServicios = false;
+  bool adm = false;
 
   @override
   void initState() {
@@ -266,11 +271,38 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Nro. Orden: ',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text(
+                                      'Nro. Orden: ',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    if(orden.ordenTrabajoId == 0)...[
+                                      const Text('Adm'),
+                                      Switch(
+                                        value: adm, 
+                                        onChanged: (value) {
+                                          adm = value;
+                                          setState(() {});
+                                        }
+                                      )
+                                    ],
+                                    if(orden.modalidad == 'IMPREVISTA')...[
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.assignment_ind,
+                                          color: colors.primary,
+                                        ),
+                                        onPressed: null,
+                                        tooltip: 'Orden administrativa',
+                                      )
+                                    ]
+                                  ],
                                 ),
                                 Text(
                                   'Orden ${orden.ordenTrabajoId}',
@@ -500,25 +532,45 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
                                   ),
                                 ),
                                 const SizedBox(height: 10),
-                                const Text(
-                                  '*  Servicios: ',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600),
+                                Row(
+                                  children: [
+                                    const Text(
+                                      '*  Servicios: ',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    if((orden.estado == 'PENDIENTE' || orden.estado == 'EN PROCESO'))...[
+                                      const Text('Servicios del cliente'),
+                                      Switch(
+                                        activeColor: colors.primary,
+                                        value: cambieListaServicios, 
+                                        onChanged: (value) async {
+                                          cambieListaServicios = value;
+                                          serviciosCliente = selectedCliente.clienteId != 0 ? await ClientServices().getClienteServices(context, selectedCliente.clienteId, token) : await ClientServices().getClienteServices(context, orden.cliente.clienteId, token);
+                                          setState(() {});
+                                        }
+                                      ),
+                                    ]
+                                  ],
                                 ),
-                                if(orden.ordenTrabajoId == 0)
-                                SizedBox(
-                                  width: 400,
-                                  child: DropdownSearch<Servicio>(
-                                    items: servicios,
-                                    popupProps: const PopupProps.menu(
-                                      showSearchBox: true, searchDelay: Duration.zero),
-                                    onChanged: (value) {
-                                      serviciosSeleccionados.insert(0, value!);
-                                      setState(() {});
-                                    },
+                                if((orden.estado == 'PENDIENTE' || orden.estado == 'EN PROCESO'))...[
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width,
+                                    child: DropdownSearch(
+                                      items: cambieListaServicios ? serviciosCliente : servicios,
+                                      popupProps: const PopupProps.menu(showSearchBox: true, searchDelay: Duration.zero),
+                                      onChanged: (value) {
+                                        print(value);
+                                        serviciosSeleccionados.insert(0, value!);
+                                        print(serviciosSeleccionados);
+                                        setState(() {});
+                                      },
+                                    ),
                                   ),
-                                ),
+                                ],
                                 if(/*orden.ordenTrabajoId != 0*/serviciosSeleccionados.isNotEmpty && (orden.estado == 'PENDIENTE' || orden.estado == 'EN PROCESO'))...[
                                   SizedBox(
                                   height: 250,
@@ -846,19 +898,19 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
  Future<void> datosAGuardar(BuildContext context) async {
   DateTime fechaOrden = DateTime(selectedDateOrden.year, selectedDateOrden.month, selectedDateOrden.day);
   
-  
   orden.fechaOrdenTrabajo = fechaOrden;
   orden.fechaDesde = selectedDateDesde;
   orden.fechaHasta = selectedDateHasta;
   orden.instrucciones = _instruccionesController.text;
   orden.comentarios = _comentarioController.text;
-  List<ServicioOrdenes> serviciosOrdenes = convertirServicios();
+  List<ServicioOrdenes> serviciosOrdenes = convertirServiciosSeleccionados();
   orden.servicio = serviciosOrdenes;
   
   if (orden.ordenTrabajoId == 0) {
     orden.cliente = selectedCliente;
     orden.tipoOrden = selectedTipoOrden;
-    orden.tecnico = selectedTecnico!;    
+    orden.tecnico = selectedTecnico!;
+    orden.modalidad = adm ? 'IMPREVISTA' : null;
 
     await OrdenServices().postOrden(context, orden, token);
   }else{
@@ -867,28 +919,39 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
   setState(() {});
 }
 
+  List<ServicioOrdenes> convertirServiciosSeleccionados() {
+    List<ServicioOrdenes> serviciosAAgregar = serviciosSeleccionados.map((servicio) {
+     return ServicioOrdenes(
+      servicioId: servicio.servicioId,
+      codServicio: servicio.codServicio,
+      descripcion: servicio.descripcion,
+     );
+   }).toList();
+   return serviciosAAgregar;
+ }
+
  List<ServicioOrdenes> convertirServicios() {
-   List<ServicioOrdenes> serviciosOrdenes = serviciosSeleccionados.map((servicio) {
+    List<ServicioOrdenes> serviciosOrdenes = serviciosSeleccionados.map((servicio) {
      return ServicioOrdenes(
        servicioId: servicio.servicioId,
        codServicio: servicio.codServicio,
        descripcion: servicio.descripcion,
      );
-   }).toList();
-   return serviciosOrdenes;
- }
+    }).toList();
+    return serviciosOrdenes;
+  }
 
   List<Servicio> convertirServiciosOrden() {
-   List<Servicio> ordenesServicios = orden.servicio.map((servicio) {
-     return Servicio(
-      servicioId: servicio.servicioId,
-      codServicio: servicio.codServicio,
-      descripcion: servicio.descripcion,
-      tipoServicio: TipoServicio.empty(),
-     );
-   }).toList();
-   return ordenesServicios;
- }
+    List<Servicio> ordenesServicios = orden.servicio.map((servicio) {
+      return Servicio(
+        servicioId: servicio.servicioId,
+        codServicio: servicio.codServicio,
+        descripcion: servicio.descripcion,
+        tipoServicio: TipoServicio.empty(),
+      );
+    }).toList();
+    return ordenesServicios;
+  }
 
 
   void cambiarEstado() {

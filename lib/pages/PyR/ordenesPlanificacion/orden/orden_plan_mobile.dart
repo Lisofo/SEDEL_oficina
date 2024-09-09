@@ -495,12 +495,20 @@ class _OrdenPlanMobileState extends State<OrdenPlanMobile> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: colors.primary,),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text('${ordenesFiltradas[i].ordenTrabajoId}', style: const TextStyle(color: Colors.white),),
-                                    )
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: colors.primary,),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text('${ordenesFiltradas[i].ordenTrabajoId}', style: const TextStyle(color: Colors.white),),
+                                        )
+                                      ),
+                                      if(ordenesFiltradas[i].modalidad == 'IMPREVISTA')...[
+                                        Icon(Icons.assignment_ind, color: colors.primary,)
+                                      ]
+                                    ],
                                   ),
                                   const SizedBox(height: 15,),
                                   Text(ordenesFiltradas[i].cliente.codCliente),

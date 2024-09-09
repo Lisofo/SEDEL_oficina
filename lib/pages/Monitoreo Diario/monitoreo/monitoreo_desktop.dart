@@ -32,7 +32,7 @@ class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
     'Finalizada',
     'Revisada',
   ];
-
+  late String token = '';
   Tecnico? selectedTecnico;
   final _ordenServices = OrdenServices();
   DateTime selectedDate = DateTime.now();
@@ -48,7 +48,19 @@ class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
     'Revisada': Colors.blue.shade400,
     'Finalizada': Colors.red.shade200
   };
+  Map<String, Color> coloresCampanita = {
+    'PENDIENTE': Colors.yellow.shade200,
+    'EN PROCESO': Colors.greenAccent.shade400,
+    'REVISADA': Colors.blue.shade400,
+    'FINALIZADA': Colors.red.shade200
+  };
   late Cliente clienteSeleccionado;
+  List<Orden> ordenesCampanita = [];
+  late DateTime hoy = DateTime.now();
+  late DateTime mesesAtras = DateTime(hoy.year, hoy.month - 3, hoy.day);
+  late DateTime ayer = DateTime(hoy.year, hoy.month, hoy.day - 1);
+  late String desde = DateFormat('yyyy-MM-dd', 'es').format(mesesAtras);
+  late String hasta = DateFormat('yyyy-MM-dd', 'es').format(ayer);
 
   @override
   void initState() {
@@ -63,6 +75,13 @@ class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
     if (tecnicos.isEmpty) {
       loadTecnicos();
     }
+    cargarDatos();
+  }
+
+  cargarDatos() async {
+    token = context.watch<OrdenProvider>().token;
+    ordenesCampanita = await OrdenServices().getOrdenCampanita(context, desde, hasta, 'PENDIENTE, EN PROCESO, FINALIZADA', 1, token);
+    setState(() {});
   }
 
   Future<void> loadTecnicos() async {
@@ -150,7 +169,6 @@ class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final token = context.watch<OrdenProvider>().token;
 
     return SafeArea(
       child: Scaffold(
@@ -216,6 +234,13 @@ class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
                         tooltip: 'Buscar',  
                       ),
                       const Spacer(),
+                      IconButton(
+                        onPressed: () async {
+                          await ordenesARevisar(context);
+                        },
+                        tooltip: 'Ordenes a revisar',  
+                        icon: ordenesCampanita.isEmpty ? Icon(Icons.notifications, color: colors.primary,) : Icon(Icons.notifications_active, color: colors.primary,)
+                      ),
                       IconButton(
                         tooltip: 'Seleccione fecha',
                         onPressed: () async {
@@ -315,8 +340,7 @@ class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
                               scrollDirection: Axis.vertical,
                               itemCount: ordenesPendientes.length,
                               itemBuilder: (context, index) {
-                                return cardsDeLaLista(
-                                    ordenesPendientes, index, 'Pendiente');
+                                return cardsDeLaLista(ordenesPendientes, index, 'Pendiente');
                               },
                             ),
                           ],
@@ -372,8 +396,7 @@ class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
                               scrollDirection: Axis.vertical,
                               itemCount: ordenesRevisadas.length,
                               itemBuilder: (context, index) {
-                                return cardsDeLaLista(
-                                    ordenesRevisadas, index, 'Revisada');
+                                return cardsDeLaLista(ordenesRevisadas, index, 'Revisada');
                               },
                             ),
                           ],
@@ -387,6 +410,57 @@ class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> ordenesARevisar(BuildContext context) async {
+    ordenesCampanita = await OrdenServices().getOrdenCampanita(context, desde, hasta, 'PENDIENTE, EN PROCESO, FINALIZADA', 1000, token);
+    await showDialog(
+      context: context, 
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Ordenes a revisar"),
+          content: Column(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.68,
+                width: MediaQuery.of(context).size.width * 0.3,
+                child: ListView.builder(
+                  itemCount: ordenesCampanita.length,
+                  itemBuilder: (context, i) {
+                    var orden = ordenesCampanita[i];
+                    return ListTile(
+                      isThreeLine: true,
+                      leading: Container(
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: coloresCampanita[orden.estado],),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('${orden.ordenTrabajoId}', style: const TextStyle(color: Colors.white),),
+                        )
+                      ),
+                      title: Text(orden.cliente.nombre, style: const TextStyle(fontWeight: FontWeight.w600),),
+                      subtitle: Text('${orden.tecnico.nombre} \nEstado: ${orden.estado}'),
+                      trailing: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(DateFormat("E d, MMM HH:mm", 'es').format(orden.fechaDesde)),
+                          Text(DateFormat("E d, MMM HH:mm", 'es').format(orden.fechaHasta)),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              )
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: (){router.pop();}, 
+              child: const Text('Cerrar')
+            )
+          ],
+        );
+      },
     );
   }
 

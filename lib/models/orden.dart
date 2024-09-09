@@ -71,7 +71,7 @@ class Orden {
       planoId: json["planoId"] as int? ?? 0,
       servicios: [],
       origen: json["origen"],
-      modalidad: '',
+      modalidad: json["modalidad"] as String? ?? '',
     );
 
   Map<String, dynamic> toMap() => {
@@ -126,6 +126,7 @@ class Orden {
     tecnico = Tecnico.empty();
     servicios = [];
     servicio = [];
+    modalidad = '';
   }
 }
 
