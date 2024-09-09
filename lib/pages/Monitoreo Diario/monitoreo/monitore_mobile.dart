@@ -409,32 +409,30 @@ class _MonitoreoMobileState extends State<MonitoreoMobile> {
           content: Column(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.68,
-                width: MediaQuery.of(context).size.width * 0.3,
-                child: ListView.builder(
+                height: MediaQuery.of(context).size.height * 0.75,
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: ListView.separated(
                   itemCount: ordenesCampanita.length,
                   itemBuilder: (context, i) {
                     var orden = ordenesCampanita[i];
-                    return ListTile(
-                      isThreeLine: true,
-                      leading: Container(
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: coloresCampanita[orden.estado],),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('${orden.ordenTrabajoId}', style: const TextStyle(color: Colors.white),),
-                        )
-                      ),
-                      title: Text(orden.cliente.nombre, style: const TextStyle(fontWeight: FontWeight.w600),),
-                      subtitle: Text('${orden.tecnico.nombre} \nEstado: ${orden.estado}'),
-                      trailing: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(DateFormat("E d, MMM HH:mm", 'es').format(orden.fechaDesde)),
-                          Text(DateFormat("E d, MMM HH:mm", 'es').format(orden.fechaHasta)),
-                        ],
-                      ),
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: coloresCampanita[orden.estado],),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('${orden.ordenTrabajoId}', style: const TextStyle(color: Colors.white),),
+                          )
+                        ),
+                        Text(orden.cliente.nombre, style: const TextStyle(fontWeight: FontWeight.w600),),
+                        Text('${orden.tecnico.nombre} \nEstado: ${orden.estado}'),
+                        Text(DateFormat("E d, MMM HH:mm", 'es').format(orden.fechaDesde)),
+                        Text(DateFormat("E d, MMM HH:mm", 'es').format(orden.fechaHasta)),
+                      ],
                     );
-                  },
+                  }, separatorBuilder: (BuildContext context, int index) { return Divider(); },
                 ),
               )
             ],
