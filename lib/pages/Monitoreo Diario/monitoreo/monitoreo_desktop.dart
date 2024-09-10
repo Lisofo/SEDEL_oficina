@@ -447,6 +447,10 @@ class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
                           Text(DateFormat("E d, MMM HH:mm", 'es').format(orden.fechaHasta)),
                         ],
                       ),
+                      onTap: () {
+                        Provider.of<OrdenProvider>(context, listen: false).setOrden(orden);
+                        router.push('/editOrden');
+                      },
                     );
                   },
                 ),

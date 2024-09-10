@@ -415,22 +415,28 @@ class _MonitoreoMobileState extends State<MonitoreoMobile> {
                   itemCount: ordenesCampanita.length,
                   itemBuilder: (context, i) {
                     var orden = ordenesCampanita[i];
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: coloresCampanita[orden.estado],),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text('${orden.ordenTrabajoId}', style: const TextStyle(color: Colors.white),),
-                          )
-                        ),
-                        Text(orden.cliente.nombre, style: const TextStyle(fontWeight: FontWeight.w600),),
-                        Text('${orden.tecnico.nombre} \nEstado: ${orden.estado}'),
-                        Text(DateFormat("E d, MMM HH:mm", 'es').format(orden.fechaDesde)),
-                        Text(DateFormat("E d, MMM HH:mm", 'es').format(orden.fechaHasta)),
-                      ],
+                    return InkWell(
+                      onTap: () {
+                        Provider.of<OrdenProvider>(context, listen: false).setOrden(orden);
+                        router.push('/editOrden');
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: coloresCampanita[orden.estado],),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text('${orden.ordenTrabajoId}', style: const TextStyle(color: Colors.white),),
+                            )
+                          ),
+                          Text(orden.cliente.nombre, style: const TextStyle(fontWeight: FontWeight.w600),),
+                          Text('${orden.tecnico.nombre} \nEstado: ${orden.estado}'),
+                          Text(DateFormat("E d, MMM HH:mm", 'es').format(orden.fechaDesde)),
+                          Text(DateFormat("E d, MMM HH:mm", 'es').format(orden.fechaHasta)),
+                        ],
+                      ),
                     );
                   }, separatorBuilder: (BuildContext context, int index) { return Divider(); },
                 ),
