@@ -418,6 +418,7 @@ class _MonitoreoMobileState extends State<MonitoreoMobile> {
                     return InkWell(
                       onTap: () {
                         Provider.of<OrdenProvider>(context, listen: false).setOrden(orden);
+                        Navigator.of(context).pop();
                         router.push('/editOrden');
                       },
                       child: Column(

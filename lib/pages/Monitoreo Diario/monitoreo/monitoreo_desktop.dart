@@ -231,7 +231,7 @@ class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
                           cargarListas();
                         },
                         icon: const Icon(Icons.search_outlined),
-                        tooltip: 'Buscar',  
+                        tooltip: 'Buscar',
                       ),
                       const Spacer(),
                       IconButton(
@@ -449,6 +449,7 @@ class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
                       ),
                       onTap: () {
                         Provider.of<OrdenProvider>(context, listen: false).setOrden(orden);
+                        Navigator.of(context).pop();
                         router.push('/editOrden');
                       },
                     );
