@@ -174,8 +174,8 @@ class _EditPasswordMobileState extends State<EditPasswordMobile> {
       
                 onTap: () async{
                   if (_formKey.currentState!.validate()) {
-                    await _userServices.patchPwd(context,userSeleccionado.usuarioId.toString(),_passwordController.text,token);
-                    await _userServices.patchPIN(context,userSeleccionado.usuarioId.toString(),_pinController.text,token);
+                    await _userServices.patchPwd(context,userSeleccionado.usuarioId.toString(),_passwordController.text,_pinController.text,token);
+                    // await _userServices.patchPIN(context,userSeleccionado.usuarioId.toString(),_pinController.text,token);
                   }
                 },
                 child: Padding(

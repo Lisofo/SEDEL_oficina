@@ -265,11 +265,14 @@ class UserServices {
     }
   }
 
-  Future patchPwd(BuildContext context, String userId, String password, String token) async {
+  Future patchPwd(BuildContext context, String userId, String password, String pin, String token) async {
     String link = '$apiLink$userId';
     try {
       var headers = {'Authorization': token};
-      var data = {"password": password};
+      var data = {
+        "password": password,
+        "pin2": pin
+      };
       final resp = await _dio.request(
         link,
         data: data,

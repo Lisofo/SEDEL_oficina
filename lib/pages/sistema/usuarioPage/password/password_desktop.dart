@@ -158,25 +158,25 @@ class _EditPasswordDesktopState extends State<EditPasswordDesktop> {
                   ),
                   const Spacer(),
                   BottomAppBar(
-                      elevation: 0,
-                      color: Colors.transparent,
-                      child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                CustomButton(
-                                  onPressed: () async {
-                                    if (_formKey.currentState!.validate()) {
-                                      await _userServices.patchPwd(context,userSeleccionado.usuarioId.toString(),_passwordController.text,token);
-                                      await _userServices.patchPIN(context,userSeleccionado.usuarioId.toString(),_pinController.text,token);
-                                    }
-                                  },
-                                  text: 'Guardar',
-                                  tamano: 20,
-                                ),
-                              ]
-                            )
+                    elevation: 0,
+                    color: Colors.transparent,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          CustomButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                await _userServices.patchPwd(context,userSeleccionado.usuarioId.toString(),_passwordController.text,_pinController.text,token);
+                                // await _userServices.patchPIN(context,userSeleccionado.usuarioId.toString(),_pinController.text,token);
+                              }
+                            },
+                            text: 'Guardar',
+                            tamano: 20,
+                          ),
+                        ]
+                      )
                     )
                   )
                 ],
