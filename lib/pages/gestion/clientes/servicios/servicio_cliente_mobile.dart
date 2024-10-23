@@ -64,7 +64,7 @@ class _ServicioClienteMobileState extends State<ServicioClienteMobile> {
             ],
           ),
         ) : 
-        Container(
+        SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: ListView.builder(
@@ -86,7 +86,7 @@ class _ServicioClienteMobileState extends State<ServicioClienteMobile> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Center(
-                              child: Container(
+                              child: SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.90,
                                 child: Text(servicio.descripcion, 
                                   style: const TextStyle(
@@ -100,7 +100,7 @@ class _ServicioClienteMobileState extends State<ServicioClienteMobile> {
                             Text(DateFormat('E, d, MMM, yyyy', 'es').format(servicio.desde!)),
                             Text(servicio.hasta == null ? '' : DateFormat('E, d, MMM, yyyy', 'es').format(servicio.hasta!)),
                             for(var frecuencia in servicio.frecuencia)...[
-                              Container(
+                              SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.80,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
