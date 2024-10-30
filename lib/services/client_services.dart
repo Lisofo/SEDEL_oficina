@@ -379,7 +379,7 @@ class ClientServices {
   }
 
   Future getClientesDepartamentos(BuildContext context, String token) async {
-    String link = apiUrl += 'api/v1/clientes/departamentos';
+    String link = apiUrl += 'api/v1/clientes/departamentos?sort=descripcion';
 
     try {
       var headers = {'Authorization': token};
