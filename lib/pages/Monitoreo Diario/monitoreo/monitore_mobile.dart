@@ -439,7 +439,7 @@ class _MonitoreoMobileState extends State<MonitoreoMobile> {
                         ],
                       ),
                     );
-                  }, separatorBuilder: (BuildContext context, int index) { return Divider(); },
+                  }, separatorBuilder: (BuildContext context, int index) { return const Divider(); },
                 ),
               )
             ],
