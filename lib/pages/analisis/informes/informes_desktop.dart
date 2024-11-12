@@ -10,7 +10,7 @@ import 'package:sedel_oficina_maqueta/models/informes_values.dart';
 import 'package:sedel_oficina_maqueta/models/parametro.dart';
 import 'package:sedel_oficina_maqueta/models/reporte.dart';
 import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
-import 'package:sedel_oficina_maqueta/search/parametro_cliente_values.dart';
+import 'package:sedel_oficina_maqueta/search/parametros_values.dart';
 import 'package:sedel_oficina_maqueta/services/informes_services.dart';
 import 'package:sedel_oficina_maqueta/widgets/appbar_desktop.dart';
 import 'package:sedel_oficina_maqueta/widgets/custom_form_dropdown.dart';
@@ -200,13 +200,13 @@ class _InformesDesktopState extends State<InformesDesktop> {
                                       await _selectDate(context, parametro.parametro, parametro.tipo, parametro);
                                       print(parametro.parametro);
                                     } else if(parametro.control == 'L'){
-                                      final cliente = await showSearch(
+                                      final valorSeleccionado = await showSearch(
                                         context: context, 
-                                        delegate: ParametroClientSearchDelegate('Buscar cliente', historial, parametro.informeId, parametro.parametroId, parametro.dependeDe, parametros)
+                                        delegate: ParametroSearchDelegate('Buscar ${parametro.parametro}', historial, parametro.informeId, parametro.parametroId, parametro.dependeDe, parametros)
                                       );
-                                      if(cliente != null) {
-                                        parametro.valor = cliente.id.toString();
-                                        parametro.valorAMostrar = cliente.descripcion;
+                                      if(valorSeleccionado != null) {
+                                        parametro.valor = valorSeleccionado.id.toString();
+                                        parametro.valorAMostrar = valorSeleccionado.descripcion;
                                         setState(() {});
                                         
                                       } else{
