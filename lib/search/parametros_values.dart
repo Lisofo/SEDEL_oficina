@@ -8,7 +8,7 @@ import 'package:sedel_oficina_maqueta/provider/orden_provider.dart';
 import 'package:sedel_oficina_maqueta/services/informes_services.dart';
 
 
-class ParametroClientSearchDelegate extends SearchDelegate {
+class ParametroSearchDelegate extends SearchDelegate {
   @override
   final String searchFieldLabel;
   final List<ParametrosValues> historial;
@@ -16,7 +16,7 @@ class ParametroClientSearchDelegate extends SearchDelegate {
   final int parametroId;
   final String? dependeDe;
   List<Parametro> parametros;
-  ParametroClientSearchDelegate(this.searchFieldLabel, this.historial, this.informeId, this.parametroId, this.dependeDe, this.parametros);
+  ParametroSearchDelegate(this.searchFieldLabel, this.historial, this.informeId, this.parametroId, this.dependeDe, this.parametros);
 
   @override
   List<Widget>? buildActions(BuildContext context) {
