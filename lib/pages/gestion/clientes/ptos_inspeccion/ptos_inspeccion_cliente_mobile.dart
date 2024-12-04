@@ -643,6 +643,7 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
 
     await PlanosServices().postPlano(context, cliente, nuevoPlanoACrear, token);
     planos = await PlanosServices().getClientPlano(context, cliente, token);
+    PlanosServices.showDialogs(context, 'Plano creado', true, false);
     setState(() {});
   }
 
@@ -782,6 +783,7 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
                   ),
                   const SizedBox(height: 10,),
                   CustomDropdownFormMenu(
+                    isDense: true,
                     hint: 'Zona',
                     value: zonaSeleccionada.codZona != '' ? zonaSeleccionada : null,
                     items: zonas.map((e) {
@@ -806,6 +808,7 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
                   ),
                   const SizedBox(height: 10,),
                   CustomDropdownFormMenu(
+                    isDense: true,
                     hint: 'Plaga objetivo',
                     value: plagaObjetivoSeleccionada.plagaObjetivoId != 0 ? plagaObjetivoSeleccionada : null,
                     items: plagasObjetivo.map((e) {
@@ -853,21 +856,39 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
               TextButton(
                 child: const Text('Confirmar'),
                 onPressed: () async {
+                  // for (var i = 0; i < puntosSeleccionados.length; i++) {
+                  //   puntosSeleccionados[i].codPuntoInspeccion = codPuntoInspeccionController.text;
+                  //   puntosSeleccionados[i].zona = zonaSeleccionada.codZona;
+                  //   puntosSeleccionados[i].sector = sectorController.text;
+                  //   puntosSeleccionados[i].plagaObjetivoId = plagaObjetivoSeleccionada.plagaObjetivoId;
+                  //   puntosSeleccionados[i].comentario = comentarioController.text;
+                  //   puntosSeleccionados[i].codigoBarra = codigoBarraController.text;
+
+                  //   if (puntosSeleccionados[i].puntoInspeccionId != 0) {
+                  //     await PlanosServices().putPtoInspeccion(context, cliente, planoSeleccionado, puntosSeleccionados[i], token);
+                  //   } 
+                  // }
+                  // if(puntosSeleccionados.length == 1){
+                  //  await PlanosServices.showDialogs(context, 'Punto actualizado correctamente', true, false);
+                  // }else{
+                  //  await PlanosServices.showDialogs(context, 'Puntos actualizados correctamente', true, false);
+                  // }
+                  // await actualizar(puntos);
                   for (var i = 0; i < puntosSeleccionados.length; i++) {
                     Ptoinspeccion nuevoPtoInspeccion = Ptoinspeccion(
-                      puntoInspeccionId: puntosSeleccionados[i].puntoInspeccionId,                        
+                      puntoInspeccionId: puntosSeleccionados[i].puntoInspeccionId,
                       planoId: puntosSeleccionados[i].planoId,
                       tipoPuntoInspeccionId: puntosSeleccionados[i].tipoPuntoInspeccionId,
                       codTipoPuntoInspeccion: puntosSeleccionados[i].codTipoPuntoInspeccion,
-                      plagaObjetivoId: puntosSeleccionados[i].plagaObjetivoId,
+                      plagaObjetivoId: plagaObjetivoSeleccionada.plagaObjetivoId != 0 ? plagaObjetivoSeleccionada.plagaObjetivoId : puntosSeleccionados[i].plagaObjetivoId,
                       codPuntoInspeccion: puntosSeleccionados.length == 1 ? codPuntoInspeccionController.text : puntosSeleccionados[i].codPuntoInspeccion,
                       codigoBarra: puntosSeleccionados.length == 1 ? codigoBarraController.text : puntosSeleccionados[i].codigoBarra,
                       zona: zonaSeleccionada.codZona,
                       sector: sectorController.text,
                       comentario: comentarioController.text,
                       seleccionado: puntosSeleccionados[i].seleccionado,
-                      codPlagaObjetivo: puntosSeleccionados[i].codPlagaObjetivo,
-                      descPlagaObjetivo: puntosSeleccionados[i].descPlagaObjetivo,
+                      codPlagaObjetivo: plagaObjetivoSeleccionada.codPlagaObjetivo,
+                      descPlagaObjetivo: plagaObjetivoSeleccionada.descripcion,
                       descTipoPunto: puntosSeleccionados[i].descTipoPunto,
                       desde: puntosSeleccionados[i].desde,
                       estado: puntosSeleccionados[i].estado,

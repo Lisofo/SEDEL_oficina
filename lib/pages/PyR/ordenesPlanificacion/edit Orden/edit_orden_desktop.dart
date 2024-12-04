@@ -899,6 +899,8 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
     } else if(orden.estado == 'REVISADA') {
       nuevoEstado = 'FINALIZADA';
     }
+    int? statusCode;
+    final ordenServices = OrdenServices();
 
     showDialog(
       context: context,
@@ -915,8 +917,12 @@ class _EditOrdenDesktopState extends State<EditOrdenDesktop> {
             ),
             TextButton(
               onPressed: () async {
-                await OrdenServices().patchOrden(context, orden, nuevoEstado, 0, token);
-                await OrdenServices.showDialogs(context, 'Estado cambiado correctamente', true, false);
+                await ordenServices.patchOrden(context, orden, nuevoEstado, 0, token);
+                statusCode = await ordenServices.getStatusCode();
+                await ordenServices.resetStatusCode();
+                if(statusCode == 1) {
+                  await OrdenServices.showDialogs(context, 'Estado cambiado correctamente', true, false);
+                }
                 setState(() {
                   orden.estado = nuevoEstado;
                 });

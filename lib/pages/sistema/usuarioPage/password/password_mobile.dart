@@ -124,12 +124,12 @@ class _EditPasswordMobileState extends State<EditPasswordMobile> {
                       maxLines: 1,
                       label: 'PIN',
                       controller: _pinController,
-                      validator: (value) {
-                        if (value!.length < 6 || value.length > 12) {
-                          return 'Ingrese un PIN valido';
-                        }
-                        return null;
-                      },
+                      // validator: (value) {
+                      //   if (value!.length < 6 || value.length > 12) {
+                      //     return 'Ingrese un PIN valido';
+                      //   }
+                      //   return null;
+                      // },
                     ),
                   )
                 ],

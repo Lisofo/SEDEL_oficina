@@ -965,34 +965,40 @@ class _EditOrdenMobileState extends State<EditOrdenMobile> {
     } else if(orden.estado == 'REVISADA') {
       nuevoEstado = 'FINALIZADA';
     }
+    int? statusCode;
+    final ordenServices = OrdenServices();
+
 
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Cambio de estado de la orden'),
-            content: Text(
-                'Esta por cambiar el estado de la orden ${orden.ordenTrabajoId}. Esta seguro de querer cambiar el estado de ${orden.estado} a $nuevoEstado?'),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Cerrar')),
-              TextButton(
-                  onPressed: () async {
-                    await OrdenServices()
-                        .patchOrden(context, orden, nuevoEstado, 0, token);
-                    await OrdenServices.showDialogs(
-                        context, 'Estado cambiado correctamente', true, false);
-                    setState(() {
-                      orden.estado = nuevoEstado;
-                    });
-                  },
-                  child: const Text('Confirmar')),
-            ],
-          );
-        });
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Cambio de estado de la orden'),
+          content: Text('Esta por cambiar el estado de la orden ${orden.ordenTrabajoId}. Esta seguro de querer cambiar el estado de ${orden.estado} a $nuevoEstado?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cerrar')),
+            TextButton(
+              onPressed: () async {
+                await ordenServices.patchOrden(context, orden, nuevoEstado, 0, token);
+                statusCode = await ordenServices.getStatusCode();
+                await ordenServices.resetStatusCode();
+                if(statusCode == 1) {
+                  await OrdenServices.showDialogs(context, 'Estado cambiado correctamente', true, false);
+                }
+                setState(() {
+                  orden.estado = nuevoEstado;
+                });
+              },
+              child: const Text('Confirmar')
+            ),
+          ],
+        );
+      }
+    );
   }
 
   void cambiarTecnico() {

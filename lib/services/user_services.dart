@@ -271,8 +271,10 @@ class UserServices {
       var headers = {'Authorization': token};
       var data = {
         "password": password,
-        "pin2": pin
+        if(pin != '')
+          "pin2": pin
       };
+      
       final resp = await _dio.request(
         link,
         data: data,
