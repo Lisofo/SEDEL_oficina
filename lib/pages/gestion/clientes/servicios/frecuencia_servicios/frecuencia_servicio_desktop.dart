@@ -518,7 +518,9 @@ class _FrecuenciaServicioDesktopState extends State<FrecuenciaServicioDesktop> {
                     );
                     await ServiciosServices().putFrecuencias(context, nuevaFrecuencia, widget.token);
                     frecuencias = await ServiciosServices().getFrecuencias(context, widget.cliente.clienteId, widget.servicioCliente.clienteServicioId, widget.token);
-                    setState((){});
+                    setState((){
+                      comentarioController.text = '';
+                    });
                   },
                   child: const Text('Guardar'),
                 ),

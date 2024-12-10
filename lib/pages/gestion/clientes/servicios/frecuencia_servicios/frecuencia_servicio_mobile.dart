@@ -304,7 +304,9 @@ class _FrecuenciaServicioMobileState extends State<FrecuenciaServicioMobile> {
                         );
                         await ServiciosServices().postFrecuencias(context, nuevaFrecuencia, widget.token);
                         frecuencias = await ServiciosServices().getFrecuencias(context, widget.cliente.clienteId, widget.servicioCliente.clienteServicioId, widget.token);
-                        setState((){});
+                        setState((){
+                          comentarioController.text = '';
+                        });
                       },
                       child: const Text('Agregar'),
                     ),

@@ -70,7 +70,8 @@ class _AddClientServicesDialogState extends State<AddClientServicesDialog> {
               return DropdownMenuItem(
   
                 value: e,
-                child: Flexible(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.4,
                   child: Text(
                     maxLines: 2,
                     e.descripcion,
