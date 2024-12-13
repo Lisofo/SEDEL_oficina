@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sedel_oficina_maqueta/services/login_service.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class LoginDesktop extends StatefulWidget {
   const LoginDesktop({super.key});
@@ -77,116 +78,133 @@ class _LoginDesktopState extends State<LoginDesktop> {
                       ),
                       const SizedBox(height: 35),
                       Form(
-                          key: _formKey,
-                          child: Column(
-                            children: [
-                              TextFormField(
-                                  controller: usernameController,
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                          borderSide: const BorderSide(),
-                                          borderRadius:
-                                              BorderRadius.circular(20)),
-                                      fillColor: Colors.white,
-                                      filled: true,
-                                      prefixIcon: const Icon(Icons.person),
-                                      prefixIconColor:
-                                          colors.primary,
-                                      hintText: 'Ingrese su usuario'),
-                                  validator: (value) {
-                                    if (value!.isEmpty ||
-                                        value.trim().isEmpty) {
-                                      return 'Ingrese un usuario valido';
-                                    }
-                                    return null;
-                                  },
-                                  onSaved: (newValue) => user = newValue!
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              controller: usernameController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderSide: const BorderSide(),
+                                  borderRadius: BorderRadius.circular(20)
                                 ),
-                              const SizedBox(
-                                height: 20,
+                                fillColor: Colors.white,
+                                filled: true,
+                                prefixIcon: const Icon(Icons.person),
+                                prefixIconColor: colors.primary,
+                                hintText: 'Ingrese su usuario'
                               ),
-                              TextFormField(
-                                  controller: passwordController,
-                                  obscureText: isObscured,
-                                  focusNode: passwordFocusNode,
-                                  keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                          borderSide: const BorderSide(),
-                                          borderRadius:
-                                              BorderRadius.circular(20)),
-                                      fillColor: Colors.white,
-                                      filled: true,
-                                      prefixIcon: const Icon(Icons.lock),
-                                      prefixIconColor:
-                                          //const Color.fromARGB(255, 41, 146, 41)
-                                          colors.primary,
-                                      suffixIcon: IconButton(
-                                        padding: const EdgeInsetsDirectional.only(
-                                            end: 12.0),
-                                        icon: isObscured
-                                            ? const Icon(
-                                                Icons.visibility_off,
-                                                color: Colors.black,
-                                              )
-                                            : const Icon(Icons.visibility,
-                                                color: Colors.black),
-                                        onPressed: () {
-                                          setState(() {
-                                            isObscured = !isObscured;
-                                          });
-                                        },
-                                      ),
-                                      hintText: 'Ingrese su contraseña'),
-                                  validator: (value) {
-                                    if (value!.isEmpty ||
-                                        value.trim().isEmpty) {
-                                      return 'Ingrese su contraseña';
-                                    }
-                                    if (value.length < 6) {
-                                      return 'Contraseña invalida';
-                                    }
-                                    return null;
-                                  },
-                                  onFieldSubmitted: (value) async {
-                                    await login(context);
-                                  },
-                                  onSaved: (newValue) => pass = newValue!),
-                              const SizedBox(
-                                height: 40,
-                              ),
-                              ElevatedButton(
-                                style: const ButtonStyle(
-                                  backgroundColor:
-                                      WidgetStatePropertyAll(Colors.white),
-                                  elevation: WidgetStatePropertyAll(10),
-                                  shape: WidgetStatePropertyAll(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.horizontal(
-                                        left: Radius.circular(50),
-                                        right: Radius.circular(50),
-                                      ),
+                              validator: (value) {
+                                if (value!.isEmpty ||
+                                    value.trim().isEmpty) {
+                                  return 'Ingrese un usuario valido';
+                                }
+                                return null;
+                              },
+                              onSaved: (newValue) => user = newValue!
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            TextFormField(
+                                controller: passwordController,
+                                obscureText: isObscured,
+                                focusNode: passwordFocusNode,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderSide: const BorderSide(),
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    prefixIcon: const Icon(Icons.lock),
+                                    prefixIconColor:
+                                        //const Color.fromARGB(255, 41, 146, 41)
+                                        colors.primary,
+                                    suffixIcon: IconButton(
+                                      padding: const EdgeInsetsDirectional.only(
+                                          end: 12.0),
+                                      icon: isObscured
+                                          ? const Icon(
+                                              Icons.visibility_off,
+                                              color: Colors.black,
+                                            )
+                                          : const Icon(Icons.visibility,
+                                              color: Colors.black),
+                                      onPressed: () {
+                                        setState(() {
+                                          isObscured = !isObscured;
+                                        });
+                                      },
                                     ),
-                                  ),
-                                ),
-                                onPressed: () async {
+                                    hintText: 'Ingrese su contraseña'),
+                                validator: (value) {
+                                  if (value!.isEmpty ||
+                                      value.trim().isEmpty) {
+                                    return 'Ingrese su contraseña';
+                                  }
+                                  if (value.length < 6) {
+                                    return 'Contraseña invalida';
+                                  }
+                                  return null;
+                                },
+                                onFieldSubmitted: (value) async {
                                   await login(context);
                                 },
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8.5),
-                                  child: Text(
-                                    'Iniciar Sesión',
-                                    style: TextStyle(
-                                      color: colors.primary,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 25,
+                                onSaved: (newValue) => pass = newValue!),
+                            const SizedBox(
+                              height: 40,
+                            ),
+                            ElevatedButton(
+                              style: const ButtonStyle(
+                                backgroundColor:
+                                    WidgetStatePropertyAll(Colors.white),
+                                elevation: WidgetStatePropertyAll(10),
+                                shape: WidgetStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.horizontal(
+                                      left: Radius.circular(50),
+                                      right: Radius.circular(50),
                                     ),
                                   ),
                                 ),
                               ),
-                            ],
-                          )),
+                              onPressed: () async {
+                                await login(context);
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.5),
+                                child: Text(
+                                  'Iniciar Sesión',
+                                  style: TextStyle(
+                                    color: colors.primary,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 25,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ),
+                      const SizedBox(height: 30,),
+                      Center(
+                        child: FutureBuilder(
+                          future: PackageInfo.fromPlatform(),
+                          builder: (BuildContext context, AsyncSnapshot<PackageInfo> snapshot) {
+                            if (snapshot.hasData) {
+                              return Text(
+                                'Versión ${snapshot.data!.version} (Build ${snapshot.data!.buildNumber})',
+                                style: const TextStyle(color: Colors.black),
+                              );
+                            } else {
+                              return const Text('Cargando la web...');
+                            }
+                          }
+                        ),
+                      )
                     ],
                   ),
                 ),

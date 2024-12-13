@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sedel_oficina_maqueta/services/login_service.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class LoginMobile extends StatefulWidget {
   const LoginMobile({super.key});
@@ -141,23 +142,46 @@ class _LoginMobileState extends State<LoginMobile> {
                   height: 40,
                 ),
                 ElevatedButton(
-                    style: const ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(Colors.white),
-                        elevation: WidgetStatePropertyAll(10),
-                        shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.horizontal(
-                                left: Radius.circular(50),
-                                right: Radius.circular(50))))),
-                    onPressed: () async{
-                      await login(context);
-                    },
-                    child: Text(
-                      'Iniciar Sesión',
-                      style: TextStyle(
-                          color: colors.primary,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
-                    )),
+                  style: const ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(Colors.white),
+                    elevation: WidgetStatePropertyAll(10),
+                    shape: WidgetStatePropertyAll(
+                        RoundedRectangleBorder(
+                        borderRadius: BorderRadius.horizontal(
+                          left: Radius.circular(50),
+                          right: Radius.circular(50)
+                        )
+                      )
+                    )
+                  ),
+                  onPressed: () async{
+                    await login(context);
+                  },
+                  child: Text(
+                    'Iniciar Sesión',
+                    style: TextStyle(
+                      color: colors.primary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20
+                    ),
+                  )
+                ),
+                const SizedBox(height: 30,),
+                Center(
+                  child: FutureBuilder(
+                    future: PackageInfo.fromPlatform(),
+                    builder: (BuildContext context, AsyncSnapshot<PackageInfo> snapshot) {
+                      if (snapshot.hasData) {
+                        return Text(
+                          'Versión ${snapshot.data!.version} (Build ${snapshot.data!.buildNumber})',
+                          style: const TextStyle(color: Colors.black),
+                        );
+                      } else {
+                        return const Text('Cargando la web...');
+                      }
+                    }
+                  ),
+                )
               ],
             ),
           ),
