@@ -9,8 +9,7 @@ class ButtonDelegate extends StatefulWidget {
   final Color colorSeleccionado;
   final String nombreProvider;
 
-  const ButtonDelegate(
-      {super.key, required this.colorSeleccionado, required this.nombreProvider});
+  const ButtonDelegate({super.key, required this.colorSeleccionado, required this.nombreProvider});
 
   @override
   State<ButtonDelegate> createState() => _ButtonDelegateState();
@@ -45,6 +44,9 @@ class _ButtonDelegateState extends State<ButtonDelegate> {
       case 'editIndisponibilidad':
         selectedCliente = context.read<OrdenProvider>().clienteEditIndisponibilidad;
         break;
+      case 'unicoCliente':
+        selectedCliente = context.read<OrdenProvider>().unicoCliente;
+        break;
     }
     final colors = Theme.of(context).colorScheme;
     return Row(
@@ -68,14 +70,13 @@ class _ButtonDelegateState extends State<ButtonDelegate> {
                 ),
           onPressed: () async {
             final cliente = await showSearch(
-                context: context,
-                delegate: ClientSearchDelegate(
-                    'Buscar Cliente', historial, widget.nombreProvider));
+              context: context,
+              delegate: ClientSearchDelegate('Buscar Cliente', historial, widget.nombreProvider)
+            );
             if (cliente != null) {
               setState(() {
                 selectedCliente = cliente;
-                final int clienteExiste = historial
-                    .indexWhere((element) => element.nombre == cliente.nombre);
+                final int clienteExiste = historial.indexWhere((element) => element.nombre == cliente.nombre);
                 if (clienteExiste == -1) {
                   historial.insert(0, cliente);
                 }

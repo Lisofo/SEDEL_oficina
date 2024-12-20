@@ -51,6 +51,7 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
   bool cargando = false;
   late List<Orden> ordenesFiltradas = [];
   int columnas = 7;
+  late bool unicoClienteBool = false;
 
   @override
   void initState() {
@@ -174,56 +175,56 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
         width: MediaQuery.of(context).size.width *0.9,
         child: Column(
           children: [
-
-          SizedBox(
-            width: 220,
-            child: DropdownSearch(
-              dropdownDecoratorProps: const DropDownDecoratorProps(
+            SizedBox(
+              width: 220,
+              child: DropdownSearch(
+                dropdownDecoratorProps: const DropDownDecoratorProps(
                 textAlign: TextAlign.center,
                   baseStyle: TextStyle(color: Colors.black),
                   dropdownSearchDecoration: InputDecoration(
                     border: InputBorder.none,
-                      hintText: 'Tecnico',
-                      hintStyle: TextStyle(color: Colors.black))),
-              items: tecnicos,
-              popupProps: const PopupProps.menu(
-                  showSearchBox: true, searchDelay: Duration.zero),
-              onChanged: (value) {
-                setState(() {
-                  selectedTecnico = value;
-                  tecnicoFiltro = value!.tecnicoId;
-                  print(clienteSeleccionado.nombre);
-                });
-              },
-            ),
-          ),
-          Divider(
-            thickness: 3,
-            color: colors.primary,
-          ),
-          const ButtonDelegate(
-            colorSeleccionado: Colors.black,
-            nombreProvider: 'Planificador',
-          ),
-          Divider(
-            thickness: 3,
-            color: colors.primary,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              TextButton(
-                style: ButtonStyle(
-                  maximumSize: WidgetStatePropertyAll(Size.fromWidth(MediaQuery.of(context).size.width * 0.5 )),
-                  backgroundColor: WidgetStatePropertyAll(colors.secondary),
-                  shape: WidgetStatePropertyAll(ContinuousRectangleBorder(borderRadius: BorderRadius.circular(20)))
+                    hintText: 'Tecnico',
+                    hintStyle: TextStyle(color: Colors.black)
+                  )
                 ),
+                items: tecnicos,
+                popupProps: const PopupProps.menu(showSearchBox: true, searchDelay: Duration.zero),
+                onChanged: (value) {
+                  setState(() {
+                    selectedTecnico = value;
+                    tecnicoFiltro = value!.tecnicoId;
+                    print(clienteSeleccionado.nombre);
+                  });
+                },
+              ),
+            ),
+            Divider(
+              thickness: 3,
+              color: colors.primary,
+            ),
+            const ButtonDelegate(
+              colorSeleccionado: Colors.black,
+              nombreProvider: 'Planificador',
+            ),
+            Divider(
+              thickness: 3,
+              color: colors.primary,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                TextButton(
+                  style: ButtonStyle(
+                    maximumSize: WidgetStatePropertyAll(Size.fromWidth(MediaQuery.of(context).size.width * 0.5 )),
+                    backgroundColor: WidgetStatePropertyAll(colors.secondary),
+                    shape: WidgetStatePropertyAll(ContinuousRectangleBorder(borderRadius: BorderRadius.circular(20)))
+                  ),
                   onPressed: () async {
                     final pickedDate = await showDateRangePicker(
-                        context: context,
-                        firstDate: DateTime(2023),
-                        lastDate: DateTime(2090));
-              
+                      context: context,
+                      firstDate: DateTime(2023),
+                      lastDate: DateTime(2090)
+                    );
                     if (pickedDate != null && pickedDate != selectedDate) {
                       setState(() {
                         selectedDate = pickedDate;
@@ -235,103 +236,95 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
                     'Período',
                     style: TextStyle(color: Colors.black),
                   )
-              ),
-              IconButton(
-                onPressed: () async {
-                  await buscar(token);
-                  cargarPlanificacion();
-                },
-                icon: const Icon(Icons.search_outlined),
-                tooltip: 'Buscar',
-                style: const ButtonStyle(
-                    iconColor: WidgetStatePropertyAll(Colors.black)),
-              ),
-            ],
-          ),
-          
-          const SizedBox(width: 10,),
-          Text('${DateFormat("EEEEE d MMMM", 'es').format(selectedDate.start)} - ${DateFormat("EEEEE d MMMM", 'es').format(selectedDate.end)}',
-            style: const TextStyle(color: Colors.black),
-          ),
-          Divider(
-            thickness: 3,
-            color: colors.primary,
-          ),
-          Text(
-            '${ordenesFiltradas.isEmpty ? '0' : ordenesFiltradas.length} Ordenes', 
-            style: const TextStyle(color: Colors.black),
-          ),
-          const Spacer(),
-          const Divider(),
-          Wrap(
-            children: [
-              // IconButton(
-              //   onPressed: () async {
-              //   await generadorPlanificacion(context);
-              //   },
-              //   icon:  Icon(Icons.play_lesson_rounded, color: colors.primary,),
-              //   tooltip: 'Generar planificador',
-              // ),
-              TextButton(
-                child:  Text(
-                  "Hoy",
-                  style: TextStyle(color: colors.primary),
                 ),
-                onPressed: () => controller.jumpTo(DateTime.now()),
-              ),
-              IconButton(
-                icon: const Icon(Icons.start),
-                style:  ButtonStyle(
-                    iconColor: WidgetStatePropertyAll(colors.primary)),
-                onPressed: () {
-                  nuevaFecha = selectedDate.start;  
-                  controller.jumpTo(selectedDate.start);
-                } ,
-                tooltip: 'Inicio del período',
-              ),
-              IconButton(
-                icon: const Icon(Icons.calendar_view_day),
-                style:  ButtonStyle(
-                    iconColor: WidgetStatePropertyAll(colors.primary)),
-                onPressed: () {
-                  controller.setColumns(1);
-                  columnas = 1;
-                } ,
-                tooltip: 'Vista día',
-              ),
-              // IconButton(
-              //   icon: const Icon(Icons.calendar_view_month_outlined),
-              //   style:  ButtonStyle(
-              //       iconColor: WidgetStatePropertyAll(colors.primary)),
-              //   onPressed: () => controller.setColumns(30),
-              //   tooltip: 'Vista mensual',
-              // ),
-              IconButton(
-                icon: const Icon(Icons.calendar_view_week),
-                style:  ButtonStyle(
-                    iconColor: WidgetStatePropertyAll(colors.primary)),
-                onPressed: () {
-                  controller.setColumns(7);
-                  columnas = 7;
-                } ,
-                tooltip: 'Vista semanal',
-              ),
-              IconButton(
-                icon: const Icon(Icons.zoom_in),
-                style:  ButtonStyle(
-                    iconColor: WidgetStatePropertyAll(colors.primary)),
-                onPressed: () =>
-                    controller.setCellHeight(controller.cellHeight + 10),
-              ),
-              IconButton(
-                icon: const Icon(Icons.zoom_out),
-                style:  ButtonStyle(
-                    iconColor: WidgetStatePropertyAll(colors.primary)),
-                onPressed: () =>
-                    controller.setCellHeight(controller.cellHeight - 10),
-              ),
-            ],
-          ),
+                IconButton(
+                  onPressed: () async {
+                    await buscar(token);
+                    cargarPlanificacion();
+                  },
+                  icon: const Icon(Icons.search_outlined),
+                  tooltip: 'Buscar',
+                  style: const ButtonStyle( iconColor: WidgetStatePropertyAll(Colors.black)),
+                ),
+              ],
+            ),
+
+            const SizedBox(width: 10,),
+            Text('${DateFormat("EEEEE d MMMM", 'es').format(selectedDate.start)} - ${DateFormat("EEEEE d MMMM", 'es').format(selectedDate.end)}',
+              style: const TextStyle(color: Colors.black),
+            ),
+            Divider(
+              thickness: 3,
+              color: colors.primary,
+            ),
+            Text(
+              '${ordenesFiltradas.isEmpty ? '0' : ordenesFiltradas.length} Ordenes', 
+              style: const TextStyle(color: Colors.black),
+            ),
+            const Spacer(),
+            const Divider(),
+            Wrap(
+              children: [
+                // IconButton(
+                //   onPressed: () async {
+                //   await generadorPlanificacion(context);
+                //   },
+                //   icon:  Icon(Icons.play_lesson_rounded, color: colors.primary,),
+                //   tooltip: 'Generar planificador',
+                // ),
+                TextButton(
+                  child:  Text(
+                    "Hoy",
+                    style: TextStyle(color: colors.primary),
+                  ),
+                  onPressed: () => controller.jumpTo(DateTime.now()),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.start),
+                  style:  ButtonStyle( iconColor: WidgetStatePropertyAll(colors.primary)),
+                  onPressed: () {
+                    nuevaFecha = selectedDate.start;  
+                    controller.jumpTo(selectedDate.start);
+                  } ,
+                  tooltip: 'Inicio del período',
+                ),
+                IconButton(
+                  icon: const Icon(Icons.calendar_view_day),
+                  style:  ButtonStyle( iconColor: WidgetStatePropertyAll(colors.primary)),
+                  onPressed: () {
+                    controller.setColumns(1);
+                    columnas = 1;
+                  } ,
+                  tooltip: 'Vista día',
+                ),
+                // IconButton(
+                //   icon: const Icon(Icons.calendar_view_month_outlined),
+                //   style:  ButtonStyle(
+                //       iconColor: WidgetStatePropertyAll(colors.primary)),
+                //   onPressed: () => controller.setColumns(30),
+                //   tooltip: 'Vista mensual',
+                // ),
+                IconButton(
+                  icon: const Icon(Icons.calendar_view_week),
+                  style:  ButtonStyle( iconColor: WidgetStatePropertyAll(colors.primary)),
+                  onPressed: () {
+                    controller.setColumns(7);
+                    columnas = 7;
+                  } ,
+                  tooltip: 'Vista semanal',
+                ),
+                IconButton(
+                  icon: const Icon(Icons.zoom_in),
+                  style:  ButtonStyle( iconColor: WidgetStatePropertyAll(colors.primary)),
+                  onPressed: () => controller.setCellHeight(controller.cellHeight + 10),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.zoom_out),
+                  style:  ButtonStyle( iconColor: WidgetStatePropertyAll(colors.primary)),
+                  onPressed: () => controller.setCellHeight(controller.cellHeight - 10),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -391,9 +384,10 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2)),
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2)
+                ),
               ],
             ),
             child: Center(
@@ -457,7 +451,7 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
     );
   }
 
-   generadorPlanificacion(BuildContext context) {
+  generadorPlanificacion(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
@@ -466,29 +460,57 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
             'Generar planificación',
             style: TextStyle(fontSize: 25),
           ),
-          content: RichText(
-            text: TextSpan(
-              style: const TextStyle(
-                fontSize: 14.0,
-                color: Colors.black,
-              ),
-              children: <TextSpan>[
-                const TextSpan(
-                  text: 'Se va a generar la planificación automática para el período '),
-                TextSpan(
-                  text: '${DateFormat("d/MM/yyyy", 'es').format(selectedDatePlanificacion.start)} ',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+          content: StatefulBuilder(
+            builder: (context, setStateBd) => Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    style: const TextStyle(
+                      fontSize: 14.0,
+                      color: Colors.black,
+                    ),
+                    children: <TextSpan>[
+                      const TextSpan(
+                        text: 'Se va a generar la planificación automática para el período '),
+                      TextSpan(
+                        text: '${DateFormat("d/MM/yyyy", 'es').format(selectedDatePlanificacion.start)} ',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const TextSpan(text: 'hasta el '),
+                      TextSpan(
+                        text: DateFormat("d/MM/yyyy", 'es').format(selectedDatePlanificacion.end),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                 ),
-                const TextSpan(text: 'hasta el '),
-                TextSpan(
-                  text: DateFormat("d/MM/yyyy", 'es').format(selectedDatePlanificacion.end),
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                Row(
+                  children: [
+                    Switch(
+                      value: unicoClienteBool,
+                      onChanged: (value) {
+                        setStateBd(() {
+                          unicoClienteBool = value;
+                        });
+                      }
+                    ),
+                    const Text('Unico cliente'),
+                  ],
+                ),
+                Visibility(
+                  visible: unicoClienteBool, // Mostrar solo si el Switch está en true
+                  child: const ButtonDelegate(
+                    colorSeleccionado: Colors.black,
+                    nombreProvider: 'unicoCliente'
+                  ),
                 ),
               ],
             ),
           ),
           actions: [
-            Column(
+            Row(
               children: [
                 TextButton.icon(
                   onPressed: () async {
@@ -510,26 +532,18 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
                   icon: const Icon(Icons.date_range),
                   label: const Text('Editar fechas')
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextButton(
-                    onPressed: () async {
-                      router.pop(context);
-                      await cargandoPlanificacion();
-                    },
-                    child: const Text('Confirmar')
-                    ),
-                    TextButton(
-                      onPressed: () {
-                       router.pop(context);
-                     },
-                      child: const Text('Cancelar')
-                    ),
-                  ],
-                )
-                
-                
+                const Spacer(),
+                TextButton(
+                  onPressed: () async {
+                    Navigator.pop(context);
+                    await cargandoPlanificacion();
+                  },
+                  child: const Text('Confirmar')),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Cancelar')),
               ],
             )
             
@@ -539,19 +553,20 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
     );
   }
 
-   Future<void> cargandoPlanificacion() async {
-      String fechaDesde =
-        ('${selectedDatePlanificacion.start.year}-${selectedDatePlanificacion.start.month}-${selectedDatePlanificacion.start.day}');
-    String fechaHasta =
-        ('${selectedDatePlanificacion.end.year}-${selectedDatePlanificacion.end.month}-${selectedDatePlanificacion.end.day}');
-     setState(() {
-       cargando = true;
-     });
-     await PlanificacionServices().generarPlanificacion(context,fechaDesde,fechaHasta,token);
-     setState(() {
-       cargando = false;
-     });
-   }
+  Future<void> cargandoPlanificacion() async {
+    String fechaDesde = ('${selectedDatePlanificacion.start.year}-${selectedDatePlanificacion.start.month}-${selectedDatePlanificacion.start.day}');
+    String fechaHasta = ('${selectedDatePlanificacion.end.year}-${selectedDatePlanificacion.end.month}-${selectedDatePlanificacion.end.day}');
+    Cliente unicoCliente = context.read<OrdenProvider>().unicoCliente;
+    setState(() {
+      cargando = true;
+    });
+    await PlanificacionServices().generarPlanificacion(context,fechaDesde,fechaHasta, unicoCliente.clienteId, token);
+    setState(() {
+      cargando = false;
+      unicoClienteBool = false;
+      Provider.of<OrdenProvider>(context, listen: false).clearSelectedCliente('unicoCliente');
+    });
+  }
 
   Future<void> buscar(String token) async {
     clienteSeleccionado = context.read<OrdenProvider>().clientePlanificador;

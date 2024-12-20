@@ -40,6 +40,7 @@ class OrdenProvider with ChangeNotifier {
   Cliente _clientePlanificador = Cliente.empty();
   Cliente _clienteOrdenes = Cliente.empty();
   Cliente _clienteEditOrdenes = Cliente.empty();
+  Cliente _unicoCliente = Cliente.empty();
   Tecnico _tecnico = Tecnico.empty();
   Tarea _tarea = Tarea.empty();
   Servicio _servicio = Servicio.empty();
@@ -83,6 +84,7 @@ class OrdenProvider with ChangeNotifier {
   Cliente get clienteMonitoreo => _clienteMonitoreo;
   Cliente get clienteMapa => _clienteMapa;
   Cliente get clientePlanificador => _clientePlanificador;
+  Cliente get unicoCliente => _unicoCliente;
   Tecnico get tecnico => _tecnico;
   Tarea get tarea => _tarea;
   Servicio get servicio => _servicio;
@@ -166,6 +168,9 @@ class OrdenProvider with ChangeNotifier {
       case 'editIndisponibilidad':
         _clienteEditIndisponibilidad = cli;
         break;
+      case 'unicoCliente':
+        _unicoCliente = cli;
+        break;
       default:
         _cliente = cli;
     }
@@ -195,6 +200,9 @@ class OrdenProvider with ChangeNotifier {
         break;
       case 'editIndisponibilidad':
         _clienteEditIndisponibilidad = Cliente.empty();
+        break;
+      case 'unicoCliente':
+        _unicoCliente = Cliente.empty();
         break;
       default:
         _cliente = Cliente.empty();

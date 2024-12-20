@@ -64,14 +64,15 @@ class PlanificacionServices{
     statusCode = null;
   }
 
-  Future generarPlanificacion(BuildContext context,String fechaDesde,String fechaHasta, String token) async {
+  Future generarPlanificacion(BuildContext context,String fechaDesde,String fechaHasta, int clienteId, String token) async {
     String link = apiLink;
 
     try {
       var headers = {'Authorization': token};
       var data = {
         "fechaDesde": fechaDesde,
-        "fechaHasta": fechaHasta
+        "fechaHasta": fechaHasta,
+        "clienteId": clienteId
       };
       var resp = await _dio.request(
         link,

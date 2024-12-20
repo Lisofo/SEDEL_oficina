@@ -19,8 +19,7 @@ import '../provider/orden_provider.dart';
 class CustomizedTimetableDesktop extends StatefulWidget {
   const CustomizedTimetableDesktop({super.key});
   @override
-  State<CustomizedTimetableDesktop> createState() =>
-      _CustomizedTimetableDesktopState();
+  State<CustomizedTimetableDesktop> createState() => _CustomizedTimetableDesktopState();
 }
 
 class _CustomizedTimetableDesktopState extends State<CustomizedTimetableDesktop> {
@@ -49,6 +48,7 @@ class _CustomizedTimetableDesktopState extends State<CustomizedTimetableDesktop>
   late Cliente clienteSeleccionado = Cliente.empty();
   bool cargando = false;
   late List<Orden> ordenesFiltradas = [];
+  late bool unicoClienteBool = false;
 
   @override
   void initState() {
@@ -144,11 +144,7 @@ class _CustomizedTimetableDesktopState extends State<CustomizedTimetableDesktop>
   }
 
   void cargarPlanificacion() {
-    ordenesFiltradas = ordenes
-        .where((e) =>
-            (clienteFiltro > 0 ? e.cliente.clienteId == clienteFiltro : true) &&
-            (tecnicoFiltro > 0 ? e.tecnico.tecnicoId == tecnicoFiltro : true))
-        .toList();
+    ordenesFiltradas = ordenes.where((e) => (clienteFiltro > 0 ? e.cliente.clienteId == clienteFiltro : true) && (tecnicoFiltro > 0 ? e.tecnico.tecnicoId == tecnicoFiltro : true)).toList();
     items = generateItems3(ordenesFiltradas);
   }
 
@@ -247,13 +243,13 @@ class _CustomizedTimetableDesktopState extends State<CustomizedTimetableDesktop>
             style: const TextStyle(color: Colors.white),
           ),
           const Spacer(),
-          // IconButton(
-          //   onPressed: () async {
-          //    await generadorPlanificacion(context);
-          //   },
-          //   icon: const Icon(Icons.play_lesson_rounded, color: Colors.white,),
-          //   tooltip: 'Generar planificador',
-          // ),
+          IconButton(
+            onPressed: () async {
+             await generadorPlanificacion(context);
+            },
+            icon: const Icon(Icons.play_lesson_rounded, color: Colors.white,),
+            tooltip: 'Generar planificador',
+          ),
           TextButton(
             child: const Text(
               "Hoy",
@@ -413,23 +409,51 @@ class _CustomizedTimetableDesktopState extends State<CustomizedTimetableDesktop>
             'Generar planificación',
             style: TextStyle(fontSize: 25),
           ),
-          content: RichText(
-            text: TextSpan(
-              style: const TextStyle(
-                fontSize: 14.0,
-                color: Colors.black,
-              ),
-              children: <TextSpan>[
-                const TextSpan(
-                  text: 'Se va a generar la planificación automática para el período '),
-                TextSpan(
-                  text: '${DateFormat("d/MM/yyyy", 'es').format(selectedDatePlanificacion.start)} ',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+          content: StatefulBuilder(
+            builder: (context, setStateBd) => Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    style: const TextStyle(
+                      fontSize: 14.0,
+                      color: Colors.black,
+                    ),
+                    children: <TextSpan>[
+                      const TextSpan(
+                        text: 'Se va a generar la planificación automática para el período '),
+                      TextSpan(
+                        text: '${DateFormat("d/MM/yyyy", 'es').format(selectedDatePlanificacion.start)} ',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const TextSpan(text: 'hasta el '),
+                      TextSpan(
+                        text: DateFormat("d/MM/yyyy", 'es').format(selectedDatePlanificacion.end),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                 ),
-                const TextSpan(text: 'hasta el '),
-                TextSpan(
-                  text: DateFormat("d/MM/yyyy", 'es').format(selectedDatePlanificacion.end),
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                Row(
+                  children: [
+                    Switch(
+                      value: unicoClienteBool,
+                      onChanged: (value) {
+                        setStateBd(() {
+                          unicoClienteBool = value;
+                        });
+                      }
+                    ),
+                    const Text('Unico cliente'),
+                  ],
+                ),
+                Visibility(
+                  visible: unicoClienteBool, // Mostrar solo si el Switch está en true
+                  child: const ButtonDelegate(
+                    colorSeleccionado: Colors.black,
+                    nombreProvider: 'unicoCliente'
+                  ),
                 ),
               ],
             ),
@@ -478,17 +502,20 @@ class _CustomizedTimetableDesktopState extends State<CustomizedTimetableDesktop>
     );
   }
 
-   Future<void> cargandoPlanificacion() async {
+  Future<void> cargandoPlanificacion() async {
     String fechaDesde = ('${selectedDatePlanificacion.start.year}-${selectedDatePlanificacion.start.month}-${selectedDatePlanificacion.start.day}');
     String fechaHasta = ('${selectedDatePlanificacion.end.year}-${selectedDatePlanificacion.end.month}-${selectedDatePlanificacion.end.day}');
+    Cliente unicoCliente = context.read<OrdenProvider>().unicoCliente;
     setState(() {
       cargando = true;
     });
-    await PlanificacionServices().generarPlanificacion(context,fechaDesde,fechaHasta,token);
+    await PlanificacionServices().generarPlanificacion(context,fechaDesde,fechaHasta, unicoCliente.clienteId, token);
     setState(() {
       cargando = false;
+      unicoClienteBool = false;
+      Provider.of<OrdenProvider>(context, listen: false).clearSelectedCliente('unicoCliente');
     });
-   }
+  }
 
   Future<void> buscar(String token) async {
     clienteSeleccionado = context.read<OrdenProvider>().clientePlanificador;
