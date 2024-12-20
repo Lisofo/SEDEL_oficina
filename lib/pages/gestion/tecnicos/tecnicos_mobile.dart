@@ -122,7 +122,7 @@ class _TecnicosPageMobileState extends State<TecnicosPageMobile> {
               ),
         ),
         body: Flex(
-          direction: Axis.vertical,
+          direction: Axis.horizontal,
           children: [
             Flexible(
               flex: 4,
@@ -131,25 +131,38 @@ class _TecnicosPageMobileState extends State<TecnicosPageMobile> {
                 child: ListView.builder(
                   itemCount: tecnicos.length,
                   itemBuilder: (context, index) {
-                    return Card(
-                      child: ListTile(
-                        leading: Container(
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: colors.primary,),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(tecnicos[index].codTecnico, style: const TextStyle(color: Colors.white),),
-                          )
+                    return GestureDetector(
+                      onTap: () {
+                        Provider.of<OrdenProvider>(context, listen: false).setTecnico(tecnicos[index]);
+                        router.push('/editTecnicos');
+                      },
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: colors.primary,),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(tecnicos[index].codTecnico, style: const TextStyle(color: Colors.white),),
+                                    )
+                                  ),
+                                  const SizedBox(width: 10,),
+                                  Text(tecnicos[index].nombre),
+                                ],
+                              ),
+                              const SizedBox(height: 5,),
+                              Text('Documento: ${tecnicos[index].documento}'),
+                              const SizedBox(height: 5,),
+                              Text('Fecha vencimiento del carne de salud: ${DateFormat("E d, MMM, yyyy", 'es').format(tecnicos[index].fechaVtoCarneSalud as DateTime)}'),
+                            ],
+                          ),
                         ),
-                        title: Text(tecnicos[index].nombre),
-                        subtitle:
-                            Text('Documento: ${tecnicos[index].documento}'),
-                        trailing: Text(
-                            'Fecha vencimiento del carne de salud: ${DateFormat("E d, MMM, yyyy", 'es').format(tecnicos[index].fechaVtoCarneSalud as DateTime)}'),
-                        onTap: () {
-                          Provider.of<OrdenProvider>(context, listen: false)
-                              .setTecnico(tecnicos[index]);
-                          router.push('/editTecnicos');
-                        },
                       ),
                     );
                   },
