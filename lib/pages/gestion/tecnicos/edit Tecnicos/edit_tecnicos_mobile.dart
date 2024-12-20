@@ -45,8 +45,8 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
   late bool tieneId = false;
   late Uint8List? _avatarTecnico = null;
   late Uint8List? _firmaTecnico = null;
-  late final String _avatarTecnico2 = '';
-  late final String _firmaTecnico2 = '';
+  late String? _avatarTecnico2 = '';
+  late String? _firmaTecnico2 = '';
   late List<int> firmaBytes = [];
   late List<int> avatarBytes = [];
   late String md5Avatar = '';
@@ -55,6 +55,7 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
   late String avatarName = '';
   late String nombre = '';
   int buttonIndex = 0;
+  late bool verDiaSiguiente = false;
 
   String _formatDateAndTime(DateTime? date) {
     return '${date?.day.toString().padLeft(2, '0')}/${date?.month.toString().padLeft(2, '0')}/${date?.year.toString().padLeft(4, '0')}';
@@ -112,7 +113,12 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
     selectedDateNacimiento = selectedTecnico.fechaNacimiento!;
     selectedDateIngreso = selectedTecnico.fechaIngreso!;
     selectedDateCarneSalud = selectedTecnico.fechaVtoCarneSalud!;
+    verDiaSiguiente = selectedTecnico.verDiaSiguiente ?? false;
     tieneId = selectedTecnico.tecnicoId > 0;
+    if(selectedTecnico.avatarPath != '' || selectedTecnico.firmaPath != ''){
+      _avatarTecnico2 = selectedTecnico.avatarPath;
+      _firmaTecnico2 = selectedTecnico.firmaPath;
+    }
     setState(() {});
   }
 
@@ -126,23 +132,16 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
       cargoSeleccionado = selectedTecnico.cargo;
     }
 
-    _dateNacimientoController.text = (selectedTecnico.tecnicoId != 0 &&
-            selectedDateNacimiento == selectedTecnico.fechaNacimiento)
-        ? _formatDateAndTime(selectedTecnico.fechaNacimiento)
-        : _formatDateAndTime(selectedDateNacimiento);
-    _dateCarneSaludController.text = (selectedTecnico.tecnicoId != 0 &&
-            selectedDateCarneSalud == selectedTecnico.fechaVtoCarneSalud)
-        ? _formatDateAndTime(selectedTecnico.fechaVtoCarneSalud)
-        : _formatDateAndTime(selectedDateCarneSalud);
-    _dateIngresoController.text = (selectedTecnico.tecnicoId != 0 &&
-            selectedDateIngreso == selectedTecnico.fechaIngreso)
-        ? _formatDateAndTime(selectedTecnico.fechaIngreso)
-        : _formatDateAndTime(selectedDateIngreso);
+    _dateNacimientoController.text = (selectedTecnico.tecnicoId != 0 && selectedDateNacimiento == selectedTecnico.fechaNacimiento) 
+      ? _formatDateAndTime(selectedTecnico.fechaNacimiento) : _formatDateAndTime(selectedDateNacimiento);
+    _dateCarneSaludController.text = (selectedTecnico.tecnicoId != 0 && selectedDateCarneSalud == selectedTecnico.fechaVtoCarneSalud)
+      ? _formatDateAndTime(selectedTecnico.fechaVtoCarneSalud) : _formatDateAndTime(selectedDateCarneSalud);
+    _dateIngresoController.text = (selectedTecnico.tecnicoId != 0 && selectedDateIngreso == selectedTecnico.fechaIngreso)
+      ? _formatDateAndTime(selectedDateIngreso) : _formatDateAndTime(selectedDateIngreso);
 
     late Cargo cargoInicialSeleccionado = cargos[0];
     if (cargoSeleccionado!.cargoId != 0) {
-      cargoInicialSeleccionado = cargos
-          .firstWhere((cargo) => cargo.cargoId == cargoSeleccionado!.cargoId);
+      cargoInicialSeleccionado = cargos.firstWhere((cargo) => cargo.cargoId == cargoSeleccionado!.cargoId);
     }
     return SafeArea(
       child: Scaffold(
@@ -172,15 +171,34 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
                         width: 20,
                       ),
                       _avatarTecnico != null
-                          ? Image.memory(_avatarTecnico!,
-                              width: 200, height: 200)
-                          : const SizedBox(
-                              width: 200,
-                              height: 200,
-                              child: Placeholder(
-                                child: Text('Avatar del tecnico'),
+                        ? Image.memory(
+                            _avatarTecnico!,
+                            width: 300,
+                            height: 250,
+                            fit: BoxFit.cover,
+                          )
+                        : _avatarTecnico2 != ''
+                            ? Image.network(
+                                '$_avatarTecnico2?authorization=$token',
+                                width: 300,
+                                height: 250,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const SizedBox(
+                                    width: 250,
+                                    height: 250,
+                                    child: Placeholder(
+                                      child: Text('Error al cargar avatar del técnico'),
+                                    ),
+                                  );
+                                },
+                              )
+                            : const SizedBox(
+                                width: 250,
+                                height: 250,
+                                child: Placeholder(
+                                  child: Text('Avatar del técnico'),
+                                ),
                               ),
-                            ),
                     ],
                   ),
                   const SizedBox(
@@ -210,11 +228,35 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
                       const SizedBox(
                         width: 1,
                       ),
-                      SizedBox(
-                        width: 200,
-                        child: Image.asset(
-                            'images/Firmas_Tecnicos/ANDRES ABREU.JPG'),
-                      ),
+                      _firmaTecnico != null
+                            ? Image.memory(
+                                _firmaTecnico!,
+                                width: 300,
+                                height: 109,
+                                fit: BoxFit.cover,
+                              )
+                            : _firmaTecnico2 != ''
+                                ? Image.network(
+                                    '$_firmaTecnico2?authorization=$token',
+                                    width: 300,
+                                    height: 109,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const SizedBox(
+                                        width: 250,
+                                        height: 250,
+                                        child: Placeholder(
+                                          child: Text('Error al cargar la firma del técnico'),
+                                        ),
+                                      ); 
+                                    },
+                                  )
+                                : const SizedBox(
+                                    width: 250,
+                                    height: 109,
+                                    child: Placeholder(
+                                      child: Text('Firma del técnico'),
+                                    ),
+                                  ),
                     ],
                   ),
                   const SizedBox(
@@ -423,6 +465,20 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 5,),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      const Text('Ver día siguiente en la app'),
+                      Switch(
+                        value: verDiaSiguiente, 
+                        onChanged: (value) {
+                          verDiaSiguiente = value;
+                          setState(() {});
+                        },
+                      )
+                    ],
+                  )
                 ],
               )),
         ),
@@ -513,6 +569,7 @@ class _EditTecnicosMobileState extends State<EditTecnicosMobile> {
     selectedTecnico.fechaVtoCarneSalud = DateTime(selectedDateCarneSalud.year, selectedDateCarneSalud.month, selectedDateCarneSalud.day);
     selectedTecnico.avatarMd5 = md5Avatar != '' ? md5Avatar : '';
     selectedTecnico.firmaMd5 = md5Firma != '' ? md5Firma : '';
+    selectedTecnico.verDiaSiguiente = verDiaSiguiente;
 
     if (selectedTecnico.tecnicoId == 0) {
       await TecnicoServices().postTecnico(context, selectedTecnico, token);

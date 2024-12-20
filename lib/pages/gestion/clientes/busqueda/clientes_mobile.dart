@@ -81,7 +81,7 @@ class _ClientesMobileState extends State<ClientesMobile> {
           firmaMd5: '' ,
           avatarPath: '' ,
           avatarMd5: '' ,
-          cargo: null
+          cargo: null, verDiaSiguiente: null,
         )
       );
     });

@@ -82,7 +82,7 @@ class _ClientesDesktopState extends State<ClientesDesktop> {
           firmaMd5: '' ,
           avatarPath: '' ,
           avatarMd5: '' ,
-          cargo: null
+          cargo: null, verDiaSiguiente: null,
         )
       );
     });

@@ -90,7 +90,8 @@ class _IndisponibilidadesDesktopState extends State<IndisponibilidadesDesktop> {
           avatarPath: '',
           avatarMd5: '',
           cargo: Cargo.empty(),
-          cargoId: 0
+          cargoId: 0, 
+          verDiaSiguiente: null
         )
       );
     });
@@ -123,7 +124,7 @@ class _IndisponibilidadesDesktopState extends State<IndisponibilidadesDesktop> {
                               final pickedDate = await showDateRangePicker(
                                 context: context,
                                 firstDate: DateTime(2023),
-                                lastDate: DateTime(2025)
+                                lastDate: DateTime(2090)
                               );
 
                               if (pickedDate != null && pickedDate != selectedDate) {

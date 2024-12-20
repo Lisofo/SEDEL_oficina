@@ -108,7 +108,7 @@ class _MonitoreoMobileState extends State<MonitoreoMobile> {
           firmaMd5: '' ,
           avatarPath: '' ,
           avatarMd5: '' ,
-          cargo: null
+          cargo: null, verDiaSiguiente: null,
         ));
     });
   }

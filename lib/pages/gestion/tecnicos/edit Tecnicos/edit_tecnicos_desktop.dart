@@ -54,6 +54,7 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
   late String avatarName = '';
   late String nombre = '';
   late MaskTextInputFormatter maskFormatter = MaskTextInputFormatter(mask: '#.###.###-#', filter: { "#": RegExp(r'[0-9]') });
+  late bool verDiaSiguiente = false;
 
   String _formatDateAndTime(DateTime? date) {
     return '${date?.day.toString().padLeft(2, '0')}/${date?.month.toString().padLeft(2, '0')}/${date?.year.toString().padLeft(4, '0')}';
@@ -112,6 +113,7 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
     selectedDateNacimiento = selectedTecnico.fechaNacimiento!;
     selectedDateIngreso = selectedTecnico.fechaIngreso!;
     selectedDateCarneSalud = selectedTecnico.fechaVtoCarneSalud!;
+    verDiaSiguiente = selectedTecnico.verDiaSiguiente ?? false;
     tieneId = selectedTecnico.tecnicoId > 0;
     if(selectedTecnico.avatarPath != '' || selectedTecnico.firmaPath != ''){
       _avatarTecnico2 = selectedTecnico.avatarPath;
@@ -378,6 +380,18 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
                         ],
                       ),
                       const SizedBox(height: 20,),
+                      Row(
+                        children: [
+                          const Text('Ver día siguiente en la app'),
+                          Switch(
+                            value: verDiaSiguiente, 
+                            onChanged: (value) {
+                              verDiaSiguiente = value;
+                              setState(() {});
+                            },
+                          )
+                        ],
+                      )
                     ],
                   ),
                 ),
@@ -485,6 +499,7 @@ class _EditTecnicosDesktopState extends State<EditTecnicosDesktop> {
     selectedTecnico.fechaVtoCarneSalud = DateTime(selectedDateCarneSalud.year, selectedDateCarneSalud.month, selectedDateCarneSalud.day);
     selectedTecnico.avatarMd5 = md5Avatar != '' ? md5Avatar : '';
     selectedTecnico.firmaMd5 = md5Firma != '' ? md5Firma : '';
+    selectedTecnico.verDiaSiguiente = verDiaSiguiente;
 
     if (selectedTecnico.tecnicoId == 0) {
       await TecnicoServices().postTecnico(context, selectedTecnico, token);

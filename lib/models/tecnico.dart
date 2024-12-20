@@ -23,6 +23,7 @@ class Tecnico {
   late String? avatarMd5;
   late Cargo? cargo;
   late int cargoId;
+  late bool? verDiaSiguiente;
 
   Tecnico({
     required this.tecnicoId,
@@ -39,6 +40,7 @@ class Tecnico {
     required this.avatarMd5,
     required this.cargo,
     required this.cargoId,
+    required this.verDiaSiguiente,
   });
 
   factory Tecnico.fromJson(Map<String, dynamic> json) => Tecnico(
@@ -56,6 +58,7 @@ class Tecnico {
     avatarMd5: json["avatarMD5"] as String? ?? '',
     cargo: json["cargo"] != null ? Cargo.fromJson(json["cargo"]) : null,
     cargoId: 0,
+    verDiaSiguiente: json["verDiaSiguiente"] ?? false,
   );
 
   Map<String, dynamic> toMap() => {
@@ -64,7 +67,8 @@ class Tecnico {
     "documento": documento,
     "fechaIngreso": fechaIngreso == null ? null : fechaIngreso!.toIso8601String(),
     "fechaVtoCarneSalud": fechaVtoCarneSalud == null ? null : fechaVtoCarneSalud!.toIso8601String(),
-    "cargoId": cargoId
+    "cargoId": cargoId,
+    "verDiaSiguiente": verDiaSiguiente,
   };
 
   Tecnico.empty() {
@@ -82,6 +86,7 @@ class Tecnico {
     avatarMd5 = '';
     cargoId = 0;
     cargo = Cargo(cargoId: 0, codCargo: '', descripcion: '');
+    verDiaSiguiente = false;
   }
 
   @override

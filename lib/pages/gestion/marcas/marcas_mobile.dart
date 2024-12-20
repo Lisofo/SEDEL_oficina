@@ -65,7 +65,7 @@ class _MarcasPageMobileState extends State<MarcasPageMobile> {
           firmaMd5: '' ,
           avatarPath: '' ,
           avatarMd5: '' ,
-          cargo: null
+          cargo: null, verDiaSiguiente: null,
         ));
     });
   }
@@ -100,7 +100,7 @@ class _MarcasPageMobileState extends State<MarcasPageMobile> {
                           final pickedDate = await showDateRangePicker(
                               context: context,
                               firstDate: DateTime(2023),
-                              lastDate: DateTime(2025));
+                              lastDate: DateTime(2090));
                     
                           if (pickedDate != null &&
                               pickedDate != selectedDate) {

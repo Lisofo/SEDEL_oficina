@@ -106,7 +106,7 @@ class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
           firmaMd5: '' ,
           avatarPath: '' ,
           avatarMd5: '' ,
-          cargo: null
+          cargo: null, verDiaSiguiente: null,
         ));
     });
   }
