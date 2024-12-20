@@ -138,7 +138,8 @@ class _CustomizedTimetableDesktopState extends State<CustomizedTimetableDesktop>
         '',
         '',
         0,
-        token);
+        token
+      );
     }
   }
 
@@ -152,13 +153,11 @@ class _CustomizedTimetableDesktopState extends State<CustomizedTimetableDesktop>
   }
 
   addDay() {
-    
-      nuevaFecha = nuevaFecha.add(const Duration(days: 1));
-    
+    nuevaFecha = nuevaFecha.add(const Duration(days: 1));
   }
 
   subtractDay() {
-      nuevaFecha = nuevaFecha.subtract(const Duration(days: 1));
+    nuevaFecha = nuevaFecha.subtract(const Duration(days: 1));
   }
   
   @override
