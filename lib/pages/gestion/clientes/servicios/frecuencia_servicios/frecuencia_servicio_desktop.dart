@@ -161,6 +161,7 @@ class _FrecuenciaServicioDesktopState extends State<FrecuenciaServicioDesktop> {
   Future<void> agregarFrecuencia(BuildContext context) async {
     DateTime? fechaDesde;
     DateTime? fechaHasta;
+    frecuenciaSeleccionada = SubFrecuencia.empty();
     
     await showDialog(
       context: context,
@@ -229,7 +230,7 @@ class _FrecuenciaServicioDesktopState extends State<FrecuenciaServicioDesktop> {
                         ),
                       ],
                     ),
-                    if(frecuenciaSeleccionada.frecuenciaId == 1)...[
+                    if(frecuenciaSeleccionada.frecuenciaId != 0)...[
                       const SizedBox(height: 16),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.3,
@@ -445,7 +446,7 @@ class _FrecuenciaServicioDesktopState extends State<FrecuenciaServicioDesktop> {
                         ),
                       ],
                     ),
-                    if(frecuenciaSeleccionada.frecuenciaId == 1)...[
+                    if(frecuenciaSeleccionada.frecuenciaId != 0)...[
                       const SizedBox(height: 16),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.3,

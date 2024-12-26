@@ -48,6 +48,7 @@ class _ButtonDelegateState extends State<ButtonDelegate> {
         selectedCliente = context.read<OrdenProvider>().unicoCliente;
         break;
     }
+    print('buttonDelegate ${selectedCliente.clienteId}');
     final colors = Theme.of(context).colorScheme;
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -59,7 +60,7 @@ class _ButtonDelegateState extends State<ButtonDelegate> {
             backgroundColor: WidgetStatePropertyAll(colors.secondary),
             shape: WidgetStatePropertyAll(ContinuousRectangleBorder(borderRadius: BorderRadius.circular(20)))
           ),
-          child: selectedCliente.nombre == ''
+          child: selectedCliente.clienteId == 0
               ? Text(
                   'Seleccione cliente',
                   style: TextStyle(color: widget.colorSeleccionado),

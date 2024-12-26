@@ -63,30 +63,30 @@ class _AddClientServicesDialogState extends State<AddClientServicesDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          DropdownButtonFormField(
+          DropdownButtonFormField<Servicio>(
             isExpanded: true,
             isDense: true,
             items: servicios.map((e) {
-              return DropdownMenuItem(
-  
+              return DropdownMenuItem<Servicio>(
                 value: e,
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width * 0.4,
                   child: Text(
-                    maxLines: 2,
                     e.descripcion,
+                    maxLines: 2,
                     overflow: TextOverflow.clip,
                     softWrap: true,
                   ),
                 ),
               );
             }).toList(),
-            onChanged: (Servicio? value) {
-              servicioSeleccionado = value;
-            },
+            onChanged: servicioInicial == null
+                ? (Servicio? value) {
+                    servicioSeleccionado = value;
+                  }
+                : null, // Desactiva el dropdown si servicioInicial no es null
             value: servicioInicial,
             hint: const Text('Servicios'),
-            
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,

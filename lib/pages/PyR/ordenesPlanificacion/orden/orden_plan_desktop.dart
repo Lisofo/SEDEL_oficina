@@ -56,12 +56,12 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
 
   void filtro() {
     ordenesFiltradas = ordenes
-        .where((e) =>
-            (clienteFiltro > 0 ? e.cliente.clienteId == clienteFiltro : true) &&
-            (tecnicoFiltro > 0 ? e.tecnico.tecnicoId == tecnicoFiltro : true) &&
-            (selectedEstado != 'Todos' ? e.estado == selectedEstado : true) &&
-            (selectedTipo.descripcion != 'Todos' ? e.tipoOrden == selectedTipo : true))
-        .toList();
+      .where((e) =>
+          (clienteFiltro > 0 ? e.cliente.clienteId == clienteFiltro : true) &&
+          (tecnicoFiltro > 0 ? e.tecnico.tecnicoId == tecnicoFiltro : true) &&
+          (selectedEstado != 'Todos' ? e.estado == selectedEstado : true) &&
+          (selectedTipo.descripcion != 'Todos' ? e.tipoOrden == selectedTipo : true))
+      .toList();
     print(ordenes.length);
     print("ordenesFiltradas después de filtro: ${ordenesFiltradas.length}");
   }

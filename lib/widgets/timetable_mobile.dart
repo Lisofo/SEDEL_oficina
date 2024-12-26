@@ -574,8 +574,8 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
     print(clienteSeleccionado.clienteId.toString());
     print(clienteSeleccionado);
 
-    String fechaDesde = ('${selectedDate.start.year}-${selectedDate.start.month}-${selectedDate.start.day}');
-    String fechaHasta = ('${selectedDate.end.year}-${selectedDate.end.month}-${selectedDate.end.day}');
+    String fechaDesde = DateFormat('yyyy-MM-dd', 'es').format(selectedDate.start);
+    String fechaHasta = DateFormat('yyyy-MM-dd', 'es').format(selectedDate.end);
 
     String tecnicoId = selectedTecnico != null ? selectedTecnico!.tecnicoId.toString() : '';
 

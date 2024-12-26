@@ -32,7 +32,8 @@ class _AppBarDesktopState extends State<AppBarDesktop> {
       actions: [
         IconButton(
             onPressed: () {
-              Provider.of<OrdenProvider>(context, listen: false).setCliente(Cliente.empty(), 'Ordenes');
+              // Provider.of<OrdenProvider>(context, listen: false).setCliente(Cliente.empty(), 'Ordenes');
+              //Comentado el 26/12/24 por un error en la busqueda
               router.pop();
             },
             icon: const Icon(

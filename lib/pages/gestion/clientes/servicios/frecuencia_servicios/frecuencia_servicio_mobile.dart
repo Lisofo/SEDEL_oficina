@@ -229,7 +229,7 @@ class _FrecuenciaServicioMobileState extends State<FrecuenciaServicioMobile> {
                         ),
                       ],
                     ),
-                    if(frecuenciaSeleccionada.frecuenciaId == 1)...[
+                    if(frecuenciaSeleccionada.frecuenciaId != 0)...[
                       const SizedBox(height: 16),
                       SizedBox(
                         width: MediaQuery.of(context).size.width,
@@ -451,7 +451,7 @@ class _FrecuenciaServicioMobileState extends State<FrecuenciaServicioMobile> {
                         ),
                       ],
                     ),
-                    if(frecuenciaSeleccionada.frecuenciaId == 1)...[
+                    if(frecuenciaSeleccionada.frecuenciaId != 0)...[
                       const SizedBox(height: 16),
                       SizedBox(
                         width: MediaQuery.of(context).size.width,

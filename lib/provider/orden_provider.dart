@@ -173,8 +173,10 @@ class OrdenProvider with ChangeNotifier {
         break;
       default:
         _cliente = cli;
+        break;
     }
-
+    print(cli.clienteId);
+    print(nombreMenu);
     notifyListeners();
   }
 
@@ -207,6 +209,7 @@ class OrdenProvider with ChangeNotifier {
       default:
         _cliente = Cliente.empty();
     }
+    print('Limpio $nombreMenu');
     notifyListeners();
   }
 
