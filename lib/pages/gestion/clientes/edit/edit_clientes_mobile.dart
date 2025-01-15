@@ -777,9 +777,22 @@ class _EditClientesMobileState extends State<EditClientesMobile> {
                   ),
                 ),
                 title: Text(usuarios[index].usuario),
-                subtitle: Text(
-                  usuarios[index].login,
-                  style: const TextStyle(fontSize: 13),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      usuarios[index].login,
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                    Text(
+                      usuariosXClientes[index].tipoAcceso == 'N' ? 'Normal' : 'Restringido',
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                    Text(
+                      usuariosXClientes[index].tipoNotificacion == 'N' ? 'No recibe notificación' : 'Recibe notificación',
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                  ],
                 ),
                 onTap: () {
                   final usuarioSeleccionado = usuariosTodos.where((usuario) => usuario.usuarioId == usuarios[index].usuarioId,).toList()[0];

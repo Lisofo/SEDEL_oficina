@@ -382,7 +382,7 @@ class PlanosServices{
         "estado": estado, 
         "subEstado": subEstado,
         "comentario": comentario,
-        "ordenTrabajoId": ordenTrabajoId
+        "ordenTrabajoId": ordenTrabajoId == 0 ? null : ordenTrabajoId
       });
       var resp = await _dio.request(
         link,
@@ -398,7 +398,7 @@ class PlanosServices{
         ptoInspeccion.estado = estado;
         ptoInspeccion.subEstado = subEstado;
         ptoInspeccion.comentario = comentario;
-        
+        showDialogs(context, 'Estado y subestado cambiados correctamente', true, false);
       } else {
         showErrorDialog(context, 'Hubo un error al momento de cambiar el estado');
       }

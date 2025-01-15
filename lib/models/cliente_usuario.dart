@@ -18,6 +18,7 @@ class ClienteUsuario {
   late String telefono1;
   late String email;
   late String tipoAcceso;
+  late String tipoNotificacion;
 
   ClienteUsuario({
     required this.usuarioId,
@@ -30,31 +31,34 @@ class ClienteUsuario {
     required this.telefono1,
     required this.email,
     required this.tipoAcceso,
+    required this.tipoNotificacion,
   });
 
   factory ClienteUsuario.fromJson(Map<String, dynamic> json) => ClienteUsuario(
-        usuarioId: json["usuarioId"] as int? ?? 0,
-        login: json["login"] as String? ?? '',
-        usuario: json["usuario"] as String? ?? '',
-        clienteId: json["clienteId"] as int? ?? 0,
-        codCliente: json["codCliente"] as String? ?? '',
-        cliente: json["cliente"] as String? ?? '',
-        direccion: json["direccion"] as String? ?? '',
-        telefono1: json["telefono1"] as String? ?? '',
-        email: json["email"] as String? ?? '',
-        tipoAcceso: json["tipoAcceso"] as String? ?? '',
-      );
+    usuarioId: json["usuarioId"] as int? ?? 0,
+    login: json["login"] as String? ?? '',
+    usuario: json["usuario"] as String? ?? '',
+    clienteId: json["clienteId"] as int? ?? 0,
+    codCliente: json["codCliente"] as String? ?? '',
+    cliente: json["cliente"] as String? ?? '',
+    direccion: json["direccion"] as String? ?? '',
+    telefono1: json["telefono1"] as String? ?? '',
+    email: json["email"] as String? ?? '',
+    tipoAcceso: json["tipoAcceso"] as String? ?? '',
+    tipoNotificacion: json["tipoNotificacion"] as String? ?? ''
+  );
 
   Map<String, dynamic> toMap() => {
-        "usuarioId": usuarioId,
-        "login": login,
-        "usuario": usuario,
-        "clienteId": clienteId,
-        "codCliente": codCliente,
-        "cliente": cliente,
-        "direccion": direccion,
-        "telefono1": telefono1,
-        "email": email,
-        "tipoAcceso": tipoAcceso
-      };
+    "usuarioId": usuarioId,
+    "login": login,
+    "usuario": usuario,
+    "clienteId": clienteId,
+    "codCliente": codCliente,
+    "cliente": cliente,
+    "direccion": direccion,
+    "telefono1": telefono1,
+    "email": email,
+    "tipoAcceso": tipoAcceso,
+    "tipoNotificacion": tipoNotificacion
+  };
 }

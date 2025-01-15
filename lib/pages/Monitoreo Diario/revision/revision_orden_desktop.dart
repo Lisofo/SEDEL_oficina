@@ -106,7 +106,7 @@ class _RevisionOrdenDesktopState extends State<RevisionOrdenDesktop> with Single
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarDesktop(titulo: 'Revisión orden ${orden.ordenTrabajoId}'),
+      appBar: AppBarDesktop(titulo: 'Revisión orden ${orden.ordenTrabajoId}  ${orden.cliente.codCliente} - ${orden.cliente.nombre}'),
       drawer: const Drawer(
         child: BotonesDrawer(),
       ),

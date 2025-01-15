@@ -643,6 +643,10 @@ class _BodyState extends State<Body> {
                                     usuariosXClientes[index].tipoAcceso == 'N' ? 'Normal' : 'Restringido',
                                     style: const TextStyle(fontSize: 13),
                                   ),
+                                  Text(
+                                    usuariosXClientes[index].tipoNotificacion == 'N' ? 'No recibe notificación' : 'Recibe notificación',
+                                    style: const TextStyle(fontSize: 13),
+                                  ),
                                   
                                 ],
                               ),

@@ -115,7 +115,7 @@ class _MonitoreoMobileState extends State<MonitoreoMobile> {
 
   Future<void> buscar(String token) async {
     clienteSeleccionado = context.read<OrdenProvider>().clienteMonitoreo;
-    Provider.of<OrdenProvider>(context, listen: false).clearSelectedCliente('Monitoreo');
+    // Provider.of<OrdenProvider>(context, listen: false).clearSelectedCliente('Monitoreo');
     // print(clienteSeleccionado.clienteId.toString());
 
     String tecnicoId = selectedTecnico != null ? selectedTecnico!.tecnicoId.toString() : '';
@@ -131,6 +131,7 @@ class _MonitoreoMobileState extends State<MonitoreoMobile> {
       '',
       0,
       token,
+      false
     );
     setState(() {
       ordenes = results;

@@ -239,10 +239,18 @@ class _FrecuenciaServicioDesktopState extends State<FrecuenciaServicioDesktop> {
                           itemCount: fechas.length,
                           itemBuilder: (context, i) {
                             return CheckboxListTile(
+                              // agregar control para quincenal, n meses y mensuales que solo pueda seleccionar un solo dia de la semana y en mobile tambien
                               title: Text(fechas[i].fecha),
                               value: fechas[i].activo,
                               onChanged: (value) {
-                                fechas[i].activo = value!;
+                                if(frecuenciaSeleccionada.frecuenciaId == 2 || frecuenciaSeleccionada.frecuenciaId == 3 || frecuenciaSeleccionada.frecuenciaId == 4) {
+                                  for (var j = 0; j < fechas.length; j++) {
+                                    fechas[j].activo = false; // Desmarca todos los días
+                                  }
+                                  fechas[i].activo = value!; // Marca solo el día seleccionado
+                                } else {
+                                  fechas[i].activo = value!;
+                                }
                                 setStateBd(() {});
                               },
                             );
@@ -402,10 +410,10 @@ class _FrecuenciaServicioDesktopState extends State<FrecuenciaServicioDesktop> {
                             child: Text(e.descripcion),
                           );
                         }).toList(),
-                        onChanged: (value) {
+                        onChanged: frecuenciaSeleccionada.frecuenciaId == 0 ? (value) {
                           frecuenciaSeleccionada = value;
                           setStateBd((){});
-                        },
+                        } : null,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -455,10 +463,18 @@ class _FrecuenciaServicioDesktopState extends State<FrecuenciaServicioDesktop> {
                           itemCount: fechas.length,
                           itemBuilder: (context, i) {
                             return CheckboxListTile(
+                              // agregar control para quincenal, n meses y mensuales que solo pueda seleccionar un solo dia de la semana y en mobile tambien
                               title: Text(fechas[i].fecha),
                               value: fechas[i].activo,
                               onChanged: (value) {
-                                fechas[i].activo = value!;
+                                if(frecuenciaSeleccionada.frecuenciaId == 2 || frecuenciaSeleccionada.frecuenciaId == 3 || frecuenciaSeleccionada.frecuenciaId == 4) {
+                                  for (var j = 0; j < fechas.length; j++) {
+                                    fechas[j].activo = false; // Desmarca todos los días
+                                  }
+                                  fechas[i].activo = value!; // Marca solo el día seleccionado
+                                } else {
+                                  fechas[i].activo = value!;
+                                }
                                 setStateBd(() {});
                               },
                             );

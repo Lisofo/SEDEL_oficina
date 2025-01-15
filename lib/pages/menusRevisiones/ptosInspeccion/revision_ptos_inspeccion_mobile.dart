@@ -87,6 +87,7 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
       // tiposDePuntos = await _ptosInspeccionServices.getTiposPtosInspeccion(context, token);
       plagasObjetivo = await PlagaObjetivoServices().getPlagasObjetivo(context, '', '', token);
       Provider.of<OrdenProvider>(context, listen: false).setTipoPTI(selectedTipoPto);
+      statusCodeRevision = await _ptosInspeccionServices.getStatusCode();
       if (statusCodeRevision == 1){
         cargoDatosCorrectamente = true;
       }
@@ -101,15 +102,15 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
   Future<dynamic> getTipos() async {
     late List<TipoPtosInspeccion> tiposDePuntosFiltrados = [];
     if(!filtro2){
-      tiposDePuntosFiltrados = await PtosInspeccionServices().getTiposPtosInspeccion(context, token);
+      tiposDePuntosFiltrados = await _ptosInspeccionServices.getTiposPtosInspeccion(context, token);
       return tiposDePuntosFiltrados.where((pto)=> cantidadSolo(pto) > 0).toList();
     } else {
-      return await PtosInspeccionServices().getTiposPtosInspeccion(context, token);
+      return await _ptosInspeccionServices.getTiposPtosInspeccion(context, token);
     }
   } 
 
   Future<void> refreshData() async {
-    widget.ptosInspeccion = await PtosInspeccionServices().getPtosInspeccion(context, orden, revisionId, token);
+    widget.ptosInspeccion = await _ptosInspeccionServices.getPtosInspeccion(context, orden, revisionId, token);
     setState(() {});
   }
 
@@ -141,7 +142,6 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
       child: SizedBox(
         height: MediaQuery.of(context).size.height * 0.88,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
           Container(
             width: Constantes().ancho,
@@ -192,15 +192,19 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
               },
             ),
           ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.60,
-            width: Constantes().ancho,
-            child: RefreshIndicator(
-              key: _refreshIndicatorKey,
-              onRefresh: refreshData,
-              child: listaDePuntos()
-            )
+          Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.60,
+              width: Constantes().ancho,
+              child: RefreshIndicator(
+                key: _refreshIndicatorKey,
+                onRefresh: refreshData,
+                child: listaDePuntos()
+              )
+            ),
           ),
+          const Spacer(),
           BottomAppBar(
             elevation: 0,
             child: Row(
@@ -318,7 +322,8 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
               ],
             ),
             ),
-        ]),
+          ]
+        ),
       ),
     );
   }
@@ -344,36 +349,7 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
         itemBuilder: (context, index) {
           final puntoDeInspeccion = provider.listaPuntos[index];
           // print(puntoDeInspeccion.codAccion);
-          return ListTile(
-            title: Row(
-              children: [
-                Text('Punto ${puntoDeInspeccion.codPuntoInspeccion}'),
-                const Spacer(),
-                Text(
-                  puntoDeInspeccion.codAccion.toString(),
-                  style: TextStyle(color: colors.primary),
-                )
-              ],
-            ),
-            subtitle: Column(
-              children: [
-                Text('Zona: ${puntoDeInspeccion.zona}'),
-                const SizedBox(
-                  width: 20,
-                ),
-                Text('Sector: ${puntoDeInspeccion.sector}'),
-              ],
-            ),
-            trailing: Checkbox(
-              activeColor: colors.primary,
-              value: puntoDeInspeccion.seleccionado,
-              splashRadius: 40,
-              onChanged: (bool? newValue) {
-                setState(() {
-                  puntoDeInspeccion.seleccionado = newValue ?? false;
-                });
-              },
-            ),
+          return InkWell(
             onTap: () {
               if (puntoDeInspeccion.seleccionado) {
                 // Provider.of<OrdenProvider>(context, listen: false)
@@ -381,9 +357,54 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
               } else {
                 Provider.of<OrdenProvider>(context, listen: false).setRevisionPI(puntoDeInspeccion);
               }
-
               router.push('/ptosInspeccionRevision');
             },
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.1,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.85,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('Punto ${puntoDeInspeccion.codPuntoInspeccion}'),
+                            const Spacer(),
+                            Text(
+                              puntoDeInspeccion.codAccion.toString(),
+                              style: TextStyle(color: colors.primary),
+                            )
+                          ],
+                        ),
+                      ),
+                      Text('Zona: ${puntoDeInspeccion.zona}'),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Text('Sector: ${puntoDeInspeccion.sector}'),
+                      
+                    ],
+                  ),
+                  Checkbox(
+                    activeColor: colors.primary,
+                    value: puntoDeInspeccion.seleccionado,
+                    splashRadius: 40,
+                    onChanged: (bool? newValue) {
+                      setState(() {
+                        puntoDeInspeccion.seleccionado = newValue ?? false;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
           );
         },
       );
@@ -396,58 +417,60 @@ class _RevisionPtosInspeccionMobileState extends State<RevisionPtosInspeccionMob
       builder: (BuildContext context) {
         List<BottomSheetOpcion> listaOpciones = [
           BottomSheetOpcion(
-              text: 'Sin Actividad',
-              icon: Icons.cancel,
-              ruta: 'Sin Actividad',
-              condicion: 'M'),
+            text: 'Sin Actividad',
+            icon: Icons.cancel,
+            ruta: 'Sin Actividad',
+            condicion: 'M'
+          ),
           BottomSheetOpcion(
-              text: 'Actividad',
-              icon: Icons.check,
-              ruta: '/ptosInspeccionActividad',
-              condicion: 'M'),
+            text: 'Actividad',
+            icon: Icons.check,
+            ruta: '/ptosInspeccionActividad',
+            condicion: 'M'
+          ),
           BottomSheetOpcion(
-              text: 'Mantenimiento',
-              icon: Icons.build,
-              ruta: '/ptosInspeccionActividad',
-              condicion: 'M'),
+            text: 'Mantenimiento',
+            icon: Icons.build,
+            ruta: '/ptosInspeccionActividad',
+            condicion: 'M'
+          ),
           BottomSheetOpcion(
-              text: 'Desinstalado',
-              icon: Icons.delete,
-              ruta: 'Desinstalado',
-              condicion: 'M'),
+            text: 'Desinstalado',
+            icon: Icons.delete,
+            ruta: 'Desinstalado',
+            condicion: 'M'
+          ),
           BottomSheetOpcion(
-              text: 'Nuevo', icon: Icons.add, ruta: 'Nuevo', condicion: 'S'),
+            text: 'Nuevo',
+            icon: Icons.add,
+            ruta: 'Nuevo',
+            condicion: 'S'
+          ),
           BottomSheetOpcion(
-              text: 'Trasladado',
-              icon: Icons.swap_horiz,
-              ruta: 'Trasladado',
-              condicion: 'M'),
+            text: 'Trasladado',
+            icon: Icons.swap_horiz,
+            ruta: 'Trasladado',
+            condicion: 'M'
+          ),
           BottomSheetOpcion(
-              text: 'Sin Acceso',
-              icon: Icons.not_interested,
-              ruta: 'Sin Acceso',
-              condicion: 'M'),
+            text: 'Sin Acceso',
+            icon: Icons.not_interested,
+            ruta: 'Sin Acceso',
+            condicion: 'M'
+          ),
         ];
-
         {
           final List<BottomSheetOpcion> listaOpcionesAplicar = [];
-          List<RevisionPtoInspeccion> elementosEncontrados = puntosSeleccionados
-              .where((elemento) => elemento.piAccionId == 5)
-              .toList();
+          List<RevisionPtoInspeccion> elementosEncontrados = puntosSeleccionados.where((elemento) => elemento.piAccionId == 5).toList();
           for (var pto in listaOpciones) {
-            if (seleccionados == 0 ||
-                (seleccionados == 1 &&
-                    puntosSeleccionados[0].piAccionId == 5)) {
+            if (seleccionados == 0 || (seleccionados == 1 && puntosSeleccionados[0].piAccionId == 5)) {
               if (pto.condicion == 'S') {
                 listaOpcionesAplicar.add(pto);
               }
-            } else if (pto.condicion == 'M' &&
-                seleccionados > 0 &&
-                elementosEncontrados.isEmpty) {
+            } else if (pto.condicion == 'M' && seleccionados > 0 && elementosEncontrados.isEmpty) {
               listaOpcionesAplicar.add(pto);
             }
           }
-
           return listaOpcionesAplicar.isEmpty
               ? const Center(
                   child: Text(

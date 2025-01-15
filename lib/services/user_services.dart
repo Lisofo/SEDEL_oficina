@@ -399,11 +399,12 @@ class UserServices {
     }
   }
 
-  Future postClientUsers(BuildContext context, String userId, String clienteId, String tipoAcceso, String token) async {
+  Future postClientUsers(BuildContext context, String userId, String clienteId, String tipoAcceso, String tipoNotificacion, String token) async {
     String link = '$apiLink$userId/clientes';
     var data = {
       "clienteId": clienteId,
-      "tipoAcceso": tipoAcceso
+      "tipoAcceso": tipoAcceso,
+      "tipoNotificacion": tipoNotificacion
     };
     try {
       var headers = {'Authorization': token};

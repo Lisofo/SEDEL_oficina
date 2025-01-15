@@ -556,6 +556,7 @@ class _OrdenPlanDesktopState extends State<OrdenPlanDesktop> {
       selectedEstado!,
       selectedTipo.tipoOrdenId,
       token,
+      false
     );
     setState(() {
       ordenesFiltradas = results;

@@ -22,6 +22,7 @@ class UsuariosXCliente {
   late String telefono1;
   late String email;
   late String tipoAcceso;
+  late String tipoNotificacion;
 
   UsuariosXCliente({
     required this.usuarioId,
@@ -34,6 +35,7 @@ class UsuariosXCliente {
     required this.telefono1,
     required this.email,
     required this.tipoAcceso,
+    required this.tipoNotificacion,
   });
 
   factory UsuariosXCliente.fromJson(Map<String, dynamic> json) =>
@@ -48,6 +50,7 @@ class UsuariosXCliente {
         telefono1: json["telefono1"] as String? ?? '',
         email: json["email"] as String? ?? '',
         tipoAcceso: json["tipoAcceso"] as String? ?? '',
+        tipoNotificacion: json["tipoNotificacion"] as String? ?? ''
       );
 
   Map<String, dynamic> toMap() => {
@@ -60,7 +63,8 @@ class UsuariosXCliente {
         "direccion": direccion,
         "telefono1": telefono1,
         "email": email,
-        "tipoAcceso":tipoAcceso
+        "tipoAcceso":tipoAcceso,
+        "tipoNotificacion": tipoNotificacion
       };
 
   UsuariosXCliente.empty() {
@@ -74,5 +78,6 @@ class UsuariosXCliente {
     telefono1 = '';
     email = '';
     tipoAcceso = '';
+    tipoNotificacion = '';
   }
 }

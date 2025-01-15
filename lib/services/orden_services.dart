@@ -109,10 +109,10 @@ class OrdenServices {
     }
   }
 
-  Future getOrden(BuildContext context, String clienteId, String tecnicoId, String desde, String hasta, String ordenTrabajoId, String estado, int tipoOrdenId, String token) async {
+  Future getOrden(BuildContext context, String clienteId, String tecnicoId, String desde, String hasta, String ordenTrabajoId, String estado, int tipoOrdenId, String token, bool planificador) async {
     bool yaTieneFiltro = false;
     String link = apiLink;
-    String linkFiltrado = link += '?sort=fechaDesde&limit=1000';
+    String linkFiltrado = planificador ? link += '?sort=fechaDesde&limit=10000' : link += '?sort=fechaDesde&limit=1000';
     yaTieneFiltro = true;
     if (clienteId != '0' && clienteId != '') {
       linkFiltrado += '&clienteId=$clienteId';

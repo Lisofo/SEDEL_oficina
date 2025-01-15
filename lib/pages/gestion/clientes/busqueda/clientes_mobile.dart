@@ -107,6 +107,36 @@ class _ClientesMobileState extends State<ClientesMobile> {
           ),
           child: Column(
             children: [
+              Column(
+                children: [
+                  const Text('Código: '),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    child: CustomTextFormField(
+                      controller: _codController,
+                      maxLines: 1,
+                      hint: 'Buscar código del cliente',
+                      onFieldSubmitted: (value) async {
+                        String query = value;
+                        await buscar(
+                          _nombreController.text,
+                          query,
+                          estadoSeleccionado?.codEstado,
+                          tecnicoFiltro.toString(),
+                          token
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5,),
+              Divider(
+                thickness: 0.5,
+                color: colors.primary,
+                endIndent: 20,
+                indent: 20,
+              ),
               const SizedBox(height: 5,),
               Column(
                 children: [

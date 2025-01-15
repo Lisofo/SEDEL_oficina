@@ -63,7 +63,7 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
 
   cargarDatos() async {
     try {
-      if (widget.materiales.isNotEmpty || widget.revisionMaterialesList.isNotEmpty){
+      if (widget.materiales.isNotEmpty){
         cargoDatosCorrectamente = true;
       }
       cargando = false;
@@ -235,24 +235,24 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
     revisionId = context.read<OrdenProvider>().revisionId;
 
     return cargando ? const Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(),
-                Text('Cargando, por favor espere...')
-              ],
-            ),
-          ) : !cargoDatosCorrectamente ? 
-          Center(
-            child: TextButton.icon(
-              onPressed: () async {
-                await cargarDatos();
-              }, 
-              icon: const Icon(Icons.replay_outlined),
-              label: const Text('Recargar'),
-            ),
-          ) : Padding(
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            Text('Cargando, por favor espere...')
+          ],
+        ),
+      ) : !cargoDatosCorrectamente ? 
+      Center(
+        child: TextButton.icon(
+          onPressed: () async {
+            await cargarDatos();
+          }, 
+          icon: const Icon(Icons.replay_outlined),
+          label: const Text('Recargar'),
+        ),
+      ) : Padding(
       padding: const EdgeInsets.all(8),
       child: Column(
         children: [

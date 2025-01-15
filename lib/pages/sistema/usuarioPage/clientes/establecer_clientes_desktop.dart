@@ -27,7 +27,9 @@ class _EstablecerClientesDesktopState extends State<EstablecerClientesDesktop> {
   List<Cliente> historial = [];
   late Cliente selectedCliente;
   late String tipoAcceso = '';
+  late String tipoNotificacion= '';
   bool filtro = false;
+  bool filtroNotificiaciones = false;
   
   @override
   void initState() {
@@ -82,6 +84,10 @@ class _EstablecerClientesDesktopState extends State<EstablecerClientesDesktop> {
                               Text(
                                 _clientes[index].tipoAcceso == 'N' ? 'Normal' : 'Restringido',
                                 textAlign: TextAlign.center,
+                              ),
+                              Text(
+                                _clientes[index].tipoNotificacion == 'N' ? 'No recibe notificación' : 'Recibe notificación',
+                                style: const TextStyle(fontSize: 13),
                               ),
                             ],
                           ),
@@ -168,6 +174,22 @@ class _EstablecerClientesDesktopState extends State<EstablecerClientesDesktop> {
                                       ),
                                       const Text('Acceso restringido')
                                     ],
+                                  ),
+                                  const Text('Notificaciones'),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Text('Ninguna'),
+                                      Switch(
+                                        activeColor: colors.primary,
+                                        value: filtroNotificiaciones, 
+                                        onChanged: (value) {
+                                          filtroNotificiaciones = value;
+                                          setStateBd(() {});
+                                        },
+                                      ),
+                                      const Text('Todas')
+                                    ],
                                   )
                                 ],
                               ),
@@ -176,11 +198,13 @@ class _EstablecerClientesDesktopState extends State<EstablecerClientesDesktop> {
                               TextButton(
                                   onPressed: () async {
                                     tipoAcceso = filtro ? 'R' : 'N';
+                                    tipoNotificacion = filtroNotificiaciones ? 'T' : 'N';
                                     await _userServices.postClientUsers(
                                       context,
                                       userSeleccionado.usuarioId.toString(),
                                       selectedCliente.clienteId.toString(),
                                       tipoAcceso,
+                                      tipoNotificacion,
                                       token
                                     );
                                     await getClientes(userSeleccionado, token);
@@ -216,34 +240,34 @@ class _EstablecerClientesDesktopState extends State<EstablecerClientesDesktop> {
 
   Future<dynamic> borrarClienteAsignado(BuildContext context, List<ClienteUsuario> _clientes, int index) {
     return showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text('Confirmar accion'),
-                                  content: Text('Desea borrar ${_clientes[index].cliente}?'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () async {
-                                        await _userServices.deleteClientUsers(
-                                          context,
-                                          userSeleccionado.usuarioId.toString(),
-                                          _clientes[index].clienteId.toString(),
-                                          token
-                                        );
-                                        await getClientes(userSeleccionado, token);
-                                      },
-                                      child: const Text('Borrar')
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('Cancelar')
-                                    )
-                                  ],
-                                );
-                              },
-                            );
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Confirmar accion'),
+          content: Text('Desea borrar ${_clientes[index].cliente}?'),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                await _userServices.deleteClientUsers(
+                  context,
+                  userSeleccionado.usuarioId.toString(),
+                  _clientes[index].clienteId.toString(),
+                  token
+                );
+                await getClientes(userSeleccionado, token);
+              },
+              child: const Text('Borrar')
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancelar')
+            )
+          ],
+        );
+      },
+    );
   }
 
   Future<List<ClienteUsuario>> getClientes(Usuario user, String token) async {

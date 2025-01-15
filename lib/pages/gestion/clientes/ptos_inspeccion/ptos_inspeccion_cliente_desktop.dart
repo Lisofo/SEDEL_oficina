@@ -177,7 +177,7 @@ class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDe
                                   icon: const Icon(Icons.delete)
                                 ),
                               ],
-                      ),
+                            ),
                             onTap: () async {
                               mostrarLista = true;
                               planoSeleccionado = plano;
@@ -925,7 +925,9 @@ class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDe
 
   cambiarEstadoPunto(List<Ptoinspeccion> puntos) async {
     desde = DateTime(desde.year, desde.month, desde.day);
-    ordenesCliente = await OrdenServices().getOrden(context, cliente.clienteId.toString(), '', desde.toIso8601String(), hasta.toIso8601String(), '', '', 0, token);
+    String fechaDesde = DateFormat('yyyy-MM-dd', 'es').format(desde);
+    String fechaHasta = DateFormat('yyyy-MM-dd', 'es').format(hasta);
+    ordenesCliente = await OrdenServices().getOrden(context, cliente.clienteId.toString(), '', fechaDesde, fechaHasta, '', '', 0, token, false);
     if(puntos.length == 1){
       comentarioController.text = puntos[0].comentario;
     }else{
@@ -1019,7 +1021,6 @@ class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDe
                     token
                   );
                 }
-                PlanosServices.showDialogs(context, 'Estado y subestado cambiados correctamente', true, false);
                 await actualizar(puntos);
               },
             ),

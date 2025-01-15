@@ -63,7 +63,7 @@ class _RevisionMaterialesDiagnositcoMenuState extends State<RevisionMaterialesDi
     token = context.read<OrdenProvider>().token;
     try {
       orden = context.read<OrdenProvider>().orden;
-      if (widget.materiales.isNotEmpty && widget.revisionMaterialesList.isNotEmpty){
+      if (widget.materiales.isNotEmpty){
         cargoDatosCorrectamente = true;
       }
       cargando = false;

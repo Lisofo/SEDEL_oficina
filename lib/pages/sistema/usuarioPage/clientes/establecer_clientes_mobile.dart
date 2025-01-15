@@ -27,7 +27,9 @@ class _EstablecerClientesMobileState extends State<EstablecerClientesMobile> {
   late Cliente selectedCliente;
   int buttonIndex = 0;
   late String tipoAcceso = '';
+  late String tipoNotificacion= '';
   bool filtro = false;
+  bool filtroNotificiaciones = false;
 
   @override
   void initState() {
@@ -73,6 +75,10 @@ class _EstablecerClientesMobileState extends State<EstablecerClientesMobile> {
                           Text(
                             _clientes[index].tipoAcceso == 'N' ? 'Normal' : 'Restringido',
                             textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            _clientes[index].tipoNotificacion == 'N' ? 'No recibe notificación' : 'Recibe notificación',
+                            style: const TextStyle(fontSize: 13),
                           ),
                         ],
                       ),
@@ -170,6 +176,22 @@ class _EstablecerClientesMobileState extends State<EstablecerClientesMobile> {
                                     ),
                                     const Text('Acceso restringido')
                                   ],
+                                ),
+                                const Text('Notificaciones'),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text('Ninguna'),
+                                    Switch(
+                                      activeColor: colors.primary,
+                                      value: filtroNotificiaciones, 
+                                      onChanged: (value) {
+                                        filtroNotificiaciones = value;
+                                        setStateBd(() {});
+                                      },
+                                    ),
+                                    const Text('Todas')
+                                  ],
                                 )
                               ],
                             ),
@@ -183,6 +205,7 @@ class _EstablecerClientesMobileState extends State<EstablecerClientesMobile> {
                                   userSeleccionado.usuarioId.toString(),
                                   selectedCliente.clienteId.toString(),
                                   tipoAcceso,
+                                  tipoNotificacion,
                                   token
                                 );
                                 await getClientes(userSeleccionado, token);

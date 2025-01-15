@@ -160,7 +160,7 @@ class RevisionServices {
   
   Future postRevision(BuildContext context, int uId, Orden orden, String token) async {
     String link = apiLink;
-    link += 'api/v1/ordenes/${orden.ordenTrabajoId.toString()}/revisiones';
+    link += 'api/v1/ordenes/${orden.ordenTrabajoId}/revisiones';
     var data = ({"idUsuario": uId, "ordinal": 0, "comentario": ""});
     try {
       var headers = {'Authorization': token};

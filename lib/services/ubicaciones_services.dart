@@ -41,6 +41,7 @@ class UbicacionesServices {
 
   Future getUbicaciones(BuildContext context, int tecnicoId, String fechaDesde, String fechaHasta, String token) async {
     String link = apiLink += 'ubicaciones?tecnicoId=$tecnicoId&fechaDesde=$fechaDesde&fechaHasta=$fechaHasta';
+    print(link);
     try {
       var headers = {'Authorization': token};
       var resp = await _dio.request(

@@ -113,7 +113,7 @@ class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
 
   Future<void> buscar(String token) async {
     clienteSeleccionado = context.read<OrdenProvider>().clienteMonitoreo;
-    Provider.of<OrdenProvider>(context, listen: false).clearSelectedCliente('Monitoreo');
+    // Provider.of<OrdenProvider>(context, listen: false).clearSelectedCliente('Monitoreo');
     print(clienteSeleccionado.clienteId.toString());
 
     String tecnicoId = selectedTecnico != null ? selectedTecnico!.tecnicoId.toString() : '';
@@ -129,6 +129,7 @@ class _MonitoreoDesktopState extends State<MonitoreoDesktop> {
       '',
       0,
       token,
+      false
     );
     setState(() {
       ordenes = results;

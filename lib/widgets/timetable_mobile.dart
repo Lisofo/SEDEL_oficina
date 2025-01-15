@@ -129,7 +129,7 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
 
   void generarPlanificacion() async {
     if (clienteSeleccionado.clienteId.toString() == '0' && tecnicoFiltro.toString() == '0') {
-      ordenes = await _ordenServices.getOrden(context, '', '', '', '', '', '', 0, token);
+      ordenes = await _ordenServices.getOrden(context, '', '', '', '', '', '', 0, token, true);
     } else {
       ordenes = await _ordenServices.getOrden(
         context, 
@@ -140,7 +140,7 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
         '',
         '',
         0,
-        token);
+        token, true);
     }
   }
 
@@ -384,7 +384,9 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.black.withValues(
+                    alpha: 0.2
+                  ),
                   blurRadius: 4,
                   offset: const Offset(0, 2)
                 ),
@@ -589,6 +591,7 @@ class _CustomizedTimetableMobileState extends State<CustomizedTimetableMobile> {
       '',
       0,
       token,
+      true,
     );
     setState(() {
       ordenes = results;

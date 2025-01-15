@@ -148,7 +148,6 @@ class _MapaPageDesktopState extends State<MapaPageDesktop> with SingleTickerProv
                       String fechaDesde = DateFormat('yyyy-MM-dd', 'es').format(selectedDate);
                       DateTime manana = DateTime(selectedDate.year, selectedDate.month, selectedDate. day + 1);
                       String fechaHasta = DateFormat('yyyy-MM-dd', 'es').format(manana);
-        
                       ubicaciones = await UbicacionesServices().getUbicaciones(context, selectedTecnico!.tecnicoId, fechaDesde, fechaHasta, token);
                       await cargarUbicacion();
                       await cargarMarkers();

@@ -61,10 +61,7 @@ class _RevisionPtosInspeccionDesktopState extends State<RevisionPtosInspeccionDe
   ];
 
   List<RevisionPtoInspeccion> get ptosFiltrados {
-    return widget.ptosInspeccion
-      .where((pto) =>
-          pto.tipoPuntoInspeccionId == selectedTipoPto.tipoPuntoInspeccionId)
-      .toList();
+    return widget.ptosInspeccion.where((pto) => pto.tipoPuntoInspeccionId == selectedTipoPto.tipoPuntoInspeccionId).toList();
   }
 
   List<RevisionPtoInspeccion> get puntosSeleccionados {
@@ -506,13 +503,9 @@ class _RevisionPtosInspeccionDesktopState extends State<RevisionPtosInspeccionDe
         showDialog(
           context: context,
           builder: (context) {
-            if (puntosSeleccionados.length == 1 &&
-                    (puntosSeleccionados[0].piAccionId == 1 &&
-                        botones.text == 'Sin Actividad') ||
-                (puntosSeleccionados[0].piAccionId == 4 &&
-                    botones.text == 'Desinstalado') ||
-                puntosSeleccionados[0].piAccionId == 7 &&
-                    botones.text == 'Sin Acceso') {
+            if (puntosSeleccionados.length == 1 && (puntosSeleccionados[0].piAccionId == 1 && botones.text == 'Sin Actividad') ||
+                (puntosSeleccionados[0].piAccionId == 4 && botones.text == 'Desinstalado') ||
+                  puntosSeleccionados[0].piAccionId == 7 && botones.text == 'Sin Acceso') {
               comentarioController.text = puntosSeleccionados[0].comentario;
             } else {
               comentarioController.text = '';
@@ -575,7 +568,6 @@ class _RevisionPtosInspeccionDesktopState extends State<RevisionPtosInspeccionDe
                 plagaObjetivoSeleccionada = PlagaObjetivo.empty();
                 zonaSeleccionada = ZonaPI.empty();
               }
-
               return SingleChildScrollView(
                 child: AlertDialog(
                   title: const Text('Nuevo Punto'),
@@ -678,7 +670,8 @@ class _RevisionPtosInspeccionDesktopState extends State<RevisionPtosInspeccionDe
                   ],
                 ),
               );
-            });
+            }
+          );
         break;
       case 'Trasladado':
         showDialog(
@@ -753,7 +746,8 @@ class _RevisionPtosInspeccionDesktopState extends State<RevisionPtosInspeccionDe
                   ),
                 ],
               );
-            });
+            }
+          );
         break;
     }
   }

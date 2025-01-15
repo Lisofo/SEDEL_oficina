@@ -962,7 +962,9 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
 
   cambiarEstadoPunto(List<Ptoinspeccion> puntos) async {
     desde = DateTime(desde.year, desde.month, desde.day);
-    ordenesCliente = await OrdenServices().getOrden(context, cliente.clienteId.toString(), '', desde.toIso8601String(), hasta.toIso8601String(), '', '', 0, token);
+    String fechaDesde = DateFormat('yyyy-MM-dd', 'es').format(desde);
+    String fechaHasta = DateFormat('yyyy-MM-dd', 'es').format(hasta);
+    ordenesCliente = await OrdenServices().getOrden(context, cliente.clienteId.toString(), '', fechaDesde, fechaHasta, '', '', 0, token, false);
     if(puntos.length == 1){
       comentarioController.text = puntos[0].comentario;
     }else{
@@ -1040,7 +1042,6 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
               child: const Text('Confirmar'),
               onPressed: () async {
               var estadoYSubEstado = estadoPuntoSeleccionado.split(' / ');
-                
                 for (var i = 0; i < puntosSeleccionados.length; i++) {
                   await PlanosServices().patchEstadoPunto(
                     context, 
@@ -1055,7 +1056,6 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
                     token
                   );
                 }
-                PlanosServices.showDialogs(context, 'Estado y subestado cambiados correctamente', true, false);
                 await actualizar(puntos);
               },
             ),
