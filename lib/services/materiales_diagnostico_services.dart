@@ -154,7 +154,7 @@ class MaterialesDiagnosticoServices {
   }
 
   Future getLotes(BuildContext context, int materialId, String token) async {
-    String link = '${apiUrl}api/v1/materiales/$materialId/lotes';
+    String link = '${apiUrl}api/v1/materiales/$materialId/lotes?estado=A';
 
     try {
       var headers = {'Authorization': token};

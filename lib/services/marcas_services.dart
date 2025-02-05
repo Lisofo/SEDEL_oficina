@@ -11,8 +11,7 @@ class MarcaServices{
   final _dio = Dio();
   int? statusCode;
   
-  static Future<void> showDialogs(BuildContext context, String errorMessage,
-      bool doblePop, bool triplePop) async {
+  static Future<void> showDialogs(BuildContext context, String errorMessage, bool doblePop, bool triplePop) async {
     showDialog(
       context: context,
       builder: (context) {
@@ -99,6 +98,7 @@ class MarcaServices{
 
       statusCode = 1;
       final List<dynamic> marcaList = resp.data;
+      print('print desde el get: ${resp.data[0]["desde"]}');
       var retorno = marcaList.map((obj) => Marca.fromJson(obj)).toList();
       print(retorno.length);
       return retorno;
@@ -131,11 +131,12 @@ class MarcaServices{
 
   Future putMarca(BuildContext context, Marca marca, String token) async {
     try {
-      String link = apiLink;
+      String link = '$apiLink${marca.marcaId}';
       var headers = {'Authorization': token};
+      print(marca.desde.toIso8601String());
 
       final resp = await _dio.request(
-        link += marca.marcaId.toString(),
+        link,
         data: marca.toMap(),
         options: Options(
           method: 'PUT', 

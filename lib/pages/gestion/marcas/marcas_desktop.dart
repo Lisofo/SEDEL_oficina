@@ -136,14 +136,15 @@ class _MarcasPageDesktopState extends State<MarcasPageDesktop> {
                         SizedBox(
                           width: 220,
                           child: DropdownSearch(
-                            dropdownDecoratorProps:
-                                const DropDownDecoratorProps(
-                                    dropdownSearchDecoration: InputDecoration(
-                                        hintText: 'Seleccione un tecnico')),
+                            dropdownDecoratorProps: const DropDownDecoratorProps(
+                              dropdownSearchDecoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: 'Seleccione un técnico'),
+                              textAlignVertical: TextAlignVertical.center,
+                            ),
                             items: tecnicos,
-                            popupProps: const PopupProps.menu(
-                                showSearchBox: true,
-                                searchDelay: Duration.zero),
+                            selectedItem: selectedTecnico,
+                            popupProps: const PopupProps.menu(showSearchBox: true, searchDelay: Duration.zero),
                             onChanged: (value) {
                               setState(() {
                                 selectedTecnico = value;
@@ -191,18 +192,18 @@ class _MarcasPageDesktopState extends State<MarcasPageDesktop> {
                       Marca marca = marcas[i];
                       return Card(
                         child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: colors.primary,
-                            child: Text(marca.marcaId.toString(), style: const TextStyle(color: Colors.white),),
+                          leading: Container(
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: colors.primary,),
+                            child: Text(marca.marcaId.toString(), style: const TextStyle(color: Colors.white, fontSize: 18),),
                           ),
                           title: Text('${marca.codTecnico} - ${marca.nombreTecnico}'),
                           subtitle: Column(
                             children: [
                               if(marca.modo == '') ... [
-                                Text('Entrada: ${marca.ubicacion} - Salida: `${marca.ubicacionHasta}'),
+                                Text('Entrada: ${marca.ubicacion} - Salida: ${marca.ubicacionHasta}'),
                               ] 
                               else ... [
-                                Text('Entrada: ${marca.ubicacion} - Salida: `${marca.ubicacionHasta}'),
+                                Text('Entrada: ${marca.ubicacion} - Salida: ${marca.ubicacionHasta}'),
                                 const SizedBox(height: 10,),
                                 const Text('Modo: Administrativo'),
                               ]

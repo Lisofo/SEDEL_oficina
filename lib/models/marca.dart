@@ -49,13 +49,12 @@ class Marca {
         modo: json["modo"] as String? ?? '',
     );
 
-    Map<String, dynamic> toMap() => {
-        "marcaId": marcaId,
-        "desde": desde.toIso8601String(),
-        "hasta": hasta?.toIso8601String(),
-        "tecnicoId": tecnicoId,
-        'modo': 'A'
-    };
+  Map<String, dynamic> toMap() => {
+    "desde": desde.toIso8601String(),
+    "hasta": hasta?.toIso8601String(),
+    "tecnicoId": tecnicoId,
+    'modo': 'A'
+  };
 
     Marca.empty(){
       marcaId = 0;

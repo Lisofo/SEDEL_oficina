@@ -33,139 +33,147 @@ class _EditMarcasDesktopState extends State<EditMarcasDesktop> {
   List<Tecnico> tecnicos = [];
   late Tecnico? selectedTecnico = Tecnico.empty();
   late Tecnico? tecnicoIncialSeleccionado = null;
+  late bool editar = true;
 
   Future<Null> _selectDateDesde(BuildContext context) async {
     return await showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Seleccionar fecha y hora desde'),
-            content: StatefulBuilder(
-              builder: (context, setStateBd) => Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(
-                    title: const Text('Fecha'),
-                    subtitle: Text(DateFormat('EEEE d , MMM, yyyy', 'es').format(selectedDateDesde)),
-                    onTap: () async {
-                      final DateTime? picked = await showDatePicker(
-                          context: context,
-                          initialDate: selectedDateDesde,
-                          initialDatePickerMode: DatePickerMode.day,
-                          firstDate: DateTime(2015),
-                          lastDate: DateTime(2099));
-                      if (picked != null) {
-                        setStateBd(() {
-                          selectedDateDesde = picked;
-                        });
-                      }
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Hora'),
-                    subtitle: Text(_formatTime(selectedDateDesde)),
-                    onTap: () async {
-                      TimeOfDay? pickedTime = await showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay.fromDateTime(selectedDateDesde),
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Seleccionar fecha y hora desde'),
+          content: StatefulBuilder(
+            builder: (context, setStateBd) => Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  title: const Text('Fecha'),
+                  subtitle: Text(DateFormat('EEEE d , MMM, yyyy', 'es').format(selectedDateDesde)),
+                  onTap: () async {
+                    final DateTime? picked = await showDatePicker(
+                      context: context,
+                      initialDate: selectedDateDesde,
+                      initialDatePickerMode: DatePickerMode.day,
+                      firstDate: DateTime(2015),
+                      lastDate: DateTime(2099)
+                    );
+                    if (picked != null) {
+                      setStateBd(() {
+                        selectedDateDesde = picked;
+                      });
+                    }
+                  },
+                ),
+                ListTile(
+                  title: const Text('Hora'),
+                  subtitle: Text(_formatTime(selectedDateDesde)),
+                  onTap: () async {
+                    TimeOfDay? pickedTime = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.fromDateTime(selectedDateDesde),
+                    );
+                    if (pickedTime != null) {
+                      selectedDateDesde = DateTime(
+                        selectedDateDesde.year,
+                        selectedDateDesde.month,
+                        selectedDateDesde.day,
+                        pickedTime.hour,
+                        pickedTime.minute,
                       );
-                      if (pickedTime != null) {
-                        selectedDateDesde = DateTime(
-                          selectedDateDesde.year,
-                          selectedDateDesde.month,
-                          selectedDateDesde.day,
-                          pickedTime.hour,
-                          pickedTime.minute,
-                        );
-                      }
-                      setStateBd(() {});
-                    },
-                  ),
-                ],
-              ),
+                    }
+                    setStateBd(() {});
+                  },
+                ),
+              ],
             ),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    router.pop();
-                  },
-                  child: const Text('Cancelar')),
-              TextButton(
-                  onPressed: () {
-                    router.pop();
-                    setState(() {});
-                  },
-                  child: const Text('Confirmar')),
-            ],
-          );
-        });
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                router.pop();
+              },
+              child: const Text('Cancelar')
+            ),
+            TextButton(
+              onPressed: () {
+                router.pop();
+                setState(() {});
+              },
+              child: const Text('Confirmar')
+            ),
+          ],
+        );
+      }
+    );
   }
 
   Future<Null> _selectDateHasta(BuildContext context) async {
     return await showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Seleccionar fecha y hora hasta'),
-            content: StatefulBuilder(
-              builder: (context, setStateBd) => Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(
-                    title: const Text('Fecha'),
-                    subtitle: Text(DateFormat('EEEE d , MMM, yyyy', 'es').format(selectedDateHasta)),
-                    onTap: () async {
-                      final DateTime? picked = await showDatePicker(
-                          context: context,
-                          initialDate: selectedDateHasta,
-                          initialDatePickerMode: DatePickerMode.day,
-                          firstDate: DateTime(2015),
-                          lastDate: DateTime(2099));
-                      if (picked != null) {
-                        setStateBd(() {
-                          selectedDateHasta = picked;
-                        });
-                      }
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Hora'),
-                    subtitle: Text(_formatTime(selectedDateHasta)),
-                    onTap: () async {
-                      TimeOfDay? pickedTime = await showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay.fromDateTime(selectedDateHasta),
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Seleccionar fecha y hora hasta'),
+          content: StatefulBuilder(
+            builder: (context, setStateBd) => Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  title: const Text('Fecha'),
+                  subtitle: Text(DateFormat('EEEE d , MMM, yyyy', 'es').format(selectedDateHasta)),
+                  onTap: () async {
+                    final DateTime? picked = await showDatePicker(
+                      context: context,
+                      initialDate: selectedDateHasta,
+                      initialDatePickerMode: DatePickerMode.day,
+                      firstDate: DateTime(2015),
+                      lastDate: DateTime(2099)
+                    );
+                    if (picked != null) {
+                      setStateBd(() {
+                        selectedDateHasta = picked;
+                      });
+                    }
+                  },
+                ),
+                ListTile(
+                  title: const Text('Hora'),
+                  subtitle: Text(_formatTime(selectedDateHasta)),
+                  onTap: () async {
+                    TimeOfDay? pickedTime = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.fromDateTime(selectedDateHasta),
+                    );
+                    if (pickedTime != null) {
+                      selectedDateHasta = DateTime(
+                        selectedDateHasta.year,
+                        selectedDateHasta.month,
+                        selectedDateHasta.day,
+                        pickedTime.hour,
+                        pickedTime.minute,
                       );
-                      if (pickedTime != null) {
-                        selectedDateHasta = DateTime(
-                          selectedDateHasta.year,
-                          selectedDateHasta.month,
-                          selectedDateHasta.day,
-                          pickedTime.hour,
-                          pickedTime.minute,
-                        );
-                      }
-                      setStateBd(() {});
-                    },
-                  ),
-                ],
-              ),
+                    }
+                    setStateBd(() {});
+                  },
+                ),
+              ],
             ),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    router.pop();
-                  },
-                  child: const Text('Cancelar')),
-              TextButton(
-                  onPressed: () {
-                    router.pop();
-                    setState(() {});
-                  },
-                  child: const Text('Confirmar')),
-            ],
-          );
-        });
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                router.pop();
+              },
+              child: const Text('Cancelar')
+            ),
+            TextButton(
+              onPressed: () {
+                router.pop();
+                setState(() {});
+              },
+              child: const Text('Confirmar')
+            ),
+          ],
+        );
+      });
   }
 
   String _formatDateAndTime(DateTime? date) {
@@ -185,6 +193,7 @@ class _EditMarcasDesktopState extends State<EditMarcasDesktop> {
   cargarDatos() async {
     token = context.read<OrdenProvider>().token;
     marca = context.read<OrdenProvider>().marca;
+    print('print desde el edit: ${marca.desde}');
     selectedDateDesde = marca.desde;
     selectedDateHasta = marca.hasta!;
     if (tecnicos.isEmpty) {
@@ -204,14 +213,16 @@ class _EditMarcasDesktopState extends State<EditMarcasDesktop> {
   @override
   Widget build(BuildContext context) {
      _dateController.text = marca.marcaId != 0 && selectedDateDesde == marca.desde
-        ? _formatDateAndTime(marca.desde)
-        : _formatDateAndTime(selectedDateDesde);
+      ? _formatDateAndTime(marca.desde) : _formatDateAndTime(selectedDateDesde);
     _dateHastaController.text = (marca.marcaId != 0 && selectedDateHasta == marca.hasta)
-        ? _formatDateAndTime(marca.hasta)
-        : _formatDateAndTime(selectedDateHasta);
+      ? _formatDateAndTime(marca.hasta) : _formatDateAndTime(selectedDateHasta);
     if (marca.tecnicoId != 0  && tecnicos.isNotEmpty) {
-        tecnicoIncialSeleccionado = tecnicos.firstWhere((tec) => tec.tecnicoId == marca.tecnicoId);
+      tecnicoIncialSeleccionado = tecnicos.firstWhere((tec) => tec.tecnicoId == marca.tecnicoId);
+      selectedTecnico = tecnicoIncialSeleccionado;
+      if(selectedTecnico!.tecnicoId != 0) {
+        editar = false;
       }
+    }
 
 
     return Scaffold(
@@ -231,10 +242,10 @@ class _EditMarcasDesktopState extends State<EditMarcasDesktop> {
                   Row(
                     children: [
                       IconButton.filledTonal(
-                          onPressed: () =>
-                              _selectDateDesde(context),
-                          icon: const Icon(
-                              Icons.calendar_month)),
+                        onPressed: () => _selectDateDesde(context),
+                        icon: const Icon(Icons.calendar_month)
+                      ),
+                      const SizedBox(width: 10,),
                       SizedBox(
                         width: 300,
                         child: CustomTextFormField(
@@ -254,38 +265,33 @@ class _EditMarcasDesktopState extends State<EditMarcasDesktop> {
                   Row(
                     children: [
                       IconButton.filledTonal(
-                          onPressed: () =>
-                              _selectDateHasta(context),
-                          icon: const Icon(
-                              Icons.calendar_month)),
+                        onPressed: () => _selectDateHasta(context),
+                        icon: const Icon(Icons.calendar_month)
+                      ),
+                      const SizedBox(width: 10,),
                       SizedBox(
                         width: 300,
                         child: CustomTextFormField(
                           label: 'Fecha hasta',
                           textAling: TextAlign.center,
-                          controller:
-                              _dateHastaController,
+                          controller: _dateHastaController,
                           onChanged: (value) {
                             // selectedDateHasta =
                             //     DateTime.parse(value);
                           },
                           validator: (value) {
-                            if (value == null ||
-                                value.isEmpty) {
+                            if (value == null || value.isEmpty) {
                               return 'Seleccione una fecha hasta';
                             } else {
-                              final fechaDesde =
-                                  DateFormat.yMd().parse(_dateController.text);
-                              final fechaHasta =
-                                  DateFormat.yMd()
-                                      .parse(value);
-                              if (fechaHasta
-                                  .isBefore(fechaDesde)) {
+                              final fechaDesde = DateFormat.yMd().parse(_dateController.text);
+                              print('Estoy validando fechaDesde: $fechaDesde');
+                              final fechaHasta = DateFormat.yMd().parse(value);
+                              if (fechaHasta.isBefore(fechaDesde)) {
                                 return 'La fecha seleccionada es incorrecta seleccione \nuna fecha mayor o igual a la inicial';
                               }
                             }
                             return null;
-                          },
+                          }, 
                         ),
                       ),
                     ],
@@ -298,21 +304,19 @@ class _EditMarcasDesktopState extends State<EditMarcasDesktop> {
                       Container(
                         width: 300,
                         decoration: BoxDecoration(
-                            border: Border.all(),
-                            borderRadius:
-                                BorderRadius.circular(5)),
+                          border: Border.all(),
+                          borderRadius: BorderRadius.circular(5)),
                         child: DropdownSearch(
-                          dropdownDecoratorProps:
-                              const DropDownDecoratorProps(
-                                  dropdownSearchDecoration:
-                                      InputDecoration(
-                                          hintText:
-                                              'Seleccione un tecnico')),
+                          dropdownDecoratorProps: const DropDownDecoratorProps(
+                            dropdownSearchDecoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Seleccione un técnico'),
+                            textAlignVertical: TextAlignVertical.center,
+                          ),
+                          enabled: editar,
                           items: tecnicos,
-                          selectedItem: tecnicoIncialSeleccionado,
-                          popupProps: const PopupProps.menu(
-                              showSearchBox: true,
-                              searchDelay: Duration.zero),
+                          selectedItem: selectedTecnico,
+                          popupProps: const PopupProps.menu(showSearchBox: true, searchDelay: Duration.zero),
                           onChanged: (value) {
                             setState(() {
                               selectedTecnico = value;
