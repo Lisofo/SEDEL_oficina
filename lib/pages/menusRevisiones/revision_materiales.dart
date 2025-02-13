@@ -287,7 +287,7 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
                     });
                     try {
                       plagas = await PlagaServices().getPlagas(context, '', '', token);
-                      lotes = await MaterialesServices().getLotes(context, selectedMaterial.materialId, token);
+                      lotes = await MaterialesServices().getLotes(context, selectedMaterial.materialId, true, token);
                       metodosAplicacion = await MaterialesServices().getMetodosAplicacion(context, '', '', token);  
                     } catch (e) {
                       plagas = [];
@@ -397,7 +397,7 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
                                 }
                                 try {
                                   plagas = await PlagaServices().getPlagas(context, '', '', token);
-                                  lotes = await MaterialesServices().getLotes(context, item.material.materialId, token);
+                                  lotes = await MaterialesServices().getLotes(context, item.material.materialId, true, token);
                                   metodosAplicacion = await MaterialesServices().getMetodosAplicacion(context, '', '', token);
                                   estaBuscando = false;
                                   setState(() {});  

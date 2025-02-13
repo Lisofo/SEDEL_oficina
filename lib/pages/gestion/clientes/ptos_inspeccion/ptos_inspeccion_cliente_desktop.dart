@@ -124,7 +124,7 @@ class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDe
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBarDesktop(titulo: 'Ptos de inspección'),
+      appBar: AppBarDesktop(titulo: 'Ptos de inspección - ${cliente.codCliente} - ${cliente.nombre}'),
       drawer: const Drawer(
         child: BotonesDrawer(),
       ),

@@ -53,7 +53,7 @@ class _ServicioClienteMobileState extends State<ServicioClienteMobile> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBarMobile(titulo: 'Servicio clientes'),
+        appBar: AppBarMobile(titulo: 'Servicio clientes - ${widget.cliente.codCliente}'),
         body: !cargando ? const Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

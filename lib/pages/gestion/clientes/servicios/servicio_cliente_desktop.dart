@@ -56,7 +56,7 @@ class _ServicioClienteDesktopState extends State<ServicioClienteDesktop> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBarDesktop(titulo: 'Servicio clientes'),
+        appBar: AppBarDesktop(titulo: 'Servicio clientes - ${widget.cliente.codCliente} - ${widget.cliente.nombre}'),
         drawer: const Drawer(
           child: BotonesDrawer(),
         ),

@@ -124,7 +124,7 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ptos de inspección', style: TextStyle(color: Colors.white),),
+        title: Text('Ptos de inspección - ${cliente.codCliente}', style: const TextStyle(color: Colors.white),),
         backgroundColor: colors.primary,
         iconTheme: IconThemeData(
           color: colors.surface

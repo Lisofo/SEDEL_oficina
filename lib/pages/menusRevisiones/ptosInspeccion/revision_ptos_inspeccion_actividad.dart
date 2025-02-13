@@ -652,7 +652,7 @@ class _RevisionPtosInspeccionActividadState extends State<RevisionPtosInspeccion
   }
 
   Future<void> cargarLotes() async {
-    lotesVencimientos = await MaterialesServices().getLotes(context, materialSeleccionado!.materialId, token);
+    lotesVencimientos = await MaterialesServices().getLotes(context, materialSeleccionado!.materialId, true, token);
     setState(() {});
   }
 

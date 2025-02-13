@@ -43,7 +43,7 @@ class _LotesPageDesktopState extends State<LotesPageDesktop> {
   cargarDatos() async {
     materialSeleccionado = context.read<OrdenProvider>().materiales;
     token = context.read<OrdenProvider>().token;
-    lotes =  await MaterialesServices().getLotes(context, materialSeleccionado.materialId, token);
+    lotes =  await MaterialesServices().getLotes(context, materialSeleccionado.materialId, false, token);
     
     setState(() {});
   }
@@ -52,7 +52,7 @@ class _LotesPageDesktopState extends State<LotesPageDesktop> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBarDesktop(titulo: 'Lotes'),
+      appBar: AppBarDesktop(titulo: 'Lotes ${materialSeleccionado.descripcion}'),
       drawer: const Drawer(
         child: BotonesDrawer(),
       ),
@@ -194,7 +194,7 @@ class _LotesPageDesktopState extends State<LotesPageDesktop> {
         
     await MaterialesServices().postLote(context, materialSeleccionado.materialId, lote, token);    
     await MaterialesServices.showDialogs(context, 'Lote creado correctamente', true, false);
-    lotes = await MaterialesServices().getLotes(context, materialSeleccionado.materialId, token); 
+    lotes = await MaterialesServices().getLotes(context, materialSeleccionado.materialId, false, token);
       
     setState(() {});
   }
@@ -207,7 +207,7 @@ class _LotesPageDesktopState extends State<LotesPageDesktop> {
         
     await MaterialesServices().putLote(context, materialSeleccionado.materialId, lote, token);    
     await MaterialesServices.showDialogs(context, 'Lote editado correctamente', true, false);
-    lotes = await MaterialesServices().getLotes(context, materialSeleccionado.materialId, token);
+    lotes = await MaterialesServices().getLotes(context, materialSeleccionado.materialId, false, token);
 
     setState(() {});
   }
@@ -226,7 +226,7 @@ class _LotesPageDesktopState extends State<LotesPageDesktop> {
                 await MaterialesServices().deleteLote(context, materialSeleccionado.materialId, lote, token);
                 await MaterialesServices.showDialogs(context, 'Lote borrado correctamente', true, false);
 
-                lotes = await MaterialesServices().getLotes(context, materialSeleccionado.materialId, token);
+                lotes = await MaterialesServices().getLotes(context, materialSeleccionado.materialId, false, token);
                 setState(() {});
             }, child: const Text('Confirmar')),
 

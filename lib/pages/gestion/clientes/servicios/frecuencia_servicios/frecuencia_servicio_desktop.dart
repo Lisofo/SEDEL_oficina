@@ -60,7 +60,7 @@ class _FrecuenciaServicioDesktopState extends State<FrecuenciaServicioDesktop> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarDesktop(titulo: 'Frecuencia del servicio ${widget.servicioCliente.descripcion}'),
+      appBar: AppBarDesktop(titulo: 'Frecuencia del servicio ${widget.servicioCliente.descripcion} - ${widget.cliente.codCliente} - ${widget.cliente.nombre}'),
       drawer: const Drawer(
         child: BotonesDrawer(),
       ),
