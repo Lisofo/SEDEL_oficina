@@ -46,31 +46,31 @@ class ParametroSearchDelegate extends SearchDelegate {
     final clientServices = InformesServices();
     final token = context.watch<OrdenProvider>().token;
 
-    final List<String> searchParams = query.split(" ");
+    // final List<String> searchParams = query.split(" ");
 
     String id = '';
     String descripcion = '';
     
-
-    if (searchParams.length >= 2) {
-      id = searchParams[0];
-      descripcion = searchParams.sublist(1).join(' ');
-    } else {
-      if (int.tryParse(searchParams[0]) != null) {
-        id = searchParams[0];
-        descripcion = '';
-      } else {
-        id = '';
-        descripcion = searchParams[0];
-      }
-    }
+    descripcion = query;
+    // if (searchParams.length >= 2) {
+    //   id = searchParams[0];
+    //   descripcion = searchParams.sublist(1).join(' ');
+    // } else {
+    //   if (int.tryParse(searchParams[0]) != null) {
+    //     id = searchParams[0];
+    //     descripcion = '';
+    //   } else {
+    //     id = '';
+    //     descripcion = searchParams[0];
+    //   }
+    // }
 
     return FutureBuilder(
       future: clientServices.getParametrosValues(context, token, informeId, parametroId, id, descripcion, dependeDe.toString(), parametros),
       builder: (_, AsyncSnapshot snapshot) {
         if (snapshot.hasError) {
           return const ListTile(
-            title: Text('No hay ningún cliente con ese nombre'),
+            title: Text('No se encontró en la busqueda'),
           );
         }
 
