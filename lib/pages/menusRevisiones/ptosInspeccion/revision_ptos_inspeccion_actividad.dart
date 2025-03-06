@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sedel_oficina_maqueta/config/config.dart';
+import 'package:sedel_oficina_maqueta/config/router/app_router.dart';
 import 'package:sedel_oficina_maqueta/models/materialesTPI.dart';
 import 'package:sedel_oficina_maqueta/models/orden.dart';
 import 'package:sedel_oficina_maqueta/models/plagaXTPI.dart';
@@ -611,8 +612,18 @@ class _RevisionPtosInspeccionActividadState extends State<RevisionPtosInspeccion
             TextButton(
               child: const Text('Agregar'),
               onPressed: () {
-                final cantidad = cantidadControllerMateriales.text;
-                late PtoMaterial nuevoMaterial = PtoMaterial(
+                bool noTieneLotes = false;
+                bool tieneLoteId = false;
+                if(lotesVencimientos.isEmpty){
+                  noTieneLotes = true;
+                } else{
+                  if(loteSeleccionado!.materialLoteId != 0){
+                    tieneLoteId = true;
+                  }
+                }
+                if( noTieneLotes || tieneLoteId ) {
+                  final cantidad = cantidadControllerMateriales.text;
+                  late PtoMaterial nuevoMaterial = PtoMaterial(
                     otPiMaterialId: 0,
                     otPuntoInspeccionId: 0,
                     materialId: materialSeleccionado!.materialId,
@@ -621,28 +632,39 @@ class _RevisionPtosInspeccionActividadState extends State<RevisionPtosInspeccion
                     dosis: materialSeleccionado!.dosis,
                     unidad: materialSeleccionado!.unidad,
                     cantidad: int.parse(cantidad),
-                    materialLoteId: loteSeleccionado?.materialLoteId == null
-                        ? null
-                        : loteSeleccionado!.materialLoteId,
-                    lote: loteSeleccionado?.lote == null
-                        ? ''
-                        : loteSeleccionado!.lote);
-                if (cantidad.isNotEmpty && materialSeleccionado != null) {
-                  materialesSeleccionados.add(nuevoMaterial);
-                  cantidadControllerMateriales.clear();
+                    materialLoteId: loteSeleccionado?.materialLoteId == null ? null : loteSeleccionado!.materialLoteId,
+                    lote: loteSeleccionado?.lote == null ? '' : loteSeleccionado!.lote
+                  );
+                  if (cantidad.isNotEmpty && materialSeleccionado != null) {
+                    materialesSeleccionados.add(nuevoMaterial);
+                    cantidadControllerMateriales.clear();
+                    setState(() {
+                      materialSeleccionado = null;
+                      loteSeleccionado = null;
+                    });
+                  }
+                  Navigator.of(context).pop();
                   setState(() {
-                    materialSeleccionado = null;
-                    loteSeleccionado = null;
+                    // _scrollController.animateTo(
+                    //   _scrollController.position.maxScrollExtent + 200,
+                    //   duration: Duration(milliseconds: 500),
+                    //   curve: Curves.easeInOut,
+                    // );
                   });
+                } else {
+                  showDialog(
+                    context: context, 
+                    builder: (BuildContext context){
+                      return AlertDialog(
+                        title: const Text('Error'),
+                        content: const Text('Faltan campos por completar'),
+                        actions: [
+                          TextButton(onPressed: ()=> router.pop(), child: const Text('Cerrar'))
+                        ],
+                      );
+                    }
+                  );
                 }
-                Navigator.of(context).pop();
-                setState(() {
-                  // _scrollController.animateTo(
-                  //   _scrollController.position.maxScrollExtent + 200,
-                  //   duration: Duration(milliseconds: 500),
-                  //   curve: Curves.easeInOut,
-                  // );
-                });
               },
             ),
           ],
