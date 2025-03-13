@@ -408,7 +408,7 @@ class _RevisionMaterialesMenuState extends State<RevisionMaterialesMenu> {
                                   estaBuscando = false;
                                   setState(() {});
                                 }
-                                if(plagas.isNotEmpty && lotes.isNotEmpty && metodosAplicacion.isNotEmpty){
+                                if(plagas.isNotEmpty && metodosAplicacion.isNotEmpty){
                                   bool resultado = await editMaterial(context, item);
                                   setState(() {
                                     estaBuscando = resultado;
