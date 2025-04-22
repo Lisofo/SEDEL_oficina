@@ -660,7 +660,6 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
     setState(() {});
   }
 
-
   Future<void> actualizarPlanos(List<Plano> planos) async {
     planos = await PlanosServices().getClientPlano(context, cliente, token);
     setState(() {
@@ -984,8 +983,10 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    puntos.length == 1 ? 'Esta por cambiar el estado del punto ${puntos[0].codPuntoInspeccion} del tipo ${selectedTipoPto.descripcion}' 
-                    : 'Esta por cambiar el estado a multiples puntos'
+                    puntos.length == 1 && selectedTipoPto.descripcion != '' 
+                      ? 'Esta por cambiar el estado del punto ${puntos[0].codPuntoInspeccion} del tipo ${selectedTipoPto.descripcion}' 
+                        : puntos.length == 1 && selectedTipoPto.descripcion == '' ? 'Esta por cambiar el estado del punto ${puntos[0].codPuntoInspeccion}' 
+                          : 'Esta por cambiar el estado a multiples puntos'
                   ),
                   const SizedBox(height: 10,),
                   CustomDropdownFormMenu(
@@ -1047,7 +1048,7 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
                     context, 
                     cliente, 
                     planoSeleccionado, 
-                    puntosSeleccionados[0],
+                    puntosSeleccionados[i],
                     estadoYSubEstado[0],
                     estadoYSubEstado[1],
                     comentarioController.text, 
@@ -1056,6 +1057,7 @@ class _PtosInspeccionClientesMobileState extends State<PtosInspeccionClientesMob
                     token
                   );
                 }
+                PlanosServices.showDialogs(context, 'Estado y subestado cambiados correctamente', true, false);
                 await actualizar(puntos);
               },
             ),

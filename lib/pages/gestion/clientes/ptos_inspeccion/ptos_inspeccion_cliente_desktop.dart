@@ -289,21 +289,24 @@ class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDe
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       CustomButton(
-                        text: 'Editar estado/sub estado', 
-                        onPressed: () {
+                        text: 'Editar estado/sub estado',
+                        disabled: puntosSeleccionados.isEmpty,
+                        onPressed: puntosSeleccionados.isEmpty ? null : () {
                           cambiarEstadoPunto(puntosSeleccionados);
                         }
                       ),
                       const SizedBox(width: 10,),
                       CustomButton(
-                        text: 'Borrar punto', 
-                        onPressed: (){
+                        text: 'Borrar punto',
+                        disabled: puntosSeleccionados.isEmpty,
+                        onPressed: puntosSeleccionados.isEmpty ? null : () {
                           borrarPunto(puntosSeleccionados);
                         }
                       ),
                       const SizedBox(width: 10,),
                       CustomButton(
-                        onPressed: (){
+                        disabled: puntosSeleccionados.isEmpty,
+                        onPressed: puntosSeleccionados.isEmpty ? null : (){
                           editarPunto(puntosSeleccionados);
                         }, 
                         text: 'Editar punto'
@@ -936,7 +939,7 @@ class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDe
 
     showDialog(
       context: context, 
-      builder: (context){
+      builder: (context) {
         return AlertDialog(
           title: const Text('Cambiar estado y subestado'),
           content: StatefulBuilder(
@@ -947,8 +950,10 @@ class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDe
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    puntos.length == 1 ? 'Esta por cambiar el estado del punto ${puntos[0].codPuntoInspeccion} del tipo ${selectedTipoPto.descripcion}' 
-                    : 'Esta por cambiar el estado a multiples puntos'
+                    puntos.length == 1 && selectedTipoPto.descripcion != '' 
+                      ? 'Esta por cambiar el estado del punto ${puntos[0].codPuntoInspeccion} del tipo ${selectedTipoPto.descripcion}' 
+                        : puntos.length == 1 && selectedTipoPto.descripcion == '' ? 'Esta por cambiar el estado del punto ${puntos[0].codPuntoInspeccion}' 
+                          : 'Esta por cambiar el estado a multiples puntos'
                   ),
                   const SizedBox(height: 10,),
                   CustomDropdownFormMenu(
@@ -1012,7 +1017,7 @@ class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDe
                     context, 
                     cliente, 
                     planoSeleccionado, 
-                    puntosSeleccionados[0],
+                    puntosSeleccionados[i],
                     estadoYSubEstado[0],
                     estadoYSubEstado[1],
                     comentarioController.text, 
@@ -1021,6 +1026,7 @@ class _PtosInspeccionClientesDesktopState extends State<PtosInspeccionClientesDe
                     token
                   );
                 }
+                PlanosServices.showDialogs(context, 'Estado y subestado cambiados correctamente', true, false);
                 await actualizar(puntos);
               },
             ),
