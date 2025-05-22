@@ -254,7 +254,7 @@ class OrdenServices {
       } 
     }
   }
-
+ 
   Future getOrdenCV(BuildContext context, int ordenId, String token) async {
     String link = '${apiLink}cv?ordenTrabajoId=$ordenId';
     try {
